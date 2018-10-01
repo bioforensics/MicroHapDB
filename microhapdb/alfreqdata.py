@@ -28,6 +28,13 @@ def load_allele_frequencies():
     return pandas.read_table(microhapdb.data_file('allele.tsv'))
 
 
+def test_assumptions():
+    assert len(microhapdb.allelefreqs.Population.unique()) == 84
+    # For 13 loci the number of alleles and the number of annotated allele frequencies is mismatched for all populations in the table published by ALFRED.
+    # Another locus is only mismatched for a portion of the populations. See `dbbuild/allele-mismatch.log`.
+    assert len(microhapdb.allelefreqs.Locus.unique()) == (148 - 13)
+
+
 def test_allele_frequencies():
     af = microhapdb.allelefreqs
     assert af.shape == (54637, 4)
