@@ -15,12 +15,16 @@ desc = (
     'Resource for working with microhaploptype data from the ALFRED database '
     '(https://alfred.med.yale.edu).'
 )
+with open('README.md', 'r') as infile:
+    longdesc = infile.read()
 
 setup(
     name='microhapdb',
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     description=desc,
+    long_description=longdesc,
+    long_description_content_type='text/markdown',
     url='https://github.com/bioforensics/microhapdb',
     author='Daniel Standage',
     author_email='daniel.standage@nbacc.dhs.gov',
@@ -40,7 +44,7 @@ setup(
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python :: 3',
-        'Topic : Scientific/Engineering :: Bio-Informatics',
+        'Topic :: Scientific/Engineering :: Bio-Informatics',
     ],
     zip_safe=True,
 )

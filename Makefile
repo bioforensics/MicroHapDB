@@ -10,7 +10,9 @@ test:
 
 ## devdeps:   install development dependencies
 devdeps:
-	pip install pycodestyle pytest-cov pytest-sugar
+	pip3 install --upgrade pip setuptools
+	pip3 install wheel twine
+	pip3 install pycodestyle pytest-cov pytest-sugar
 
 ## clean:     remove development artifacts
 clean:
