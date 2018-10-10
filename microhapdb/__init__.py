@@ -9,13 +9,14 @@
 
 
 from microhapdb.util import data_file
-from microhapdb.alfreqdata import allelefreqs
-from microhapdb.locusdata import loci
-from microhapdb.popdata import populations
-from microhapdb.variantdata import variants
 from microhapdb import cli
-
-
+import pandas
 from ._version import get_versions
 __version__ = get_versions()['version']
 del get_versions
+
+
+allelefreqs = pandas.read_table(data_file('allele.tsv'))
+loci = pandas.read_table(data_file('locus.tsv'))
+populations = pandas.read_table(data_file('population.tsv'))
+variants = pandas.read_table(data_file('variant.tsv'))

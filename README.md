@@ -20,7 +20,7 @@ To make sure the package installed correctly:
 
 ```
 pip3 install pytest
-py.test --pyargs microhapdb
+py.test --pyargs microhapdb --doctest-modules
 ```
 
 MicroHapDB requires Python version 3.

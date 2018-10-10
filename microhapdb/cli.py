@@ -106,15 +106,6 @@ def get_parser():
     return parser
 
 
-tables = {
-    'allelefreq': microhapdb.allelefreqs,
-    'locus': microhapdb.loci,
-    'population': microhapdb.populations,
-    'variant': microhapdb.variants,
-    'files': None,
-}
-
-
 def main(args=None):
     if args is None:  # pragma: no cover
         args = get_parser().parse_args()
@@ -122,6 +113,13 @@ def main(args=None):
     if args.cmd is None:  # pragma: no cover
         get_parser().parse_args(['-h'])
 
+    tables = {
+        'allelefreq': microhapdb.allelefreqs,
+        'locus': microhapdb.loci,
+        'population': microhapdb.populations,
+        'variant': microhapdb.variants,
+        'files': None,
+    }
     assert args.cmd in tables
     if args.cmd == 'files':
         for datatype in ('allele', 'locus', 'population', 'variant'):
