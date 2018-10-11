@@ -10,6 +10,7 @@
 
 import argparse
 import microhapdb
+import pytest
 import textwrap
 
 
@@ -60,7 +61,7 @@ def get_parser():
         'allelefreq', description=desc, epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    subparser.add_argument('query', nargs='*')
+    subparser.add_argument('query', nargs='?')
 
     desc = 'List or retrieve data on microhaplotype loci'
     epilog = """\
@@ -77,7 +78,7 @@ def get_parser():
         'locus', description=desc, epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    subparser.add_argument('query', nargs='*')
+    subparser.add_argument('query', nargs='?')
 
     desc = 'List or retrieve data on the 84 populations included in MicroHapDB.'
     epilog = """\
@@ -92,7 +93,7 @@ def get_parser():
         'population', description=desc, epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    subparser.add_argument('query', nargs='*')
+    subparser.add_argument('query', nargs='?')
 
     desc = 'List or retrieve data on microhaplotype variants.'
     epilog = """\
@@ -107,7 +108,7 @@ def get_parser():
         'variant', description=desc, epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    subparser.add_argument('query', nargs='*')
+    subparser.add_argument('query', nargs='?')
 
     desc = 'List MicroHapDB data files'
     subparser = subparsers.add_parser('files', description=desc)
@@ -128,10 +129,63 @@ def main(args=None):
             print(microhapdb.data_file(datatype + '.tsv'))
         return
     table = getattr(microhapdb, tables[args.cmd])
-    if len(args.query) == 0:
+    if args.query is None:
         result = table
-    elif len(args.query) == 1:
-        result = table.query(args.query[0])
     else:
-        raise ValueError('multiple queries unsupported')
+        result = table.query(args.query)
     print(result.to_string())
+
+
+def test_help(capsys):
+    with pytest.raises(SystemExit):
+        get_parser().parse_args(['-h'])
+    out, err = capsys.readouterr()
+    assert 'show this help message and exit' in out
+
+
+def test_version(capsys):
+    with pytest.raises(SystemExit):
+        get_parser().parse_args(['-v'])
+    out, err = capsys.readouterr()
+    assert microhapdb.__version__ in out or microhapdb.__version__ in err
+
+
+def test_parser():
+    p = get_parser().parse_args(['locus'])
+    assert p.cmd == 'locus'
+    assert p.query is None
+
+    p = get_parser().parse_args(['locus', 'Chrom == 5'])
+    assert p.cmd == 'locus'
+    assert p.query is 'Chrom == 5'
+
+
+def test_parser_files_query(capsys):
+    with pytest.raises(SystemExit) as se:
+        args = get_parser().parse_args(['files', 'ID == "bogus"'])
+    out, err = capsys.readouterr()
+    assert 'unrecognized arguments: ID == "bogus"' in err
+
+
+def test_main(capsys):
+    args = get_parser().parse_args(['population'])
+    main(args)
+    out, err = capsys.readouterr()
+    outlines = out.strip().split('\n')
+    assert len(outlines) == 85, len(outlines)
+
+
+def test_main_query(capsys):
+    args = get_parser().parse_args(['population', 'Name.str.contains("Amer")'])
+    main(args)
+    out, err = capsys.readouterr()
+    outlines = out.strip().split('\n')
+    assert len(outlines) == 4, len(outlines)
+
+
+def test_main_files(capsys):
+    args = get_parser().parse_args(['files'])
+    main(args)
+    out, err = capsys.readouterr()
+    outlines = out.strip().split('\n')
+    assert len(outlines) == 4, len(outlines)
