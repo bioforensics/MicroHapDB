@@ -1,3 +1,7 @@
+[![MicroHapDB build status][travisbadge]](https://travis-ci.org/bioforensics/MicroHapDB)
+[![PyPI version][pypibadge]](https://pypi.python.org/pypi/microhapdb)
+[![BSD licensed][licensebadge]](https://github.com/bioforensics/MicroHapDB/blob/master/LICENSE.txt)
+
 # MicroHapDB
 
 Daniel Standage, 2018  
@@ -122,3 +126,6 @@ If you use this package, please cite our work.
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
 [Pandas]: https://pandas.pydata.org
+[travisbadge]: https://img.shields.io/travis/bioforensics/MicroHapDB.svg
+[pypibadge]: https://img.shields.io/pypi/v/microhapdb.svg
+[licensebadge]: https://img.shields.io/badge/license-BSD-blue.svg
