@@ -13,6 +13,15 @@ import microhapdb
 import textwrap
 
 
+tables = {
+    'allelefreq': 'allelefreqs',
+    'locus': 'loci',
+    'population': 'populations',
+    'variant': 'variants',
+    'files': None,
+}
+
+
 def get_parser():
     bubbletext = r'''
 ≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠
@@ -113,19 +122,12 @@ def main(args=None):
     if args.cmd is None:  # pragma: no cover
         get_parser().parse_args(['-h'])
 
-    tables = {
-        'allelefreq': microhapdb.allelefreqs,
-        'locus': microhapdb.loci,
-        'population': microhapdb.populations,
-        'variant': microhapdb.variants,
-        'files': None,
-    }
     assert args.cmd in tables
     if args.cmd == 'files':
         for datatype in ('allele', 'locus', 'population', 'variant'):
             print(microhapdb.data_file(datatype + '.tsv'))
         return
-    table = tables[args.cmd]
+    table = getattr(microhapdb, tables[args.cmd])
     if len(args.query) == 0:
         result = table
     elif len(args.query) == 1:
