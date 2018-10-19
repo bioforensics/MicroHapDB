@@ -91,3 +91,13 @@ def test_variants():
     v = microhapdb.variants
     assert v.shape == (405, 7)
     assert len(v.query('Chrom == 12')) == 15
+
+
+def test_allele_positions():
+    """
+    >>> list(microhapdb.allele_positions('mh19KK-301'))
+    [(19, 50938487, 50938488), (19, 50938502, 50938503), (19, 50938526, 50938527), (19, 50938550, 50938551)]
+    >>> list(microhapdb.allele_positions('SI664193D'))
+    [(19, 4852124, 4852125), (19, 4852324, 4852325)]
+    """
+    pass
