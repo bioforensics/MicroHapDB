@@ -30,8 +30,9 @@ def cleanup(allelestr, locusid, indels):
 def allele_frequencies(freqfile, indelfile, logstream=stderr):
     indels = load_indel_alleles(indelfile)
     with open(freqfile, 'r') as instream:
-        next(instream)
-        next(instream)
+        line = next(instream)
+        if line.startswith('Created on'):
+            next(instream)
         chunks = instream.read().split('-----------------\n')
 
     for chunk in chunks:
