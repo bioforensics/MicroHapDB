@@ -172,7 +172,7 @@ def test_main(capsys):
     main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split('\n')
-    assert len(outlines) == 85, len(outlines)
+    assert len(outlines) == 84, len(outlines)
 
 
 def test_main_query(capsys):

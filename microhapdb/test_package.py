@@ -13,10 +13,12 @@ import pytest
 
 
 def test_assumptions():
-    assert len(microhapdb.allelefreqs.Population.unique()) == 84
-    # For 13 loci the number of alleles and the number of annotated allele frequencies is mismatched for all populations in the table published by ALFRED.
-    # Another locus is only mismatched for a portion of the populations. See `dbbuild/allele-mismatch.log`.
-    assert len(microhapdb.allelefreqs.Locus.unique()) == (148 - 13)
+    assert len(microhapdb.allelefreqs.Population.unique()) == 96
+    # For many loci there is a discrepancy between the number of annotated alleles and allele frequencies in the table published by ALFRED.
+    # See `dbbuild/allele-mismatch.log` for details.
+    # The problematic allele frequencies are discarded, and only the congruent data are retained.
+    # For 1 locus, however, there is a discrepancy for every single single data point, and thus no frequency data for that locus is retained.
+    assert len(microhapdb.allelefreqs.Locus.unique()) == (198 - 1)
 
 
 def test_allele_frequencies():
@@ -30,10 +32,10 @@ def test_allele_frequencies():
     83
     >>> microhapdb.allelefreqs.query('Locus == "SI664616D" & Allele == "T,A,A" & Population == "SA000077O"')
                Locus Population Allele  Frequency
-    16996  SI664616D  SA000077O  T,A,A      0.107
+    23915  SI664616D  SA000077O  T,A,A      0.107
     """
     af = microhapdb.allelefreqs
-    assert af.shape == (54637, 4)
+    assert af.shape == (71535, 4)
     assert len(af.query('Locus == "SI664638H"').Allele.unique()) == 6
     assert len(af.query('Locus == "SI664638H" & Allele == "G,G,G"')) == 83
     freq = af.query('Locus == "SI664638H" & Allele == "G,G,G" & Population == "SA004250L"').Frequency.values[0]
@@ -45,15 +47,15 @@ def test_loci():
 
     >>> microhapdb.loci.query('ID == "SI664616D"')
                ID        Name  Chrom     Start       End                          Variants
-    43  SI664616D  mh15KK-104     15  63806357  63806495  rs11631544,rs10152453,rs80047978
+    76  SI664616D  mh15KK-104     15  63806357  63806495  rs11631544,rs10152453,rs80047978
     >>> microhapdb.loci.query('Chrom == 15 & Start > 50000000 & End < 100000000')
                ID        Name  Chrom     Start       End                          Variants
-    43  SI664616D  mh15KK-104     15  63806357  63806495  rs11631544,rs10152453,rs80047978
-    46  SI664613A  mh15KK-066     15  52192752  52192827                  rs1063902,rs4219
+    73  SI664613A  mh15KK-066     15  52192752  52192827                  rs1063902,rs4219
+    76  SI664616D  mh15KK-104     15  63806357  63806495  rs11631544,rs10152453,rs80047978
     """
     loc = microhapdb.loci
-    assert loc.shape == (148, 6)
-    assert len(loc.query('Chrom == 19')) == 4
+    assert loc.shape == (198, 6)
+    assert len(loc.query('Chrom == 19')) == 5
 
 
 def test_populations():
@@ -61,15 +63,15 @@ def test_populations():
 
     >>> microhapdb.populations.query('ID == "SA000936S"')
                ID     Name  NumChrom
-    48  SA000936S  Koreans       106
+    47  SA000936S  Koreans       106
     >>> microhapdb.populations.query('Name.str.contains("Afr")')
                ID               Name  NumChrom
-    41  SA000101C  African Americans       168
-    59  SA004047P  African Americans       122
-    75  SA004242M    Afro-Caribbeans       192
+    40  SA000101C  African Americans       168
+    58  SA004047P  African Americans       122
+    74  SA004242M    Afro-Caribbeans       192
     """
     pop = microhapdb.populations
-    assert pop.shape == (84, 3)
+    assert pop.shape == (83, 3)
     assert pop.query('ID == "SA000028K"').Name.values == ['Karitiana']
     assert list(pop.query('Name.str.contains("Jews")').ID.values) == ['SA000015G', 'SA000016H', 'SA000096P', 'SA000490N']
 
@@ -79,18 +81,18 @@ def test_variants():
 
     >>> microhapdb.variants.query('ID == "rs80047978"')
                  ID   AlfredID  Chrom     Start       End AlfredAlleles dbSNPAlleles
-    298  rs80047978  SI664352A     15  63806494  63806495           A,G          A,G
+    422  rs80047978  SI664352A     15  63806494  63806495           A,G          A,G
     >>> microhapdb.variants.query('Chrom == 15 & Start > 50000000 & End < 100000000')
                  ID   AlfredID  Chrom     Start       End AlfredAlleles dbSNPAlleles
-    294   rs1063902  SI056461W     15  52192752  52192753           A,C          A,C
-    295      rs4219  SI404942X     15  52192826  52192827           G,T          G,T
-    296  rs11631544  SI664351Z     15  63806357  63806358           C,T          C,T
-    297  rs10152453  SI663904C     15  63806413  63806414           A,C          A,C
-    298  rs80047978  SI664352A     15  63806494  63806495           A,G          A,G
+    418   rs1063902  SI056461W     15  52192752  52192753           A,C          A,C
+    419      rs4219  SI404942X     15  52192826  52192827           G,T          G,T
+    420  rs11631544  SI664351Z     15  63806357  63806358           C,T          C,T
+    421  rs10152453  SI663904C     15  63806413  63806414           A,C          A,C
+    422  rs80047978  SI664352A     15  63806494  63806495           A,G          A,G
     """
     v = microhapdb.variants
-    assert v.shape == (405, 7)
-    assert len(v.query('Chrom == 12')) == 15
+    assert v.shape == (559, 7)
+    assert len(v.query('Chrom == 12')) == 20
 
 
 def test_allele_positions():

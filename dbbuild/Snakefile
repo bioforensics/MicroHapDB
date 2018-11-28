@@ -32,23 +32,21 @@ rule tables:
 
 rule mhafdb:
     """Download microhap allele frequency database from ALFRED."""
-    output: protected(dlfile('Microhap_alleleF.txt'))
+    output: dlfile('Microhap_alleleF_198.txt')
     run:
-        url = 'https://alfred.med.yale.edu/alfred/selectDownload/Microhap_alleleF.txt'
+        url = 'https://alfred.med.yale.edu/alfred/selectDownload/Microhap_alleleF_198.txt'
         urlretrieve(url, output[0])
         with open(output[0], 'r') as filetocheck:
             sha = sha1(filetocheck.read().encode('utf-8')).hexdigest()
-            assert sha == 'b13d8a9d197149d65f1c6c2a34100a6b0686bc28'
-        # os.chmod(output[0], 0o444)
+            assert sha == '4e471ca9987072992efa46b492d5d81d44078666'
 
 
 rule locusdetail:
     input: tmpfile('microhap-loci-prelim.tsv')
-    output: protected(dlfile('locus-detail/{locus}.html.gz'))
+    output: dlfile('locus-detail/{locus}.html.gz')
     run:
-        url = "https://alfred.med.yale.edu/alfred/recordinfo.asp?condition=sites.site_uid='" + wildcards.locus
+        url = "https://alfred.med.yale.edu/alfred/recordinfo.asp?UNID=" + wildcards.locus
         download_and_compress(url, output[0])
-        # os.chmod(output[0], 0o444)
 
 
 rule fetchallloci:
@@ -76,7 +74,7 @@ rule all_alleles:
 rule allelefreq:
     """Format allele frequency data."""
     input:
-        dlfile('Microhap_alleleF.txt'),
+        dlfile('Microhap_alleleF_198.txt'),
         'indel-alleles.json'
     output:
         'allele.tsv',
@@ -93,7 +91,7 @@ rule allelefreq:
 # -----------------------------------------------------------------------------
 
 rule listloci:
-    input: dlfile('Microhap_alleleF.txt')
+    input: dlfile('Microhap_alleleF_198.txt')
     output: tmpfile('microhap-loci-prelim.tsv')
     run:
         with sopen(input[0], 'r') as instream, sopen(output[0], 'w') as outstream:
@@ -103,7 +101,7 @@ rule listloci:
 
 
 rule scrapelocus:
-    input: ancient(dlfile('locus-detail/{locus}.html.gz'))
+    input: dlfile('locus-detail/{locus}.html.gz')
     output:
         tmpfile('locus-variants/{locus}.tsv.gz'),
         tmpfile('locus-alleles/{locus}.tsv.gz')
@@ -130,7 +128,7 @@ rule combine_loci:
 # -----------------------------------------------------------------------------
 
 rule population:
-    input: dlfile('Microhap_alleleF.txt')
+    input: dlfile('Microhap_alleleF_198.txt')
     output: 'population.tsv'
     run:
         with sopen(input[0], 'r') as instream, sopen(output[0], 'w') as outstream:
