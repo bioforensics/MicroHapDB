@@ -41,7 +41,7 @@ def locus_scrape(locusid, instream, allelefile, variantfile):
     """
     data = instream.read()
     vmatch = search(r'in this (\d+)-site microhap', data)
-    assert vmatch, input[0]
+    assert vmatch, instream.name
     nvariants = int(vmatch.group(1))
     pattern = (
         r'(rs\d+)\s*\((A|C|G|T|Ins|Del|Indel -)/(A|C|G|T|Ins|Del|Indel -)'
