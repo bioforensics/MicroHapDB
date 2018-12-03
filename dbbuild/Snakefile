@@ -30,16 +30,6 @@ rule tables:
 # Downloads
 # -----------------------------------------------------------------------------
 
-rule mhafdb:
-    """Download microhap allele frequency database from ALFRED."""
-    output: dlfile('Microhap_alleleF_198.txt')
-    run:
-        url = 'https://alfred.med.yale.edu/alfred/selectDownload/Microhap_alleleF_198.txt'
-        urlretrieve(url, output[0])
-        with open(output[0], 'r') as filetocheck:
-            sha = sha1(filetocheck.read().encode('utf-8')).hexdigest()
-            assert sha == '4e471ca9987072992efa46b492d5d81d44078666'
-
 
 rule locusdetail:
     input: tmpfile('microhap-loci-prelim.tsv')
@@ -74,15 +64,13 @@ rule all_alleles:
 rule allelefreq:
     """Format allele frequency data."""
     input:
-        dlfile('Microhap_alleleF_198.txt'),
+        dlfile('Microhap_alleleF_198_corrected.txt'),
         'indel-alleles.json'
-    output:
-        'allele.tsv',
-        'allele-mismatch.log'
+    output: 'allele.tsv'
     run:
-        with open(output[0], 'w') as outstream, open(output[1], 'w') as logstream:
+        with open(output[0], 'w') as outstream:
             print('Locus', 'Population', 'Allele', 'Frequency', sep='\t', file=outstream)
-            for af in allele_frequencies(input[0], input[1], logstream):
+            for af in allele_frequencies(input[0], input[1]):
                 print(af.locusid, af.popid, af.allele, af.freq, sep='\t', file=outstream)
 
 
@@ -91,7 +79,7 @@ rule allelefreq:
 # -----------------------------------------------------------------------------
 
 rule listloci:
-    input: dlfile('Microhap_alleleF_198.txt')
+    input: dlfile('Microhap_alleleF_198_corrected.txt')
     output: tmpfile('microhap-loci-prelim.tsv')
     run:
         with sopen(input[0], 'r') as instream, sopen(output[0], 'w') as outstream:
@@ -128,13 +116,16 @@ rule combine_loci:
 # -----------------------------------------------------------------------------
 
 rule population:
-    input: dlfile('Microhap_alleleF_198.txt')
-    output: 'population.tsv'
+    input: dlfile('Microhap_alleleF_198_corrected.txt')
+    output:
+        'population.tsv',
+        tmpfile('popids.tsv')
     run:
-        with sopen(input[0], 'r') as instream, sopen(output[0], 'w') as outstream:
-            print('ID', 'Name', 'NumChrom', sep='\t', file=outstream)
-            for pop in population_summary(instream):
-                print(pop.popid, pop.popname, pop.numchrom, sep='\t', file=outstream)
+        with sopen(input[0], 'r') as instream, sopen(output[0], 'w') as outstream, sopen(output[1], 'w') as idstream:
+            print('ID', 'Name', 'Source', sep='\t', file=outstream)
+            for popid, poplabel, popname in population_summary(instream):
+                print(popid, popname, 'ALFRED', sep='\t', file=outstream)
+                print(popid, 'population', poplabel, sep='\t', file=idstream)
 
 
 # -----------------------------------------------------------------------------
