@@ -20,10 +20,6 @@ from variant import variant_xref, combine_variants
 
 rule tables:
     input: expand('{datatype}.tsv', datatype=['allele', 'locus', 'population', 'variant'])
-    output: 'tables.complete'
-    run:
-        with open(output[0], 'w') as outfile:
-            print('Done', file=outfile)
 
 
 # -----------------------------------------------------------------------------
@@ -103,12 +99,19 @@ rule combine_loci:
         tmpfile('microhap-loci-prelim.tsv'),
         tmpfile('locus-alleles-all.tsv'),
         'variant.tsv'
-    output: 'locus.tsv'
+    output:
+        'locus.tsv',
+        tmpfile('locusids.tsv'),
+        tmpfile('locusvars.tsv')
     run:
-        with sopen(input[0], 'r') as idstream, sopen(input[1], 'r') as allelestream, sopen(input[2], 'r') as variantstream, sopen(output[0], 'w') as outstream:
-            print('ID', 'Name', 'Chrom', 'Start', 'End', 'Variants', sep='\t', file=outstream)
+        with sopen(input[0], 'r') as idstream, sopen(input[1], 'r') as allelestream, sopen(input[2], 'r') as variantstream, sopen(output[0], 'w') as outstream1, sopen(output[1], 'w') as outstream2, sopen(output[2], 'w') as outstream3:
+            print('ID', 'Source', 'Reference', 'Chrom', 'Start', 'End', sep='\t', file=outstream1)
             for locus in combine_locus_data(idstream, allelestream, variantstream):
-                print(locus.locusid, locus.locusname, locus.chrom, locus.start, locus.end, locus.variants, sep='\t', file=outstream)
+                print(locus.locusid, 'ALFRED', 'GRCh38', 'chr' + locus.chrom, locus.start, locus.end, sep='\t', file=outstream1)
+                print(locus.label, 'locus', locus.locusid, sep='\t', file=outstream2)
+                print(locus.locusname, 'locus', locus.locusid, sep='\t', file=outstream2)
+                for varid in locus.variants:
+                    print(locus.locusid, varid, sep='\t', file=outstream3)
 
 
 # -----------------------------------------------------------------------------
@@ -125,7 +128,7 @@ rule population:
             print('ID', 'Name', 'Source', sep='\t', file=outstream)
             for popid, poplabel, popname in population_summary(instream):
                 print(popid, popname, 'ALFRED', sep='\t', file=outstream)
-                print(popid, 'population', poplabel, sep='\t', file=idstream)
+                print(poplabel, 'population', popid, sep='\t', file=idstream)
 
 
 # -----------------------------------------------------------------------------

@@ -11,7 +11,7 @@ import os
 from re import findall, search
 
 
-Locus = namedtuple('Locus', 'locusid, locusname, chrom, start, end, variants')
+Locus = namedtuple('Locus', 'locusid,label,locusname,chrom,start,end,variants')
 
 
 # Populate a list of all microhap loci, but only if the locus table has already
@@ -89,12 +89,13 @@ def combine_locus_data(idstream, allelestream, variantstream):
         locusvariants[locusid] = variantids
 
     next(idstream)
-    for line in idstream:
-        locusid, locusname = line.strip().split()
-        varstr = locusvariants[locusid]
+    for n, line in enumerate(idstream, 1):
+        locusid = 'MHDBL{:06d}'.format(n)
+        label, locusname = line.strip().split()
+        varstr = locusvariants[label]
         varlist = varstr.split(',')
         vardata = [variants[v] for v in varlist]
         chrom = vardata[0][2]
         start = min([int(d[3]) for d in vardata])
         end = max([int(d[4]) for d in vardata])
-        yield Locus(locusid, locusname, chrom, start, end, varstr)
+        yield Locus(locusid, label, locusname, chrom, start, end, varlist)
