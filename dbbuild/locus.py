@@ -12,6 +12,7 @@ from re import findall, search
 
 
 Locus = namedtuple('Locus', 'locusid,label,locusname,chrom,start,end,variants')
+Variant = namedtuple('Variant', 'dbsnpid,chrom,position')
 
 
 # Populate a list of all microhap loci, but only if the locus table has already
@@ -71,6 +72,30 @@ def locus_scrape(locusid, instream, allelefile, variantfile):
             print(locusid, hap, varstr, sep='\t', file=outstream)
 
 
+def variant_coords(alfred, dbsnp):
+    dbsnpids = set()
+    next(alfred)
+    for line in alfred:
+        dbsnpid = line.split()[1]
+        dbsnpids.add(dbsnpid)
+    dbsnpids_found = set()
+    for line in dbsnp:
+        if line.startswith('#'):
+            continue
+        fields = line.strip().split('\t')
+        dbsnpid = fields[2]
+        if dbsnpid not in dbsnpids:
+            continue
+        chrom = fields[0]
+        position = int(fields[1])
+        yield Variant(dbsnpid, chrom, position)
+        dbsnpids_found.add(dbsnpid)
+    if dbsnpids > dbsnpids_found:
+        missing = sorted(dbsnpids - dbsnpids_found)
+        message = '{} dbSNP IDs missing: {}'.format(len(missing), missing)
+        raise ValueError(message)
+
+
 def combine_locus_data(idstream, allelestream, variantstream):
     """Aggregate locus data from ALFRED and dbSNP."""
     variants = dict()
@@ -95,7 +120,7 @@ def combine_locus_data(idstream, allelestream, variantstream):
         varstr = locusvariants[label]
         varlist = varstr.split(',')
         vardata = [variants[v] for v in varlist]
-        chrom = vardata[0][2]
-        start = min([int(d[3]) for d in vardata])
-        end = max([int(d[4]) for d in vardata])
+        chrom = vardata[0][1]
+        start = min([int(d[2]) for d in vardata])
+        end = max([int(d[2]) for d in vardata])
         yield Locus(locusid, label, locusname, chrom, start, end, varlist)

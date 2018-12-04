@@ -6,42 +6,14 @@
 # -----------------------------------------------------------------------------
 
 from collections import namedtuple
+from sys import stderr
 
 
-Variant = namedtuple('Variant', 'dbsnpid, chrom, position, refr, alt')
-AggVariant = namedtuple(
-    'AggVariant',
-    'dbsnpid, alfredid, chrom, start, end, alfalleles, dbsnpalleles'
-)
+Variant = namedtuple('Variant', 'dbsnpid,alfredid,label,chrom,pos,alleles')
 
 
-def variant_xref(alfred, dbsnp):
-    dbsnpids = set()
-    next(alfred)
-    for line in alfred:
-        dbsnpid = line.split()[1]
-        dbsnpids.add(dbsnpid)
-    dbsnpids_found = set()
-    for line in dbsnp:
-        if line.startswith('#'):
-            continue
-        fields = line.strip().split('\t')
-        dbsnpid = fields[2]
-        if dbsnpid not in dbsnpids:
-            continue
-        chrom = fields[0]
-        position = int(fields[1])
-        refr = fields[3]
-        alt = fields[4]
-        yield Variant(dbsnpid, chrom, position, refr, alt)
-        dbsnpids_found.add(dbsnpid)
-    if dbsnpids > dbsnpids_found:
-        missing = sorted(dbsnpids - dbsnpids_found)
-        message = '{} dbSNP IDs missing: {}'.format(len(missing), missing)
-        raise ValueError(message)
-
-
-def combine_variants(alfred, dbsnp):
+def retrieve_proximal_variants(alfred, dbsnp):
+    alfred_found = set()
     alfred_data = dict()
     next(alfred)
     for line in alfred:
@@ -51,16 +23,23 @@ def combine_variants(alfred, dbsnp):
     next(dbsnp)
     for line in dbsnp:
         dbsnpvals = line.strip().split()
-        dbsnpid = dbsnpvals[0]
-        alfredvals = alfred_data[dbsnpid]
-        alfredid = alfredvals[2]
-        chrom = dbsnpvals[1]
-        alfalleles = set(alfredvals[3:5])
-        alfalstr = ','.join(sorted(alfalleles))
+        dbsnpid = dbsnpvals[2]
         dba = dbsnpvals[3:5]
         dbsnpalleles = set([n for v in dba for n in v.split(',')])
         dbsnpalstr = ','.join(sorted(dbsnpalleles))
-        position = int(dbsnpvals[2])
-        av = AggVariant(dbsnpid, alfredid, chrom, position - 1, position,
-                        alfalstr, dbsnpalstr)
+        chrom = dbsnpvals[0]
+        position = int(dbsnpvals[1])
+        alfredid = None
+        locuslabel = None
+        if dbsnpid in alfred_data:
+            alfred_found.add(dbsnpid)
+            alfredid = alfred_data[dbsnpid][2]
+            locuslabel = alfred_data[dbsnpid][0]
+        av = Variant(dbsnpid, alfredid, locuslabel, chrom, position - 1,
+                     dbsnpalstr)
         yield av
+    missing = set(alfred_data.keys()) - alfred_found
+    if len(missing) > 0:
+        message = '{} variants not found in dbSNP'.format(len(missing))
+        message += ': {}'.format(','.join(missing))
+        raise ValueError(message)
