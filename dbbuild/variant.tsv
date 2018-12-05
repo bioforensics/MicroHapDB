@@ -1,4 +1,4 @@
-VariantID	Reference	Chrom	Position	Alleles	Source
+ID	Reference	Chrom	Position	Alleles	Source
 MHDBV000000001	GRCh38	chr1	1551092	A,G	dbSNP151
 MHDBV000000002	GRCh38	chr1	1551095	G,T	dbSNP151
 MHDBV000000003	GRCh38	chr1	1551102	C,T	dbSNP151

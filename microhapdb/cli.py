@@ -10,17 +10,17 @@
 
 import argparse
 import microhapdb
-import pytest
+from microhapdb.retrieve import query_mode, id_mode, region_mode
+from sys import stderr
 import textwrap
 
 
-tables = {
-    'allelefreq': 'allelefreqs',
-    'locus': 'loci',
-    'population': 'populations',
-    'variant': 'variants',
-    'files': None,
-}
+def print_files():
+    tables = (
+        'allele', 'locus', 'population', 'variant', 'variantmap', 'idmap'
+    )
+    for table in tables:
+        print(microhapdb.data_file(table + '.tsv'))
 
 
 def get_parser():
@@ -33,107 +33,82 @@ def get_parser():
                               |_|
 ≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠
 '''
-    subcommandstr = '", "'.join(sorted(list(tables.keys())))
-    parser = argparse.ArgumentParser(
-        description=bubbletext,
+    epilog = """\
+    Examples::
+
+        microhapdb --id mh12KK-043
+        microhapdb --id rs10815466
+        microhapdb --id SA000936S
+        microhapdb --table population
+        microhapdb --table locus --region chr7
+        microhapdb --table variant --region chr19:4000000-5000000
+        microhapdb --table allele --query 'Locus == "MHDBL000047" and Allele == "C,T,G" and Population == "MHDBP000006"'
+    """
+    epilog = textwrap.dedent(epilog)
+    cli = argparse.ArgumentParser(
+        description=bubbletext, epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser._optionals.title = 'Global arguments'
-    parser.add_argument(
+    cli._optionals.title = 'Configuration'
+    cli.add_argument(
         '-v', '--version', action='version',
         version='MicroHapDB v{}'.format(microhapdb.__version__)
     )
-    subparsers = parser.add_subparsers(dest='cmd', metavar='cmd',
-                                       help='"' + subcommandstr + '"')
-
-    desc = 'List or retrieve allele frequencies for 148 loci across 84 populations.'
-    desc = textwrap.dedent(desc)
-    epilog = """\
-    Examples::
-
-        microhapdb allelefreq
-        microhapdb allelefreq 'Locus == "SI664601X"'
-        microhapdb allelefreq 'Locus == "SI664601X" & Allele == "C,T,G"'
-        microhapdb allelefreq 'Locus == "SI664601X" & Allele == "C,T,G" & Population == "SA000007H"'
-    """
-    epilog = textwrap.dedent(epilog)
-    subparser = subparsers.add_parser(
-        'allelefreq', description=desc, epilog=epilog,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+    cli.add_argument(
+        '-f', '--files', action='store_true', help='print data table '
+        'filenames and exit'
     )
-    subparser.add_argument('query', nargs='?')
-
-    desc = 'List or retrieve data on microhaplotype loci'
-    epilog = """\
-    Examples::
-
-        microhapdb locus
-        microhapdb locus 'ID == "SI664572E"'
-        microhapdb locus 'Name == "mh05KK-122"'
-        microhapdb locus 'Variants.str.contains("rs10408594")'
-        microhapdb locus 'Chrom == 2 & Start > 200000000 & End < 300000000'
-    """
-    epilog = textwrap.dedent(epilog)
-    subparser = subparsers.add_parser(
-        'locus', description=desc, epilog=epilog,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+    cli.add_argument(
+        '-t', '--table', choices=['variant', 'locus', 'population', 'allele'],
+        metavar='TBL', help='restrict results to the specified data table; '
+        'must be one of "variant", "locus", "population", or "allele"'
     )
-    subparser.add_argument('query', nargs='?')
-
-    desc = 'List or retrieve data on the 84 populations included in MicroHapDB.'
-    epilog = """\
-    Examples::
-
-        microhapdb population
-        microhapdb population 'ID == "SA000936S"'
-        microhapdb population 'Name.str.contains("Afr")'
-    """
-    epilog = textwrap.dedent(epilog)
-    subparser = subparsers.add_parser(
-        'population', description=desc, epilog=epilog,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+    cli.add_argument(
+        '-r', '--region', metavar='RGN', help='restrict results to the '
+        'specified genomic region; format chrX:YYYY-ZZZZZ'
     )
-    subparser.add_argument('query', nargs='?')
-
-    desc = 'List or retrieve data on microhaplotype variants.'
-    epilog = """\
-    Examples::
-
-        microhapdb variant
-        microhapdb variant 'ID == "rs10815466"'
-        microhapdb variant 'Chrom == 7'
-    """
-    epilog = textwrap.dedent(epilog)
-    subparser = subparsers.add_parser(
-        'variant', description=desc, epilog=epilog,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+    cli.add_argument(
+        '--id', metavar='ID', help='query data tables using a dbSNP ID, an '
+        'ALFRED ID/name, or an internal MicroHapDB ID'
     )
-    subparser.add_argument('query', nargs='?')
+    cli.add_argument(
+        '-q', '--query', metavar='QRY', help='Invoke a Pandas-style query; '
+        'must specify table to query with the `-t|--table` flag'
+    )
 
-    desc = 'List MicroHapDB data files'
-    subparser = subparsers.add_parser('files', description=desc)
-
-    return parser
+    return cli
 
 
 def main(args=None):
     if args is None:  # pragma: no cover
         args = get_parser().parse_args()
 
-    if args.cmd is None:  # pragma: no cover
+    if args.files:
+        print_files()
+        return
+
+    if set([getattr(args, key) for key in vars(args)]) == set([False, None]):
         get_parser().parse_args(['-h'])
 
-    assert args.cmd in tables
-    if args.cmd == 'files':
-        for datatype in ('allele', 'locus', 'population', 'variant'):
-            print(microhapdb.data_file(datatype + '.tsv'))
-        return
-    table = getattr(microhapdb, tables[args.cmd])
-    if args.query is None:
-        result = table
+    if args.query:
+        for attr in ('region', 'id'):
+            if getattr(args, attr):
+                msg = 'ignoring "{}" parameter in "query" mode'.format(attr)
+                print('[MicroHapDB] WARNING:', message, file=stderr)
+        query_mode(args.table, args.query)
+
+    elif args.id:
+        if args.table:
+            message = 'ignoring "table" parameter in "id" mode'
+            print('[MicroHapDB] WARNING:', message, file=stderr)
+        id_mode(args.id)
+
+    elif args.region:
+        region_mode(args.region, args.table)
+
     else:
-        result = table.query(args.query)
-    print(result.to_string())
+        print(microhapdb.tables[args.table].to_string())
+
 
 
 def test_help(capsys):

@@ -10,16 +10,26 @@
 
 from microhapdb.util import data_file
 from microhapdb import cli
+from microhapdb import retrieve
 import pandas
 from ._version import get_versions
 __version__ = get_versions()['version']
 del get_versions
 
 
-allelefreqs = pandas.read_table(data_file('allele.tsv'))
+idmap = pandas.read_table(data_file('idmap.tsv'))
+frequencies = pandas.read_table(data_file('allele.tsv'))
 loci = pandas.read_table(data_file('locus.tsv'))
 populations = pandas.read_table(data_file('population.tsv'))
 variants = pandas.read_table(data_file('variant.tsv'))
+variantmap = pandas.read_table(data_file('variantmap.tsv'))
+
+tables = {
+    'variant': variants,
+    'locus': loci,
+    'population': populations,
+    'allele': frequencies,
+}
 
 
 def allele_positions(locusid):

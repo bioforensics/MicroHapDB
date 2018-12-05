@@ -209,7 +209,7 @@ rule parse_variant_data:
                 values = line.strip().split()
                 mapping[values[0]] = values[2]
 
-            print('VariantID', 'Reference', 'Chrom', 'Position', 'Alleles', 'Source', sep='\t', file=outstream)
+            print('ID', 'Reference', 'Chrom', 'Position', 'Alleles', 'Source', sep='\t', file=outstream)
             print('LocusID', 'VariantID', sep='\t', file=varoutstream)
             for n, v in enumerate(retrieve_proximal_variants(alfred, dbsnp), 1):
                 varid = 'MHDBV{:09d}'.format(n)
