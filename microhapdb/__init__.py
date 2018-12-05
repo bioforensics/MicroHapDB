@@ -30,17 +30,3 @@ tables = {
     'population': populations,
     'allele': frequencies,
 }
-
-
-def allele_positions(locusid):
-    """Convenience function for grabbing a locus' genomic coordinates.
-
-    Loci can be accessed by their ALFRED IDs (SI...) or their names (mh...).
-    """
-    q = 'ID == "{id}" | Name == "{id}"'.format(id=locusid)
-    locus = loci.query(q)
-    assert len(locus) == 1
-    dbsnpids = locus['Variants'].iloc[0].split(',')
-    var = variants[variants['ID'].isin(dbsnpids)]
-    for index, row in var.iterrows():
-        yield row['Chrom'], row['Start'], row['End']

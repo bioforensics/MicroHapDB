@@ -11,7 +11,7 @@
 import argparse
 import microhapdb
 from microhapdb.retrieve import query_mode, id_mode, region_mode
-from sys import stderr
+import sys
 import textwrap
 
 
@@ -83,24 +83,23 @@ def main(args=None):
     if args is None:  # pragma: no cover
         args = get_parser().parse_args()
 
-    if args.files:
-        print_files()
-        return
-
     if set([getattr(args, key) for key in vars(args)]) == set([False, None]):
         get_parser().parse_args(['-h'])
 
-    if args.query:
+    elif args.files:
+        print_files()
+
+    elif args.query:
         for attr in ('region', 'id'):
             if getattr(args, attr):
                 msg = 'ignoring "{}" parameter in "query" mode'.format(attr)
-                print('[MicroHapDB] WARNING:', message, file=stderr)
+                print('[MicroHapDB] WARNING:', msg, file=sys.stderr)
         query_mode(args.table, args.query)
 
     elif args.id:
         if args.table:
             message = 'ignoring "table" parameter in "id" mode'
-            print('[MicroHapDB] WARNING:', message, file=stderr)
+            print('[MicroHapDB] WARNING:', message, file=sys.stderr)
         id_mode(args.id)
 
     elif args.region:
@@ -108,59 +107,3 @@ def main(args=None):
 
     else:
         print(microhapdb.tables[args.table].to_string())
-
-
-
-def test_help(capsys):
-    with pytest.raises(SystemExit):
-        get_parser().parse_args(['-h'])
-    out, err = capsys.readouterr()
-    assert 'show this help message and exit' in out
-
-
-def test_version(capsys):
-    with pytest.raises(SystemExit):
-        get_parser().parse_args(['-v'])
-    out, err = capsys.readouterr()
-    assert microhapdb.__version__ in out or microhapdb.__version__ in err
-
-
-def test_parser():
-    p = get_parser().parse_args(['locus'])
-    assert p.cmd == 'locus'
-    assert p.query is None
-
-    p = get_parser().parse_args(['locus', 'Chrom == 5'])
-    assert p.cmd == 'locus'
-    assert p.query is 'Chrom == 5'
-
-
-def test_parser_files_query(capsys):
-    with pytest.raises(SystemExit) as se:
-        args = get_parser().parse_args(['files', 'ID == "bogus"'])
-    out, err = capsys.readouterr()
-    assert 'unrecognized arguments: ID == "bogus"' in err
-
-
-def test_main(capsys):
-    args = get_parser().parse_args(['population'])
-    main(args)
-    out, err = capsys.readouterr()
-    outlines = out.strip().split('\n')
-    assert len(outlines) == 84, len(outlines)
-
-
-def test_main_query(capsys):
-    args = get_parser().parse_args(['population', 'Name.str.contains("Amer")'])
-    main(args)
-    out, err = capsys.readouterr()
-    outlines = out.strip().split('\n')
-    assert len(outlines) == 4, len(outlines)
-
-
-def test_main_files(capsys):
-    args = get_parser().parse_args(['files'])
-    main(args)
-    out, err = capsys.readouterr()
-    outlines = out.strip().split('\n')
-    assert len(outlines) == 4, len(outlines)
