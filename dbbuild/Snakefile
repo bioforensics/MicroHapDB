@@ -63,7 +63,7 @@ rule all_alleles:
 rule allelefreq:
     """Format allele frequency data."""
     input:
-        dlfile('Microhap_alleleF_198_corrected.txt'),
+        dlfile('Microhap_alleleF_198.txt'),
         'indel-alleles.json',
         'idmap.tsv'
     output: 'allele.tsv'
@@ -83,7 +83,7 @@ rule allelefreq:
 # -----------------------------------------------------------------------------
 
 rule listloci:
-    input: dlfile('Microhap_alleleF_198_corrected.txt')
+    input: dlfile('Microhap_alleleF_198.txt')
     output: tmpfile('microhap-loci-prelim.tsv')
     run:
         with sopen(input[0], 'r') as instream, sopen(output[0], 'w') as outstream:
@@ -149,7 +149,7 @@ rule combine_loci:
 # -----------------------------------------------------------------------------
 
 rule population:
-    input: dlfile('Microhap_alleleF_198_corrected.txt')
+    input: dlfile('Microhap_alleleF_198.txt')
     output:
         'population.tsv',
         tmpfile('popids.tsv.gz')

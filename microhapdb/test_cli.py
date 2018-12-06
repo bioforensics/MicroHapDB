@@ -9,6 +9,7 @@
 
 import microhapdb
 from microhapdb.cli import get_parser
+from microhapdb.cli import id_mode, query_mode, region_mode
 import pytest
 
 
@@ -37,8 +38,9 @@ def test_version(capsys):
 
 
 def test_files(capsys):
-    args = get_parser().parse_args(['--files'])
-    microhapdb.cli.main(args)
+    with pytest.raises(SystemExit):
+        args = get_parser().parse_args(['--files'])
+        microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     print(err)
     outlines = out.strip().split('\n')
@@ -69,7 +71,6 @@ def test_main(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split('\n')
-    print(out)
     assert len(outlines) == 96 + 1  # 96 populations + 1 header line
 
 

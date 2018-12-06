@@ -9,8 +9,7 @@ https://github.com/bioforensics/microhapdb
 
 **MicroHapDB** is a package designed for scientists and researchers interested in microhaplotype analysis.
 This package is a distribution and convenience mechanism and does not implement any analytics itself.
-All microhap data was obtained from the [Allele Frequency Database (ALFRED)][alfred]<sup>[1]</sup> at the Yale University School of Medicine.
-We are not affiliated with the provisioners of this data, but we *are* enthusiatic about the utility of this data type in a variety of bioforensic applications!
+MicroHapDB is designed to work with microhap data from any source, although currently all data was obtained from the [Allele Frequency Database (ALFRED)][alfred]<sup>[1]</sup> at the Yale University School of Medicine.
 
 ## Installation
 
@@ -39,8 +38,7 @@ MicroHapDB provides several convenient methods to access microhaplotype data.
 
 ### Command-line interface
 
-Invoke `microhapdb --help` for a description of the command-line configuration
-options and several usage examples.
+Invoke `microhapdb --help` for a description of the command-line configuration options and several usage examples.
 
 ### Python API
 
@@ -52,12 +50,17 @@ Programmatic access to microhap data within Python is as simple as invoking `imp
 - `microhapdb.variants`
 
 Each is a [Pandas][]<sup>[2]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
-The helper function `microhapdb.fetch_by_id` is also useful for retrieving data using external identifiers (such as ALFRED IDs or names) rather than the internal MicroHapDB identifiers.
+There are also two auxiliary tables: one that contains a mapping of all variants to their corresponding microhap loci, and another table cross-referencing external IDs/labels/names with internal MicroHapDB identifiers.
+
+- `microhapdb.variantmap`
+- `microhapdb.idmap`
+
+The helper function `microhapdb.id_xref` is also useful for retrieving data using any valid identifiers.
 The following example demonstrates how data across the different tables can be cross-referenced.
 
 ```python
 >>> import microhapdb
->>> microhapdb.fetch_by_id('mh02KK-136')
+>>> microhapdb.id_xref('mh02KK-136')
               ID Reference Chrom      Start        End  Source
 182  MHDBL000183    GRCh38  chr2  227227673  227227743  ALFRED
 >>> pops = microhapdb.populations.query('Name.str.contains("Amer")')
