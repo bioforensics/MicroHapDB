@@ -27,19 +27,18 @@ def test_allele_frequencies():
     >>> pop_freqs = freqs.query('Locus == "MHDBL000077" and Allele == "T,A,A"')
     >>> len(pop_freqs)
     83
-    >>> freqs.query('Locus == "MHDBL000077" and Allele == "T,A,A" '
-    ...             'and Population == "MHDBP000034"')
+    >>> freqs.query('Locus == "MHDBL000077" and Allele == "T,A,A" and Population == "MHDBP000034"')
                  Locus   Population Allele  Frequency
     30638  MHDBL000077  MHDBP000034  T,A,A      0.107
     """
     af = microhapdb.frequencies
     assert af.shape == (82167, 4)
-    assert len(af.query('Locus == "MHDBL000135"').Allele.unique()) == 6
-    assert len(af.query('Locus == "MHDBL000135" and Allele == "G,G,G"')) == 83
-    query = ('Locus == "MHDBL000135" and Allele == "G,G,G" '
-             'and Population == "MHDBP000092"')
-    freq = af.query(query).Frequency.values[0]
-    assert pytest.approx(freq, 0.202)
+    result = af[af.Locus == 'MHDBL000135'].Allele.unique()
+    assert len(result) == 6
+    result = af[(af.Locus == 'MHDBL000135') & (af.Allele == 'G,G,G')]
+    assert len(result) == 83
+    result = af.query('Locus == "MHDBL000135" & Allele == "G,G,G" & Population == "MHDBP000092"').Frequency.values[0]
+    assert pytest.approx(result, 0.202)
 
 
 def test_loci():
@@ -48,56 +47,113 @@ def test_loci():
     >>> microhapdb.loci.query('ID == "MHDBL000077"')
                  ID Reference  Chrom     Start       End  Source
     76  MHDBL000077    GRCh38  chr15  63806358  63806495  ALFRED
+    >>> microhapdb.fetch_by_id('mh04CP-002')
+                 ID Reference Chrom     Start       End  Source
+    14  MHDBL000015    GRCh38  chr4  24304953  24304972  ALFRED
     """
     loc = microhapdb.loci
+    vm = microhapdb.variantmap
+    vr = microhapdb.variants
     assert loc.shape == (198, 6)
-    assert len(loc.query('Chrom == "chr19"')) == 5
-#
-# FIXME NEED MORE LOGIC AND LESS QUERIES!
-#
-# def test_populations():
-#     """Population data
-#
-#     >>> microhapdb.populations.query('ID == "SA000936S"')
-#                ID     Name  NumChrom
-#     47  SA000936S  Koreans       106
-#     >>> microhapdb.populations.query('Name.str.contains("Afr")')
-#                ID               Name  NumChrom
-#     40  SA000101C  African Americans       168
-#     58  SA004047P  African Americans       122
-#     74  SA004242M    Afro-Caribbeans       192
-#     """
-#     pop = microhapdb.populations
-#     assert pop.shape == (83, 3)
-#     assert pop.query('ID == "SA000028K"').Name.values == ['Karitiana']
-#     assert list(pop.query('Name.str.contains("Jews")').ID.values) == ['SA000015G', 'SA000016H', 'SA000096P', 'SA000490N']
-#
-#
-# def test_variants():
-#     """Microhaplotype variant data
-#
-#     >>> microhapdb.variants.query('ID == "rs80047978"')
-#                  ID   AlfredID  Chrom     Start       End AlfredAlleles dbSNPAlleles
-#     422  rs80047978  SI664352A     15  63806494  63806495           A,G          A,G
-#     >>> microhapdb.variants.query('Chrom == 15 & Start > 50000000 & End < 100000000')
-#                  ID   AlfredID  Chrom     Start       End AlfredAlleles dbSNPAlleles
-#     418   rs1063902  SI056461W     15  52192752  52192753           A,C          A,C
-#     419      rs4219  SI404942X     15  52192826  52192827           G,T          G,T
-#     420  rs11631544  SI664351Z     15  63806357  63806358           C,T          C,T
-#     421  rs10152453  SI663904C     15  63806413  63806414           A,C          A,C
-#     422  rs80047978  SI664352A     15  63806494  63806495           A,G          A,G
-#     """
-#     v = microhapdb.variants
-#     assert v.shape == (559, 7)
-#     assert len(v.query('Chrom == 12')) == 20
-#
-#
-# def test_allele_positions():
-#     """
-#     >>> list(microhapdb.allele_positions('mh19KK-301'))
-#     [(19, 50938487, 50938488), (19, 50938502, 50938503), (19, 50938526, 50938527), (19, 50938550, 50938551)]
-#     >>> list(microhapdb.allele_positions('SI664193D'))
-#     [(19, 4852124, 4852125), (19, 4852324, 4852325)]
-#     """
-#     pass
-#
+    result = loc[loc.Chrom == 'chr19']
+    assert len(result) == 5
+    varids = vm[vm.LocusID.isin(result.ID)]
+    variants = vr[vr.ID.isin(varids.VariantID)]
+    assert len(variants) == 17
+
+
+def test_populations():
+    """Population data
+
+    >>> microhapdb.populations.query('ID == "MHDBP000048"')
+                 ID     Name  Source
+    47  MHDBP000048  Koreans  ALFRED
+    >>> microhapdb.fetch_by_id('SA004059S')
+                 ID Name  Source
+    73  MHDBP000074  Han  ALFRED
+    >>> microhapdb.populations.query('Name.str.contains("Afr")')
+                 ID               Name  Source
+    40  MHDBP000041  African Americans  ALFRED
+    67  MHDBP000068  African Americans  ALFRED
+    83  MHDBP000084    Afro-Caribbeans  ALFRED
+    """
+    pop = microhapdb.populations
+    assert pop.shape == (96, 3)
+    assert pop[pop.ID == 'MHDBP000025'].Name.values == ['Karitiana']
+    result = pop[pop.Name.str.contains('Jews')].ID.values
+    assert list(result) == ['MHDBP000013', 'MHDBP000014', 'MHDBP000036', 'MHDBP000045']
+
+
+def test_variants():
+    """Microhaplotype variant data
+
+    >>> microhapdb.fetch_by_id('rs80047978')
+                       ID Reference  Chrom  Position Alleles    Source
+    13055  MHDBV000013056    GRCh38  chr15  63806494     A,G  dbSNP151
+    >>> microhapdb.variants.query('Chrom == "chr15" and 52192400 < Position < 52192500')
+                       ID Reference  Chrom  Position Alleles    Source
+    12779  MHDBV000012780    GRCh38  chr15  52192466     C,T  dbSNP151
+    12780  MHDBV000012781    GRCh38  chr15  52192467     G,T  dbSNP151
+    12781  MHDBV000012782    GRCh38  chr15  52192471     C,T  dbSNP151
+    12782  MHDBV000012783    GRCh38  chr15  52192490     C,T  dbSNP151
+    12783  MHDBV000012784    GRCh38  chr15  52192495     C,T  dbSNP151
+    """
+    v = microhapdb.variants
+    assert v.shape == (36304, 6)
+    assert len(v[v.Chrom == 'chr12']) == 1395
+
+
+def test_query_mode(capsys):
+    with pytest.raises(ValueError) as ve:
+        microhapdb.retrieve.query_mode(None, 'ID == "MHDBP000013"')
+    assert 'must specify table to invoke a query' in str(ve.value)
+
+    with pytest.raises(ValueError) as ve:
+        microhapdb.retrieve.query_mode('BoogerSnot', 'ID == "MHDBP000013"')
+    assert 'unsupported table "BoogerSnot"' in str(ve.value)
+
+    microhapdb.retrieve.query_mode('population', 'ID == "BogusID"')
+    out, err = capsys.readouterr()
+    assert out.strip() == ''
+
+    microhapdb.retrieve.query_mode('population', 'ID == "MHDBP000013"')
+    out, err = capsys.readouterr()
+    assert '12  MHDBP000013  Jews, Ethiopian  ALFRED' in out
+
+
+def test_id_mode(capsys):
+    microhapdb.retrieve.id_mode(None)
+    out, err = capsys.readouterr()
+    assert out.strip() == ''
+
+    microhapdb.retrieve.id_mode('NotARealID')
+    out, err = capsys.readouterr()
+    assert out.strip() == ''
+
+    microhapdb.retrieve.id_mode('rs1363241798')
+    out, err = capsys.readouterr()
+    line = '21999  MHDBV000022000    GRCh38  chr20  63539694    G,GC  dbSNP151'
+    assert line in out
+
+
+def test_region_mode(capsys):
+    with pytest.raises(ValueError) as ve:
+        microhapdb.retrieve.region_mode('chr5:1000000-2000000', 'population')
+    assert 'region query not supported for table "population"' in str(ve)
+
+    with pytest.raises(ValueError) as ve:
+        microhapdb.retrieve.region_mode('chr7:123-456-789', 'locus')
+    assert 'cannot parse region "chr7:123-456-789"' in str(ve)
+
+    microhapdb.retrieve.region_mode('chrX', 'variant')
+    out, err = capsys.readouterr()
+    assert out.strip() == ''
+
+    microhapdb.retrieve.region_mode('chrY', 'locus')
+    out, err = capsys.readouterr()
+    assert out.strip() == ''
+
+    microhapdb.retrieve.region_mode('chr12:102866940-102866950', None)
+    out, err = capsys.readouterr()
+    outlines = out.strip().split('\n')
+    assert len(outlines) == 8  # 1 locus + 5 variants + 2 header lines

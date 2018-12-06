@@ -124,7 +124,6 @@ rule locus_variant_coordinates:
                 print(variant.dbsnpid, variant.chrom, variant.position, sep='\t', file=outstream)
 
 
-
 rule combine_loci:
     input:
         tmpfile('microhap-loci-prelim.tsv'),

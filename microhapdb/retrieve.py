@@ -65,19 +65,9 @@ def id_mode(idstr):
                  ID       Name  Source
     76  MHDBP000077  Colombian  ALFRED
     """
-    m = microhapdb.idmap
-    prelim = m[(m.XRef == idstr) | (m.mhdbID == idstr)]
-    if len(prelim) == 0:
-        return
-    mhdbids = list(prelim.mhdbID.unique())
-    tables = list(prelim.Table.unique())
-    assert len(mhdbids) == 1 and len(tables) == 1
-    mhdbid = mhdbids[0]
-    table = microhapdb.tables[tables[0]]
-    result = table[(table.ID == mhdbid)]
-    if len(result) == 0:
-        return
-    print(result.to_string())
+    result = fetch_by_id(idstr)
+    if result is not None:
+        print(result.to_string())
 
 
 def region_mode(region, table=None):
@@ -100,16 +90,10 @@ def region_mode(region, table=None):
     69   MHDBL000070    GRCh38  chr13   66138600   66138696  ALFRED
     70   MHDBL000071    GRCh38  chr13   94894396   94894513  ALFRED
     116  MHDBL000117    GRCh38  chr13   50313424   50313589  ALFRED
-    >>> region_mode('chr18:24557355-24557490')
+    >>> region_mode('chr18:24557400-24557450')
                  ID Reference  Chrom     Start       End  Source
     34  MHDBL000035    GRCh38  chr18  24557355  24557490  ALFRED
                        ID Reference  Chrom  Position Alleles    Source
-    17343  MHDBV000017344    GRCh38  chr18  24557371     C,T  dbSNP151
-    17344  MHDBV000017345    GRCh38  chr18  24557373     C,T  dbSNP151
-    17345  MHDBV000017346    GRCh38  chr18  24557375     C,T  dbSNP151
-    17346  MHDBV000017347    GRCh38  chr18  24557378     C,G  dbSNP151
-    17347  MHDBV000017348    GRCh38  chr18  24557389     G,T  dbSNP151
-    17348  MHDBV000017349    GRCh38  chr18  24557395     A,G  dbSNP151
     17349  MHDBV000017350    GRCh38  chr18  24557400     C,T  dbSNP151
     17350  MHDBV000017351    GRCh38  chr18  24557402     A,C  dbSNP151
     17351  MHDBV000017352    GRCh38  chr18  24557414     A,T  dbSNP151
@@ -118,18 +102,11 @@ def region_mode(region, table=None):
     17354  MHDBV000017355    GRCh38  chr18  24557443     A,G  dbSNP151
     17355  MHDBV000017356    GRCh38  chr18  24557447   C,G,T  dbSNP151
     17356  MHDBV000017357    GRCh38  chr18  24557448     A,G  dbSNP151
-    17357  MHDBV000017358    GRCh38  chr18  24557460     C,T  dbSNP151
-    17358  MHDBV000017359    GRCh38  chr18  24557463     A,T  dbSNP151
-    17359  MHDBV000017360    GRCh38  chr18  24557477     C,T  dbSNP151
-    17360  MHDBV000017361    GRCh38  chr18  24557483     A,G  dbSNP151
-    17361  MHDBV000017362    GRCh38  chr18  24557486     A,G  dbSNP151
-    17362  MHDBV000017363    GRCh38  chr18  24557488     C,T  dbSNP151
-    17363  MHDBV000017364    GRCh38  chr18  24557489     G,T  dbSNP151
     """
     chrom, start, end = None, None, None
     if ':' in region:
         chrom, rng = region.split(':')
-        if '-' not in rng:
+        if rng.count('-') != 1:
             raise ValueError('cannot parse region "{}"'.format(region))
         startstr, endstr = rng.split('-')
         start, end = int(startstr), int(endstr)
@@ -149,7 +126,18 @@ def region_mode(region, table=None):
     if table in (None, 'variant'):
         query = 'Chrom == "{}"'.format(chrom)
         if start is not None:
-            query += ' and {} < Position < {}'.format(start, end)
+            query += ' and {} <= Position <= {}'.format(start, end)
         result = microhapdb.variants.query(query)
         if len(result) != 0:
             print(result.to_string())
+
+
+def fetch_by_id(idvalue):
+    m = microhapdb.idmap
+    result = m[(m.XRef == idvalue) | (m.mhdbID == idvalue)]
+    if len(result) == 0:
+        return None
+    tables = list(result.Table.unique())
+    assert len(tables) == 1, tables
+    table = microhapdb.tables[str(tables[0])]
+    return table[table.ID.isin(result.mhdbID)]
