@@ -16,6 +16,10 @@ import textwrap
 
 
 def print_files():
+    """Print the location of the installed data files on the system.
+
+    This is helpful if the user wants to data science the TSV tables directly.
+    """
     tables = (
         'allele', 'locus', 'population', 'variant', 'variantmap', 'idmap'
     )
@@ -24,6 +28,7 @@ def print_files():
 
 
 def get_parser():
+    """Construct an argument parser for the command-line interface."""
     bubbletext = r'''
 ≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠
  __  __ _            _  _           ___  ___
@@ -80,6 +85,7 @@ def get_parser():
 
 
 def main(args=None):
+    """MicroHapDB main method."""
     if args is None:  # pragma: no cover
         args = get_parser().parse_args()
 

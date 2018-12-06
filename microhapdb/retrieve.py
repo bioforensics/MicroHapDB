@@ -133,6 +133,20 @@ def region_mode(region, table=None):
 
 
 def fetch_by_id(idvalue):
+    """Retrieve data using any internal/external ID, name, or label.
+
+    The main data tables are indexed using internal MicroHapDB IDs, but we
+    maintain an auxiliary table mapping names, IDs, and labels from source
+    databases to the internal IDs. Using this table, we can retrieve the
+    relevant record(s) using any valid record identifier.
+
+    >>> fetch_by_id('SI664352A')
+                       ID Reference  Chrom  Position Alleles    Source
+    13055  MHDBV000013056    GRCh38  chr15  63806494     A,G  dbSNP151
+    >>> fetch_by_id('mh17CP-005')
+                 ID Reference  Chrom     Start       End  Source
+    62  MHDBL000063    GRCh38  chr17  19715706  19715750  ALFRED
+    """
     m = microhapdb.idmap
     result = m[(m.XRef == idvalue) | (m.mhdbID == idvalue)]
     if len(result) == 0:

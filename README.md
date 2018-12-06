@@ -24,7 +24,7 @@ To make sure the package installed correctly:
 
 ```
 pip3 install pytest
-py.test --pyargs microhapdb --doctest-modules
+pytest --pyargs microhapdb --doctest-modules
 ```
 
 MicroHapDB requires Python version 3.
@@ -39,70 +39,67 @@ MicroHapDB provides several convenient methods to access microhaplotype data.
 
 ### Command-line interface
 
-The following commands are available on the command line.
-
-- `microhapdb locus`
-- `microhapdb variant`
-- `microhapdb allele`
-- `microhapdb population`
-
-Invoke `microhapdb <cmd> -h` to see usage instructions and examples for each command.
+Invoke `microhapdb --help` for a description of the command-line configuration
+options and several usage examples.
 
 ### Python API
 
 Programmatic access to microhap data within Python is as simple as invoking `import microhapdb` and querying the following tables.
 
-- `microhapdb.allelefreqs`
+- `microhapdb.frequencies`
 - `microhapdb.loci`
 - `microhapdb.populations`
 - `microhapdb.variants`
 
 Each is a [Pandas][]<sup>[2]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
+The helper function `microhapdb.fetch_by_id` is also useful for retrieving data using external identifiers (such as ALFRED IDs or names) rather than the internal MicroHapDB identifiers.
 The following example demonstrates how data across the different tables can be cross-referenced.
 
 ```python
 >>> import microhapdb
->>> microhapdb.loci.query('ID == "SI664558I"')
-            ID        Name  Chrom      Start        End                        Variants
-101  SI664558I  mh02KK-136      2  227227672  227227743  rs6714835,rs6756898,rs12617010
->>> microhapdb.populations.query('Name.str.contains("Amer")')
-           ID                Name  NumChrom
-41  SA000101C   African Americans       168
-59  SA004047P   African Americans       122
-83  SA004250L  European Americans       198
->>> microhapdb.allelefreqs.query('Locus == "SI664558I" and Population.isin(["SA000101C", "SA004047P", "SA004250L"])')
-           Locus Population Allele  Frequency
-38320  SI664558I  SA000101C  G,T,C      0.172
-38321  SI664558I  SA000101C  G,T,A      0.103
-38322  SI664558I  SA000101C  G,C,C      0.029
-38323  SI664558I  SA000101C  G,C,A      0.000
-38324  SI664558I  SA000101C  T,T,C      0.293
-38325  SI664558I  SA000101C  T,T,A      0.063
-38326  SI664558I  SA000101C  T,C,C      0.132
-38327  SI664558I  SA000101C  T,C,A      0.207
-38344  SI664558I  SA004047P  G,T,C      0.156
-38345  SI664558I  SA004047P  G,T,A      0.148
-38346  SI664558I  SA004047P  G,C,C      0.016
-38347  SI664558I  SA004047P  G,C,A      0.000
-38348  SI664558I  SA004047P  T,T,C      0.336
-38349  SI664558I  SA004047P  T,T,A      0.049
-38350  SI664558I  SA004047P  T,C,C      0.156
-38351  SI664558I  SA004047P  T,C,A      0.139
-38488  SI664558I  SA004250L  G,T,C      0.384
-38489  SI664558I  SA004250L  G,T,A      0.202
-38490  SI664558I  SA004250L  G,C,C      0.000
-38491  SI664558I  SA004250L  G,C,A      0.000
-38492  SI664558I  SA004250L  T,T,C      0.197
-38493  SI664558I  SA004250L  T,T,A      0.000
-38494  SI664558I  SA004250L  T,C,C      0.071
-38495  SI664558I  SA004250L  T,C,A      0.146
+>>> microhapdb.fetch_by_id('mh02KK-136')
+              ID Reference Chrom      Start        End  Source
+182  MHDBL000183    GRCh38  chr2  227227673  227227743  ALFRED
+>>> pops = microhapdb.populations.query('Name.str.contains("Amer")')
+>>> pops
+             ID                Name  Source
+40  MHDBP000041   African Americans  ALFRED
+67  MHDBP000068   African Americans  ALFRED
+91  MHDBP000092  European Americans  ALFRED
+>>> f = microhapdb.frequencies
+>>> f[(f.Locus == "MHDBL000183") & (f.Population.isin(pops.ID))]
+             Locus   Population Allele  Frequency
+75117  MHDBL000183  MHDBP000041  G,T,C      0.172
+75118  MHDBL000183  MHDBP000041  G,T,A      0.103
+75119  MHDBL000183  MHDBP000041  G,C,C      0.029
+75120  MHDBL000183  MHDBP000041  G,C,A      0.000
+75121  MHDBL000183  MHDBP000041  T,T,C      0.293
+75122  MHDBL000183  MHDBP000041  T,T,A      0.063
+75123  MHDBL000183  MHDBP000041  T,C,C      0.132
+75124  MHDBL000183  MHDBP000041  T,C,A      0.207
+75333  MHDBL000183  MHDBP000068  G,T,C      0.156
+75334  MHDBL000183  MHDBP000068  G,T,A      0.148
+75335  MHDBL000183  MHDBP000068  G,C,C      0.016
+75336  MHDBL000183  MHDBP000068  G,C,A      0.000
+75337  MHDBL000183  MHDBP000068  T,T,C      0.336
+75338  MHDBL000183  MHDBP000068  T,T,A      0.049
+75339  MHDBL000183  MHDBP000068  T,C,C      0.156
+75340  MHDBL000183  MHDBP000068  T,C,A      0.139
+75525  MHDBL000183  MHDBP000092  G,T,C      0.384
+75526  MHDBL000183  MHDBP000092  G,T,A      0.202
+75527  MHDBL000183  MHDBP000092  G,C,C      0.000
+75528  MHDBL000183  MHDBP000092  G,C,A      0.000
+75529  MHDBL000183  MHDBP000092  T,T,C      0.197
+75530  MHDBL000183  MHDBP000092  T,T,A      0.000
+75531  MHDBL000183  MHDBP000092  T,C,C      0.071
+75532  MHDBL000183  MHDBP000092  T,C,A      0.146
 ```
 
 See the [Pandas][] documentation for more details on dataframe access and query methods.
 
 ### Tab-delimited text files
 
-The data behind MicroHapDB is contained in 4 tab-delimited text files.
+The data behind MicroHapDB is contained in 6 tab-delimited text files.
 If you'd prefer not to use MicroHapDB's command-line interface or Python API, it should be trivial load these files directly into R, Julia, or the data science environment of your choice.
 Invoke `microhapdb files` on the command line to see the location of the installed `.tsv` files.
 
@@ -110,6 +107,8 @@ Invoke `microhapdb files` on the command line to see the location of the install
 - `variant.tsv`: variants associated with each microhap locus
 - `allele.tsv`: allele frequencies for 148 loci across 84 populations
 - `population.tsv`: summary of the populations studied
+- `variantmap.tsv`: shows which variants are associated with which loci
+- `idmap.tsv`: mapping of all IDs/names/labels to internal MicroHapDB IDs
 
 
 ## Citation
