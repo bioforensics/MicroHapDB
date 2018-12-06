@@ -5,30 +5,25 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-from collections import namedtuple
 from re import search
-
-
-Population = namedtuple('Population', 'popid, popname, numchrom')
 
 
 def population_summary(freqfile):
     """Scrape population data from allele frequency "table" on ALFRED."""
-    popdata = list()
+    popdata = dict()
     for line in freqfile:
-        if not line.startswith('popName'):
+        if line.startswith(('----------', 'SI664', 'popName')):
             continue
-        for line in freqfile:
-            if line.startswith('--------'):
-                break
-            values = line.strip().split('\t')
-            popmatch = search(r'^([^\(]+)\((\S+)\)', values[0])
-            assert popmatch, values[0]
-            popid = popmatch.group(2)
-            popname = popmatch.group(1)
-            numchrom = int(values[1])
-            pop = Population(popid, popname, numchrom)
-            popdata.append(pop)
-        break
-    for pop in sorted(popdata, key=lambda p: p.popid):
-        yield pop
+        values = line.strip().split('\t')
+        popmatch = search(r'^([^\(]+)\((\S+)\)', values[0])
+        assert popmatch, values[0]
+        label = popmatch.group(2)
+        popname = popmatch.group(1)
+        typed_sample_size = int(values[1])
+        if label in popdata:
+            assert popname == popdata[label]
+        else:
+            popdata[label] = popname
+    for n, label in enumerate(sorted(popdata), 1):
+        mhdbid = 'MHDBP{:06d}'.format(n)
+        yield mhdbid, label, popdata[label]

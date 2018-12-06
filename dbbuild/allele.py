@@ -8,7 +8,6 @@
 from collections import namedtuple
 import json
 from re import search
-from sys import stderr
 
 
 AlleleFreq = namedtuple('AlleleFreq', 'locusid, popid, allele, freq')
@@ -27,7 +26,7 @@ def cleanup(allelestr, locusid, indels):
     return allelestr
 
 
-def allele_frequencies(freqfile, indelfile, logstream=stderr):
+def allele_frequencies(freqfile, indelfile):
     indels = load_indel_alleles(indelfile)
     with open(freqfile, 'r') as instream:
         line = next(instream)
@@ -55,7 +54,6 @@ def allele_frequencies(freqfile, indelfile, logstream=stderr):
                 message += '; {nfreq} frequencies vs {nall} alleles'.format(
                     nfreq=len(freqs), nall=len(alleles)
                 )
-                print(message, file=logstream)
-                continue
+                raise ValueError(message)
             for allele, freq in zip(alleles, freqs):
                 yield AlleleFreq(locusid, popid, allele, freq)

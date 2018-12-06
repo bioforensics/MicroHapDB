@@ -6,7 +6,7 @@ help: Makefile
 
 ## test:      execute the automated test suite
 test:
-	py.test --cov=microhapdb --doctest-modules microhapdb/*.py
+	pytest --cov=microhapdb --doctest-modules microhapdb/test_*.py microhapdb/retrieve.py
 
 ## devdeps:   install development dependencies
 devdeps:
