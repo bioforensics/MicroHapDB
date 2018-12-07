@@ -1,5 +1,5 @@
 [![MicroHapDB build status][travisbadge]](https://travis-ci.org/bioforensics/MicroHapDB)
-[![PyPI version][pypibadge]](https://pypi.python.org/pypi/microhapdb)
+[![Install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/microhapdb/README.html)
 [![BSD licensed][licensebadge]](https://github.com/bioforensics/MicroHapDB/blob/master/LICENSE.txt)
 
 # MicroHapDB
@@ -9,20 +9,20 @@ https://github.com/bioforensics/microhapdb
 
 **MicroHapDB** is a package designed for scientists and researchers interested in microhaplotype analysis.
 This package is a distribution and convenience mechanism and does not implement any analytics itself.
-MicroHapDB is designed to work with microhap data from any source, although currently all data was obtained from the [Allele Frequency Database (ALFRED)][alfred]<sup>[1]</sup> at the Yale University School of Medicine.
+All microhaplotype data was obtained from the [Allele Frequency Database (ALFRED)][alfred]<sup>[1]</sup> at the Yale University School of Medicine and the [Leiden Open Variation Database][lovd]<sup>[2]</sup>, although we'd be happy to consider integratation of microhap data from any source.
 
 ## Installation
 
-To install:
+For best results, install from [bioconda](https://bioconda.github.io/).
 
 ```
-pip3 install microhapdb
+conda install -c bioconda microhapdb
 ```
 
 To make sure the package installed correctly:
 
 ```
-pip3 install pytest
+conda install pytest
 pytest --pyargs microhapdb --doctest-modules
 ```
 
@@ -49,7 +49,7 @@ Programmatic access to microhap data within Python is as simple as invoking `imp
 - `microhapdb.populations`
 - `microhapdb.variants`
 
-Each is a [Pandas][]<sup>[2]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
+Each is a [Pandas][]<sup>[3]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
 There are also two auxiliary tables: one that contains a mapping of all variants to their corresponding microhap loci, and another table cross-referencing external IDs/labels/names with internal MicroHapDB identifiers.
 
 - `microhapdb.variantmap`
@@ -122,11 +122,14 @@ If you use this package, please cite our work.
 
 ----------
 
-<sup>[1]</sup>Rajeevan H, Soundararajan U, Kidd JR, Pakstis AJ, Kidd KK (2012) ALFRED: an allele frequency resource for research and teaching. *Nucleic Acids Research*, 40(D1): D1010-D1015. doi:10.1093/nar/gkr924.
+<sup>[1]</sup>Rajeevan H, Soundararajan U, Kidd JR, Pakstis AJ, Kidd KK (2012) ALFRED: an allele frequency resource for research and teaching. *Nucleic Acids Research*, 40(D1): D1010-D1015, [doi:10.1093/nar/gkr924](https://doi.org/10.1093/nar/gkr924).
 
-<sup>[2]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
+<sup>[2]</sup>Fokkema IF, Taschner PE, Schaafsma GC, Celli J, Laros JF, den Dunnen JT (2011) LOVD v.2.0: the next generation in gene variant databases. *Human Mutation*, 32(5): 557-63, [doi:10.1002/humu.21438](https://doi.org/10.1002/humu.21438).
+
+<sup>[3]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
+[lovd]: http://www.lovd.nl/3.0/home
 [Pandas]: https://pandas.pydata.org
 [travisbadge]: https://img.shields.io/travis/bioforensics/MicroHapDB.svg
 [pypibadge]: https://img.shields.io/pypi/v/microhapdb.svg
