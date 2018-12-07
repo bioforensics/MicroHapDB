@@ -21,12 +21,12 @@ def query_mode(table, querystr):
     Specify the table to query (variant, locus, population, allele) and provide
     a Pandas-style query.
 
-    >>> query_mode('locus', 'Chrom == "chr8"')
+    >>> for result in query_mode('locus', 'Chrom == "chr8"'): print(result)
                   ID Reference Chrom     Start       End  Source
     77   MHDBL000078    GRCh38  chr8  11738320  11738460  ALFRED
     140  MHDBL000141    GRCh38  chr8   3659270   3659482  ALFRED
     >>> querystr = 'Locus == "MHDBL000177" and Population == "MHDBP000092"'
-    >>> query_mode('allele', querystr)
+    >>> for result in query_mode('allele', querystr): print(result)
                  Locus   Population   Allele  Frequency
     71439  MHDBL000177  MHDBP000092  T,C,A,A      0.288
     71440  MHDBL000177  MHDBP000092  T,C,G,A      0.025
@@ -50,16 +50,16 @@ def query_mode(table, querystr):
 def id_mode(idstr):
     """Retrieve data using internal or external IDs, names, or labels.
 
-    >>> id_mode('SI605775E')
+    >>> for result in id_mode('SI605775E'): print(result)
                       ID Reference  Chrom  Position Alleles    Source
     9961  MHDBV000009962    GRCh38  chr13  50313423     C,T  dbSNP151
-    >>> id_mode('rs690302')
+    >>> for result in id_mode('rs690302'): print(result)
                        ID Reference  Chrom  Position  Alleles    Source
     17205  MHDBV000017206    GRCh38  chr18   8892896  A,C,G,T  dbSNP151
-    >>> id_mode('mh19CP-007')
+    >>> for result in id_mode('mh19CP-007'): print(result)
                  ID Reference  Chrom     Start       End  Source
     66  MHDBL000067    GRCh38  chr19  14310740  14310781  ALFRED
-    >>> id_mode('SA004109O')
+    >>> for result in id_mode('SA004109O'): print(result)
                  ID       Name  Source
     76  MHDBP000077  Colombian  ALFRED
     """
@@ -77,7 +77,7 @@ def region_mode(region, table=None):
     microhaplotype locus, but also the other variants within its extent and the
     flanking nucleotides.
 
-    >>> region_mode('chr13', table='locus')
+    >>> for result in region_mode('chr13', table='locus'): print(result)
                   ID Reference  Chrom      Start        End  Source
     44   MHDBL000045    GRCh38  chr13   24343963   24343994  ALFRED
     50   MHDBL000051    GRCh38  chr13   23191402   23191542  ALFRED
@@ -87,7 +87,7 @@ def region_mode(region, table=None):
     69   MHDBL000070    GRCh38  chr13   66138600   66138696  ALFRED
     70   MHDBL000071    GRCh38  chr13   94894396   94894513  ALFRED
     116  MHDBL000117    GRCh38  chr13   50313424   50313589  ALFRED
-    >>> region_mode('chr18:24557400-24557450')
+    >>> for result in region_mode('chr18:24557400-24557450'): print(result)
                  ID Reference  Chrom     Start       End  Source
     34  MHDBL000035    GRCh38  chr18  24557355  24557490  ALFRED
                        ID Reference  Chrom  Position Alleles    Source
