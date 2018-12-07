@@ -10,18 +10,15 @@
 import microhapdb
 
 
-def query_mode(table, querystr):
-    """Retrieve data with a Pandas query.
+def fetch_by_query(table, querystr):
+    """Retrieve data using a Pandas-style query.
 
-    Specify the table to query (variant, locus, population, allele) and provide
-    a Pandas-style query.
-
-    >>> query_mode('locus', 'Chrom == "chr8"')
+    >>> for result in fetch_by_query('locus', 'Chrom == "chr8"'): print(result)
                   ID Reference Chrom     Start       End  Source
     77   MHDBL000078    GRCh38  chr8  11738320  11738460  ALFRED
     140  MHDBL000141    GRCh38  chr8   3659270   3659482  ALFRED
     >>> querystr = 'Locus == "MHDBL000177" and Population == "MHDBP000092"'
-    >>> query_mode('allele', querystr)
+    >>> for result in fetch_by_query('allele', querystr): print(result)
                  Locus   Population   Allele  Frequency
     71439  MHDBL000177  MHDBP000092  T,C,A,A      0.288
     71440  MHDBL000177  MHDBP000092  T,C,G,A      0.025
@@ -44,43 +41,48 @@ def query_mode(table, querystr):
         raise ValueError('unsupported table "{}"'.format(table))
     table = microhapdb.tables[table]
     result = table.query(querystr)
-    if len(result) == 0:
-        return
-    print(result.to_string())
+    if len(result) > 0:
+        yield result
 
 
-def id_mode(idstr):
-    """Retrieve data using internal or external IDs, names, or labels.
+def fetch_by_id(idvalue):
+    """Retrieve data using any internal/external ID, name, or label.
 
-    >>> id_mode('SI605775E')
+    The main data tables are indexed using internal MicroHapDB IDs, but we
+    maintain an auxiliary table mapping names, IDs, and labels from source
+    databases to the internal IDs. Using this table, we can retrieve the
+    relevant record(s) using any valid record identifier.
+
+    >>> for result in fetch_by_id('SI605775E'): print(result)
                       ID Reference  Chrom  Position Alleles    Source
     9961  MHDBV000009962    GRCh38  chr13  50313423     C,T  dbSNP151
-    >>> id_mode('rs690302')
+    >>> for result in fetch_by_id('rs690302'): print(result)
                        ID Reference  Chrom  Position  Alleles    Source
     17205  MHDBV000017206    GRCh38  chr18   8892896  A,C,G,T  dbSNP151
-    >>> id_mode('mh19CP-007')
+    >>> for result in fetch_by_id('mh19CP-007'): print(result)
                  ID Reference  Chrom     Start       End  Source
     66  MHDBL000067    GRCh38  chr19  14310740  14310781  ALFRED
-    >>> id_mode('SA004109O')
+    >>> for result in fetch_by_id('SA004109O'): print(result)
                  ID       Name  Source
     76  MHDBP000077  Colombian  ALFRED
     """
-    result = fetch_by_id(idstr)
-    if result is not None:
-        print(result.to_string())
+    m = microhapdb.idmap
+    result = m[(m.XRef == idvalue) | (m.mhdbID == idvalue)]
+    if len(result) == 0:
+        return
+    tables = list(result.Table.unique())
+    assert len(tables) == 1, tables
+    table = microhapdb.tables[str(tables[0])]
+    yield table[table.ID.isin(result.mhdbID)]
 
 
-def region_mode(region, table=None):
-    """Retrieve microhap loci and proximal variants with range queries.
+def fetch_by_region(region, table=None):
+    """Retrieve data using a genomic range.
 
-    Use queries of the format "chrX" or "chrX:YYYY-ZZZZ" to retrieve loci or
-    variants (or both) from the specified genomic region.
+    Optionally, use `table` to restrict the results to only variants or only
+    loci.
 
-    MicroHapDB includes not only the dbSNP variants that define each
-    microhaplotype locus, but also the other variants within its extent and the
-    flanking nucleotides.
-
-    >>> region_mode('chr13', table='locus')
+    >>> for result in fetch_by_region('chr13', table='locus'): print(result)
                   ID Reference  Chrom      Start        End  Source
     44   MHDBL000045    GRCh38  chr13   24343963   24343994  ALFRED
     50   MHDBL000051    GRCh38  chr13   23191402   23191542  ALFRED
@@ -90,7 +92,7 @@ def region_mode(region, table=None):
     69   MHDBL000070    GRCh38  chr13   66138600   66138696  ALFRED
     70   MHDBL000071    GRCh38  chr13   94894396   94894513  ALFRED
     116  MHDBL000117    GRCh38  chr13   50313424   50313589  ALFRED
-    >>> region_mode('chr18:24557400-24557450')
+    >>> for result in fetch_by_region('chr18:24557400-24557450'): print(result)
                  ID Reference  Chrom     Start       End  Source
     34  MHDBL000035    GRCh38  chr18  24557355  24557490  ALFRED
                        ID Reference  Chrom  Position Alleles    Source
@@ -121,37 +123,16 @@ def region_mode(region, table=None):
             query += ' and (Start < {}'.format(end)
             query += ' and End > {})'.format(start)
         result = microhapdb.loci.query(query)
-        if len(result) != 0:
-            print(result.to_string())
+        if len(result) > 0:
+            yield result
     if table in (None, 'variant'):
         query = 'Chrom == "{}"'.format(chrom)
         if start is not None:
             query += ' and {} <= Position <= {}'.format(start, end)
         result = microhapdb.variants.query(query)
-        if len(result) != 0:
-            print(result.to_string())
+        if len(result) > 0:
+            yield result
 
 
-def fetch_by_id(idvalue):
-    """Retrieve data using any internal/external ID, name, or label.
-
-    The main data tables are indexed using internal MicroHapDB IDs, but we
-    maintain an auxiliary table mapping names, IDs, and labels from source
-    databases to the internal IDs. Using this table, we can retrieve the
-    relevant record(s) using any valid record identifier.
-
-    >>> fetch_by_id('SI664352A')
-                       ID Reference  Chrom  Position Alleles    Source
-    13055  MHDBV000013056    GRCh38  chr15  63806494     A,G  dbSNP151
-    >>> fetch_by_id('mh17CP-005')
-                 ID Reference  Chrom     Start       End  Source
-    62  MHDBL000063    GRCh38  chr17  19715706  19715750  ALFRED
-    """
-    m = microhapdb.idmap
-    result = m[(m.XRef == idvalue) | (m.mhdbID == idvalue)]
-    if len(result) == 0:
-        return None
-    tables = list(result.Table.unique())
-    assert len(tables) == 1, tables
-    table = microhapdb.tables[str(tables[0])]
-    return table[table.ID.isin(result.mhdbID)]
+def id_xref(idvalue):
+    return next(fetch_by_id(idvalue))

@@ -9,6 +9,7 @@
 
 
 import microhapdb
+from microhapdb.retrieve import fetch_by_id, fetch_by_query, fetch_by_region
 import pytest
 
 
@@ -47,7 +48,7 @@ def test_loci():
     >>> microhapdb.loci.query('ID == "MHDBL000077"')
                  ID Reference  Chrom     Start       End  Source
     76  MHDBL000077    GRCh38  chr15  63806358  63806495  ALFRED
-    >>> microhapdb.fetch_by_id('mh04CP-002')
+    >>> microhapdb.id_xref('mh04CP-002')
                  ID Reference Chrom     Start       End  Source
     14  MHDBL000015    GRCh38  chr4  24304953  24304972  ALFRED
     """
@@ -68,7 +69,7 @@ def test_populations():
     >>> microhapdb.populations.query('ID == "MHDBP000048"')
                  ID     Name  Source
     47  MHDBP000048  Koreans  ALFRED
-    >>> microhapdb.fetch_by_id('SA004059S')
+    >>> microhapdb.id_xref('SA004059S')
                  ID Name  Source
     73  MHDBP000074  Han  ALFRED
     >>> microhapdb.populations.query('Name.str.contains("Afr")')
@@ -87,7 +88,7 @@ def test_populations():
 def test_variants():
     """Microhaplotype variant data
 
-    >>> microhapdb.fetch_by_id('rs80047978')
+    >>> microhapdb.id_xref('rs80047978')
                        ID Reference  Chrom  Position Alleles    Source
     13055  MHDBV000013056    GRCh38  chr15  63806494     A,G  dbSNP151
     >>> microhapdb.variants.query('Chrom == "chr15" and 52192400 < Position < 52192500')
@@ -103,57 +104,50 @@ def test_variants():
     assert len(v[v.Chrom == 'chr12']) == 1395
 
 
-def test_query_mode(capsys):
+def test_fetch_by_query():
     with pytest.raises(ValueError) as ve:
-        microhapdb.retrieve.query_mode(None, 'ID == "MHDBP000013"')
+        next(fetch_by_query(None, 'ID == "MHDBP000013"'))
     assert 'must specify table to invoke a query' in str(ve.value)
 
     with pytest.raises(ValueError) as ve:
-        microhapdb.retrieve.query_mode('BoogerSnot', 'ID == "MHDBP000013"')
+        next(fetch_by_query('BoogerSnot', 'ID == "MHDBP000013"'))
     assert 'unsupported table "BoogerSnot"' in str(ve.value)
 
-    microhapdb.retrieve.query_mode('population', 'ID == "BogusID"')
-    out, err = capsys.readouterr()
-    assert out.strip() == ''
+    results = list(fetch_by_query('population', 'ID == "BogusID"'))
+    assert results == []
 
-    microhapdb.retrieve.query_mode('population', 'ID == "MHDBP000013"')
-    out, err = capsys.readouterr()
-    assert '12  MHDBP000013  Jews, Ethiopian  ALFRED' in out
-
-
-def test_id_mode(capsys):
-    microhapdb.retrieve.id_mode(None)
-    out, err = capsys.readouterr()
-    assert out.strip() == ''
-
-    microhapdb.retrieve.id_mode('NotARealID')
-    out, err = capsys.readouterr()
-    assert out.strip() == ''
-
-    microhapdb.retrieve.id_mode('rs1363241798')
-    out, err = capsys.readouterr()
-    line = '21999  MHDBV000022000    GRCh38  chr20  63539694    G,GC  dbSNP151'
-    assert line in out
+    results = list(fetch_by_query('population', 'ID == "MHDBP000013"'))
+    assert len(results) == 1
+    assert results[0].Name.values == ['Jews, Ethiopian']
 
 
-def test_region_mode(capsys):
+def test_fetch_by_id():
+    assert list(fetch_by_id(None)) == []
+    assert list(fetch_by_id('NotARealID')) == []
+    results = list(fetch_by_id('rs1363241798'))
+    assert len(results) == 1
+    assert results[0].ID.values == ['MHDBV000022000']
+    assert results[0].Chrom.values == ['chr20']
+    assert results[0].Position.values == [63539694]
+
+
+def test_fetch_by_region():
     with pytest.raises(ValueError) as ve:
-        microhapdb.retrieve.region_mode('chr5:1000000-2000000', 'population')
+        list(fetch_by_region('chr5:1000000-2000000', 'population'))
     assert 'region query not supported for table "population"' in str(ve)
 
     with pytest.raises(ValueError) as ve:
-        microhapdb.retrieve.region_mode('chr7:123-456-789', 'locus')
+        list(fetch_by_region('chr7:123-456-789', 'locus'))
     assert 'cannot parse region "chr7:123-456-789"' in str(ve)
 
-    microhapdb.retrieve.region_mode('chrX', 'variant')
-    out, err = capsys.readouterr()
-    assert out.strip() == ''
+    assert list(fetch_by_region('chrX', 'variant')) == []
+    assert list(fetch_by_region('chrY', 'locus')) == []
 
-    microhapdb.retrieve.region_mode('chrY', 'locus')
-    out, err = capsys.readouterr()
-    assert out.strip() == ''
-
-    microhapdb.retrieve.region_mode('chr12:102866940-102866950', None)
-    out, err = capsys.readouterr()
-    outlines = out.strip().split('\n')
-    assert len(outlines) == 8  # 1 locus + 5 variants + 2 header lines
+    results = list(fetch_by_region('chr12:102866940-102866950', None))
+    assert len(results) == 2
+    print(results[0].ID.values)
+    print(results[1].ID.values)
+    assert list(results[0].ID.values) == ['MHDBL000092']
+    assert list(results[1].ID.values) == ['MHDBV000008871', 'MHDBV000008872',
+                                          'MHDBV000008873', 'MHDBV000008874',
+                                          'MHDBV000008875']
