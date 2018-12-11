@@ -30,7 +30,7 @@ def alfred_loci_prelim(freqstream, coordstream):
     for line in coordstream:
         values = line.strip().split()
         locusid = locusids[values[0]]
-        yield [*values[1:], 'ALFRED', locusid, locusname]
+        yield [*values[1:], 'ALFRED', locusid, values[0]]
 
 
 def lovd_loci_prelim(instream):
