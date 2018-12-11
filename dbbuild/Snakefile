@@ -6,142 +6,81 @@
 # -----------------------------------------------------------------------------
 
 # Import from standard libraries
+from gzip import open as gzopen
 from hashlib import sha1
 from os import chmod
 from urllib.request import urlretrieve
 
 # Import from internal libraries
-from allele import allele_frequencies
-from files import sopen, download_and_compress, cat, dlfile, tmpfile
-from locus import locus_list, locus_scrape, combine_locus_data, variant_coords, ALL_LOCI
+from allele import allele_frequencies_alfred, allele_frequencies_lovd
+from files import smartopen
+from locus import alfred_locus_list, alfred_loci_prelim, lovd_loci_prelim, combine_loci
+from locus import alfred_locus_scrape
 from population import population_summary
-from variant import retrieve_proximal_variants
+from variant import dbsnp_subset_command, retrieve_proximal_variants
+
+
+ALL_ALFRED_LOCI = list()
+with smartopen('alfred/Microhap_alleleF_198.txt', 'r') as instream:
+    for locusid, locusname in alfred_locus_list(instream):
+        ALL_ALFRED_LOCI.append(locusid)
 
 
 rule tables:
     input:
-        expand('{datatype}.tsv', datatype=['allele', 'locus', 'population', 'variant']),
-        'idmap.tsv',
-        'variantmap.tsv'
-
-
-# -----------------------------------------------------------------------------
-# Downloads
-# -----------------------------------------------------------------------------
-
-
-rule locusdetail:
-    input: tmpfile('microhap-loci-prelim.tsv')
-    output: dlfile('locus-detail/{locus}.html.gz')
-    run:
-        url = "https://alfred.med.yale.edu/alfred/recordinfo.asp?UNID=" + wildcards.locus
-        download_and_compress(url, output[0])
-
-
-rule fetchallloci:
-    input: expand(dlfile('locus-detail/{locus}.html.gz'), locus=ALL_LOCI)
-    output: dlfile('fetchallloci.complete')
-    run:
-        with open(output[0], 'w') as outfile:
-            print('Done', file=outfile)
-
-
-# -----------------------------------------------------------------------------
-# Alleles
-# -----------------------------------------------------------------------------
-
-rule all_alleles:
-    """Aggregate all microhap locus allele data."""
-    input: expand(tmpfile('locus-alleles/{locus}.tsv.gz'), locus=ALL_LOCI)
-    output: tmpfile('locus-alleles-all.tsv')
-    run:
-        with open(output[0], 'w') as outstream:
-            print('Locus', 'Allele', 'Variants', sep='\t', file=outstream)
-            cat(outstream, input)
-
-
-rule allelefreq:
-    """Format allele frequency data."""
-    input:
-        dlfile('Microhap_alleleF_198.txt'),
-        'indel-alleles.json',
-        'idmap.tsv'
-    output: 'allele.tsv'
-    run:
-        with open(output[0], 'w') as outstream, open(input[2], 'r') as instream:
-            mapping = dict()
-            for line in instream:
-                values = line.strip().split()
-                mapping[values[0]] = values[2]
-            print('Locus', 'Population', 'Allele', 'Frequency', sep='\t', file=outstream)
-            for af in allele_frequencies(input[0], input[1]):
-                print(mapping[af.locusid], mapping[af.popid], af.allele, af.freq, sep='\t', file=outstream)
+        expand('{table}.tsv', table=['allele', 'locus', 'population', 'variant', 'idmap', 'variantmap'])
 
 
 # -----------------------------------------------------------------------------
 # Loci
 # -----------------------------------------------------------------------------
 
-rule listloci:
-    input: dlfile('Microhap_alleleF_198.txt')
-    output: tmpfile('microhap-loci-prelim.tsv')
-    run:
-        with sopen(input[0], 'r') as instream, sopen(output[0], 'w') as outstream:
-            print('ID', 'Name', sep='\t', file=outstream)
-            for locusid, locusname in locus_list(instream):
-                print(locusid, locusname, sep='\t', file=outstream)
-
 
 rule scrapelocus:
-    input: dlfile('locus-detail/{locus}.html.gz')
+    input: 'alfred/downloads/locus-detail/{locus}.html.gz'
     output:
-        tmpfile('locus-variants/{locus}.tsv.gz'),
-        tmpfile('locus-alleles/{locus}.tsv.gz')
+        'intermediate/locus-variants/{locus}.tsv.gz',
+        'intermediate/locus-alleles/{locus}.tsv.gz'
     run:
-        with sopen(input[0], 'r') as instream:
-            locus_scrape(wildcards.locus, instream, output[1], output[0])
+        with smartopen(input[0], 'r') as instream:
+            alfred_locus_scrape(wildcards.locus, instream, output[1], output[0])
 
 
-rule locus_variants:
-    """Aggregate all microhap locus variant data."""
-    input: expand(tmpfile('locus-variants/{locus}.tsv.gz'), locus=ALL_LOCI)
-    output: tmpfile('locus-variants-all.tsv')
-    run:
-        with sopen(output[0], 'w') as outstream:
-            print('Locus', 'dbSNPID', 'AlfredID', 'Reference', 'Alternate', sep='\t', file=outstream)
-            cat(outstream, input)
-
-
-rule locus_variant_coordinates:
+rule alfred_loci_prelim:
     input:
-        tmpfile('locus-variants-all.tsv'),
-        config['dbsnp']
-    output: tmpfile('locus-variant-coords.tsv')
+        'alfred/Microhap_alleleF_198.txt',
+        'alfred/curated/alfred-microhap-coords-hg38.tsv'
+    output: 'intermediate/alfred-loci.tsv'
     run:
-        with sopen(input[0], 'r') as instream1, sopen(input[1], 'r') as instream2, sopen(output[0], 'w') as outstream:
-            print('dbSNPID', 'Chrom', 'Position', sep='\t', file=outstream)
-            for variant in variant_coords(instream1, instream2):
-                print(variant.dbsnpid, variant.chrom, variant.position, sep='\t', file=outstream)
+        with smartopen(input[0], 'r') as freqinput, smartopen(input[1], 'r') as coordinput, smartopen(output[0], 'w') as outstream:
+            print('Chrom', 'Start', 'End', 'Source', 'AlfredID', 'AlfredName', sep='\t', file=outstream)
+            for values in alfred_loci_prelim(freqinput, coordinput):
+                print(*values, sep='\t', file=outstream)
+
+
+rule lovd_loci_prelim:
+    input: 'lovd/lovd-microhap-loci.txt'
+    output: 'intermediate/lovd-loci.tsv'
+    run:
+        with smartopen(input[0], 'r') as instream, smartopen(output[0], 'w') as outstream:
+            print('Chrom', 'Start', 'End', 'Source', 'LovdID', sep='\t', file=outstream)
+            for values in lovd_loci_prelim(instream):
+                print(*values, sep='\t', file=outstream)
 
 
 rule combine_loci:
     input:
-        tmpfile('microhap-loci-prelim.tsv'),
-        tmpfile('locus-alleles-all.tsv'),
-        tmpfile('locus-variant-coords.tsv')
+        'intermediate/alfred-loci.tsv',
+        'intermediate/lovd-loci.tsv'
     output:
         'locus.tsv',
-        tmpfile('locusids.tsv.gz'),
-        tmpfile('locusvars.tsv')
+        'intermediate/locusids.tsv.gz'
     run:
-        with sopen(input[0], 'r') as idstream, sopen(input[1], 'r') as allelestream, sopen(input[2], 'r') as variantstream, sopen(output[0], 'w') as outstream1, sopen(output[1], 'w') as outstream2, sopen(output[2], 'w') as outstream3:
-            print('ID', 'Reference', 'Chrom', 'Start', 'End', 'Source', sep='\t', file=outstream1)
-            for locus in combine_locus_data(idstream, allelestream, variantstream):
-                print(locus.locusid, 'GRCh38', 'chr' + locus.chrom, locus.start, locus.end, 'ALFRED', sep='\t', file=outstream1)
-                print(locus.label, 'locus', locus.locusid, sep='\t', file=outstream2)
-                print(locus.locusname, 'locus', locus.locusid, sep='\t', file=outstream2)
-                for varid in locus.variants:
-                    print(locus.locusid, varid, sep='\t', file=outstream3)
+        with smartopen(input[0], 'r') as alfredstream, smartopen(input[1], 'r') as lovdstream, smartopen(output[0], 'w') as outstream, smartopen(output[1], 'w') as idstream:
+            print('ID', 'Reference', 'Chrom', 'Start', 'End', 'Source', sep='\t', file=outstream)
+            for values in combine_loci(alfredstream, lovdstream):
+                fp = idstream if len(values) == 3 else outstream
+                print(*values, sep='\t', file=fp)
 
 
 # -----------------------------------------------------------------------------
@@ -149,15 +88,17 @@ rule combine_loci:
 # -----------------------------------------------------------------------------
 
 rule population:
-    input: dlfile('Microhap_alleleF_198.txt')
+    input:
+        'alfred/Microhap_alleleF_198.txt',
+        'lovd/pops.tsv'
     output:
         'population.tsv',
-        tmpfile('popids.tsv.gz')
+        'intermediate/popids.tsv.gz'
     run:
-        with sopen(input[0], 'r') as instream, sopen(output[0], 'w') as outstream, sopen(output[1], 'w') as idstream:
+        with smartopen(input[0], 'r') as alfredstream, smartopen(input[1], 'r') as lovdstream, smartopen(output[0], 'w') as outstream, smartopen(output[1], 'w') as idstream:
             print('ID', 'Name', 'Source', sep='\t', file=outstream)
-            for popid, poplabel, popname in population_summary(instream):
-                print(popid, popname, 'ALFRED', sep='\t', file=outstream)
+            for popid, poplabel, popname, source in population_summary(alfredstream, lovdstream):
+                print(popid, popname, source, sep='\t', file=outstream)
                 print(poplabel, 'population', popid, sep='\t', file=idstream)
 
 
@@ -170,54 +111,51 @@ rule dbsnp_subset:
     input:
         'locus.tsv',
         config['dbsnp']
-    output: tmpfile('dbsnp-subset.vcf')
+    output: 'intermediate/dbsnp-subset.vcf'
     run:
-        regions = list()
-        with open(input[0], 'r') as instream:
-            next(instream)
-            for line in instream:
-                values = line.strip().split()
-                chrom = values[2][3:]
-                start, end = int(values[3]), int(values[4])
-                length = start - end
-                diff = 500 - length
-                extend = diff / 2
-                newstart = int(start - extend)
-                newend = int(end + extend)
-                regions.append((chrom, newstart, newend))
-        regions = sorted(regions, key=lambda r: (r[0], r[1], r[2]))
-        regionstrs = ['{:s}:{:d}-{:d}'.format(c, s, e) for c, s, e in regions]
-        cmdargs = ['tabix', input[1], *regionstrs, '>', output[0]]
-        cmd = ' '.join(cmdargs)
+        cmd = dbsnp_subset_command(*input, *output)
         shell(cmd)
+
+
+rule locus_variants:
+    """Aggregate all microhap locus variant data."""
+    input: expand('intermediate/locus-variants/{locus}.tsv.gz', locus=ALL_ALFRED_LOCI)
+    output: 'intermediate/alfred-variants-all.tsv'
+    run:
+        with smartopen(output[0], 'w') as outstream:
+            print('Locus', 'dbSNPID', 'AlfredID', 'Reference', 'Alternate', sep='\t', file=outstream)
+        shell('gunzip -c {input} >> {output}')
 
 
 rule parse_variant_data:
     input:
-        tmpfile('dbsnp-subset.vcf'),
-        tmpfile('locus-variants-all.tsv'),
-        tmpfile('locusids.tsv.gz')
+        'intermediate/dbsnp-subset.vcf',
+        'intermediate/alfred-variants-all.tsv',
+        'lovd/lovd-microhap-variants.tsv',
+        'intermediate/locusids.tsv.gz'
     output:
         'variant.tsv',
         'variantmap.tsv',
-        tmpfile('varids.tsv.gz')
+        'intermediate/varids.tsv.gz',
     run:
-        with sopen(output[0], 'w') as outstream, sopen(output[1], 'w') as varoutstream, sopen(output[2], 'w') as idstream, sopen(input[0], 'r') as dbsnp, sopen(input[1], 'r') as alfred, sopen(input[2], 'r') as locidstream:
-            mapping = dict()
-            for line in locidstream:
-                values = line.strip().split()
-                mapping[values[0]] = values[2]
+        with smartopen(output[0], 'w') as variantstream, smartopen(output[1], 'w') as varmap, smartopen(output[2], 'w') as varidstream, smartopen(input[0], 'r') as dbsnp, smartopen(input[1], 'r') as alfred, smartopen(input[2], 'r') as lovd, smartopen(input[3], 'r') as locusids:
+            locus_ids = dict()
+            for line in locusids:
+                xref, table, lid = line.strip().split()
+                locus_ids[xref] = lid
 
-            print('ID', 'Reference', 'Chrom', 'Position', 'Alleles', 'Source', sep='\t', file=outstream)
-            print('LocusID', 'VariantID', sep='\t', file=varoutstream)
-            for n, v in enumerate(retrieve_proximal_variants(alfred, dbsnp), 1):
+            print('ID', 'Reference', 'Chrom', 'Position', 'Alleles', 'Source', sep='\t', file=variantstream)
+            print('LocusID', 'VariantID', sep='\t', file=varmap)
+            for n, v in enumerate(retrieve_proximal_variants(dbsnp, alfred, lovd), 1):
                 varid = 'MHDBV{:09d}'.format(n)
-                print(varid, 'GRCh38', 'chr' + v.chrom, v.pos, v.alleles, 'dbSNP151', sep='\t', file=outstream)
-                print(v.dbsnpid, 'variant', varid, sep='\t', file=idstream)
-                if v.alfredid is not None:
-                    print(v.alfredid, 'variant', varid, sep='\t', file=idstream)
-                    locusid = mapping[v.label]
-                    print(locusid, varid, sep='\t', file=varoutstream)
+                print(varid, 'GRCh38', v.chrom, v.pos, v.alleles, v.source, sep='\t', file=variantstream)
+                if v.dbsnpid is not None:
+                    print(v.dbsnpid, 'variant', varid, sep='\t', file=varidstream)
+                if v.xref is not None:
+                    print(v.xref, 'variant', varid, sep='\t', file=varidstream)
+                if v.locuslabel is not None:
+                    locusid = locus_ids[v.locuslabel]
+                    print(locusid, varid, sep='\t', file=varmap)
 
 
 # -----------------------------------------------------------------------------
@@ -225,9 +163,36 @@ rule parse_variant_data:
 # -----------------------------------------------------------------------------
 
 rule idmap:
-    input: expand(tmpfile('{table}.tsv.gz'), table=['popids', 'locusids', 'varids'])
+    input: expand('intermediate/{table}.tsv.gz', table=['popids', 'locusids', 'varids'])
     output: 'idmap.tsv'
     run:
-        with open(output[0], 'w') as outstream:
+        with smartopen(output[0], 'w') as outstream:
             print('XRef', 'Table', 'mhdbID', sep='\t', file=outstream)
-            cat(outstream, input)
+        shell('gunzip -c {input} >> {output}')
+
+
+
+# -----------------------------------------------------------------------------
+# Alleles
+# -----------------------------------------------------------------------------
+
+rule allelefreq:
+    """Format allele frequency data."""
+    input:
+        'alfred/Microhap_alleleF_198.txt',
+        'alfred/indel-alleles.json',
+        'lovd/lovd-microhap-loci.txt',
+        'lovd/lovd-allele-frequencies.txt',
+        'idmap.tsv'
+    output: 'allele.tsv'
+    run:
+        with smartopen(output[0], 'w') as outstream, smartopen(input[4], 'r') as instream:
+            mapping = dict()
+            for line in instream:
+                values = line.strip().split()
+                mapping[values[0]] = values[2]
+            print('Locus', 'Population', 'Allele', 'Frequency', sep='\t', file=outstream)
+            for af in allele_frequencies_alfred(input[0], input[1]):
+                print(mapping[af.locusid], mapping[af.popid], af.allele, af.freq, sep='\t', file=outstream)
+            for af in allele_frequencies_lovd(input[2], input[3]):
+                print(mapping[af.locusid], mapping[af.popid], af.allele, af.freq, sep='\t', file=outstream)

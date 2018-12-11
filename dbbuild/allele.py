@@ -5,7 +5,7 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 import json
 from re import search
 
@@ -26,7 +26,7 @@ def cleanup(allelestr, locusid, indels):
     return allelestr
 
 
-def allele_frequencies(freqfile, indelfile):
+def allele_frequencies_alfred(freqfile, indelfile):
     indels = load_indel_alleles(indelfile)
     with open(freqfile, 'r') as instream:
         line = next(instream)
@@ -57,3 +57,34 @@ def allele_frequencies(freqfile, indelfile):
                 raise ValueError(message)
             for allele, freq in zip(alleles, freqs):
                 yield AlleleFreq(locusid, popid, allele, freq)
+
+
+def allele_frequencies_lovd(locusfile, freqfile):
+    alleles = defaultdict(dict)
+    with open(locusfile, 'r') as instream:
+        locusid = None
+        for line in instream:
+            values = line.strip().split(',')
+            if line.startswith('mh'):
+                locusid = values[0]
+            else:
+                haplotype = values[0][2:]
+                allelelist = [a.strip() for a in values[1].split(':')]
+                allelestr = ','.join(allelelist)
+                alleles[locusid][haplotype] = allelestr
+
+    with open(freqfile, 'r') as instream:
+        next(instream)
+        locusid = None
+        for line in instream:
+            values = line.strip().split('\t')
+            if line.startswith('mh'):
+                locusid = values[0]
+            else:
+                if locusid == 'mh17PK-86511':
+                    continue
+                haplotype = values[0]
+                freqs = values[1:]
+                for freq, pop in zip(freqs, ('NL', 'Asia', 'Africa')):
+                    allele = alleles[locusid][haplotype]
+                    yield AlleleFreq(locusid, pop, allele, freq)
