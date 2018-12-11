@@ -14,10 +14,10 @@ def fetch_by_query(table, querystr):
     """Retrieve data using a Pandas-style query.
 
     >>> for result in fetch_by_query('locus', 'Chrom == "chr8"'): print(result)
-                  ID Reference Chrom     Start       End  Source
-    202  MHDBL000203    GRCh38  chr8   1194331   1194395    LOVD
-    203  MHDBL000204    GRCh38  chr8   3659270   3659482  ALFRED
-    204  MHDBL000205    GRCh38  chr8  11738320  11738460  ALFRED
+                  ID Reference Chrom     Start       End   AvgAe  Source
+    202  MHDBL000203    GRCh38  chr8   1194331   1194395  2.6273    LOVD
+    203  MHDBL000204    GRCh38  chr8   3659270   3659482  3.9708  ALFRED
+    204  MHDBL000205    GRCh38  chr8  11738320  11738460  2.2865  ALFRED
     >>> querystr = 'Locus == "MHDBL000177" and Population == "MHDBP000092"'
     >>> for result in fetch_by_query('allele', querystr): print(result)
                  Locus   Population Allele  Frequency
@@ -51,11 +51,11 @@ def fetch_by_id(idvalue):
                        ID Reference  Chrom  Position  Alleles    Source
     19301  MHDBV000019302    GRCh38  chr18   8892896  A,C,G,T  dbSNP151
     >>> for result in fetch_by_id('mh06PK-25713'): print(result)
-                  ID Reference Chrom     Start       End Source
-    192  MHDBL000193    GRCh38  chr6  31196947  31197015   LOVD
+                  ID Reference Chrom     Start       End   AvgAe Source
+    192  MHDBL000193    GRCh38  chr6  31196947  31197015  3.0005   LOVD
     >>> for result in fetch_by_id('mh19CP-007'): print(result)
-                  ID Reference  Chrom     Start       End  Source
-    109  MHDBL000110    GRCh38  chr19  14310740  14310781  ALFRED
+                  ID Reference  Chrom     Start       End   AvgAe  Source
+    109  MHDBL000110    GRCh38  chr19  14310740  14310781  3.0813  ALFRED
     >>> for result in fetch_by_id('SA004109O'): print(result)
                  ID       Name  Source
     15  MHDBP000016  Colombian  ALFRED
@@ -77,18 +77,18 @@ def fetch_by_region(region, table=None):
     loci.
 
     >>> for result in fetch_by_region('chr13', table='locus'): print(result)
-                 ID Reference  Chrom      Start        End  Source
-    55  MHDBL000056    GRCh38  chr13   23191402   23191542  ALFRED
-    56  MHDBL000057    GRCh38  chr13   24343963   24343994  ALFRED
-    57  MHDBL000058    GRCh38  chr13   46291795   46291987  ALFRED
-    58  MHDBL000059    GRCh38  chr13   50313424   50313589  ALFRED
-    59  MHDBL000060    GRCh38  chr13   53486692   53486837  ALFRED
-    60  MHDBL000061    GRCh38  chr13   66138600   66138696  ALFRED
-    61  MHDBL000062    GRCh38  chr13   94894396   94894513  ALFRED
-    62  MHDBL000063    GRCh38  chr13  110154352  110154505  ALFRED
+                 ID Reference  Chrom      Start        End   AvgAe  Source
+    55  MHDBL000056    GRCh38  chr13   23191402   23191542  3.6440  ALFRED
+    56  MHDBL000057    GRCh38  chr13   24343963   24343994  3.0655  ALFRED
+    57  MHDBL000058    GRCh38  chr13   46291795   46291987  4.0035  ALFRED
+    58  MHDBL000059    GRCh38  chr13   50313424   50313589  2.3932  ALFRED
+    59  MHDBL000060    GRCh38  chr13   53486692   53486837  6.0444  ALFRED
+    60  MHDBL000061    GRCh38  chr13   66138600   66138696  3.4361  ALFRED
+    61  MHDBL000062    GRCh38  chr13   94894396   94894513  2.0150  ALFRED
+    62  MHDBL000063    GRCh38  chr13  110154352  110154505  3.7978  ALFRED
     >>> for result in fetch_by_region('chr18:24557400-24557450'): print(result)
-                  ID Reference  Chrom     Start       End  Source
-    105  MHDBL000106    GRCh38  chr18  24557355  24557490  ALFRED
+                  ID Reference  Chrom     Start       End  AvgAe  Source
+    105  MHDBL000106    GRCh38  chr18  24557355  24557490  2.658  ALFRED
                        ID Reference  Chrom  Position Alleles    Source
     19445  MHDBV000019446    GRCh38  chr18  24557400     C,T  dbSNP151
     19446  MHDBV000019447    GRCh38  chr18  24557402     A,C  dbSNP151

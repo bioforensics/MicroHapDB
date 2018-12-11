@@ -47,19 +47,19 @@ def test_loci():
 
     >>> l = microhapdb.loci
     >>> l[l.ID == 'MHDBL000108']
-                  ID Reference  Chrom     Start       End  Source
-    107  MHDBL000108    GRCh38  chr18  78329886  78329968  ALFRED
+                  ID Reference  Chrom     Start       End   AvgAe  Source
+    107  MHDBL000108    GRCh38  chr18  78329886  78329968  3.2906  ALFRED
     >>> l[l.ID == 'MHDBL000065']
-                 ID Reference  Chrom     Start       End Source
-    64  MHDBL000065    GRCh38  chr14  32203269  32203324   LOVD
+                 ID Reference  Chrom     Start       End   AvgAe Source
+    64  MHDBL000065    GRCh38  chr14  32203269  32203324  3.7886   LOVD
     >>> microhapdb.id_xref('mh04CP-002')
-                  ID Reference Chrom     Start       End  Source
-    159  MHDBL000160    GRCh38  chr4  24304953  24304972  ALFRED
+                  ID Reference Chrom     Start       End   AvgAe  Source
+    159  MHDBL000160    GRCh38  chr4  24304953  24304972  3.5182  ALFRED
     """
     loc = microhapdb.loci
     vm = microhapdb.variantmap
     vr = microhapdb.variants
-    assert loc.shape == (213, 6)
+    assert loc.shape == (213, 7)
     result = loc[loc.Chrom == 'chr19']
     assert len(result) == 5
     varids = vm[vm.LocusID.isin(result.ID)]
