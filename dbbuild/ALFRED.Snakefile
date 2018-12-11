@@ -5,12 +5,12 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-from locus import locus_list
+from locus import alfred_locus_list
 
 
 ALL_ALFRED_LOCI = list()
 with open('alfred/Microhap_alleleF_198.txt') as instream:
-    for locusid, locusname in locus_list(instream):
+    for locusid, locusname in alfred_locus_list(instream):
         ALL_ALFRED_LOCI.append(locusid)
 
 

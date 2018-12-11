@@ -210,7 +210,7 @@ rule allelefreq:
     """Format allele frequency data."""
     input:
         'alfred/Microhap_alleleF_198.txt',
-        'alfred/indel-alleles.json',
+        'alfred/curated/indel-alleles.json',
         'lovd/lovd-microhap-loci.txt',
         'lovd/lovd-allele-frequencies.txt',
         'idmap.tsv'
