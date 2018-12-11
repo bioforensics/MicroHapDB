@@ -11,6 +11,8 @@ from hashlib import sha1
 from os import chmod
 from urllib.request import urlretrieve
 
+import pandas
+
 # Import from internal libraries
 from allele import allele_frequencies_alfred, allele_frequencies_lovd
 from files import smartopen
@@ -73,7 +75,7 @@ rule combine_loci:
         'intermediate/alfred-loci.tsv',
         'intermediate/lovd-loci.tsv'
     output:
-        'locus.tsv',
+        'intermediate/locus-prelim.tsv',
         'intermediate/locusids.tsv.gz'
     run:
         with smartopen(input[0], 'r') as alfredstream, smartopen(input[1], 'r') as lovdstream, smartopen(output[0], 'w') as outstream, smartopen(output[1], 'w') as idstream:
@@ -81,6 +83,35 @@ rule combine_loci:
             for values in combine_loci(alfredstream, lovdstream):
                 fp = idstream if len(values) == 3 else outstream
                 print(*values, sep='\t', file=fp)
+
+
+rule score_loci:
+    input:
+        'intermediate/locus-prelim.tsv',
+        'allele.tsv'
+    output:
+        'locus.tsv'
+    run:
+        loci = pandas.read_table(input[0])
+        freqs = pandas.read_table(input[1])
+        aes = list()
+        for n, locusid in enumerate(loci['ID']):
+            if n > 0 and n % 10 == 0:
+                print('....processed', n, 'loci')
+            ae_per_pop = list()
+            for pop in freqs[freqs.Locus == locusid].Population.unique():
+                ae_recip = 0.0
+                for freq in freqs[(freqs.Locus == locusid) & (freqs.Population == pop)].Frequency:
+                    ae_recip += freq ** 2
+                ae = 1.0 / ae_recip
+                ae_per_pop.append(ae)
+            avg_ae = sum(ae_per_pop) / len(ae_per_pop)
+            aes.append('{:.04f}'.format(avg_ae))
+        loci = loci.assign(AvgAe=pandas.Series(aes))
+        column_order = ['ID', 'Reference', 'Chrom', 'Start', 'End', 'AvgAe',
+                        'Source']
+        loci = loci[column_order]
+        loci.to_csv(output[0], sep='\t', index=False)
 
 
 # -----------------------------------------------------------------------------
@@ -109,7 +140,7 @@ rule population:
 
 rule dbsnp_subset:
     input:
-        'locus.tsv',
+        'intermediate/locus-prelim.tsv',
         config['dbsnp']
     output: 'intermediate/dbsnp-subset.vcf'
     run:
