@@ -9,7 +9,8 @@ https://github.com/bioforensics/microhapdb
 
 **MicroHapDB** is a package designed for scientists and researchers interested in microhaplotype analysis.
 This package is a distribution and convenience mechanism and does not implement any analytics itself.
-All microhaplotype data was obtained from the [Allele Frequency Database (ALFRED)][alfred]<sup>[1]</sup> at the Yale University School of Medicine and the [Leiden Open Variation Database][lovd]<sup>[2]</sup>, although we'd be happy to consider integratation of microhap data from any source.
+All microhaplotype data was obtained from the [Allele Frequency Database (ALFRED)][alfred]<sup>[1]</sup> at the Yale University School of Medicine and the [Leiden Open Variation Database][lovd]<sup>[2]</sup>.
+We're also happy to consider integrating additional microhap data from other sources.
 
 ## Installation
 
@@ -26,7 +27,7 @@ conda install pytest
 pytest --pyargs microhapdb --doctest-modules
 ```
 
-MicroHapDB requires Python version 3.
+MicroHapDB requires Python version 3 and the [Pandas][] library.
 
 ## Usage
 
@@ -72,30 +73,43 @@ The following example demonstrates how data across the different tables can be c
 >>> f = microhapdb.frequencies
 >>> f[(f.Locus == "MHDBL000183") & (f.Population.isin(pops.ID))]
              Locus   Population Allele  Frequency
-75117  MHDBL000183  MHDBP000041  G,T,C      0.172
-75118  MHDBL000183  MHDBP000041  G,T,A      0.103
-75119  MHDBL000183  MHDBP000041  G,C,C      0.029
-75120  MHDBL000183  MHDBP000041  G,C,A      0.000
-75121  MHDBL000183  MHDBP000041  T,T,C      0.293
-75122  MHDBL000183  MHDBP000041  T,T,A      0.063
-75123  MHDBL000183  MHDBP000041  T,C,C      0.132
-75124  MHDBL000183  MHDBP000041  T,C,A      0.207
-75333  MHDBL000183  MHDBP000068  G,T,C      0.156
-75334  MHDBL000183  MHDBP000068  G,T,A      0.148
-75335  MHDBL000183  MHDBP000068  G,C,C      0.016
-75336  MHDBL000183  MHDBP000068  G,C,A      0.000
-75337  MHDBL000183  MHDBP000068  T,T,C      0.336
-75338  MHDBL000183  MHDBP000068  T,T,A      0.049
-75339  MHDBL000183  MHDBP000068  T,C,C      0.156
-75340  MHDBL000183  MHDBP000068  T,C,A      0.139
-75525  MHDBL000183  MHDBP000092  G,T,C      0.384
-75526  MHDBL000183  MHDBP000092  G,T,A      0.202
-75527  MHDBL000183  MHDBP000092  G,C,C      0.000
-75528  MHDBL000183  MHDBP000092  G,C,A      0.000
-75529  MHDBL000183  MHDBP000092  T,T,C      0.197
-75530  MHDBL000183  MHDBP000092  T,T,A      0.000
-75531  MHDBL000183  MHDBP000092  T,C,C      0.071
-75532  MHDBL000183  MHDBP000092  T,C,A      0.146
+>>> import microhapdb                                                                                                  
+>>> microhapdb.id_xref('mh02KK-136')                                                                                   
+              ID Reference Chrom      Start        End   AvgAe  Source                                                 
+128  MHDBL000129    GRCh38  chr2  227227673  227227743  3.7742  ALFRED                                                 
+>>> pops = microhapdb.populations.query('Name.str.contains("Amer")')                                                   
+>>> pops
+             ID                Name  Source
+2   MHDBP000003   African Americans  ALFRED
+3   MHDBP000004   African Americans  ALFRED
+21  MHDBP000022  European Americans  ALFRED
+>>> f = microhapdb.frequencies                                                                                         
+>>> f[(f.Locus == "MHDBL000129") & (f.Population.isin(pops.ID))]                                                       
+             Locus   Population Allele  Frequency
+75117  MHDBL000129  MHDBP000003  G,T,C      0.172
+75118  MHDBL000129  MHDBP000003  G,T,A      0.103
+75119  MHDBL000129  MHDBP000003  G,C,C      0.029
+75120  MHDBL000129  MHDBP000003  G,C,A      0.000
+75121  MHDBL000129  MHDBP000003  T,T,C      0.293
+75122  MHDBL000129  MHDBP000003  T,T,A      0.063
+75123  MHDBL000129  MHDBP000003  T,C,C      0.132
+75124  MHDBL000129  MHDBP000003  T,C,A      0.207
+75333  MHDBL000129  MHDBP000004  G,T,C      0.156
+75334  MHDBL000129  MHDBP000004  G,T,A      0.148
+75335  MHDBL000129  MHDBP000004  G,C,C      0.016
+75336  MHDBL000129  MHDBP000004  G,C,A      0.000
+75337  MHDBL000129  MHDBP000004  T,T,C      0.336
+75338  MHDBL000129  MHDBP000004  T,T,A      0.049
+75339  MHDBL000129  MHDBP000004  T,C,C      0.156
+75340  MHDBL000129  MHDBP000004  T,C,A      0.139
+75525  MHDBL000129  MHDBP000022  G,T,C      0.384
+75526  MHDBL000129  MHDBP000022  G,T,A      0.202
+75527  MHDBL000129  MHDBP000022  G,C,C      0.000
+75528  MHDBL000129  MHDBP000022  G,C,A      0.000
+75529  MHDBL000129  MHDBP000022  T,T,C      0.197
+75530  MHDBL000129  MHDBP000022  T,T,A      0.000
+75531  MHDBL000129  MHDBP000022  T,C,C      0.071
+75532  MHDBL000129  MHDBP000022  T,C,A      0.146
 ```
 
 See the [Pandas][] documentation for more details on dataframe access and query methods.
