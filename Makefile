@@ -6,13 +6,13 @@ help: Makefile
 
 ## test:      execute the automated test suite
 test:
-	pytest --cov=microhapdb --doctest-modules microhapdb/test_*.py microhapdb/retrieve.py
+	pytest --cov=microhapdb --doctest-modules microhapdb/test_*.py microhapdb/cli.py microhapdb/retrieve.py
 
 ## devdeps:   install development dependencies
 devdeps:
-	pip3 install --upgrade pip setuptools
-	pip3 install wheel twine
-	pip3 install pycodestyle pytest-cov pytest-sugar
+	pip install --upgrade pip setuptools
+	pip install wheel twine
+	pip install pycodestyle pytest-cov pytest-sugar
 
 ## clean:     remove development artifacts
 clean:

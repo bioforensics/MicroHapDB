@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------
 
 from collections import namedtuple
-from files import sopen, tmpfile
+from files import smartopen
 import os
 from re import findall, search
 
@@ -15,25 +15,52 @@ Locus = namedtuple('Locus', 'locusid,label,locusname,chrom,start,end,variants')
 Variant = namedtuple('Variant', 'dbsnpid,chrom,position')
 
 
-# Populate a list of all microhap loci, but only if the locus table has already
-# been created from the allele frequency database.
-ALL_LOCI = list()
-if os.path.isfile(tmpfile('microhap-loci-prelim.tsv')):
-    with open(tmpfile('microhap-loci-prelim.tsv')) as instream:
-        next(instream)
-        for line in instream:
-            locusid, name = line.strip().split()
-            ALL_LOCI.append(locusid)
-
-
-def locus_list(instream):
+def alfred_locus_list(instream):
     data = instream.read()
     matches = findall(r'(\S+) \| null \| \d+ \| (\S+)', data)
     for locusid, locusname in matches:
         yield locusid, locusname
 
 
-def locus_scrape(locusid, instream, allelefile, variantfile):
+def alfred_loci_prelim(freqstream, coordstream):
+    locusids = dict()
+    for locusid, locusname in alfred_locus_list(freqstream):
+        locusids[locusname] = locusid
+    next(coordstream)
+    for line in coordstream:
+        values = line.strip().split()
+        locusid = locusids[values[0]]
+        yield [*values[1:], 'ALFRED', locusid, values[0]]
+
+
+def lovd_loci_prelim(instream):
+    for line in instream:
+        if line.startswith(' '):
+            continue
+        values = line.strip().split(',')
+        yield [*values[1:4], 'LOVD', values[0]]
+
+
+def combine_loci(alfredstream, lovdstream):
+    loci = list()
+    next(alfredstream)
+    for line in alfredstream:
+        values = line.strip().split()
+        loci.append(values)
+    next(lovdstream)
+    for line in lovdstream:
+        values = line.strip().split()
+        loci.append(values)
+    loci.sort(key=lambda l: (l[0], int(l[1]), int(l[2])))
+    for n, valuelist in enumerate(loci, 1):
+        chrom, start, end, source, *idlist = valuelist
+        newid = 'MHDBL{:06d}'.format(n)
+        yield [newid, 'GRCh38', chrom, start, end, source]
+        for xref in idlist:
+            yield [xref, 'locus', newid]
+
+
+def alfred_locus_scrape(locusid, instream, allelefile, variantfile):
     """Scrape a locus detail page for variant and allele data
 
     We use the locus detail pages to determine which variants are associated
@@ -58,7 +85,7 @@ def locus_scrape(locusid, instream, allelefile, variantfile):
     alfredids = [m[4] for m in matches]
     refralleles = [m[1] for m in matches]
     altalleles = [m[2] for m in matches]
-    with sopen(variantfile, 'w') as outstream:
+    with smartopen(variantfile, 'w') as outstream:
         id_allele_data = zip(dbsnpids, alfredids, refralleles, altalleles)
         for values in id_allele_data:
             print(locusid, *values, sep='\t', file=outstream)
@@ -66,61 +93,7 @@ def locus_scrape(locusid, instream, allelefile, variantfile):
     matches = findall(r'<tr><td>([ACGTDI](-[ACGTDI])+)</td>', data)
     haplotypes = [m[0] for m in matches]
     varstr = ','.join(dbsnpids)
-    with sopen(allelefile, 'w') as outstream:
+    with smartopen(allelefile, 'w') as outstream:
         for hap in haplotypes:
             hap = hap.replace('-', ',')
             print(locusid, hap, varstr, sep='\t', file=outstream)
-
-
-def variant_coords(alfred, dbsnp):
-    dbsnpids = set()
-    next(alfred)
-    for line in alfred:
-        dbsnpid = line.split()[1]
-        dbsnpids.add(dbsnpid)
-    dbsnpids_found = set()
-    for line in dbsnp:
-        if line.startswith('#'):
-            continue
-        fields = line.strip().split('\t')
-        dbsnpid = fields[2]
-        if dbsnpid not in dbsnpids:
-            continue
-        chrom = fields[0]
-        position = int(fields[1])
-        yield Variant(dbsnpid, chrom, position)
-        dbsnpids_found.add(dbsnpid)
-    if dbsnpids > dbsnpids_found:
-        missing = sorted(dbsnpids - dbsnpids_found)
-        message = '{} dbSNP IDs missing: {}'.format(len(missing), missing)
-        raise ValueError(message)
-
-
-def combine_locus_data(idstream, allelestream, variantstream):
-    """Aggregate locus data from ALFRED and dbSNP."""
-    variants = dict()
-    next(variantstream)
-    for line in variantstream:
-        values = line.strip().split()
-        vid = values[0]
-        variants[vid] = values
-
-    locusvariants = dict()
-    next(allelestream)
-    for line in allelestream:
-        values = line.strip().split()
-        locusid = values[0]
-        variantids = values[2]
-        locusvariants[locusid] = variantids
-
-    next(idstream)
-    for n, line in enumerate(idstream, 1):
-        locusid = 'MHDBL{:06d}'.format(n)
-        label, locusname = line.strip().split()
-        varstr = locusvariants[label]
-        varlist = varstr.split(',')
-        vardata = [variants[v] for v in varlist]
-        chrom = vardata[0][1]
-        start = min([int(d[2]) for d in vardata])
-        end = max([int(d[2]) for d in vardata])
-        yield Locus(locusid, label, locusname, chrom, start, end, varlist)

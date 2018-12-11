@@ -71,7 +71,7 @@ def test_main(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split('\n')
-    assert len(outlines) == 96 + 1  # 96 populations + 1 header line
+    assert len(outlines) == 96 + 3 + 1  # 96 ALFRED + 3 LOVD + 1 header line
 
 
 def test_main_region_mode(capsys):
@@ -89,7 +89,7 @@ def test_main_id_mode(capsys):
     args = get_parser().parse_args(arglist)
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
-    line = '34996  MHDBV000034997    GRCh38  chr9    680713     A,G  dbSNP151'
+    line = '39087  MHDBV000039088    GRCh38  chr9    680713     A,G  dbSNP151'
     assert line in out
 
 

@@ -11,8 +11,10 @@ Those who are especially curious or who wish to reproduce this work should find 
 Building MicroHapDB from scratch requires the following software and data.
 
 - Python 3 (tested with 3.6, but will probably work with earlier 3.x versions)
+- Pandas (tested with 0.23.4)
 - Snakemake (tested with 5.1.5)
 - dbSNP database (VCF format, gzip compressed)
+- tabix (tested with 1.9)
 
 For convenience, let's assume for the rest of this manual that the path to the dbSNP database is stored in the environmental variable `dbsnp`.
 
@@ -20,36 +22,39 @@ For convenience, let's assume for the rest of this manual that the path to the d
 export dbsnp=/path/to/the/file/dbSNP_GRCh38.vcf.gz
 ```
 
-The build procedure has been tested on the Linux and Mac OS X operating systems, but OS-specific commands were intentionally avoided so the workflow should have no problems running on Windows or your cousin's obscure flavor of UNIX.
+The build procedure has been tested on the Linux and Mac OS X operating systems.
 
 
-## Build step 1: data download
+## Data download
 
-The first step of the procedure is to download data from the ALFRED database.
-The two commands in this step are the only commands that require an Internet connection.
-All subsequent commands will work offline.
+> **NOTE**: This step should not need to be repeated and is described only for the purpose of full disclosure.
+
+Important variant information for ALFRED microhaplotypes are unavailable in convenient summary form.
+The `ALFRED.Snakefile` workflow was used to retrieve HTML summary pages for microhap loci over the network from the ALFRED database.
 
 ```
-snakemake listloci --config dbsnp=$dbsnp
-snakemake fetchallloci --config dbsnp=$dbsnp
+snakemake --snakefile ALFRED.Snakefile -p loci
 ```
 
-**Note**: Snakemake will choke on all other commands/targets if `listloci` has not yet been executed. Invoking `snakemake listloci fetchallloci ...` will not work.
+These files are stored in the `alfred/downloads/locus-detail/` directory for scraping by the main data processing workflow.
+All other data required for the build has been downloaded as described in the `alfred/` and `lovd/` directories.
 
-**Another note**: by default, SnakeMake will only run one process at a time.
-Please do not execute these initial commands in parallel mode (with the `--jobs` parameter) as that could overload the ALFRED server with numerous network requests in a very short period of time.
+> **ANOTHER NOTE**: As of December 2018, funding for the ALFRED database is set to expire.
+> It is uncertain how long this build step will work.
+> Fortunately the data have been captured and stored here to enable future reference.
 
-**Yet another note**: the `downloads/` directory is distributed with the MicroHapDB codebase as downloaded from ALFRED in September 2018.
 
+## Data processing
 
-## Build step 2: data processing
-
-The second step of the procedure is to scrape, clean, and format the data downloaded from ALFRED, and to cross-reference the data with dbSNP.
-
-If you have multiple processors available, you can run many steps in parallel.
-For example, if you have 8 processors available add `--jobs 8` to the command below.
-However, iterating over the dbSNP VCF file takes orders of magnitude more time than any other step and cannot be sped up by parallel processing, so it's a moot point.
+The main build procedure is implemented in `Snakefile` and scrapes, cleans, formats, and cross-references data from ALFRED, LOVD, and dbSNP.
+It is invoked like so.
 
 ```
 snakemake tables --config dbsnp=$dbsnp
+```
+
+To speed up the build with multiple processes:
+
+```
+snakemake tables --cores 8 --config dbsnp=$dbsnp
 ```
