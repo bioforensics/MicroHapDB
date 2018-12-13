@@ -5,7 +5,7 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 from sys import stderr
 
 
@@ -28,6 +28,25 @@ def dbsnp_subset_command(locusfile, dbsnpfile, outfile):
             newend = int(end + extend)
             regions.append((chrom, newstart, newend))
     regions = sorted(regions, key=lambda r: (r[0], r[1], r[2]))
+    def overlap(interval1, interval2):
+        if interval1[0] != interval2[0]:
+            return False
+        return interval1[1] <= interval2[2] and interval1[2] >= interval2[1]
+    def merge(intervals):
+        tomerge = list()
+        for interval in intervals:
+            if len(tomerge) > 0:
+                current = (tomerge[0][0], tomerge[0][1], tomerge[-1][2])
+                if overlap(interval, current):
+                    tomerge.append(interval)
+                    continue
+                else:
+                    yield current
+                    tomerge = list()
+            tomerge.append(interval)
+        current = (tomerge[0][0], tomerge[0][1], tomerge[-1][2])
+        yield current
+    regions = merge(regions)
     regionstrs = ['{:s}:{:d}-{:d}'.format(c, s, e) for c, s, e in regions]
     cmdargs = ['tabix', dbsnpfile, *regionstrs, '>', outfile]
     cmd = ' '.join(cmdargs)
@@ -38,12 +57,12 @@ def retrieve_proximal_variants(dbsnp, alfred, lovd):
     variants = list()
 
     alfred_found = set()
-    alfred_data = dict()
+    alfred_data = defaultdict(list)
     next(alfred)
     for line in alfred:
         values = line.strip().split()
         dbsnpid = values[1]
-        alfred_data[dbsnpid] = values
+        alfred_data[dbsnpid].append(values)
 
     lovd_found = set()
     lovd_data = dict()
@@ -73,14 +92,18 @@ def retrieve_proximal_variants(dbsnp, alfred, lovd):
         locuslabel = None
         if dbsnpid in alfred_data:
             alfred_found.add(dbsnpid)
-            xref = alfred_data[dbsnpid][2]
-            locuslabel = alfred_data[dbsnpid][0]
+            for values in alfred_data[dbsnpid]:
+                xref = values[2]
+                locuslabel = values[0]
+                av = Variant(dbsnp, xref, 'dbSNP151', locuslabel, chrom,
+                             position - 1, dbsnpalstr)
+                variants.append(av)
         elif dbsnpid in lovd_data:
             lovd_found.add(dbsnpid)
             locuslabel = lovd_data[dbsnpid][0]
-        av = Variant(dbsnpid, xref, 'dbSNP151', locuslabel, chrom, position - 1,
-                     dbsnpalstr)
-        variants.append(av)
+            av = Variant(dbsnpid, xref, 'dbSNP151', locuslabel, chrom,
+                         position - 1, dbsnpalstr)
+            variants.append(av)
 
     variants.sort(key=lambda v: (v.chrom, v.pos))
     for v in variants:

@@ -38,6 +38,10 @@ def lovd_loci_prelim(instream):
         if line.startswith(' '):
             continue
         values = line.strip().split(',')
+        offsets = [int(o) for o in values[-1].split(':')]
+        start = int(values[2])
+        values[2] = start + offsets[0]
+        values[3] = start + offsets[-1] + 1
         yield [*values[1:4], 'LOVD', values[0]]
 
 
