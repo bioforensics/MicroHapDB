@@ -48,13 +48,13 @@ def test_loci():
     >>> l = microhapdb.loci
     >>> l[l.ID == 'MHDBL000108']
                   ID Reference  Chrom     Start       End   AvgAe  Source
-    107  MHDBL000108    GRCh38  chr18  78329886  78329968  3.2906  ALFRED
+    107  MHDBL000108    GRCh38  chr18  78329885  78329968  3.2906  ALFRED
     >>> l[l.ID == 'MHDBL000065']
                  ID Reference  Chrom     Start       End   AvgAe Source
-    64  MHDBL000065    GRCh38  chr14  32203269  32203324  3.7886   LOVD
+    64  MHDBL000065    GRCh38  chr14  32203273  32203324  3.7886   LOVD
     >>> microhapdb.id_xref('mh04CP-002')
                   ID Reference Chrom     Start       End   AvgAe  Source
-    159  MHDBL000160    GRCh38  chr4  24304953  24304972  3.5182  ALFRED
+    159  MHDBL000160    GRCh38  chr4  24304952  24304972  3.5182  ALFRED
     """
     loc = microhapdb.loci
     vm = microhapdb.variantmap
@@ -100,21 +100,21 @@ def test_variants():
 
     >>> microhapdb.id_xref('SI338744D')
                       ID Reference Chrom   Position Alleles    Source
-    1958  MHDBV000001959    GRCh38  chr1  161985865     A,G  dbSNP151
+    1963  MHDBV000001964    GRCh38  chr1  161985865     A,G  dbSNP151
     >>> microhapdb.id_xref('rs80047978')
                        ID Reference  Chrom  Position Alleles    Source
-    14355  MHDBV000014356    GRCh38  chr15  63806494     A,G  dbSNP151
+    14363  MHDBV000014364    GRCh38  chr15  63806494     A,G  dbSNP151
     >>> microhapdb.variants.query('Chrom == "chr15" and 52192400 < Position < 52192500')
                        ID Reference  Chrom  Position Alleles    Source
-    14079  MHDBV000014080    GRCh38  chr15  52192466     C,T  dbSNP151
-    14080  MHDBV000014081    GRCh38  chr15  52192467     G,T  dbSNP151
-    14081  MHDBV000014082    GRCh38  chr15  52192471     C,T  dbSNP151
-    14082  MHDBV000014083    GRCh38  chr15  52192490     C,T  dbSNP151
-    14083  MHDBV000014084    GRCh38  chr15  52192495     C,T  dbSNP151
+    14087  MHDBV000014088    GRCh38  chr15  52192466     C,T  dbSNP151
+    14088  MHDBV000014089    GRCh38  chr15  52192467     G,T  dbSNP151
+    14089  MHDBV000014090    GRCh38  chr15  52192471     C,T  dbSNP151
+    14090  MHDBV000014091    GRCh38  chr15  52192490     C,T  dbSNP151
+    14091  MHDBV000014092    GRCh38  chr15  52192495     C,T  dbSNP151
     """
     v = microhapdb.variants
-    assert v.shape == (40395, 6)
-    assert len(v[v.Chrom == 'chr12']) == 1395
+    assert v.shape == (39780, 6)
+    assert len(v[v.Chrom == 'chr12']) == 1397
 
 
 def test_fetch_by_query():
@@ -140,7 +140,7 @@ def test_fetch_by_id():
     results = list(fetch_by_id('rs1363241798'))
     assert len(results) == 1
     print(results)
-    assert results[0].ID.values == ['MHDBV000024096']
+    assert results[0].ID.values == ['MHDBV000024080']
     assert results[0].Chrom.values == ['chr20']
     assert results[0].Position.values == [63539694]
 
@@ -162,6 +162,6 @@ def test_fetch_by_region():
     print(results[0].ID.values)
     print(results[1].ID.values)
     assert list(results[0].ID.values) == ['MHDBL000053']
-    assert list(results[1].ID.values) == ['MHDBV000009392', 'MHDBV000009393',
-                                          'MHDBV000009394', 'MHDBV000009395',
-                                          'MHDBV000009396']
+    assert list(results[1].ID.values) == ['MHDBV000009399', 'MHDBV000009400',
+                                          'MHDBV000009401', 'MHDBV000009402',
+                                          'MHDBV000009403']

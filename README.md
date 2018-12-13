@@ -62,29 +62,16 @@ The following example demonstrates how data across the different tables can be c
 ```python
 >>> import microhapdb
 >>> microhapdb.id_xref('mh02KK-136')
-              ID Reference Chrom      Start        End  Source
-182  MHDBL000183    GRCh38  chr2  227227673  227227743  ALFRED
+              ID Reference Chrom      Start        End   AvgAe  Source
+128  MHDBL000129    GRCh38  chr2  227227672  227227743  3.7742  ALFRED
 >>> pops = microhapdb.populations.query('Name.str.contains("Amer")')
->>> pops
-             ID                Name  Source
-40  MHDBP000041   African Americans  ALFRED
-67  MHDBP000068   African Americans  ALFRED
-91  MHDBP000092  European Americans  ALFRED
->>> f = microhapdb.frequencies
->>> f[(f.Locus == "MHDBL000183") & (f.Population.isin(pops.ID))]
-             Locus   Population Allele  Frequency
->>> import microhapdb                                                                                                  
->>> microhapdb.id_xref('mh02KK-136')                                                                                   
-              ID Reference Chrom      Start        End   AvgAe  Source                                                 
-128  MHDBL000129    GRCh38  chr2  227227673  227227743  3.7742  ALFRED                                                 
->>> pops = microhapdb.populations.query('Name.str.contains("Amer")')                                                   
 >>> pops
              ID                Name  Source
 2   MHDBP000003   African Americans  ALFRED
 3   MHDBP000004   African Americans  ALFRED
 21  MHDBP000022  European Americans  ALFRED
->>> f = microhapdb.frequencies                                                                                         
->>> f[(f.Locus == "MHDBL000129") & (f.Population.isin(pops.ID))]                                                       
+>>> f = microhapdb.frequencies
+>>> f[(f.Locus == "MHDBL000129") & (f.Population.isin(pops.ID))]
              Locus   Population Allele  Frequency
 75117  MHDBL000129  MHDBP000003  G,T,C      0.172
 75118  MHDBL000129  MHDBP000003  G,T,A      0.103
