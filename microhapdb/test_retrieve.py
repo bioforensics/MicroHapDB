@@ -113,8 +113,8 @@ def test_variants():
     14083  MHDBV000014084    GRCh38  chr15  52192495     C,T  dbSNP151
     """
     v = microhapdb.variants
-    assert v.shape == (40395, 6)
-    assert len(v[v.Chrom == 'chr12']) == 1395
+    assert v.shape == (39780, 6)
+    assert len(v[v.Chrom == 'chr12']) == 1397
 
 
 def test_fetch_by_query():
@@ -140,7 +140,7 @@ def test_fetch_by_id():
     results = list(fetch_by_id('rs1363241798'))
     assert len(results) == 1
     print(results)
-    assert results[0].ID.values == ['MHDBV000024096']
+    assert results[0].ID.values == ['MHDBV000024080']
     assert results[0].Chrom.values == ['chr20']
     assert results[0].Position.values == [63539694]
 
@@ -162,6 +162,6 @@ def test_fetch_by_region():
     print(results[0].ID.values)
     print(results[1].ID.values)
     assert list(results[0].ID.values) == ['MHDBL000053']
-    assert list(results[1].ID.values) == ['MHDBV000009392', 'MHDBV000009393',
-                                          'MHDBV000009394', 'MHDBV000009395',
-                                          'MHDBV000009396']
+    assert list(results[1].ID.values) == ['MHDBV000009399', 'MHDBV000009400',
+                                          'MHDBV000009401', 'MHDBV000009402',
+                                          'MHDBV000009403']

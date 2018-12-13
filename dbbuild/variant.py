@@ -28,10 +28,12 @@ def dbsnp_subset_command(locusfile, dbsnpfile, outfile):
             newend = int(end + extend)
             regions.append((chrom, newstart, newend))
     regions = sorted(regions, key=lambda r: (r[0], r[1], r[2]))
+
     def overlap(interval1, interval2):
         if interval1[0] != interval2[0]:
             return False
         return interval1[1] <= interval2[2] and interval1[2] >= interval2[1]
+
     def merge(intervals):
         tomerge = list()
         for interval in intervals:
@@ -46,6 +48,7 @@ def dbsnp_subset_command(locusfile, dbsnpfile, outfile):
             tomerge.append(interval)
         current = (tomerge[0][0], tomerge[0][1], tomerge[-1][2])
         yield current
+
     regions = merge(regions)
     regionstrs = ['{:s}:{:d}-{:d}'.format(c, s, e) for c, s, e in regions]
     cmdargs = ['tabix', dbsnpfile, *regionstrs, '>', outfile]
@@ -88,19 +91,21 @@ def retrieve_proximal_variants(dbsnp, alfred, lovd):
         if not chrom.startswith('chr'):
             chrom = 'chr' + chrom
         position = int(dbsnpvals[1])
-        xref = None
-        locuslabel = None
+        locuslabels = list()
         if dbsnpid in alfred_data:
             alfred_found.add(dbsnpid)
             for values in alfred_data[dbsnpid]:
                 xref = values[2]
                 locuslabel = values[0]
-                av = Variant(dbsnp, xref, 'dbSNP151', locuslabel, chrom,
-                             position - 1, dbsnpalstr)
-                variants.append(av)
+                locuslabels.append((xref, locuslabel))
         elif dbsnpid in lovd_data:
             lovd_found.add(dbsnpid)
             locuslabel = lovd_data[dbsnpid][0]
+            locuslabels.append((None, locuslabel))
+        else:
+            locuslabels.append((None, None))
+
+        for xref, locuslabel in locuslabels:
             av = Variant(dbsnpid, xref, 'dbSNP151', locuslabel, chrom,
                          position - 1, dbsnpalstr)
             variants.append(av)
