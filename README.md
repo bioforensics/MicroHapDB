@@ -123,11 +123,37 @@ If you use this package, please cite our work.
 
 ----------
 
+
+## References
+
+### Variant Databases
+
 <sup>[1]</sup>Rajeevan H, Soundararajan U, Kidd JR, Pakstis AJ, Kidd KK (2012) ALFRED: an allele frequency resource for research and teaching. *Nucleic Acids Research*, 40(D1): D1010-D1015, [doi:10.1093/nar/gkr924](https://doi.org/10.1093/nar/gkr924).
 
 <sup>[2]</sup>Fokkema IF, Taschner PE, Schaafsma GC, Celli J, Laros JF, den Dunnen JT (2011) LOVD v.2.0: the next generation in gene variant databases. *Human Mutation*, 32(5): 557-63, [doi:10.1002/humu.21438](https://doi.org/10.1002/humu.21438).
 
+### Supporting Software
+
 <sup>[3]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
+
+### Microhaplotype Studies
+
+Bulbul O, Pakstis AJ, Soundararajan U, Gurkan C, Brissenden JE, Roscoe JM, Evsanaa B, Togtokh A, Paschou P, Grigorenko EL, Gurwitz D, Wootton S, Lagace R, Chang J, Speed WC, Kidd KK (2018) Ancestry inference of 96 population samples using microhaplotypes. *International Journal of Legal Medicine*, **132**:703-711, [doi:10.1007/s00414-017-1748-6](https://doi.org/10.1007/s00414-017-1748-6).
+
+Chen P, Yin C, Li Z, Pu Y, Yu Y, Zhao P, Chen D, Liang W, Zhang L, Chen F (2018) Evaluation of the Microhaplotypes panel for DNA mixture analyses. *Forensic Science International: Genetics*, **35**:149-155, [doi:10.1016/j.fsigen.2018.05.003](https://doi.org/10.1016/j.fsigen.2018.05.003).
+
+Chen P, Zhu W, Tong F, Pu Y, Yu Y, Huang S, Li Z, Zhang L, Liang W, Chen F (2018) Identifying novel microhaplotypes for ancestry inference. *International Journal of Legal Medicine*, [doi:10.1007/s00414-018-1881-x](https://doi.org/10.1007/s00414-018-1881-x).
+
+Kidd KK, Pakstis AJ, Speed WC, Lagace R, Wootton S, Chang J (2018) Selecting microhaplotypes optimized for different purposes. *Electrophoresis*, [doi:10.1002/elps.201800092](https://doi.org/10.1002/elps.201800092).
+
+Kidd KK, Speed WC, Pakstis AJ, Podini DS, Lagace R, Chang J, Wootton S, Haigh E, Soundararajan U (2017) Evaluating 130 Microhaplotypes across a Global Set of 83 Populations. *Forensic Science International: Genetics*, **29**:29-37, [doi:10.1016/j.fsigen.2017.03.014](https://doi.org/10.1016/j.fsigen.2017.03.014).
+
+Kidd KK, Pakstis AJ, Speed WC, Lagace R, Chang J, Wootton S, Haigh E, Kidd JR (2014) Current sequencing technology makes microhaplotypes a powerful new type of genetic marker for forensics. *Forensic Science International: Genetics*, **12**:215-224, [doi:10.1016/j.fsigen.2014.06.014](https://doi.org/10.1016/j.fsigen.2014.06.014)
+
+Kidd KK, Pakstis AJ, Speed WC, Lagace R, Chang J, Wootton S, Ihuegbu N (2013) Microhaplotype loci are a powerful new type of forensic marker". *Forensic Science International: Genetics supplement series*, **4**:e123-124, [doi:10.1016/j.fsigss.2013.10.063](https://doi.org/10.1016/j.fsigss.2013.10.063).
+
+van der Gaag KJ, de Leeuw RH, Laros JFJ, den Dunnen JT, de Knijff P (2018) Short hypervariable microhaplotypes: A novel set of very short high discriminating power loci without stutter artefacts. *Forensic Science International: Genetics*, 35:169-175, [doi:10.1016/j.fsigen.2018.05.008](https://doi.org/10.1016/j.fsigen.2018.05.008).
+
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
 [lovd]: http://www.lovd.nl/3.0/home
