@@ -166,6 +166,7 @@ def test_fetch_by_region():
                                           'MHDBV000009401', 'MHDBV000009402',
                                           'MHDBV000009403']
 
+
 @pytest.mark.parametrize('locusaccession', [
     'mh13KK-218',
     'SI664607D',
