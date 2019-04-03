@@ -18,12 +18,12 @@ __version__ = get_versions()['version']
 del get_versions
 
 
-idmap = pandas.read_table(data_file('idmap.tsv'))
-frequencies = pandas.read_table(data_file('allele.tsv'))
-loci = pandas.read_table(data_file('locus.tsv'))
-populations = pandas.read_table(data_file('population.tsv'))
-variants = pandas.read_table(data_file('variant.tsv'))
-variantmap = pandas.read_table(data_file('variantmap.tsv'))
+idmap = pandas.read_csv(data_file('idmap.tsv'), sep='\t')
+frequencies = pandas.read_csv(data_file('allele.tsv'), sep='\t')
+loci = pandas.read_csv(data_file('locus.tsv'), sep='\t')
+populations = pandas.read_csv(data_file('population.tsv'), sep='\t')
+variants = pandas.read_csv(data_file('variant.tsv'), sep='\t')
+variantmap = pandas.read_csv(data_file('variantmap.tsv'), sep='\t')
 
 tables = {
     'variant': variants,
