@@ -165,3 +165,15 @@ def test_fetch_by_region():
     assert list(results[1].ID.values) == ['MHDBV000009399', 'MHDBV000009400',
                                           'MHDBV000009401', 'MHDBV000009402',
                                           'MHDBV000009403']
+
+
+@pytest.mark.parametrize('locusaccession', [
+    'mh13KK-218',
+    'SI664607D',
+    'MHDBL000060',
+])
+def test_allele_positions(locusaccession):
+    pos = microhapdb.retrieve.allele_positions(locusaccession)
+    assert pos == [53486691, 53486745, 53486756, 53486836]
+    with pytest.raises(StopIteration):
+        _ = microhapdb.retrieve.allele_positions('b0GusId')

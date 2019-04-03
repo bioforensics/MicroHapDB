@@ -130,3 +130,17 @@ def fetch_by_region(region, table=None):
 
 def id_xref(idvalue):
     return next(fetch_by_id(idvalue))
+
+
+def allele_positions(locus):
+    locusrecords = microhapdb.id_xref(locus)
+    assert len(locusrecords) == 1
+    locusid = locusrecords.iloc[0].ID
+    variants = microhapdb.variants[
+        microhapdb.variants.ID.isin(
+            microhapdb.variantmap[
+                microhapdb.variantmap.LocusID == locusid
+            ].VariantID
+        )
+    ]
+    return list(variants.Position)
