@@ -177,3 +177,14 @@ def test_allele_positions(locusaccession):
     assert pos == [53486691, 53486745, 53486756, 53486836]
     with pytest.raises(StopIteration):
         _ = microhapdb.retrieve.allele_positions('b0GusId')
+
+
+def test_standardize_ids():
+    from microhapdb.retrieve import standardize_ids as sid
+    assert sid(['BoGUSid']) == list()
+    assert sid(['MHDBL000097']) == ['MHDBL000097']
+    assert sid(['SI664623B']) == ['MHDBL000097']
+    assert sid(['MHDBL000097', 'SI664623B']) == ['MHDBL000097']
+    assert sid(['SI664623B', 'NotARealId']) == ['MHDBL000097']
+    assert sid(['SI664623B', 'mh04KK-011', 'MHDBL000113']) == ['MHDBL000097', 'MHDBL000113', 'MHDBL000161']
+    assert sid(['rs547950691', 'mh02KK-131', 'SA002765U']) == ['MHDBL000118', 'MHDBP000054', 'MHDBV000028356']

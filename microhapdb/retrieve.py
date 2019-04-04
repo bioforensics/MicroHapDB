@@ -144,3 +144,20 @@ def allele_positions(locus):
         )
     ]
     return list(variants.Position)
+
+
+def standardize_ids(idlist):
+    """Convert a list of IDs or DB cross-references to internal MicroHapDB IDs.
+
+    >>> standardize_ids(['MHDBL000097'])
+    ['MHDBL000097']
+    >>> standardize_ids(['SI664623B'])
+    ['MHDBL000097']
+    >>> standardize_ids(['rs547950691', 'mh02KK-131', 'SA002765U'])
+    ['MHDBL000118', 'MHDBP000054', 'MHDBV000028356']
+    """
+    idmap = microhapdb.idmap
+    iddata = idmap[(idmap.XRef.isin(idlist)) | (idmap.mhdbID.isin(idlist))]
+    if len(iddata) == 0:
+        return list()
+    return sorted(iddata.mhdbID.unique())

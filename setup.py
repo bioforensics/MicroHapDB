@@ -42,6 +42,7 @@ setup(
         'Framework :: IPython',
         'Framework :: Jupyter',
         'Intended Audience :: Science/Research',
+        'Intended Audience :: Legal Industry',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python :: 3',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
