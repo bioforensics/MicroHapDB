@@ -143,7 +143,7 @@ def allele_positions(locus):
             ].VariantID
         )
     ]
-    return list(variants.Position)
+    return list(variants.drop_duplicates('Position').Position)
 
 
 def standardize_ids(idlist):

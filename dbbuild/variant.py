@@ -75,7 +75,7 @@ def retrieve_proximal_variants(dbsnp, alfred, lovd):
         dbsnpids = values[5]
         if dbsnpids == '-':
             v = Variant(None, None, values[-1], values[0], values[1],
-                        int(values[2]) - 1, values[4])
+                        int(values[2]), values[4])
             variants.append(v)
         else:
             for dbsnpid in dbsnpids.split(','):
