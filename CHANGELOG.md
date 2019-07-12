@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Fixed
+- A bug in the dbbuild code that resulted in a variant off-by-one error (see #21).
+- A bug in the `allele_positions()` code that didn't properly handle cases where known duplicate variants exist (see #21).
+
+
 ## [0.3] 2019-05-02
 
 ### Added
