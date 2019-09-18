@@ -30,7 +30,7 @@ with smartopen('alfred/Microhap_alleleF_198.txt', 'r') as instream:
 
 rule tables:
     input:
-        expand('{table}.tsv', table=['allele', 'locus', 'population', 'variant', 'idmap', 'variantmap'])
+        expand('{table}.tsv', table=['allele', 'marker', 'population', 'variant', 'idmap', 'variantmap'])
 
 
 # -----------------------------------------------------------------------------
@@ -90,7 +90,7 @@ rule score_loci:
         'intermediate/locus-prelim.tsv',
         'allele.tsv'
     output:
-        'locus.tsv'
+        'marker.tsv'
     run:
         loci = pandas.read_table(input[0])
         freqs = pandas.read_table(input[1])
@@ -99,9 +99,9 @@ rule score_loci:
             if n > 0 and n % 10 == 0:
                 print('....processed', n, 'loci')
             ae_per_pop = list()
-            for pop in freqs[freqs.Locus == locusid].Population.unique():
+            for pop in freqs[freqs.Marker == locusid].Population.unique():
                 ae_recip = 0.0
-                for freq in freqs[(freqs.Locus == locusid) & (freqs.Population == pop)].Frequency:
+                for freq in freqs[(freqs.Marker == locusid) & (freqs.Population == pop)].Frequency:
                     ae_recip += freq ** 2
                 ae = 1.0 / ae_recip
                 ae_per_pop.append(ae)
@@ -184,8 +184,8 @@ rule parse_variant_data:
                     print(v.dbsnpid, 'variant', varid, sep='\t', file=varidstream)
                 if v.xref is not None:
                     print(v.xref, 'variant', varid, sep='\t', file=varidstream)
-                if v.locuslabel is not None:
-                    locusid = locus_ids[v.locuslabel]
+                if v.markerlabel is not None:
+                    locusid = locus_ids[v.markerlabel]
                     print(locusid, varid, sep='\t', file=varmap)
 
 
@@ -221,7 +221,7 @@ rule allelefreq:
             for line in instream:
                 values = line.strip().split()
                 mapping[values[0]] = values[2]
-            print('Locus', 'Population', 'Allele', 'Frequency', sep='\t', file=outstream)
+            print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=outstream)
             for af in allele_frequencies_alfred(input[0], input[1]):
                 print(mapping[af.locusid], mapping[af.popid], af.allele, af.freq, sep='\t', file=outstream)
             for af in allele_frequencies_lovd(input[2], input[3]):

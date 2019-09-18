@@ -11,7 +11,7 @@ import os
 from re import findall, search
 
 
-Locus = namedtuple('Locus', 'locusid,label,locusname,chrom,start,end,variants')
+Marker = namedtuple('Marker', 'markerid,label,markername,chrom,start,end,variants')
 Variant = namedtuple('Variant', 'dbsnpid,chrom,position')
 
 
@@ -58,10 +58,10 @@ def combine_loci(alfredstream, lovdstream):
     loci.sort(key=lambda l: (l[0], int(l[1]), int(l[2])))
     for n, valuelist in enumerate(loci, 1):
         chrom, start, end, source, *idlist = valuelist
-        newid = 'MHDBL{:06d}'.format(n)
+        newid = 'MHDBM{:06d}'.format(n)
         yield [newid, 'GRCh38', chrom, start, end, source]
         for xref in idlist:
-            yield [xref, 'locus', newid]
+            yield [xref, 'marker', newid]
 
 
 def alfred_locus_scrape(locusid, instream, allelefile, variantfile):

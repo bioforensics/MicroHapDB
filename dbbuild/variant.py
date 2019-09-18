@@ -10,7 +10,7 @@ from sys import stderr
 
 
 Variant = namedtuple('Variant',
-                     'dbsnpid,xref,source,locuslabel,chrom,pos,alleles')
+                     'dbsnpid,xref,source,markerlabel,chrom,pos,alleles')
 
 
 def dbsnp_subset_command(locusfile, dbsnpfile, outfile):
