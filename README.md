@@ -46,12 +46,12 @@ Invoke `microhapdb --help` for a description of the command-line configuration o
 Programmatic access to microhap data within Python is as simple as invoking `import microhapdb` and querying the following tables.
 
 - `microhapdb.frequencies`
-- `microhapdb.loci`
+- `microhapdb.markers`
 - `microhapdb.populations`
 - `microhapdb.variants`
 
 Each is a [Pandas][]<sup>[3]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
-There are also two auxiliary tables: one that contains a mapping of all variants to their corresponding microhap loci, and another table cross-referencing external IDs/labels/names with internal MicroHapDB identifiers.
+There are also two auxiliary tables: one that contains a mapping of all variants to their corresponding microhap markers, and another table cross-referencing external IDs/labels/names with internal MicroHapDB identifiers.
 
 - `microhapdb.variantmap`
 - `microhapdb.idmap`
@@ -63,7 +63,7 @@ The following example demonstrates how data across the different tables can be c
 >>> import microhapdb
 >>> microhapdb.id_xref('mh02KK-136')
               ID Reference Chrom      Start        End   AvgAe  Source
-128  MHDBL000129    GRCh38  chr2  227227672  227227743  3.7742  ALFRED
+128  MHDBM000129    GRCh38  chr2  227227672  227227743  3.7742  ALFRED
 >>> pops = microhapdb.populations.query('Name.str.contains("Amer")')
 >>> pops
              ID                Name  Source
@@ -71,32 +71,32 @@ The following example demonstrates how data across the different tables can be c
 3   MHDBP000004   African Americans  ALFRED
 21  MHDBP000022  European Americans  ALFRED
 >>> f = microhapdb.frequencies
->>> f[(f.Locus == "MHDBL000129") & (f.Population.isin(pops.ID))]
-             Locus   Population Allele  Frequency
-75117  MHDBL000129  MHDBP000003  G,T,C      0.172
-75118  MHDBL000129  MHDBP000003  G,T,A      0.103
-75119  MHDBL000129  MHDBP000003  G,C,C      0.029
-75120  MHDBL000129  MHDBP000003  G,C,A      0.000
-75121  MHDBL000129  MHDBP000003  T,T,C      0.293
-75122  MHDBL000129  MHDBP000003  T,T,A      0.063
-75123  MHDBL000129  MHDBP000003  T,C,C      0.132
-75124  MHDBL000129  MHDBP000003  T,C,A      0.207
-75333  MHDBL000129  MHDBP000004  G,T,C      0.156
-75334  MHDBL000129  MHDBP000004  G,T,A      0.148
-75335  MHDBL000129  MHDBP000004  G,C,C      0.016
-75336  MHDBL000129  MHDBP000004  G,C,A      0.000
-75337  MHDBL000129  MHDBP000004  T,T,C      0.336
-75338  MHDBL000129  MHDBP000004  T,T,A      0.049
-75339  MHDBL000129  MHDBP000004  T,C,C      0.156
-75340  MHDBL000129  MHDBP000004  T,C,A      0.139
-75525  MHDBL000129  MHDBP000022  G,T,C      0.384
-75526  MHDBL000129  MHDBP000022  G,T,A      0.202
-75527  MHDBL000129  MHDBP000022  G,C,C      0.000
-75528  MHDBL000129  MHDBP000022  G,C,A      0.000
-75529  MHDBL000129  MHDBP000022  T,T,C      0.197
-75530  MHDBL000129  MHDBP000022  T,T,A      0.000
-75531  MHDBL000129  MHDBP000022  T,C,C      0.071
-75532  MHDBL000129  MHDBP000022  T,C,A      0.146
+>>> f[(f.Marker == "MHDBM000129") & (f.Population.isin(pops.ID))]
+            Marker   Population Allele  Frequency
+75117  MHDBM000129  MHDBP000003  G,T,C      0.172
+75118  MHDBM000129  MHDBP000003  G,T,A      0.103
+75119  MHDBM000129  MHDBP000003  G,C,C      0.029
+75120  MHDBM000129  MHDBP000003  G,C,A      0.000
+75121  MHDBM000129  MHDBP000003  T,T,C      0.293
+75122  MHDBM000129  MHDBP000003  T,T,A      0.063
+75123  MHDBM000129  MHDBP000003  T,C,C      0.132
+75124  MHDBM000129  MHDBP000003  T,C,A      0.207
+75333  MHDBM000129  MHDBP000004  G,T,C      0.156
+75334  MHDBM000129  MHDBP000004  G,T,A      0.148
+75335  MHDBM000129  MHDBP000004  G,C,C      0.016
+75336  MHDBM000129  MHDBP000004  G,C,A      0.000
+75337  MHDBM000129  MHDBP000004  T,T,C      0.336
+75338  MHDBM000129  MHDBP000004  T,T,A      0.049
+75339  MHDBM000129  MHDBP000004  T,C,C      0.156
+75340  MHDBM000129  MHDBP000004  T,C,A      0.139
+75525  MHDBM000129  MHDBP000022  G,T,C      0.384
+75526  MHDBM000129  MHDBP000022  G,T,A      0.202
+75527  MHDBM000129  MHDBP000022  G,C,C      0.000
+75528  MHDBM000129  MHDBP000022  G,C,A      0.000
+75529  MHDBM000129  MHDBP000022  T,T,C      0.197
+75530  MHDBM000129  MHDBP000022  T,T,A      0.000
+75531  MHDBM000129  MHDBP000022  T,C,C      0.071
+75532  MHDBM000129  MHDBP000022  T,C,A      0.146
 ```
 
 See the [Pandas][] documentation for more details on dataframe access and query methods.
@@ -107,11 +107,11 @@ The data behind MicroHapDB is contained in 6 tab-delimited text files.
 If you'd prefer not to use MicroHapDB's command-line interface or Python API, it should be trivial load these files directly into R, Julia, or the data science environment of your choice.
 Invoke `microhapdb files` on the command line to see the location of the installed `.tsv` files.
 
-- `locus.tsv`: microhaplotype loci
-- `variant.tsv`: variants associated with each microhap locus
-- `allele.tsv`: allele frequencies for 148 loci across 84 populations
+- `marker.tsv`: microhaplotype marker definitions
+- `variant.tsv`: variants associated with each microhap marker
+- `allele.tsv`: allele frequencies for 148 markers across 84 populations
 - `population.tsv`: summary of the populations studied
-- `variantmap.tsv`: shows which variants are associated with which loci
+- `variantmap.tsv`: identifies which variants are associated with which markers
 - `idmap.tsv`: mapping of all IDs/names/labels to internal MicroHapDB IDs
 
 
@@ -136,7 +136,7 @@ If you use this package, please cite our work.
 
 <sup>[3]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
 
-### Microhaplotype Studies
+### Selected Microhaplotype Studies
 
 Bulbul O, Pakstis AJ, Soundararajan U, Gurkan C, Brissenden JE, Roscoe JM, Evsanaa B, Togtokh A, Paschou P, Grigorenko EL, Gurwitz D, Wootton S, Lagace R, Chang J, Speed WC, Kidd KK (2018) Ancestry inference of 96 population samples using microhaplotypes. *International Journal of Legal Medicine*, **132**:703-711, [doi:10.1007/s00414-017-1748-6](https://doi.org/10.1007/s00414-017-1748-6).
 

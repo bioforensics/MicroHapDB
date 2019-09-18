@@ -12,8 +12,8 @@ import versioneer
 
 
 desc = (
-    'Resource for working with microhaploptype data from the ALFRED database '
-    '(https://alfred.med.yale.edu).'
+    'Data package providing convenient programmatic access to published '
+    'microhaplotype data.'
 )
 with open('README.md', 'r') as infile:
     longdesc = infile.read()
