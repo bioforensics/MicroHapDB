@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+### Changed
+- Replaced all references to `locus` and `loci` with `marker` and `markers` in the main code base (see #23).
+
 ### Fixed
 - A bug in the dbbuild code that resulted in a variant off-by-one error (see #21).
 - A bug in the `allele_positions()` code that didn't properly handle cases where known duplicate variants exist (see #21).

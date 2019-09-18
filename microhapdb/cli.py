@@ -18,21 +18,21 @@ import textwrap
 def query_mode(table, querystr):
     """Retrieve data with a Pandas query.
 
-    Specify the table to query (variant, locus, population, allele) and provide
-    a Pandas-style query.
+    Specify the table to query (variant, marker, population, allele) and
+    provide a Pandas-style query.
 
-    >>> for result in query_mode('locus', 'Chrom == "chr8"'): print(result)
+    >>> for result in query_mode('marker', 'Chrom == "chr8"'): print(result)
                   ID Reference Chrom     Start       End   AvgAe  Source
-    202  MHDBL000203    GRCh38  chr8   1194352   1194372  2.6273    LOVD
-    203  MHDBL000204    GRCh38  chr8   3659269   3659482  3.9708  ALFRED
-    204  MHDBL000205    GRCh38  chr8  11738319  11738460  2.2865  ALFRED
-    >>> querystr = 'Locus == "MHDBL000177" and Population == "MHDBP000092"'
+    202  MHDBM000203    GRCh38  chr8   1194352   1194372  2.6273    LOVD
+    203  MHDBM000204    GRCh38  chr8   3659269   3659482  3.9708  ALFRED
+    204  MHDBM000205    GRCh38  chr8  11738319  11738460  2.2865  ALFRED
+    >>> querystr = 'Marker == "MHDBM000177" and Population == "MHDBP000092"'
     >>> for result in query_mode('allele', querystr): print(result)
-                 Locus   Population Allele  Frequency
-    66015  MHDBL000177  MHDBP000092    C,C      0.661
-    66016  MHDBL000177  MHDBP000092    C,T      0.339
-    66017  MHDBL000177  MHDBP000092    T,C      0.000
-    66018  MHDBL000177  MHDBP000092    T,T      0.000
+                Marker   Population Allele  Frequency
+    66015  MHDBM000177  MHDBP000092    C,C      0.661
+    66016  MHDBM000177  MHDBP000092    C,T      0.339
+    66017  MHDBM000177  MHDBP000092    T,C      0.000
+    66018  MHDBM000177  MHDBP000092    T,T      0.000
     """
     for result in fetch_by_query(table, querystr):
         yield result
@@ -49,7 +49,7 @@ def id_mode(idstr):
     19313  MHDBV000019314    GRCh38  chr18   8892896  A,C,G,T  dbSNP151
     >>> for result in id_mode('mh19CP-007'): print(result)
                   ID Reference  Chrom     Start       End   AvgAe  Source
-    109  MHDBL000110    GRCh38  chr19  14310739  14310781  3.0813  ALFRED
+    109  MHDBM000110    GRCh38  chr19  14310739  14310781  3.0813  ALFRED
     >>> for result in id_mode('SA004109O'): print(result)
                  ID       Name  Source
     15  MHDBP000016  Colombian  ALFRED
@@ -59,28 +59,28 @@ def id_mode(idstr):
 
 
 def region_mode(region, table=None):
-    """Retrieve microhap loci and proximal variants with range queries.
+    """Retrieve microhap markers and proximal variants with range queries.
 
-    Use queries of the format "chrX" or "chrX:YYYY-ZZZZ" to retrieve loci or
+    Use queries of the format "chrX" or "chrX:YYYY-ZZZZ" to retrieve markers or
     variants (or both) from the specified genomic region.
 
     MicroHapDB includes not only the dbSNP variants that define each
-    microhaplotype locus, but also the other variants within its extent and the
-    flanking nucleotides.
+    microhaplotype marker, but also the other variants within its extent and
+    the flanking nucleotides.
 
-    >>> for result in region_mode('chr13', table='locus'): print(result)
+    >>> for result in region_mode('chr13', table='marker'): print(result)
                  ID Reference  Chrom      Start        End   AvgAe  Source
-    55  MHDBL000056    GRCh38  chr13   23191401   23191542  3.6440  ALFRED
-    56  MHDBL000057    GRCh38  chr13   24343962   24343994  3.0655  ALFRED
-    57  MHDBL000058    GRCh38  chr13   46291794   46291987  4.0035  ALFRED
-    58  MHDBL000059    GRCh38  chr13   50313423   50313589  2.3932  ALFRED
-    59  MHDBL000060    GRCh38  chr13   53486691   53486837  6.0444  ALFRED
-    60  MHDBL000061    GRCh38  chr13   66138599   66138696  3.4361  ALFRED
-    61  MHDBL000062    GRCh38  chr13   94894395   94894513  2.0150  ALFRED
-    62  MHDBL000063    GRCh38  chr13  110154351  110154505  3.7978  ALFRED
+    55  MHDBM000056    GRCh38  chr13   23191401   23191542  3.6440  ALFRED
+    56  MHDBM000057    GRCh38  chr13   24343962   24343994  3.0655  ALFRED
+    57  MHDBM000058    GRCh38  chr13   46291794   46291987  4.0035  ALFRED
+    58  MHDBM000059    GRCh38  chr13   50313423   50313589  2.3932  ALFRED
+    59  MHDBM000060    GRCh38  chr13   53486691   53486837  6.0444  ALFRED
+    60  MHDBM000061    GRCh38  chr13   66138599   66138696  3.4361  ALFRED
+    61  MHDBM000062    GRCh38  chr13   94894395   94894513  2.0150  ALFRED
+    62  MHDBM000063    GRCh38  chr13  110154351  110154505  3.7978  ALFRED
     >>> for result in region_mode('chr18:24557400-24557450'): print(result)
                   ID Reference  Chrom     Start       End  AvgAe  Source
-    105  MHDBL000106    GRCh38  chr18  24557354  24557490  2.658  ALFRED
+    105  MHDBM000106    GRCh38  chr18  24557354  24557490  2.658  ALFRED
                        ID Reference  Chrom  Position Alleles    Source
     19457  MHDBV000019458    GRCh38  chr18  24557400     C,T  dbSNP151
     19458  MHDBV000019459    GRCh38  chr18  24557402     A,C  dbSNP151
@@ -101,7 +101,7 @@ def print_files():
     This is helpful if the user wants to data science the TSV tables directly.
     """
     tables = (
-        'allele', 'locus', 'population', 'variant', 'variantmap', 'idmap'
+        'allele', 'marker', 'population', 'variant', 'variantmap', 'idmap'
     )
     for table in tables:
         print(microhapdb.data_file(table + '.tsv'))
@@ -125,9 +125,9 @@ def get_parser():
         microhapdb --id rs10815466
         microhapdb --id SA000936S
         microhapdb --table population
-        microhapdb --table locus --region chr7
+        microhapdb --table marker --region chr7
         microhapdb --table variant --region chr19:4000000-5000000
-        microhapdb --table allele --query 'Locus == "MHDBL000047" and Allele == "C,T,G" and Population == "MHDBP000006"'
+        microhapdb --table allele --query 'Marker == "MHDBM000047" and Allele == "C,T,G" and Population == "MHDBP000006"'
     """
     epilog = textwrap.dedent(epilog)
     cli = argparse.ArgumentParser(
@@ -144,9 +144,9 @@ def get_parser():
         'filenames and exit'
     )
     cli.add_argument(
-        '-t', '--table', choices=['variant', 'locus', 'population', 'allele'],
+        '-t', '--table', choices=['variant', 'marker', 'population', 'allele'],
         metavar='TBL', help='restrict results to the specified data table; '
-        'must be one of "variant", "locus", "population", or "allele"'
+        'must be one of "variant", "marker", "population", or "allele"'
     )
     cli.add_argument(
         '-r', '--region', metavar='RGN', help='restrict results to the '

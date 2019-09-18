@@ -1,12 +1,11 @@
-dist: trusty
 language: python
 branches:
   only:  # don't build "pushes" except on the master branch
     - master
 cache: pip
 python:
-#    - 3.5
     - 3.6
+    - 3.7
 install:
     - make devdeps
     - pip install .

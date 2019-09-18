@@ -1,10 +1,10 @@
+# MicroHapDB
+
 [![MicroHapDB build status][travisbadge]](https://travis-ci.org/bioforensics/MicroHapDB)
 [![Install with bioconda][condabadge]](http://bioconda.github.io/recipes/microhapdb/README.html)
 [![BSD licensed][licensebadge]](https://github.com/bioforensics/MicroHapDB/blob/master/LICENSE.txt)
 
-# MicroHapDB
-
-Daniel Standage, 2018  
+Daniel Standage, 2018-2019  
 https://github.com/bioforensics/microhapdb
 
 **MicroHapDB** is a package designed for scientists and researchers interested in microhaplotype analysis.
