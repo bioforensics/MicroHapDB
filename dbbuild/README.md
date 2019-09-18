@@ -58,3 +58,10 @@ To speed up the build with multiple processes:
 ```
 snakemake tables --cores 8 --config dbsnp=$dbsnp
 ```
+
+
+## Developer note
+
+Early versions of the software used the term `locus` liberally.
+This has since been replaced by `marker` in the main code base, but `locus` and `loci` are still pervasive throughout the DB build code.
+The two terms can be used interchangeably.
