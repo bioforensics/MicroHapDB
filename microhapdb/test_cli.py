@@ -48,13 +48,13 @@ def test_files(capsys):
 
 
 def test_parser():
-    cli = get_parser().parse_args(['--table', 'locus'])
-    assert cli.table == 'locus'
+    cli = get_parser().parse_args(['--table', 'marker'])
+    assert cli.table == 'marker'
     assert cli.query is None
     assert cli.region is None
 
-    cli = get_parser().parse_args(['--table', 'locus', '--region', 'chr5'])
-    assert cli.table == 'locus'
+    cli = get_parser().parse_args(['--table', 'marker', '--region', 'chr5'])
+    assert cli.table == 'marker'
     assert cli.query is None
     assert cli.region == 'chr5'
 

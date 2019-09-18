@@ -15,54 +15,54 @@ import pytest
 
 def test_assumptions():
     assert len(microhapdb.populations) == 96 + 3
-    assert len(microhapdb.loci) == 198 + 15
+    assert len(microhapdb.markers) == 198 + 15
 
 
 def test_allele_frequencies():
-    """Allele frequencies for 198 loci across 96 populations.
+    """Allele frequencies for 198 markers across 96 populations.
 
     >>> f = microhapdb.frequencies
-    >>> alleles = f[f.Locus == 'MHDBL000077'].Allele
+    >>> alleles = f[f.Marker == 'MHDBM000077'].Allele
     >>> list(alleles.unique())
     ['A,G,A', 'A,G,C', 'A,A,C', 'C,G,C']
-    >>> popfreq = f[(f.Locus == 'MHDBL000077') & (f.Allele == 'A,A,C')]
+    >>> popfreq = f[(f.Marker == 'MHDBM000077') & (f.Allele == 'A,A,C')]
     >>> len(popfreq)
     26
-    >>> f.query('Locus == "MHDBL000077" and Allele == "A,A,C" and Population == "MHDBP000025"')
-                 Locus   Population Allele  Frequency
-    50642  MHDBL000077  MHDBP000025  A,A,C      0.318
+    >>> f.query('Marker == "MHDBM000077" and Allele == "A,A,C" and Population == "MHDBP000025"')
+                Marker   Population Allele  Frequency
+    50642  MHDBM000077  MHDBP000025  A,A,C      0.318
     """
     af = microhapdb.frequencies
     assert af.shape == (82533, 4)
-    result = af[af.Locus == 'MHDBL000135'].Allele.unique()
+    result = af[af.Marker == 'MHDBM000135'].Allele.unique()
     assert len(result) == 8
-    result = af[(af.Locus == 'MHDBL000135') & (af.Allele == 'A,C,T')]
+    result = af[(af.Marker == 'MHDBM000135') & (af.Allele == 'A,C,T')]
     assert len(result) == 96
-    result = af.query('Locus == "MHDBL000135" & Allele == "A,C,T" & Population == "MHDBP000084"').Frequency.values[0]
+    result = af.query('Marker == "MHDBM000135" & Allele == "A,C,T" & Population == "MHDBP000084"').Frequency.values[0]
     assert result == pytest.approx(0.025)
 
 
-def test_loci():
-    """Microhaplotype locus data
+def test_markers():
+    """Microhaplotype marker data
 
-    >>> l = microhapdb.loci
-    >>> l[l.ID == 'MHDBL000108']
+    >>> m = microhapdb.markers
+    >>> m[m.ID == 'MHDBM000108']
                   ID Reference  Chrom     Start       End   AvgAe  Source
-    107  MHDBL000108    GRCh38  chr18  78329885  78329968  3.2906  ALFRED
-    >>> l[l.ID == 'MHDBL000065']
+    107  MHDBM000108    GRCh38  chr18  78329885  78329968  3.2906  ALFRED
+    >>> m[m.ID == 'MHDBM000065']
                  ID Reference  Chrom     Start       End   AvgAe Source
-    64  MHDBL000065    GRCh38  chr14  32203273  32203324  3.7886   LOVD
+    64  MHDBM000065    GRCh38  chr14  32203273  32203324  3.7886   LOVD
     >>> microhapdb.id_xref('mh04CP-002')
                   ID Reference Chrom     Start       End   AvgAe  Source
-    159  MHDBL000160    GRCh38  chr4  24304952  24304972  3.5182  ALFRED
+    159  MHDBM000160    GRCh38  chr4  24304952  24304972  3.5182  ALFRED
     """
-    loc = microhapdb.loci
+    m = microhapdb.markers
     vm = microhapdb.variantmap
     vr = microhapdb.variants
-    assert loc.shape == (213, 7)
-    result = loc[loc.Chrom == 'chr19']
+    assert m.shape == (213, 7)
+    result = m[m.Chrom == 'chr19']
     assert len(result) == 5
-    varids = vm[vm.LocusID.isin(result.ID)]
+    varids = vm[vm.MarkerID.isin(result.ID)]
     variants = vr[vr.ID.isin(varids.VariantID)]
     assert len(variants) == 17
 
@@ -146,34 +146,33 @@ def test_fetch_by_id():
 
 
 def test_fetch_by_region():
-    with pytest.raises(ValueError) as ve:
+    message = r'region query not supported for table "population"'
+    with pytest.raises(ValueError, match=message) as ve:
         list(fetch_by_region('chr5:1000000-2000000', 'population'))
-    assert 'region query not supported for table "population"' in str(ve)
 
-    with pytest.raises(ValueError) as ve:
-        list(fetch_by_region('chr7:123-456-789', 'locus'))
-    assert 'cannot parse region "chr7:123-456-789"' in str(ve)
+    with pytest.raises(ValueError, match='cannot parse region "chr7:123-456-789"') as ve:
+        list(fetch_by_region('chr7:123-456-789', 'marker'))
 
     assert list(fetch_by_region('chrX', 'variant')) == []
-    assert list(fetch_by_region('chrY', 'locus')) == []
+    assert list(fetch_by_region('chrY', 'marker')) == []
 
     results = list(fetch_by_region('chr12:102866940-102866950', None))
     assert len(results) == 2
     print(results[0].ID.values)
     print(results[1].ID.values)
-    assert list(results[0].ID.values) == ['MHDBL000053']
+    assert list(results[0].ID.values) == ['MHDBM000053']
     assert list(results[1].ID.values) == ['MHDBV000009399', 'MHDBV000009400',
                                           'MHDBV000009401', 'MHDBV000009402',
                                           'MHDBV000009403']
 
 
-@pytest.mark.parametrize('locusaccession', [
+@pytest.mark.parametrize('markeraccession', [
     'mh13KK-218',
     'SI664607D',
-    'MHDBL000060',
+    'MHDBM000060',
 ])
-def test_allele_positions(locusaccession):
-    pos = microhapdb.retrieve.allele_positions(locusaccession)
+def test_allele_positions(markeraccession):
+    pos = microhapdb.retrieve.allele_positions(markeraccession)
     assert pos == [53486691, 53486745, 53486756, 53486836]
     with pytest.raises(StopIteration):
         _ = microhapdb.retrieve.allele_positions('b0GusId')
@@ -182,9 +181,9 @@ def test_allele_positions(locusaccession):
 def test_standardize_ids():
     from microhapdb.retrieve import standardize_ids as sid
     assert sid(['BoGUSid']) == list()
-    assert sid(['MHDBL000097']) == ['MHDBL000097']
-    assert sid(['SI664623B']) == ['MHDBL000097']
-    assert sid(['MHDBL000097', 'SI664623B']) == ['MHDBL000097']
-    assert sid(['SI664623B', 'NotARealId']) == ['MHDBL000097']
-    assert sid(['SI664623B', 'mh04KK-011', 'MHDBL000113']) == ['MHDBL000097', 'MHDBL000113', 'MHDBL000161']
-    assert sid(['rs547950691', 'mh02KK-131', 'SA002765U']) == ['MHDBL000118', 'MHDBP000054', 'MHDBV000028356']
+    assert sid(['MHDBM000097']) == ['MHDBM000097']
+    assert sid(['SI664623B']) == ['MHDBM000097']
+    assert sid(['MHDBM000097', 'SI664623B']) == ['MHDBM000097']
+    assert sid(['SI664623B', 'NotARealId']) == ['MHDBM000097']
+    assert sid(['SI664623B', 'mh04KK-011', 'MHDBM000113']) == ['MHDBM000097', 'MHDBM000113', 'MHDBM000161']
+    assert sid(['rs547950691', 'mh02KK-131', 'SA002765U']) == ['MHDBM000118', 'MHDBP000054', 'MHDBV000028356']

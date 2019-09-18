@@ -5,8 +5,8 @@ branches:
     - master
 cache: pip
 python:
-#    - 3.5
     - 3.6
+    - 3.7
 install:
     - make devdeps
     - pip install .
