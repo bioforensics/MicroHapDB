@@ -88,3 +88,24 @@ def allele_frequencies_lovd(locusfile, freqfile):
                 for freq, pop in zip(freqs, ('NL', 'Asia', 'Africa')):
                     allele = alleles[locusid][haplotype]
                     yield AlleleFreq(locusid, pop, allele, freq)
+
+
+def allele_frequencies_linköping(deffile, freqfile):
+    labels = dict()
+    with open(deffile, 'r') as fp:
+        next(fp)
+        for line in fp:
+            rsid, label = line.strip().split('\t')
+            suffix = label[-2:]
+            labels[suffix] = label
+
+    with open(freqfile, 'r') as fp:
+        next(fp)
+        for line in fp:
+            name, allelestr, freq = line.strip().split('\t')
+            if name.endswith(('A', 'B')):
+                continue
+            suffix = name[2:4]
+            label = labels[suffix]
+            allele = ','.join(allelestr)
+            yield AlleleFreq(label, 'Swedish', allele, freq)

@@ -5,7 +5,7 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 from files import smartopen
 import os
 from re import findall, search
@@ -45,16 +45,40 @@ def lovd_loci_prelim(instream):
         yield [*values[1:4], 'LOVD', values[0]]
 
 
-def combine_loci(alfredstream, lovdstream):
+def linköping_loci_prelim(defstream, varstream):
+    coords = dict()
+    for line in varstream:
+        if line.startswith('#'):
+            continue
+        chrnum, pos, rsid, *data = line.split('\t')
+        chrom = 'chr' + chrnum
+        coords[rsid] = (chrnum, int(pos) - 1)
+
+    microhaps = defaultdict(list)
+    for line in defstream:
+        if not line.startswith('rs'):
+            continue
+        rsid, label = line.strip().split('\t')
+        microhaps[label].append(rsid)
+
+    for label, snplist in microhaps.items():
+        loclist = [coords[rsid] for rsid in snplist]
+        chrom = set([loc[0] for loc in loclist])
+        assert len(chrom) == 1, chrom
+        chromstr = 'chr{:s}'.format(list(chrom)[0])
+        coordlist = [loc[1] for loc in loclist]
+        start = min(coordlist)
+        end = max(coordlist) + 1
+        yield chromstr, start, end, 'Linköping', label
+
+
+def combine_loci(alfredstream, lovdstream, linkstream):
     loci = list()
-    next(alfredstream)
-    for line in alfredstream:
-        values = line.strip().split()
-        loci.append(values)
-    next(lovdstream)
-    for line in lovdstream:
-        values = line.strip().split()
-        loci.append(values)
+    for varstream in (alfredstream, lovdstream, linkstream):
+        next(varstream)
+        for line in varstream:
+            values = line.strip().split()
+            loci.append(values)
     loci.sort(key=lambda l: (l[0], int(l[1]), int(l[2])))
     for n, valuelist in enumerate(loci, 1):
         chrom, start, end, source, *idlist = valuelist

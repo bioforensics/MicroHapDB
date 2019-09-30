@@ -14,9 +14,9 @@ from urllib.request import urlretrieve
 import pandas
 
 # Import from internal libraries
-from allele import allele_frequencies_alfred, allele_frequencies_lovd
+from allele import allele_frequencies_alfred, allele_frequencies_lovd, allele_frequencies_linköping
 from files import smartopen
-from locus import alfred_locus_list, alfred_loci_prelim, lovd_loci_prelim, combine_loci
+from locus import alfred_locus_list, alfred_loci_prelim, lovd_loci_prelim, linköping_loci_prelim, combine_loci
 from locus import alfred_locus_scrape
 from population import population_summary
 from variant import dbsnp_subset_command, retrieve_proximal_variants
@@ -70,17 +70,30 @@ rule lovd_loci_prelim:
                 print(*values, sep='\t', file=outstream)
 
 
+rule linköping_loci_prelim:
+    input:
+        'linkoping/microhap-definitions.tsv',
+        'linkoping/snps-GRCh38.vcf.gz'
+    output: 'intermediate/linköping-loci.tsv'
+    run:
+        with smartopen(input[0], 'r') as defstream, smartopen(input[1], 'r') as varstream, smartopen(output[0], 'w') as outstream:
+            print('Chrom', 'Start', 'End', 'Source', 'Label', file=outstream)
+            for values in linköping_loci_prelim(defstream, varstream):
+                print(*values, sep='\t', file=outstream)
+
+
 rule combine_loci:
     input:
         'intermediate/alfred-loci.tsv',
-        'intermediate/lovd-loci.tsv'
+        'intermediate/lovd-loci.tsv',
+        'intermediate/linköping-loci.tsv'
     output:
         'intermediate/locus-prelim.tsv',
         'intermediate/locusids.tsv.gz'
     run:
-        with smartopen(input[0], 'r') as alfredstream, smartopen(input[1], 'r') as lovdstream, smartopen(output[0], 'w') as outstream, smartopen(output[1], 'w') as idstream:
+        with smartopen(input[0], 'r') as alfredstream, smartopen(input[1], 'r') as lovdstream, smartopen(input[2], 'r') as linkstream, smartopen(output[0], 'w') as outstream, smartopen(output[1], 'w') as idstream:
             print('ID', 'Reference', 'Chrom', 'Start', 'End', 'Source', sep='\t', file=outstream)
-            for values in combine_loci(alfredstream, lovdstream):
+            for values in combine_loci(alfredstream, lovdstream, linkstream):
                 fp = idstream if len(values) == 3 else outstream
                 print(*values, sep='\t', file=fp)
 
@@ -213,10 +226,12 @@ rule allelefreq:
         'alfred/curated/indel-alleles.json',
         'lovd/lovd-microhap-loci.txt',
         'lovd/lovd-allele-frequencies.txt',
+        'linkoping/microhap-definitions.tsv',
+        'linkoping/microhap-frequencies.tsv',
         'idmap.tsv'
     output: 'allele.tsv'
     run:
-        with smartopen(output[0], 'w') as outstream, smartopen(input[4], 'r') as instream:
+        with smartopen(output[0], 'w') as outstream, smartopen(input[6], 'r') as instream:
             mapping = dict()
             for line in instream:
                 values = line.strip().split()
@@ -225,4 +240,6 @@ rule allelefreq:
             for af in allele_frequencies_alfred(input[0], input[1]):
                 print(mapping[af.locusid], mapping[af.popid], af.allele, af.freq, sep='\t', file=outstream)
             for af in allele_frequencies_lovd(input[2], input[3]):
+                print(mapping[af.locusid], mapping[af.popid], af.allele, af.freq, sep='\t', file=outstream)
+            for af in allele_frequencies_linköping(input[4], input[5]):
                 print(mapping[af.locusid], mapping[af.popid], af.allele, af.freq, sep='\t', file=outstream)
