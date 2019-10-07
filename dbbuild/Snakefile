@@ -176,13 +176,14 @@ rule parse_variant_data:
         'intermediate/dbsnp-subset.vcf',
         'intermediate/alfred-variants-all.tsv',
         'lovd/lovd-microhap-variants.tsv',
+        'linkoping/linkoping-microhap-variants.tsv',
         'intermediate/locusids.tsv.gz'
     output:
         'variant.tsv',
         'variantmap.tsv',
         'intermediate/varids.tsv.gz',
     run:
-        with smartopen(output[0], 'w') as variantstream, smartopen(output[1], 'w') as varmap, smartopen(output[2], 'w') as varidstream, smartopen(input[0], 'r') as dbsnp, smartopen(input[1], 'r') as alfred, smartopen(input[2], 'r') as lovd, smartopen(input[3], 'r') as locusids:
+        with smartopen(output[0], 'w') as variantstream, smartopen(output[1], 'w') as varmap, smartopen(output[2], 'w') as varidstream, smartopen(input[0], 'r') as dbsnp, smartopen(input[1], 'r') as alfred, smartopen(input[2], 'r') as lovd, smartopen(input[3], 'r') as linkoping, smartopen(input[4], 'r') as locusids:
             locus_ids = dict()
             for line in locusids:
                 xref, table, lid = line.strip().split()
@@ -190,7 +191,7 @@ rule parse_variant_data:
 
             print('ID', 'Reference', 'Chrom', 'Position', 'Alleles', 'Source', sep='\t', file=variantstream)
             print('LocusID', 'VariantID', sep='\t', file=varmap)
-            for n, v in enumerate(retrieve_proximal_variants(dbsnp, alfred, lovd), 1):
+            for n, v in enumerate(retrieve_proximal_variants(dbsnp, alfred, lovd, linkoping), 1):
                 varid = 'MHDBV{:09d}'.format(n)
                 print(varid, 'GRCh38', v.chrom, v.pos, v.alleles, v.source, sep='\t', file=variantstream)
                 if v.dbsnpid is not None:
