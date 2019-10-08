@@ -42,7 +42,7 @@ def lovd_loci_prelim(instream):
         start = int(values[2])
         values[2] = start + offsets[0]
         values[3] = start + offsets[-1] + 1
-        yield [*values[1:4], 'LOVD', values[0]]
+        yield [*values[1:4], 'doi:10.1016/j.fsigen.2018.05.008', values[0]]
 
 
 def linköping_loci_prelim(defstream, varstream):
@@ -69,7 +69,7 @@ def linköping_loci_prelim(defstream, varstream):
         coordlist = [loc[1] for loc in loclist]
         start = min(coordlist)
         end = max(coordlist) + 1
-        yield chromstr, start, end, 'Linköping', label
+        yield chromstr, start, end, 'ISFG2019:P597', label
 
 
 def combine_loci(alfredstream, lovdstream, linkstream):

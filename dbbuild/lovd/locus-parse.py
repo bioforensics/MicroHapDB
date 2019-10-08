@@ -72,7 +72,7 @@ for line in args.dbSNP:
     if lovd_alleles - dbsnp_alleles == set():
         locus.add_dbsnp_rsid(slug, rsID)
     elif slug == 'chr15:24802331':
-        locus.add_dbsnp_rsid(slug, 'rs12914037')  # https://doi.org/10.1016/j.fsigen.2018.05.008
+        locus.add_dbsnp_rsid(slug, 'rs12914037')  # doi:10.1016/j.fsigen.2018.05.008
 
 print('Label', 'Chrom', 'Position', 'Offset', 'Alleles', 'rsIDs', 'Source', sep='\t')
 for label, locus in loci.items():
@@ -83,6 +83,6 @@ for label, locus in loci.items():
         if slug in locus.rsids:
             rsids = ','.join(locus.rsids[slug])
         else:
-            source = 'https://doi.org/10.1016/j.fsigen.2018.05.008'
+            source = 'doi:10.1016/j.fsigen.2018.05.008'
         alleles = ','.join(sorted(alleles))
         print(locus.label, chrom, position, position - locus.start, alleles, rsids, source, sep='\t')

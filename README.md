@@ -9,8 +9,8 @@ https://github.com/bioforensics/microhapdb
 
 **MicroHapDB** is a package designed for scientists and researchers interested in microhaplotype analysis.
 This package is a distribution and convenience mechanism and does not implement any analytics itself.
-All microhaplotype data was obtained from the [Allele Frequency Database (ALFRED)][alfred]<sup>[1]</sup> at the Yale University School of Medicine and the [Leiden Open Variation Database][lovd]<sup>[2]</sup>.
-We're also happy to consider integrating additional microhap data from other sources.
+All microhaplotype data was obtained from public sources, including the [Allele Frequency Database (ALFRED)][alfred]<sup>[1-3]</sup> and published papers and posters<sup>[4-5]</sup>.
+We're eager to consider integrating additional microhap marker and frequency data from other sources.
 
 ## Installation
 
@@ -50,7 +50,7 @@ Programmatic access to microhap data within Python is as simple as invoking `imp
 - `microhapdb.populations`
 - `microhapdb.variants`
 
-Each is a [Pandas][]<sup>[3]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
+Each is a [Pandas][]<sup>[6]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
 There are also two auxiliary tables: one that contains a mapping of all variants to their corresponding microhap markers, and another table cross-referencing external IDs/labels/names with internal MicroHapDB identifiers.
 
 - `microhapdb.variantmap`
@@ -63,7 +63,7 @@ The following example demonstrates how data across the different tables can be c
 >>> import microhapdb
 >>> microhapdb.id_xref('mh02KK-136')
               ID Reference Chrom      Start        End   AvgAe  Source
-128  MHDBM000129    GRCh38  chr2  227227672  227227743  3.7742  ALFRED
+151  MHDBM000152    GRCh38  chr2  227227672  227227743  3.7742  ALFRED
 >>> pops = microhapdb.populations.query('Name.str.contains("Amer")')
 >>> pops
              ID                Name  Source
@@ -71,32 +71,32 @@ The following example demonstrates how data across the different tables can be c
 3   MHDBP000004   African Americans  ALFRED
 21  MHDBP000022  European Americans  ALFRED
 >>> f = microhapdb.frequencies
->>> f[(f.Marker == "MHDBM000129") & (f.Population.isin(pops.ID))]
+>>> f[(f.Marker == "MHDBM000152") & (f.Population.isin(pops.ID))]
             Marker   Population Allele  Frequency
-75117  MHDBM000129  MHDBP000003  G,T,C      0.172
-75118  MHDBM000129  MHDBP000003  G,T,A      0.103
-75119  MHDBM000129  MHDBP000003  G,C,C      0.029
-75120  MHDBM000129  MHDBP000003  G,C,A      0.000
-75121  MHDBM000129  MHDBP000003  T,T,C      0.293
-75122  MHDBM000129  MHDBP000003  T,T,A      0.063
-75123  MHDBM000129  MHDBP000003  T,C,C      0.132
-75124  MHDBM000129  MHDBP000003  T,C,A      0.207
-75333  MHDBM000129  MHDBP000004  G,T,C      0.156
-75334  MHDBM000129  MHDBP000004  G,T,A      0.148
-75335  MHDBM000129  MHDBP000004  G,C,C      0.016
-75336  MHDBM000129  MHDBP000004  G,C,A      0.000
-75337  MHDBM000129  MHDBP000004  T,T,C      0.336
-75338  MHDBM000129  MHDBP000004  T,T,A      0.049
-75339  MHDBM000129  MHDBP000004  T,C,C      0.156
-75340  MHDBM000129  MHDBP000004  T,C,A      0.139
-75525  MHDBM000129  MHDBP000022  G,T,C      0.384
-75526  MHDBM000129  MHDBP000022  G,T,A      0.202
-75527  MHDBM000129  MHDBP000022  G,C,C      0.000
-75528  MHDBM000129  MHDBP000022  G,C,A      0.000
-75529  MHDBM000129  MHDBP000022  T,T,C      0.197
-75530  MHDBM000129  MHDBP000022  T,T,A      0.000
-75531  MHDBM000129  MHDBP000022  T,C,C      0.071
-75532  MHDBM000129  MHDBP000022  T,C,A      0.146
+75117  MHDBM000152  MHDBP000003  G,T,C      0.172
+75118  MHDBM000152  MHDBP000003  G,T,A      0.103
+75119  MHDBM000152  MHDBP000003  G,C,C      0.029
+75120  MHDBM000152  MHDBP000003  G,C,A      0.000
+75121  MHDBM000152  MHDBP000003  T,T,C      0.293
+75122  MHDBM000152  MHDBP000003  T,T,A      0.063
+75123  MHDBM000152  MHDBP000003  T,C,C      0.132
+75124  MHDBM000152  MHDBP000003  T,C,A      0.207
+75333  MHDBM000152  MHDBP000004  G,T,C      0.156
+75334  MHDBM000152  MHDBP000004  G,T,A      0.148
+75335  MHDBM000152  MHDBP000004  G,C,C      0.016
+75336  MHDBM000152  MHDBP000004  G,C,A      0.000
+75337  MHDBM000152  MHDBP000004  T,T,C      0.336
+75338  MHDBM000152  MHDBP000004  T,T,A      0.049
+75339  MHDBM000152  MHDBP000004  T,C,C      0.156
+75340  MHDBM000152  MHDBP000004  T,C,A      0.139
+75525  MHDBM000152  MHDBP000022  G,T,C      0.384
+75526  MHDBM000152  MHDBP000022  G,T,A      0.202
+75527  MHDBM000152  MHDBP000022  G,C,C      0.000
+75528  MHDBM000152  MHDBP000022  G,C,A      0.000
+75529  MHDBM000152  MHDBP000022  T,T,C      0.197
+75530  MHDBM000152  MHDBP000022  T,T,A      0.000
+75531  MHDBM000152  MHDBP000022  T,C,C      0.071
+75532  MHDBM000152  MHDBP000022  T,C,A      0.146
 ```
 
 See the [Pandas][] documentation for more details on dataframe access and query methods.
@@ -126,33 +126,21 @@ If you use this package, please cite our work.
 
 ## References
 
-### Variant Databases
+### Published Marker collections and Allele Frequency Data
 
 <sup>[1]</sup>Rajeevan H, Soundararajan U, Kidd JR, Pakstis AJ, Kidd KK (2012) ALFRED: an allele frequency resource for research and teaching. *Nucleic Acids Research*, 40(D1): D1010-D1015, [doi:10.1093/nar/gkr924](https://doi.org/10.1093/nar/gkr924).
 
-<sup>[2]</sup>Fokkema IF, Taschner PE, Schaafsma GC, Celli J, Laros JF, den Dunnen JT (2011) LOVD v.2.0: the next generation in gene variant databases. *Human Mutation*, 32(5): 557-63, [doi:10.1002/humu.21438](https://doi.org/10.1002/humu.21438).
+<sup>[2]</sup>Kidd KK, Pakstis AJ, Speed WC, Lagace R, Wootton S, Chang J (2018) Selecting microhaplotypes optimized for different purposes. *Electrophoresis*, [doi:10.1002/elps.201800092](https://doi.org/10.1002/elps.201800092).
+
+<sup>[3]</sup>Kidd KK, Rajeevan H (2018) ALFRED data download. *The Allele Frequency Database*, https://alfred.med.yale.edu/alfred/selectDownload/Microhap_alleleF_198.txt. Accessed December 10, 2018.
+
+<sup>[4]</sup>van der Gaag KJ, de Leeuw RH, Laros JFJ, den Dunnen JT, de Knijff P (2018) Short hypervariable microhaplotypes: A novel set of very short high discriminating power loci without stutter artefacts. *Forensic Science International: Genetics*, 35:169-175, [doi:10.1016/j.fsigen.2018.05.008](https://doi.org/10.1016/j.fsigen.2018.05.008).
+
+<sup>[5]</sup>Staadig A, Tillmar A (2019) Evaluation of microhaplotypes—A promising new type of forensic marker. *The 28th Congress of the International Society for Forensic Genetics*, P597.
 
 ### Supporting Software
 
-<sup>[3]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
-
-### Selected Microhaplotype Studies
-
-Bulbul O, Pakstis AJ, Soundararajan U, Gurkan C, Brissenden JE, Roscoe JM, Evsanaa B, Togtokh A, Paschou P, Grigorenko EL, Gurwitz D, Wootton S, Lagace R, Chang J, Speed WC, Kidd KK (2018) Ancestry inference of 96 population samples using microhaplotypes. *International Journal of Legal Medicine*, **132**:703-711, [doi:10.1007/s00414-017-1748-6](https://doi.org/10.1007/s00414-017-1748-6).
-
-Chen P, Yin C, Li Z, Pu Y, Yu Y, Zhao P, Chen D, Liang W, Zhang L, Chen F (2018) Evaluation of the Microhaplotypes panel for DNA mixture analyses. *Forensic Science International: Genetics*, **35**:149-155, [doi:10.1016/j.fsigen.2018.05.003](https://doi.org/10.1016/j.fsigen.2018.05.003).
-
-Chen P, Zhu W, Tong F, Pu Y, Yu Y, Huang S, Li Z, Zhang L, Liang W, Chen F (2018) Identifying novel microhaplotypes for ancestry inference. *International Journal of Legal Medicine*, [doi:10.1007/s00414-018-1881-x](https://doi.org/10.1007/s00414-018-1881-x).
-
-Kidd KK, Pakstis AJ, Speed WC, Lagace R, Wootton S, Chang J (2018) Selecting microhaplotypes optimized for different purposes. *Electrophoresis*, [doi:10.1002/elps.201800092](https://doi.org/10.1002/elps.201800092).
-
-Kidd KK, Speed WC, Pakstis AJ, Podini DS, Lagace R, Chang J, Wootton S, Haigh E, Soundararajan U (2017) Evaluating 130 Microhaplotypes across a Global Set of 83 Populations. *Forensic Science International: Genetics*, **29**:29-37, [doi:10.1016/j.fsigen.2017.03.014](https://doi.org/10.1016/j.fsigen.2017.03.014).
-
-Kidd KK, Pakstis AJ, Speed WC, Lagace R, Chang J, Wootton S, Haigh E, Kidd JR (2014) Current sequencing technology makes microhaplotypes a powerful new type of genetic marker for forensics. *Forensic Science International: Genetics*, **12**:215-224, [doi:10.1016/j.fsigen.2014.06.014](https://doi.org/10.1016/j.fsigen.2014.06.014)
-
-Kidd KK, Pakstis AJ, Speed WC, Lagace R, Chang J, Wootton S, Ihuegbu N (2013) Microhaplotype loci are a powerful new type of forensic marker". *Forensic Science International: Genetics supplement series*, **4**:e123-124, [doi:10.1016/j.fsigss.2013.10.063](https://doi.org/10.1016/j.fsigss.2013.10.063).
-
-van der Gaag KJ, de Leeuw RH, Laros JFJ, den Dunnen JT, de Knijff P (2018) Short hypervariable microhaplotypes: A novel set of very short high discriminating power loci without stutter artefacts. *Forensic Science International: Genetics*, 35:169-175, [doi:10.1016/j.fsigen.2018.05.008](https://doi.org/10.1016/j.fsigen.2018.05.008).
+<sup>[6]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
 
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
