@@ -193,17 +193,17 @@ rule parse_variant_data:
                 locus_ids[xref] = lid
 
             print('ID', 'Reference', 'Chrom', 'Position', 'Alleles', 'Source', sep='\t', file=variantstream)
-            print('LocusID', 'VariantID', sep='\t', file=varmap)
+            print('MarkerID', 'VariantID', sep='\t', file=varmap)
             for n, v in enumerate(retrieve_proximal_variants(dbsnp, alfred, lovd, linkoping), 1):
                 varid = 'MHDBV{:09d}'.format(n)
                 print(varid, 'GRCh38', v.chrom, v.pos, v.alleles, v.source, sep='\t', file=variantstream)
                 if v.dbsnpid is not None:
                     print(v.dbsnpid, 'variant', varid, sep='\t', file=varidstream)
-                if v.xref is not None:
-                    print(v.xref, 'variant', varid, sep='\t', file=varidstream)
-                if v.markerlabel is not None:
-                    locusid = locus_ids[v.markerlabel]
-                    print(locusid, varid, sep='\t', file=varmap)
+                for xref in v.xref:
+                    print(xref, 'variant', varid, sep='\t', file=varidstream)
+                for markerlabel in v.markerlabel:
+                    markerid = locus_ids[markerlabel]
+                    print(markerid, varid, sep='\t', file=varmap)
 
 
 # -----------------------------------------------------------------------------

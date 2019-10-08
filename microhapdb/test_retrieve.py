@@ -14,31 +14,31 @@ import pytest
 
 
 def test_assumptions():
-    assert len(microhapdb.populations) == 96 + 3
-    assert len(microhapdb.markers) == 198 + 15
+    assert len(microhapdb.populations) == 96 + 3 + 1
+    assert len(microhapdb.markers) == 198 + 15 + 40
 
 
 def test_allele_frequencies():
     """Allele frequencies for 198 markers across 96 populations.
 
     >>> f = microhapdb.frequencies
-    >>> alleles = f[f.Marker == 'MHDBM000077'].Allele
+    >>> alleles = f[f.Marker == 'MHDBM000091'].Allele
     >>> list(alleles.unique())
     ['A,G,A', 'A,G,C', 'A,A,C', 'C,G,C']
-    >>> popfreq = f[(f.Marker == 'MHDBM000077') & (f.Allele == 'A,A,C')]
+    >>> popfreq = f[(f.Marker == 'MHDBM000091') & (f.Allele == 'A,A,C')]
     >>> len(popfreq)
     26
-    >>> f.query('Marker == "MHDBM000077" and Allele == "A,A,C" and Population == "MHDBP000025"')
+    >>> f.query('Marker == "MHDBM000091" and Allele == "A,A,C" and Population == "MHDBP000025"')
                 Marker   Population Allele  Frequency
-    50642  MHDBM000077  MHDBP000025  A,A,C      0.318
+    50642  MHDBM000091  MHDBP000025  A,A,C      0.318
     """
     af = microhapdb.frequencies
-    assert af.shape == (82533, 4)
-    result = af[af.Marker == 'MHDBM000135'].Allele.unique()
+    assert af.shape == (82670, 4)
+    result = af[af.Marker == 'MHDBM000160'].Allele.unique()
     assert len(result) == 8
-    result = af[(af.Marker == 'MHDBM000135') & (af.Allele == 'A,C,T')]
+    result = af[(af.Marker == 'MHDBM000160') & (af.Allele == 'A,C,T')]
     assert len(result) == 96
-    result = af.query('Marker == "MHDBM000135" & Allele == "A,C,T" & Population == "MHDBP000084"').Frequency.values[0]
+    result = af.query('Marker == "MHDBM000160" & Allele == "A,C,T" & Population == "MHDBP000084"').Frequency.values[0]
     assert result == pytest.approx(0.025)
 
 
@@ -46,22 +46,22 @@ def test_markers():
     """Microhaplotype marker data
 
     >>> m = microhapdb.markers
-    >>> m[m.ID == 'MHDBM000108']
+    >>> m[m.ID == 'MHDBM000128']
                   ID Reference  Chrom     Start       End   AvgAe  Source
-    107  MHDBM000108    GRCh38  chr18  78329885  78329968  3.2906  ALFRED
-    >>> m[m.ID == 'MHDBM000065']
-                 ID Reference  Chrom     Start       End   AvgAe Source
-    64  MHDBM000065    GRCh38  chr14  32203273  32203324  3.7886   LOVD
+    127  MHDBM000128    GRCh38  chr18  78329885  78329968  3.2906  ALFRED
+    >>> m[m.ID == 'MHDBM000078']
+                 ID Reference  Chrom     Start       End   AvgAe                            Source
+    77  MHDBM000078    GRCh38  chr14  32203273  32203324  3.7886  doi:10.1016/j.fsigen.2018.05.008
     >>> microhapdb.id_xref('mh04CP-002')
                   ID Reference Chrom     Start       End   AvgAe  Source
-    159  MHDBM000160    GRCh38  chr4  24304952  24304972  3.5182  ALFRED
+    192  MHDBM000193    GRCh38  chr4  24304952  24304972  3.5182  ALFRED
     """
     m = microhapdb.markers
     vm = microhapdb.variantmap
     vr = microhapdb.variants
-    assert m.shape == (213, 7)
+    assert m.shape == (253, 7)
     result = m[m.Chrom == 'chr19']
-    assert len(result) == 5
+    assert len(result) == 6
     varids = vm[vm.MarkerID.isin(result.ID)]
     variants = vr[vr.ID.isin(varids.VariantID)]
     assert len(variants) == 17
@@ -88,7 +88,7 @@ def test_populations():
     4  MHDBP000005    Afro-Caribbeans  ALFRED
     """
     pop = microhapdb.populations
-    assert pop.shape == (99, 3)
+    assert pop.shape == (100, 3)
     assert pop[pop.ID == 'MHDBP000025'].Name.values == ['Finns']
     assert pop[pop.ID == 'MHDBP000049'].Name.values == ['Karitiana']
     result = pop[pop.Name.str.contains('Jews')].ID.values
@@ -100,21 +100,21 @@ def test_variants():
 
     >>> microhapdb.id_xref('SI338744D')
                       ID Reference Chrom   Position Alleles    Source
-    1963  MHDBV000001964    GRCh38  chr1  161985865     A,G  dbSNP151
+    1954  MHDBV000001955    GRCh38  chr1  161985865     A,G  dbSNP151
     >>> microhapdb.id_xref('rs80047978')
                        ID Reference  Chrom  Position Alleles    Source
-    14363  MHDBV000014364    GRCh38  chr15  63806494     A,G  dbSNP151
+    14094  MHDBV000014095    GRCh38  chr15  63806494     A,G  dbSNP151
     >>> microhapdb.variants.query('Chrom == "chr15" and 52192400 < Position < 52192500')
                        ID Reference  Chrom  Position Alleles    Source
-    14087  MHDBV000014088    GRCh38  chr15  52192466     C,T  dbSNP151
-    14088  MHDBV000014089    GRCh38  chr15  52192467     G,T  dbSNP151
-    14089  MHDBV000014090    GRCh38  chr15  52192471     C,T  dbSNP151
-    14090  MHDBV000014091    GRCh38  chr15  52192490     C,T  dbSNP151
-    14091  MHDBV000014092    GRCh38  chr15  52192495     C,T  dbSNP151
+    13818  MHDBV000013819    GRCh38  chr15  52192466     C,T  dbSNP151
+    13819  MHDBV000013820    GRCh38  chr15  52192467     G,T  dbSNP151
+    13820  MHDBV000013821    GRCh38  chr15  52192471     C,T  dbSNP151
+    13821  MHDBV000013822    GRCh38  chr15  52192490     C,T  dbSNP151
+    13822  MHDBV000013823    GRCh38  chr15  52192495     C,T  dbSNP151
     """
     v = microhapdb.variants
-    assert v.shape == (39780, 6)
-    assert len(v[v.Chrom == 'chr12']) == 1397
+    assert v.shape == (39005, 6)
+    assert len(v[v.Chrom == 'chr12']) == 1387
 
 
 def test_fetch_by_query():
@@ -140,7 +140,7 @@ def test_fetch_by_id():
     results = list(fetch_by_id('rs1363241798'))
     assert len(results) == 1
     print(results)
-    assert results[0].ID.values == ['MHDBV000024080']
+    assert results[0].ID.values == ['MHDBV000023609']
     assert results[0].Chrom.values == ['chr20']
     assert results[0].Position.values == [63539694]
 
@@ -160,16 +160,17 @@ def test_fetch_by_region():
     assert len(results) == 2
     print(results[0].ID.values)
     print(results[1].ID.values)
-    assert list(results[0].ID.values) == ['MHDBM000053']
-    assert list(results[1].ID.values) == ['MHDBV000009399', 'MHDBV000009400',
-                                          'MHDBV000009401', 'MHDBV000009402',
-                                          'MHDBV000009403']
+    assert list(results[0].ID.values) == ['MHDBM000062']
+    assert list(results[1].ID.values) == [
+        'MHDBV000009192', 'MHDBV000009193', 'MHDBV000009194', 'MHDBV000009195',
+        'MHDBV000009196',
+    ]
 
 
 @pytest.mark.parametrize('markeraccession', [
     'mh13KK-218',
     'SI664607D',
-    'MHDBM000060',
+    'MHDBM000072',
 ])
 def test_allele_positions(markeraccession):
     pos = microhapdb.retrieve.allele_positions(markeraccession)
@@ -181,9 +182,9 @@ def test_allele_positions(markeraccession):
 def test_standardize_ids():
     from microhapdb.retrieve import standardize_ids as sid
     assert sid(['BoGUSid']) == list()
-    assert sid(['MHDBM000097']) == ['MHDBM000097']
-    assert sid(['SI664623B']) == ['MHDBM000097']
-    assert sid(['MHDBM000097', 'SI664623B']) == ['MHDBM000097']
-    assert sid(['SI664623B', 'NotARealId']) == ['MHDBM000097']
-    assert sid(['SI664623B', 'mh04KK-011', 'MHDBM000113']) == ['MHDBM000097', 'MHDBM000113', 'MHDBM000161']
-    assert sid(['rs547950691', 'mh02KK-131', 'SA002765U']) == ['MHDBM000118', 'MHDBP000054', 'MHDBV000028356']
+    assert sid(['MHDBM000114']) == ['MHDBM000114']
+    assert sid(['SI664623B']) == ['MHDBM000114']
+    assert sid(['MHDBM000114', 'SI664623B']) == ['MHDBM000114']
+    assert sid(['SI664623B', 'NotARealId']) == ['MHDBM000114']
+    assert sid(['SI664623B', 'mh04KK-011', 'MHDBM000135']) == ['MHDBM000114', 'MHDBM000135', 'MHDBM000194']
+    assert sid(['rs547950691', 'mh02KK-131', 'SA002765U']) == ['MHDBM000140', 'MHDBP000054', 'MHDBV000027667']

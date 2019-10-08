@@ -58,37 +58,45 @@ def dbsnp_subset_command(locusfile, dbsnpfile, outfile):
 
 def retrieve_proximal_variants(dbsnp, alfred, lovd, linkoping):
     variants = list()
+    variant_labels = defaultdict(list)
+    variant_xrefs = defaultdict(list)
 
-    alfred_found = set()
-    alfred_data = defaultdict(list)
+    alfred_loaded = set()
     next(alfred)
     for line in alfred:
         values = line.strip().split()
-        dbsnpid = values[1]
-        alfred_data[dbsnpid].append(values)
+        locuslabel, dbsnpid, xref = values[:3]
+        variant_labels[dbsnpid].append(locuslabel)
+        variant_xrefs[dbsnpid].append(xref)
+        alfred_loaded.add(dbsnpid)
 
-    lovd_found = set()
-    lovd_data = dict()
+    lovd_loaded = set()
     next(lovd)
     for line in lovd:
         values = line.strip().split()
         dbsnpids = values[5]
         if dbsnpids == '-':
-            v = Variant(None, None, values[-1], values[0], values[1],
+            v = Variant(None, [None], values[-1], [values[0]], values[1],
                         int(values[2]), values[4])
             variants.append(v)
         else:
+            locuslabel = values[0]
             for dbsnpid in dbsnpids.split(','):
-                lovd_data[dbsnpid] = values
+                variant_labels[dbsnpid].append(locuslabel)
+                lovd_loaded.add(dbsnpid)
 
-    linkoping_found = set()
-    linkoping_data = dict()
+    linkoping_loaded = set()
     next(linkoping)
     for line in linkoping:
         values = line.strip().split()
+        locuslabel = values[0]
         dbsnpid = values[4]
-        linkoping_data[dbsnpid] = values
+        variant_labels[dbsnpid].append(locuslabel)
+        linkoping_loaded.add(dbsnpid)
 
+    alfred_found = set()
+    lovd_found = set()
+    linkoping_found = set()
     for line in dbsnp:
         dbsnpvals = line.strip().split()
         dbsnpid = dbsnpvals[2]
@@ -99,46 +107,36 @@ def retrieve_proximal_variants(dbsnp, alfred, lovd, linkoping):
         if not chrom.startswith('chr'):
             chrom = 'chr' + chrom
         position = int(dbsnpvals[1])
-        locuslabels = list()
-        if dbsnpid in alfred_data:
+        if dbsnpid in alfred_loaded:
             alfred_found.add(dbsnpid)
-            for values in alfred_data[dbsnpid]:
-                xref = values[2]
-                locuslabel = values[0]
-                locuslabels.append((xref, locuslabel))
-        if dbsnpid in lovd_data:
+        if dbsnpid in lovd_loaded:
             lovd_found.add(dbsnpid)
-            locuslabel = lovd_data[dbsnpid][0]
-            locuslabels.append((None, locuslabel))
-        if dbsnpid in linkoping_data:
+        if dbsnpid in linkoping_loaded:
             linkoping_found.add(dbsnpid)
-            locuslabel = linkoping_data[dbsnpid][0]
-            locuslabels.append((None, locuslabel))
-        if dbsnpid not in alfred_data and dbsnpid not in lovd_data and dbsnpid not in linkoping_data:
-            locuslabels.append((None, None))
 
-        for xref, locuslabel in locuslabels:
-            av = Variant(dbsnpid, xref, 'dbSNP151', locuslabel, chrom,
-                         position - 1, dbsnpalstr)
-            variants.append(av)
+        av = Variant(
+            dbsnpid, variant_xrefs[dbsnpid], 'dbSNP151', variant_labels[dbsnpid], chrom,
+            position - 1, dbsnpalstr
+        )
+        variants.append(av)
 
     variants.sort(key=lambda v: (v.chrom, v.pos))
     for v in variants:
         yield v
 
-    missing = set(alfred_data.keys()) - alfred_found
+    missing = alfred_loaded - alfred_found
     if len(missing) > 0:
         message = '{} variants not found in dbSNP'.format(len(missing))
         message += ': {}'.format(','.join(missing))
         raise ValueError(message)
 
-    missing = set(lovd_data.keys()) - lovd_found
+    missing = lovd_loaded - lovd_found
     if len(missing) > 0:
         message = '{} variants not found in dbSNP'.format(len(missing))
         message += ': {}'.format(','.join(missing))
         raise ValueError(message)
 
-    missing = set(linkoping_data.keys()) - linkoping_found
+    missing = linkoping_loaded - linkoping_found
     if len(missing) > 0:
         message = '{} variants not found in dbSNP'.format(len(missing))
         message += ': {}'.format(','.join(missing))

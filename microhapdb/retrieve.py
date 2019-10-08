@@ -14,17 +14,17 @@ def fetch_by_query(table, querystr):
     """Retrieve data using a Pandas-style query.
 
     >>> for result in fetch_by_query('marker', 'Chrom == "chr8"'): print(result)
-                  ID Reference Chrom     Start       End   AvgAe  Source
-    202  MHDBM000203    GRCh38  chr8   1194352   1194372  2.6273    LOVD
-    203  MHDBM000204    GRCh38  chr8   3659269   3659482  3.9708  ALFRED
-    204  MHDBM000205    GRCh38  chr8  11738319  11738460  2.2865  ALFRED
-    >>> querystr = 'Marker == "MHDBM000177" and Population == "MHDBP000092"'
+                  ID Reference Chrom     Start       End   AvgAe                            Source
+    238  MHDBM000239    GRCh38  chr8   1194352   1194372  2.6273  doi:10.1016/j.fsigen.2018.05.008
+    239  MHDBM000240    GRCh38  chr8   3659269   3659482  3.9708                            ALFRED
+    240  MHDBM000241    GRCh38  chr8  11738319  11738460  2.2865                            ALFRED
+    >>> querystr = 'Marker == "MHDBM000213" and Population == "MHDBP000093"'
     >>> for result in fetch_by_query('allele', querystr): print(result)
                 Marker   Population Allele  Frequency
-    66015  MHDBM000177  MHDBP000092    C,C      0.661
-    66016  MHDBM000177  MHDBP000092    C,T      0.339
-    66017  MHDBM000177  MHDBP000092    T,C      0.000
-    66018  MHDBM000177  MHDBP000092    T,T      0.000
+    66015  MHDBM000213  MHDBP000093    C,C      0.661
+    66016  MHDBM000213  MHDBP000093    C,T      0.339
+    66017  MHDBM000213  MHDBP000093    T,C      0.000
+    66018  MHDBM000213  MHDBP000093    T,T      0.000
     """
     if not table:
         raise ValueError('must specify table to invoke a query')
@@ -46,16 +46,16 @@ def fetch_by_id(idvalue):
 
     >>> for result in fetch_by_id('SI605775E'): print(result)
                        ID Reference  Chrom  Position Alleles    Source
-    10491  MHDBV000010492    GRCh38  chr13  50313423     C,T  dbSNP151
+    10265  MHDBV000010266    GRCh38  chr13  50313423     C,T  dbSNP151
     >>> for result in fetch_by_id('rs690302'): print(result)
                        ID Reference  Chrom  Position  Alleles    Source
-    19313  MHDBV000019314    GRCh38  chr18   8892896  A,C,G,T  dbSNP151
+    18914  MHDBV000018915    GRCh38  chr18   8892896  A,C,G,T  dbSNP151
     >>> for result in fetch_by_id('mh06PK-25713'): print(result)
-                  ID Reference Chrom     Start       End   AvgAe Source
-    192  MHDBM000193    GRCh38  chr6  31196949  31197002  3.0005   LOVD
+                  ID Reference Chrom     Start       End   AvgAe                            Source
+    228  MHDBM000229    GRCh38  chr6  31196949  31197002  3.0005  doi:10.1016/j.fsigen.2018.05.008
     >>> for result in fetch_by_id('mh19CP-007'): print(result)
                   ID Reference  Chrom     Start       End   AvgAe  Source
-    109  MHDBM000110    GRCh38  chr19  14310739  14310781  3.0813  ALFRED
+    130  MHDBM000131    GRCh38  chr19  14310739  14310781  3.0813  ALFRED
     >>> for result in fetch_by_id('SA004109O'): print(result)
                  ID       Name  Source
     15  MHDBP000016  Colombian  ALFRED
@@ -77,27 +77,31 @@ def fetch_by_region(region, table=None):
     markers.
 
     >>> for result in fetch_by_region('chr13', table='marker'): print(result)
-                 ID Reference  Chrom      Start        End   AvgAe  Source
-    55  MHDBM000056    GRCh38  chr13   23191401   23191542  3.6440  ALFRED
-    56  MHDBM000057    GRCh38  chr13   24343962   24343994  3.0655  ALFRED
-    57  MHDBM000058    GRCh38  chr13   46291794   46291987  4.0035  ALFRED
-    58  MHDBM000059    GRCh38  chr13   50313423   50313589  2.3932  ALFRED
-    59  MHDBM000060    GRCh38  chr13   53486691   53486837  6.0444  ALFRED
-    60  MHDBM000061    GRCh38  chr13   66138599   66138696  3.4361  ALFRED
-    61  MHDBM000062    GRCh38  chr13   94894395   94894513  2.0150  ALFRED
-    62  MHDBM000063    GRCh38  chr13  110154351  110154505  3.7978  ALFRED
+                 ID Reference  Chrom      Start        End   AvgAe         Source
+    65  MHDBM000066    GRCh38  chr13   23191401   23191542  3.6440         ALFRED
+    66  MHDBM000067    GRCh38  chr13   23191461   23191542  2.5124  ISFG2019:P597
+    67  MHDBM000068    GRCh38  chr13   24343962   24343994  3.0655         ALFRED
+    68  MHDBM000069    GRCh38  chr13   46291794   46291987  4.0035         ALFRED
+    69  MHDBM000070    GRCh38  chr13   46291948   46291987  2.6806  ISFG2019:P597
+    70  MHDBM000071    GRCh38  chr13   50313423   50313589  2.3932         ALFRED
+    71  MHDBM000072    GRCh38  chr13   53486691   53486837  6.0444         ALFRED
+    72  MHDBM000073    GRCh38  chr13   66138599   66138696  3.4361         ALFRED
+    73  MHDBM000074    GRCh38  chr13   94894395   94894513  2.0150         ALFRED
+    74  MHDBM000075    GRCh38  chr13  110154351  110154412  3.2411  ISFG2019:P597
+    75  MHDBM000076    GRCh38  chr13  110154351  110154505  3.7978         ALFRED
     >>> for result in fetch_by_region('chr18:24557400-24557450'): print(result)
-                  ID Reference  Chrom     Start       End  AvgAe  Source
-    105  MHDBM000106    GRCh38  chr18  24557354  24557490  2.658  ALFRED
+                  ID Reference  Chrom     Start       End   AvgAe         Source
+    124  MHDBM000125    GRCh38  chr18  24557354  24557490  2.6580         ALFRED
+    125  MHDBM000126    GRCh38  chr18  24557431  24557490  3.1874  ISFG2019:P597
                        ID Reference  Chrom  Position Alleles    Source
-    19457  MHDBV000019458    GRCh38  chr18  24557400     C,T  dbSNP151
-    19458  MHDBV000019459    GRCh38  chr18  24557402     A,C  dbSNP151
-    19459  MHDBV000019460    GRCh38  chr18  24557414     A,T  dbSNP151
-    19460  MHDBV000019461    GRCh38  chr18  24557416     A,G  dbSNP151
-    19461  MHDBV000019462    GRCh38  chr18  24557431     A,G  dbSNP151
-    19462  MHDBV000019463    GRCh38  chr18  24557443     A,G  dbSNP151
-    19463  MHDBV000019464    GRCh38  chr18  24557447   C,G,T  dbSNP151
-    19464  MHDBV000019465    GRCh38  chr18  24557448     A,G  dbSNP151
+    19058  MHDBV000019059    GRCh38  chr18  24557400     C,T  dbSNP151
+    19059  MHDBV000019060    GRCh38  chr18  24557402     A,C  dbSNP151
+    19060  MHDBV000019061    GRCh38  chr18  24557414     A,T  dbSNP151
+    19061  MHDBV000019062    GRCh38  chr18  24557416     A,G  dbSNP151
+    19062  MHDBV000019063    GRCh38  chr18  24557431     A,G  dbSNP151
+    19063  MHDBV000019064    GRCh38  chr18  24557443     A,G  dbSNP151
+    19064  MHDBV000019065    GRCh38  chr18  24557447   C,G,T  dbSNP151
+    19065  MHDBV000019066    GRCh38  chr18  24557448     A,G  dbSNP151
     """
     chrom, start, end = None, None, None
     if ':' in region:
@@ -149,12 +153,12 @@ def allele_positions(marker):
 def standardize_ids(idlist):
     """Convert a list of IDs or DB cross-references to internal MicroHapDB IDs.
 
-    >>> standardize_ids(['MHDBM000097'])
-    ['MHDBM000097']
+    >>> standardize_ids(['MHDBM000114'])
+    ['MHDBM000114']
     >>> standardize_ids(['SI664623B'])
-    ['MHDBM000097']
+    ['MHDBM000114']
     >>> standardize_ids(['rs547950691', 'mh02KK-131', 'SA002765U'])
-    ['MHDBM000118', 'MHDBP000054', 'MHDBV000028356']
+    ['MHDBM000140', 'MHDBP000054', 'MHDBV000027667']
     """
     idmap = microhapdb.idmap
     iddata = idmap[(idmap.XRef.isin(idlist)) | (idmap.mhdbID.isin(idlist))]

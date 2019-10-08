@@ -89,7 +89,7 @@ def test_main_id_mode(capsys):
     args = get_parser().parse_args(arglist)
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
-    line = '38466  MHDBV000038467    GRCh38  chr9    680713     A,G  dbSNP151'
+    line = '37729  MHDBV000037730    GRCh38  chr9    680713     A,G  dbSNP151'
     print(out)
     assert line in out
 
