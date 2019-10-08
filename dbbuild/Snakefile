@@ -118,8 +118,11 @@ rule score_loci:
                     ae_recip += freq ** 2
                 ae = 1.0 / ae_recip
                 ae_per_pop.append(ae)
-            avg_ae = sum(ae_per_pop) / len(ae_per_pop)
-            aes.append('{:.04f}'.format(avg_ae))
+            if len(ae_per_pop) > 0:
+                avg_ae = sum(ae_per_pop) / len(ae_per_pop)
+                aes.append('{:.04f}'.format(avg_ae))
+            else:
+                aes.append(None)
         loci = loci.assign(AvgAe=pandas.Series(aes))
         column_order = ['ID', 'Reference', 'Chrom', 'Start', 'End', 'AvgAe',
                         'Source']

@@ -92,8 +92,6 @@ def retrieve_proximal_variants(dbsnp, alfred, lovd, linkoping):
     for line in dbsnp:
         dbsnpvals = line.strip().split()
         dbsnpid = dbsnpvals[2]
-        # if dbsnpid in alfred_data or dbsnp in lovd_data or dbsnp in linkoping_data:
-        #    print('DEBUG', dbsnpid, dbsnpid in alfred_data, dbsnp in lovd_data, dbsnp in linkoping_data)
         dba = dbsnpvals[3:5]
         dbsnpalleles = set([n for v in dba for n in v.split(',')])
         dbsnpalstr = ','.join(sorted(dbsnpalleles))
@@ -108,15 +106,15 @@ def retrieve_proximal_variants(dbsnp, alfred, lovd, linkoping):
                 xref = values[2]
                 locuslabel = values[0]
                 locuslabels.append((xref, locuslabel))
-        elif dbsnpid in lovd_data:
+        if dbsnpid in lovd_data:
             lovd_found.add(dbsnpid)
             locuslabel = lovd_data[dbsnpid][0]
             locuslabels.append((None, locuslabel))
-        elif dbsnpid in linkoping_data:
+        if dbsnpid in linkoping_data:
             linkoping_found.add(dbsnpid)
             locuslabel = linkoping_data[dbsnpid][0]
             locuslabels.append((None, locuslabel))
-        else:
+        if dbsnpid not in alfred_data and dbsnpid not in lovd_data and dbsnpid not in linkoping_data:
             locuslabels.append((None, None))
 
         for xref, locuslabel in locuslabels:
