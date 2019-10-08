@@ -26,7 +26,9 @@ def population_summary(alfredstream, lovdstream):
     for line in lovdstream:
         label, source = line.strip().split()
         popdata[label] = (label, 'LOVD')
-    pops = sorted(popdata.items(), key=lambda d: d[1][0])
+    pops = list(popdata.items())
+    pops.append(('Swedish', ('Swedish', 'Linköping')))
+    pops = sorted(pops, key=lambda d: d[1][0])
     for n, (label, (name, source)) in enumerate(pops, 1):
         mhdbid = 'MHDBP{:06d}'.format(n)
         yield mhdbid, label, name, source
