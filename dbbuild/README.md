@@ -19,12 +19,13 @@ Re-compiling the database to include additional data sources is a matter of crea
 
 Each source directory must contain 4 data files.
 A description of each required file is given below.
-Raw original data files and code to transform the data into the required format should also be included.
 
 - `marker.tsv`
 - `population.tsv`
 - `frequency.tsv`
 - `source.txt`
+
+In addition to these 4 files, it is expected that raw original data files will be provided, along with code to transform the data into the required format and instructions for running the code.
 
 ### `marker.tsv`
 
@@ -45,6 +46,7 @@ mh01KK-172	GRCh38	chr1	1551453,1551522,1551678	SI664721A
 mh01KK-172	GRCh38	chr1	3826567,3826754,3826785,3826826	SI664246C
 mh01KK-172	GRCh38	chr1	4167403,4167500,4167563,4167573	SI664548H
 ```
+
 
 ### `population.tsv`
 

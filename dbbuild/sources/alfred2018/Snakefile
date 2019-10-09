@@ -1,0 +1,29 @@
+# -----------------------------------------------------------------------------
+# Copyright (c) 2019, Battelle National Biodefense Institute.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
+# and is licensed under the BSD license: see LICENSE.txt.
+# -----------------------------------------------------------------------------
+
+from marker import smartopen, parse_markers_from_table, alfred_marker_detail_scrape
+
+
+MARKERS = parse_markers_from_table('downloads/Microhap_alleleF_198.txt')
+
+
+rule marker_rsids:
+    input: expand('downloads/marker-detail/{marker}.html.gz', marker=MARKERS)
+    output:
+        mapping='marker-rsids.tsv',
+        rsidlist='all-rsids.txt'
+    run:
+        allrsids = set()
+        with smartopen(output.mapping, 'w') as mapout, smartopen(output.rsidlist, 'w') as rsidout:
+            print('Xref', 'rsIDs', sep='\t', file=mapout)
+            for filename in input:
+                with smartopen(filename, 'r') as fh:
+                    rsids = alfred_marker_detail_scrape(fh)
+                    xref = filename.split('/')[-1].split('.')[0]
+                    print(xref, ','.join(rsids), sep='\t', file=mapout)
+                    allrsids.update(rsids)
+            print(*sorted(allrsids), sep='\n', file=rsidout)
