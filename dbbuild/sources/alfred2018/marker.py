@@ -72,7 +72,7 @@ def alfred_marker_coords(vcf, mapping):
     for line in vcf:
         if line.startswith('#'):
             continue
-        chrnum, posstr, rsid, *values = line.strip.split()
+        chrnum, posstr, rsid, *values = line.strip().split()
         chrom = chrnum if chrnum.startswith('chr') else 'chr' + chrnum
         pos = int(posstr) - 1
         rsidcoords[rsid] = (chrom, pos)
@@ -81,8 +81,8 @@ def alfred_marker_coords(vcf, mapping):
         if line.startswith('Name'):
             continue
         name, xref, rsidlist = line.strip().split('\t')
-        rsids = rsidlist.split(,)
+        rsids = rsidlist.split(',')
         offsets = [rsidcoords[rsid][1] for rsid in rsids]
-        offsets, rsids = zip(*sorted(offsets, rsids))
+        assert offsets == sorted(offsets)
         chrom = rsidcoords[rsids[0]][0]
         yield name, chrom, offsets, rsids

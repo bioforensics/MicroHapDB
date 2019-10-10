@@ -5,7 +5,7 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-from marker import smartopen, parse_markers_from_table,
+from marker import smartopen, parse_markers_from_table
 from marker import alfred_marker_detail_scrape, alfred_marker_coords
 
 
@@ -38,11 +38,11 @@ rule dbsnp_subset:
     output: 'dbsnp-subset.vcf.gz'
     run:
         rsids = list()
-        with smartopen(rsidlist, 'r') as fh:
+        with smartopen(input.rsidlist, 'r') as fh:
             for line in fh:
                 rsids.append(line.strip())
         command = 'rsidx search --header --out {out:s} {dbsnp:s} {rsidx:s} {ids:s}'.format(
-            out=output[0], dbsnp=input.dbsnp, rsidx=input.rsidx, ids=rsids
+            out=output[0], dbsnp=input.dbsnp, rsidx=input.rsidx, ids=' '.join(rsids)
         )
         shell(command)
 
@@ -57,4 +57,6 @@ rule marker_coords:
             with smartopen(output[0], 'w') as out:
                 print('Name', 'Reference', 'Chrom', 'Offsets', 'Xref', sep='\t', file=out)
                 for name, chrom, offsets, xref in alfred_marker_coords(vcf, mapping):
-                    print(name, 'GRCh38', chrom, ','.join(offsets), ','.join(xref))
+                    offsetstr = ','.join(map(str, offsets))
+                    xrefstr = ','.join(xref)
+                    print(name, 'GRCh38', chrom, offsetstr, xrefstr, sep='\t', file=out)
