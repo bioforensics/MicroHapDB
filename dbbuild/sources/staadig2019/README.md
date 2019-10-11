@@ -1,4 +1,4 @@
-# Allele Frequency Database (ALFRED)
+# Linköping Panel Evaluation (Sweden)
 
 ## Citations
 
