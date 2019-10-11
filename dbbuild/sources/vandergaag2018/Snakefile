@@ -5,7 +5,11 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-from utils import smartopen, parse_markers, marker_variants
+from utils import smartopen, parse_markers, marker_variants, parse_frequencies
+
+
+rule all:
+    input: 'marker.tsv', 'population.tsv', 'frequency.tsv'
 
 
 rule dbsnp_subset:
@@ -43,3 +47,16 @@ rule markers:
                         name, '', 'GRCh38', chrom, ','.join(map(str, offsets)), ','.join(rsids),
                         sep='\t', file=out
                     )
+
+
+rule frequencies:
+    input:
+        markers='figure-s1.txt',
+        freqs='table-S2.txt'
+    output: 'frequency.tsv'
+    run:
+        with smartopen(input.markers, 'r') as mstream, smartopen(input.freqs, 'r') as fstream:
+            with smartopen(output[0], 'w') as out:
+                print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=out)
+                for data in parse_frequencies(mstream, fstream):
+                    print(*data, sep='\t', file=out)
