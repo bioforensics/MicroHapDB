@@ -60,11 +60,11 @@ rule marker_coords:
     run:
         with smartopen(input.dbsnp, 'r') as vcf, smartopen(input.markers, 'r') as mapping:
             with smartopen(output[0], 'w') as out:
-                print('Name', 'Reference', 'Chrom', 'Offsets', 'Xref', sep='\t', file=out)
-                for name, chrom, offsets, xref in alfred_marker_coords(vcf, mapping):
+                print('Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef', sep='\t', file=out)
+                for name, xref, chrom, offsets, varids in alfred_marker_coords(vcf, mapping):
                     offsetstr = ','.join(map(str, offsets))
-                    xrefstr = ','.join(xref)
-                    print(name, 'GRCh38', chrom, offsetstr, xrefstr, sep='\t', file=out)
+                    variants = ','.join(varids)
+                    print(name, xref, 'GRCh38', chrom, offsetstr, variants, sep='\t', file=out)
 
 
 rule population:

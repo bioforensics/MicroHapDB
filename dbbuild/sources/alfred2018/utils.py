@@ -85,7 +85,7 @@ def alfred_marker_coords(vcf, mapping):
         offsets = [rsidcoords[rsid][1] for rsid in rsids]
         assert offsets == sorted(offsets)
         chrom = rsidcoords[rsids[0]][0]
-        yield name, chrom, offsets, rsids
+        yield name, xref, chrom, offsets, rsids
 
 
 def alfred_pop_data(instream):
