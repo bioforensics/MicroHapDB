@@ -1,0 +1,45 @@
+# -----------------------------------------------------------------------------
+# Copyright (c) 2019, Battelle National Biodefense Institute.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
+# and is licensed under the BSD license: see LICENSE.txt.
+# -----------------------------------------------------------------------------
+
+from utils import smartopen, parse_markers, marker_variants
+
+
+rule dbsnp_subset:
+    input:
+        markers='figure-s1.txt',
+        dbsnp=config['dbsnp']
+    output: 'dbsnp-subset.vcf.gz'
+    run:
+        with smartopen(input.markers, 'r') as fh:
+            regions = list()
+            for name, chrom, start, end, offsets in parse_markers(fh):
+                if chrom.startswith('chr'):
+                    chrom = chrom[3:]
+                region = '{c:s}:{s:d}-{e:d}'.format(c=chrom, s=start, e=end)
+                regions.append(region)
+        cmdargs = ['tabix', '-h', input.dbsnp, *regions, '|', 'gzip', '>', output[0]]
+        cmd = ' '.join(cmdargs)
+        shell(cmd)
+
+
+rule markers:
+    input:
+        markers='figure-s1.txt',
+        dbsnp='dbsnp-subset.vcf.gz'
+    output: 'marker.tsv'
+    run:
+        with smartopen(input.markers, 'r') as mstream, smartopen(input.dbsnp, 'r') as vstream:
+            with smartopen(output[0], 'w') as out:
+                print(
+                    'Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef',
+                    sep='\t', file=out
+                )
+                for name, chrom, offsets, rsids in marker_variants(mstream, vstream):
+                    print(
+                        name, '', 'GRCh38', chrom, ','.join(map(str, offsets)), ','.join(rsids),
+                        sep='\t', file=out
+                    )
