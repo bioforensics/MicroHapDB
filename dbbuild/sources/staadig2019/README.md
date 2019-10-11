@@ -27,3 +27,7 @@ snakemake --config dbsnp=/path/to/dbSNP.vcf.gz rsidx=/path/to/dbSNP.rsidx -p all
 ## Manual Pre-processing
 
 The files `marker-variants.tsv` and `allele-frequencies.tsv` were exported to TSV from the corresponding `Position` and `Frequencies` tabs of the original data file furnished by the authors (in `original/Microhaplotype positions and frequencies.xlsx`).
+
+
+[Snakemake]: https://snakemake.readthedocs.io/en/stable/
+[rsidx]: https://github.com/bioforensics/rsidx

@@ -46,3 +46,6 @@ Run the following command from the `dbbuild/sources/alfred2018/` directory to co
 ```
 snakemake --config dbsnp=/path/to/dbSNP.vcf.gz rsidx=/path/to/dbSNP.rsidx -p all
 ```
+
+[Snakemake]: https://snakemake.readthedocs.io/en/stable/
+[rsidx]: https://github.com/bioforensics/rsidx
