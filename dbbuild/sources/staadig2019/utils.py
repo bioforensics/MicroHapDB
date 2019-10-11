@@ -56,3 +56,23 @@ def linköping_marker_coords(vcf, mapping):
         chrom = rsidcoords[rsids[0]][0]
         name = rename_marker(marker, chrom)
         yield name, chrom, positions, rsids
+
+
+def linköping_allele_frequencies(freqstream, namestream):
+    newnames = dict()
+    for line in namestream:
+        if line.startswith('Name'):
+            continue
+        newname, *values = line.split('\t')
+        oldname = 'MH' + newname[-2:]
+        newnames[oldname] = newname
+
+    for line in freqstream:
+        if line.startswith('Microhaplotype'):
+            continue
+        oldname, allelestr, freqstr = line.strip().split('\t')
+        if oldname.endswith(('A', 'B')):
+            continue
+        name = newnames[oldname]
+        allele = ','.join(allelestr)
+        yield name, allele, float(freqstr)

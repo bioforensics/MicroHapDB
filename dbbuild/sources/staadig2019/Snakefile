@@ -5,7 +5,7 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-from utils import smartopen, linköping_marker_coords
+from utils import smartopen, linköping_marker_coords, linköping_allele_frequencies
 
 
 rule all:
@@ -46,21 +46,14 @@ rule marker_coords:
                     print(name, '', 'GRCh38', chrom, offsetstr, varstr, sep='\t', file=out)
 
 
-rule population:
-    input: 'downloads/Microhap_alleleF_198.txt'
-    output: 'population.tsv'
-    run:
-        with smartopen(input[0], 'r') as infh, smartopen(output[0], 'w') as outfh:
-            print('Name', 'Xref', sep='\t', file=outfh)
-            for data in alfred_pop_data(infh):
-                print(*data, sep='\t', file=outfh)
-
-
 rule frequency:
-    input: 'downloads/Microhap_alleleF_198.txt'
+    input:
+        freqs='allele-frequencies.tsv',
+        markers='marker.tsv'
     output: 'frequency.tsv'
     run:
-        with smartopen(input[0], 'r') as infh, smartopen(output[0], 'w') as outfh:
-            print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=outfh)
-            for data in alfred_frequencies(infh):
-                print(*data, sep='\t', file=outfh)
+        with smartopen(input.freqs, 'r') as freqfh, smartopen(input.markers, 'r') as markerfh:
+            with smartopen(output[0], 'w') as out:
+                print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=out)
+                for name, allele, frequency in linköping_allele_frequencies(freqfh, markerfh):
+                    print(name, 'Swedish', allele, '{:.4f}'.format(frequency), sep='\t', file=out)
