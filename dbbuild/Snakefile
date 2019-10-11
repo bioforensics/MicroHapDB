@@ -8,6 +8,7 @@
 
 from glob import glob
 import os
+
 import pandas
 
 
@@ -24,6 +25,21 @@ def write_variant_map(data, output):
         marker = row['Name']
         for variant in row['VarRef'].split(','):
             print(variant, marker, sep='\t', file=output)
+
+
+def populate_idmap(data):
+    idmap = {
+        'Xref': list(),
+        'ID': list(),
+    }
+    for n, row in data.iterrows():
+        if row['Xref'] == '' or row['Xref'] is None or pandas.isnull(row['Xref']):
+            continue
+        for xref in row['Xref'].split(','):
+            idmap['Xref'].append(xref)
+            idmap['ID'].append(row['Name'])
+    data = pandas.DataFrame(idmap).sort_values('ID')
+    return data
 
 
 SOURCES = [os.path.basename(file) for file in glob('sources/*') if os.path.isdir(file)]
@@ -73,7 +89,8 @@ rule markers:
         expand('sources/{source}/source.txt', source=SOURCES),
     output:
         table='marker.tsv',
-        varmap='variantmap.tsv'
+        varmap='variantmap.tsv',
+        idmap='idmap.tsv'
     run:
         numsources = int(len(input) / 2)
         markerfiles = input[:numsources]
@@ -88,6 +105,11 @@ rule markers:
         data = pandas.concat(dfs, axis=0, ignore_index=True)
         with open(output.varmap, 'w') as fh:
             write_variant_map(data, fh)
+
+        # FIXME Add Pearson hash and AvgAe
+
+        idmap = populate_idmap(data)
+        idmap.to_csv(output.idmap, sep='\t', index=False)
 
         data.drop(columns=['Xref', 'VarRef'], inplace=True)
         data.to_csv(output.table, sep='\t', index=False)

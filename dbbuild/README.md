@@ -111,4 +111,6 @@ For example:
 
 ## Running the Database Build
 
-More soon!
+```
+snakemake tables
+```
