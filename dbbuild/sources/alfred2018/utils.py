@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------
 
 import builtins
-from collections import defaultdict, namedtuple
+from collections import defaultdict
 from gzip import open as gzopen
 import os
 from re import findall, search

@@ -5,12 +5,16 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-from alfredutils import smartopen, parse_markers_from_table
-from alfredutils import alfred_marker_detail_scrape, alfred_marker_coords
-from alfredutils import alfred_pop_data, alfred_frequencies
+from utils import smartopen, parse_markers_from_table
+from utils import alfred_marker_detail_scrape, alfred_marker_coords
+from utils import alfred_pop_data, alfred_frequencies
 
 
 MARKERS = parse_markers_from_table('downloads/Microhap_alleleF_198.txt')
+
+
+rule all:
+    input: 'marker.tsv', 'population.tsv', 'frequency.tsv'
 
 
 rule marker_rsids:
