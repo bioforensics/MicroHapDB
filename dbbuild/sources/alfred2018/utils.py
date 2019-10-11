@@ -103,7 +103,7 @@ def alfred_pop_data(instream):
             assert popname == popdata[label]
         else:
             popdata[label] = popname
-            yield popname, label
+            yield label, popname
 
 
 def alfred_frequencies(instream):

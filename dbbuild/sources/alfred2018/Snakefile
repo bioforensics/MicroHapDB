@@ -72,7 +72,7 @@ rule population:
     output: 'population.tsv'
     run:
         with smartopen(input[0], 'r') as infh, smartopen(output[0], 'w') as outfh:
-            print('Name', 'Xref', sep='\t', file=outfh)
+            print('ID', 'Name', sep='\t', file=outfh)
             for data in alfred_pop_data(infh):
                 print(*data, sep='\t', file=outfh)
 

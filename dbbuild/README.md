@@ -26,6 +26,7 @@ A description of each required file is given below.
 - `source.txt`
 
 In addition to these 4 files, it is expected that raw original data files will be provided, along with code to transform the data into the required format and instructions for running the code.
+No constraints are imposed regarding how these supporting files are named, what programming language is used, etc.—only that the pre-processing procedure can be replicated without requiring an unreasonable amount of time or effort.
 
 ### `marker.tsv`
 
@@ -55,17 +56,17 @@ mh04KK-011	SI664565G	GRCh38	chr4	37857268,37857332	rs6855439,rs6531591
 The `population.tsv` file contains a description of all the populations for which microhap allele frequency data is available.
 It includes the following fields.
 
-- `Name`: a free-text name, intended to be human readable
-- `Xref`: an identifier (or comma-separated list of identifiers) used to cross-reference the population in other databases; at least one Xref identifier is required
+- `ID`: a unique identifier for this population across all sources
+- `Name`: a free-text description of the population, intended to be human readable
 
 For example, the first few lines of the `population.tsv` for ALFRED look like this.
 
 ```
-Name	Xref
-Han	SA000001B
-Ami	SA000002C
-Hakka	SA000003D
-Biaka	SA000005F
+ID	Name
+SA000001B	Han
+SA000002C	Ami
+SA000003D	Hakka
+SA000005F	Biaka
 ```
 
 **NOTE**: population names need not be unique, but `Xref` identifiers must be unique across all sources.
