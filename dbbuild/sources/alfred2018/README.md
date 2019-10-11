@@ -27,7 +27,7 @@ This usually requires more than an hour.
 rsidx index /path/to/dbSNP.vcf.gz /path/to/dbSNP.rsidx
 ```
 
-### Step 1: download ALFRED marker and frequency data
+### Step 1: download ALFRED marker and frequency data (OPTIONAL)
 
 Microhap allele frequencies are available from ALFRED in a single text file.
 However, the marker definitions are spread across many HTML pages.
@@ -39,23 +39,10 @@ snakemake -s download.Snakefile frequencies
 snakemake -s download.Snakefile markers
 ```
 
+### Step 2: compile data tables
 
-To build the TSV files required by MicroHapDB, run the following command from the `dbbuild/sources/vandergaag2018/` directory.
+Run the following command from the `dbbuild/sources/alfred2018/` directory to compile the data into the table format required by MicroHapDB.
 
 ```
-snakemake --config dbsnp=/path/to/your/dbSNP.vcf.gz -p all
+snakemake --config dbsnp=/path/to/dbSNP.vcf.gz rsidx=/path/to/dbSNP.rsidx -p all
 ```
-
-## Manual Pre-processing
-
-The file `figure-S1.txt` was manually created using the supplementary PDF file from the paper (`original/mmc1.pdf`).
-Genomic coordinates of each marker were determined by copying the sequence from the PDF, editing in some cases, and pasting into a UCSC BLAT search.
-The offset of each variant site from the first nucleotide in the marker was manually checked, and random spot checking was used to verify the accuracy.
-
-The file `table-S2.txt` was created by copying the table from the supplementary XLSX file from the paper (`original/mmc4.xlsx`) and pasting into a text editor.
-
-The file `population.tsv` was created manually.
-
-
-[Snakemake]: https://snakemake.readthedocs.io/en/stable/
-[rsidx]: https://github.com/bioforensics/rsidx
