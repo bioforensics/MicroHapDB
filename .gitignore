@@ -8,3 +8,4 @@ dist/
 .ipynb_checkpoints/
 .*.swp
 scratch/
+~$*
