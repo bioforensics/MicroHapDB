@@ -129,10 +129,10 @@ def alfred_frequencies(instream):
     for chunk in chunks:
         lines = iter(chunk.split('\n'))
         header1 = next(lines)
-        markerid = header1.split()[0]
+        xref, _, _, markerid = header1.split(' | ')
         header2 = next(lines)
         alleles = header2.split()[2:]
-        alleles = [cleanup(a, markerid, indels) for a in alleles]
+        alleles = [cleanup(a, xref, indels) for a in alleles]
         for line in lines:
             if line.strip() == '':
                 continue
@@ -148,4 +148,4 @@ def alfred_frequencies(instream):
                 )
                 raise ValueError(message)
             for allele, freq in zip(alleles, freqs):
-                yield markerid, popid, allele, freq
+                yield markerid, popid, allele, '{:.4f}'.format(float(freq))

@@ -92,4 +92,4 @@ def parse_frequencies(markerstream, freqstream):
             freqs = values[1:]
             for freq, pop in zip(freqs, ('NL', 'Asia', 'Africa')):
                 allele = alleles[markerid][haplotype]
-                yield markerid, pop, allele, freq
+                yield markerid, pop, allele, '{:.4f}'.format(float(freq))

@@ -51,7 +51,20 @@ rule populations:
                 df = load_source_data(popfile, fh)
                 dfs.append(df)
         data = pandas.concat(dfs, axis=0, ignore_index=True)
+        assert len(data.ID) == len(data.ID.unique())
         data.sort_values('Name').to_csv(output.table, sep='\t', index=False)
+
+
+rule frequencies:
+    input: expand('sources/{source}/frequency.tsv', source=SOURCES)
+    output: 'frequency.tsv'
+    run:
+        dfs = list()
+        for freqfile in input:
+            df = pandas.read_csv(freqfile, sep='\t', index_col=None)
+            dfs.append(df)
+        data = pandas.concat(dfs, axis=0, ignore_index=True)
+        data.sort_values(['Marker', 'Population']).to_csv(output[0], sep='\t', index=False)
 
 
 rule markers:
