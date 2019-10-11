@@ -5,8 +5,9 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-from marker import smartopen, parse_markers_from_table
-from marker import alfred_marker_detail_scrape, alfred_marker_coords
+from alfredutils import smartopen, parse_markers_from_table
+from alfredutils import alfred_marker_detail_scrape, alfred_marker_coords
+from alfredutils import alfred_pop_data, alfred_frequencies
 
 
 MARKERS = parse_markers_from_table('downloads/Microhap_alleleF_198.txt')
@@ -60,3 +61,23 @@ rule marker_coords:
                     offsetstr = ','.join(map(str, offsets))
                     xrefstr = ','.join(xref)
                     print(name, 'GRCh38', chrom, offsetstr, xrefstr, sep='\t', file=out)
+
+
+rule population:
+    input: 'downloads/Microhap_alleleF_198.txt'
+    output: 'population.tsv'
+    run:
+        with smartopen(input[0], 'r') as infh, smartopen(output[0], 'w') as outfh:
+            print('Name', 'Xref', sep='\t', file=outfh)
+            for data in alfred_pop_data(infh):
+                print(*data, sep='\t', file=outfh)
+
+
+rule frequency:
+    input: 'downloads/Microhap_alleleF_198.txt'
+    output: 'frequency.tsv'
+    run:
+        with smartopen(input[0], 'r') as infh, smartopen(output[0], 'w') as outfh:
+            print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=outfh)
+            for data in alfred_frequencies(infh):
+                print(*data, sep='\t', file=outfh)

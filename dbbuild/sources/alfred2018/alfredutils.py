@@ -86,3 +86,66 @@ def alfred_marker_coords(vcf, mapping):
         assert offsets == sorted(offsets)
         chrom = rsidcoords[rsids[0]][0]
         yield name, chrom, offsets, rsids
+
+
+def alfred_pop_data(instream):
+    popdata = dict()
+    for line in instream:
+        if line.startswith(('----------', 'SI664', 'popName')):
+            continue
+        values = line.strip().split('\t')
+        popmatch = search(r'^([^\(]+)\((\S+)\)', values[0])
+        assert popmatch, values[0]
+        label = popmatch.group(2)
+        popname = popmatch.group(1)
+        typed_sample_size = int(values[1])
+        if label in popdata:
+            assert popname == popdata[label]
+        else:
+            popdata[label] = popname
+            yield popname, label
+
+
+def alfred_frequencies(instream):
+    indels = {
+        'SI664579L': {'D': 'T', 'I': 'TA'},
+        'SI664597L': {'D': 'T', 'I': 'TG'},
+        'SI664640A': {'D': 'A', 'I': 'AATAATT'},
+    }
+
+
+    def cleanup(allelestr, markerid, indels):
+        allelestr = allelestr.replace('-', ',')
+        if 'D' in allelestr or 'I' in allelestr:
+            allelestr = allelestr.replace('D', indels[markerid]['D'])
+            allelestr = allelestr.replace('I', indels[markerid]['I'])
+        return allelestr
+
+    line = next(instream)
+    if line.startswith('Created on'):
+        next(instream)
+    chunks = instream.read().split('-----------------\n')
+
+    for chunk in chunks:
+        lines = iter(chunk.split('\n'))
+        header1 = next(lines)
+        markerid = header1.split()[0]
+        header2 = next(lines)
+        alleles = header2.split()[2:]
+        alleles = [cleanup(a, markerid, indels) for a in alleles]
+        for line in lines:
+            if line.strip() == '':
+                continue
+            values = line.split('\t')
+            popid = search(r'^([^\(]+)\((\S+)\)', values[0]).group(2)
+            freqs = values[2:]
+            if len(alleles) != len(freqs):
+                message = 'WARNING: allele/freq mismatch '
+                message += 'for locus ' + markerid
+                message += ' and population ' + popid
+                message += '; {nfreq} frequencies vs {nall} alleles'.format(
+                    nfreq=len(freqs), nall=len(alleles)
+                )
+                raise ValueError(message)
+            for allele, freq in zip(alleles, freqs):
+                yield markerid, popid, allele, freq
