@@ -6,7 +6,12 @@ van der Gaag KJ, de Leeuw RH, Laros JFJ, den Dunnen JT, de Knijff P (2018) Short
 
 ## Build Process
 
-Python 3 and [Snakemake][] are needed to compile the published data into the table format required by MicroHapDB.
+The following software is required to compile the published data into the table format required by MicroHapDB.
+
+- Python 3
+- [Snakemake][]
+- tabix (from [htslib][])
+
 A recent version of the dbSNP database is also required, both the VCF file and the corresponding tabix index.
 
 To build the TSV files required by MicroHapDB, run the following command from the `dbbuild/sources/vandergaag2018/` directory.
@@ -27,3 +32,4 @@ The file `population.tsv` was created manually.
 
 
 [Snakemake]: https://snakemake.readthedocs.io/en/stable/
+[htslib]: https://github.com/samtools/htslib

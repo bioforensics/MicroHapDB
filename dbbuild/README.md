@@ -33,18 +33,20 @@ The `marker.tsv` file contains the microhaplotype marker definition.
 This includes the following fields.
 
 - `Name`: a symbol following the `mh<chromosome><initials>-<identifier>` nomenclature proposed in [Kidd (2016)](https://dx.doi.org/10.1186/s40246-016-0078-y)
-- `Reference`: the version of the human reference genome used as a variant coordinate system; at the moment, only GRCh38 is supported
+- `Xref`: an identifier (or comma-separated list of identifiers) used to cross-reference the marker in other databases; this field can be empty, but if it includes one or more identifiers, each of these identifiers should be unique to this marker across all sources
+- `Reference`: the version of the human reference genome used as a variant coordinate system; at the moment, only `GRCh38` is supported
 - `Chrom`: the chromosome on which the marker is found
 - `Offsets`: offsets (from the first nucleotide on the chromosome) of the variants that define the marker, separated by commas; note that the first nucleotide of the chromosome has an offset of `0`, the second nucleotide has an offset of `1`, and so on
-- `Xref`: an identifier (or comma-separated list of identifiers) used to cross-reference the marker in other databases; this field is optional
+- `VarRef`: a list of variant identifiers (such as rsIDs) associated with this marker; optional
 
 For example, the first few lines of the `marker.tsv` for ALFRED looks like this.
 
 ```
 Name	Reference	Chrom	Offsets	Xref
-mh01KK-172	GRCh38	chr1	1551453,1551522,1551678	SI664721A
-mh01KK-172	GRCh38	chr1	3826567,3826754,3826785,3826826	SI664246C
-mh01KK-172	GRCh38	chr1	4167403,4167500,4167563,4167573	SI664548H
+mh17KK-014	GRCh38	chr17	4497060,4497088,4497096	rs333113,rs8074965,rs11657785
+mh03KK-150	GRCh38	chr3	131927127,131927156,131927242,131927311	rs1225051,rs1225050,rs1225049,rs1225048
+mh04KK-010	GRCh38	chr4	1985210,1985244	rs3135123,rs495367
+mh04KK-011	GRCh38	chr4	37857268,37857332	rs6855439,rs6531591
 ```
 
 
@@ -60,10 +62,10 @@ For example, the first few lines of the `population.tsv` for ALFRED look like th
 
 ```
 Name	Xref
-Adygei	SA000017I
-African Americans	SA000101C
-African Americans	SA004047P
-Afro-Caribbeans	SA004242M
+Han	SA000001B
+Ami	SA000002C
+Hakka	SA000003D
+Biaka	SA000005F
 ```
 
 **NOTE**: population names need not be unique, but `Xref` identifiers must be unique across all sources.
@@ -82,12 +84,13 @@ For example, the first few lines of the `frequency.tsv` for ALFRED look like thi
 
 ```
 Marker	Population	Allele	Frequency
-mh17KK-014	SA000001B	G,C,T	0.01
-mh17KK-014	SA000001B	G,C,C	0.0
-mh17KK-014	SA000001B	G,A,C	0.0
-mh17KK-014	SA000001B	C,C,T	0.0
-mh17KK-014	SA000001B	C,C,C	0.99
-mh17KK-014	SA000002C	C,A,C	0.0
+SI664726F	SA000001B	G,C,T	0.01
+SI664726F	SA000001B	G,C,C	0.0
+SI664726F	SA000001B	G,A,C	0.0
+SI664726F	SA000001B	C,C,T	0.0
+SI664726F	SA000001B	C,C,C	0.99
+SI664726F	SA000001B	C,A,C	0.0
+SI664726F	SA000002C	G,C,T	0.0
 ```
 
 ### `source.txt`
@@ -108,69 +111,3 @@ For example:
 ## Running the Database Build
 
 More soon!
-
-
-----------
-
-# Appendix
-
-
-## Prerequisites
-
-Building MicroHapDB from scratch requires the following software and data.
-
-- Python 3 (tested with 3.6, but will probably work with earlier 3.x versions)
-- Pandas (tested with 0.23.4)
-- Snakemake (tested with 5.1.5)
-- dbSNP database (VCF format, gzip compressed)
-- tabix (tested with 1.9)
-
-For convenience, let's assume for the rest of this manual that the path to the dbSNP database is stored in the environmental variable `dbsnp`.
-
-```
-export dbsnp=/path/to/the/file/dbSNP_GRCh38.vcf.gz
-```
-
-The build procedure has been tested on the Linux and Mac OS X operating systems.
-
-
-## Data download
-
-> **NOTE**: This step should not need to be repeated and is described only for the purpose of full disclosure.
-
-Important variant information for ALFRED microhaplotypes are unavailable in convenient summary form.
-The `ALFRED.Snakefile` workflow was used to retrieve HTML summary pages for microhap loci over the network from the ALFRED database.
-
-```
-snakemake --snakefile ALFRED.Snakefile -p loci
-```
-
-These files are stored in the `alfred/downloads/locus-detail/` directory for scraping by the main data processing workflow.
-All other data required for the build has been downloaded as described in the `alfred/` and `lovd/` directories.
-
-> **ANOTHER NOTE**: As of December 2018, funding for the ALFRED database is set to expire.
-> It is uncertain how long this build step will work.
-> Fortunately the data have been captured and stored here to enable future reference.
-
-
-## Data processing
-
-The main build procedure is implemented in `Snakefile` and scrapes, cleans, formats, and cross-references data from ALFRED, LOVD, and dbSNP.
-It is invoked like so.
-
-```
-snakemake tables --config dbsnp=$dbsnp
-```
-
-To speed up the build with multiple processes:
-
-```
-snakemake tables --cores 8 --config dbsnp=$dbsnp
-```
-
-
-## Developer note
-
-Early versions of the software used the term `locus` liberally.
-This has since been replaced by `marker` in the main code base, but `locus` and `loci` are still pervasive throughout the DB build code.
-The two terms can be used interchangeably.
