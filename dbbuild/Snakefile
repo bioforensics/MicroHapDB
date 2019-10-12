@@ -8,8 +8,9 @@
 
 from glob import glob
 import os
-
 import pandas
+from pearhash.pearhash import PearsonHasher
+from pyfaidx import Fasta as FastaIdx
 
 
 def load_source_data(table, source):
@@ -40,6 +41,46 @@ def populate_idmap(data):
             idmap['ID'].append(row['Name'])
     data = pandas.DataFrame(idmap).sort_values('ID')
     return data
+
+
+def parse_fasta(data):
+    """Load sequences in Fasta format.
+    This generator function yields a tuple containing a defline and a sequence
+    for each record in the Fasta data. Stolen shamelessly from
+    http://stackoverflow.com/a/7655072/459780.
+    """
+    name, seq = None, []
+    for line in data:
+        line = line.rstrip()
+        if line.startswith('>'):
+            if name:
+                yield (name, ''.join(seq))
+            name, seq = line, []
+        else:
+            seq.append(line)
+    if name:  # pragma: no cover
+        yield (name, ''.join(seq))
+
+
+def add_marker_permids(data, refr):
+    seqs = FastaIdx(refr)
+
+    permids = list()
+    hasher = PearsonHasher(4)
+    for n, row in data.iterrows():
+        offsets = [int(o) for o in row['Offsets'].split(',')]
+        localoffsets = [o - offsets[0] for o in offsets]
+        minpos, maxpos = min(offsets), max(offsets) + 1
+        markerseq = seqs[row['Chrom']][minpos:maxpos].seq
+        markerseq = str(markerseq).upper()
+        localoffsets = list(map(str, localoffsets))
+        hash_input = ','.join(localoffsets + [markerseq])
+        marker_hash = hasher.hash(hash_input.encode('utf-8')).hexdigest()
+        permid = 'MHDBM-' + marker_hash
+        permids.append(permid)
+
+    data['PermID'] = pandas.Series(permids)
+
 
 
 SOURCES = [os.path.basename(file) for file in glob('sources/*') if os.path.isdir(file)]
@@ -85,6 +126,7 @@ rule frequencies:
 
 rule markers:
     input:
+        config['refr'],
         expand('sources/{source}/marker.tsv', source=SOURCES),
         expand('sources/{source}/source.txt', source=SOURCES),
     output:
@@ -92,6 +134,7 @@ rule markers:
         varmap='variantmap.tsv',
         idmap='idmap.tsv'
     run:
+        input = input[1:]
         numsources = int(len(input) / 2)
         markerfiles = input[:numsources]
         sourcefiles = input[numsources:]
@@ -106,10 +149,15 @@ rule markers:
         with open(output.varmap, 'w') as fh:
             write_variant_map(data, fh)
 
-        # FIXME Add Pearson hash and AvgAe
+        add_marker_permids(data, config['refr'])
+        data = data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'Source', 'Xref', 'VarRef']]
+
+        # FIXME Add AvgAe
 
         idmap = populate_idmap(data)
         idmap.to_csv(output.idmap, sep='\t', index=False)
 
-        data.drop(columns=['Xref', 'VarRef'], inplace=True)
+        data['TempPos'] = data.Offsets.apply(lambda os: int(os.split(',')[0]))
+        data = data.sort_values(['Chrom', 'TempPos'])
+        data.drop(columns=['Xref', 'VarRef', 'TempPos'], inplace=True)
         data.to_csv(output.table, sep='\t', index=False)
