@@ -5,7 +5,6 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-
 from glob import glob
 import os
 import pandas
@@ -17,6 +16,16 @@ def load_source_data(table, source):
     src = source.read().strip()
     data = pandas.read_csv(table, sep='\t', index_col=None)
     data['Source'] = src
+    return data
+
+
+def merge_markers(markerfiles, sourcefiles):
+    dfs = list()
+    for markerfile, sourcefile in zip(markerfiles, sourcefiles):
+        with open(sourcefile, 'r') as fh:
+            df = load_source_data(markerfile, fh)
+            dfs.append(df)
+    data = pandas.concat(dfs, axis=0, ignore_index=True)
     return data
 
 
@@ -82,6 +91,34 @@ def add_marker_permids(data, refr):
     data['PermID'] = pandas.Series(permids)
 
 
+def compute_marker_ae(data, freqs):
+    aes = list()
+    for n, marker in enumerate(data['Name']):
+        if n > 0 and n % 20 == 0:
+            print('...calculated AvgAe for', n, 'markers')
+        ae_per_pop = list()
+        for pop in freqs[freqs.Marker == marker].Population.unique():
+            ae_recip = 0.0
+            for freq in freqs[(freqs.Marker == marker) & (freqs.Population == pop)].Frequency:
+                ae_recip += freq ** 2
+            ae = 1.0 / ae_recip
+            ae_per_pop.append(ae)
+        if len(ae_per_pop) > 0:
+            avg_ae = sum(ae_per_pop) / len(ae_per_pop)
+            aes.append('{:.04f}'.format(avg_ae))
+        else:
+            aes.append(None)
+    return data.assign(AvgAe=pandas.Series(aes))
+
+
+def sort_and_clean(data):
+    data['ChromSort'] = data.Chrom.apply(lambda c: int(c[3:]))
+    data['TempPos'] = data.Offsets.apply(lambda os: int(os.split(',')[0]))
+    data = data.sort_values(['ChromSort', 'TempPos'])
+    data.drop(columns=['Xref', 'VarRef', 'ChromSort', 'TempPos'], inplace=True)
+    assert(len(data.Name) == len(data.Name.unique()))
+    return data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'AvgAe', 'Source']]
+
 
 SOURCES = [os.path.basename(file) for file in glob('sources/*') if os.path.isdir(file)]
 
@@ -127,6 +164,7 @@ rule frequencies:
 rule markers:
     input:
         config['refr'],
+        'frequency.tsv',
         expand('sources/{source}/marker.tsv', source=SOURCES),
         expand('sources/{source}/source.txt', source=SOURCES),
     output:
@@ -134,32 +172,21 @@ rule markers:
         varmap='variantmap.tsv',
         idmap='idmap.tsv'
     run:
-        input = input[1:]
+        freqfile = input[1]
+        input = input[2:]
         numsources = int(len(input) / 2)
         markerfiles = input[:numsources]
         sourcefiles = input[numsources:]
 
-        dfs = list()
-        for markerfile, sourcefile in zip(markerfiles, sourcefiles):
-            with open(sourcefile, 'r') as fh:
-                df = load_source_data(markerfile, fh)
-                dfs.append(df)
-
-        data = pandas.concat(dfs, axis=0, ignore_index=True)
+        data = merge_markers(markerfiles, sourcefiles)
         with open(output.varmap, 'w') as fh:
             write_variant_map(data, fh)
-
         add_marker_permids(data, config['refr'])
-        data = data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'Source', 'Xref', 'VarRef']]
-
-        # FIXME Add AvgAe
+        freqs = pandas.read_csv(freqfile, sep='\t')
+        data = compute_marker_ae(data, freqs)
 
         idmap = populate_idmap(data)
         idmap.to_csv(output.idmap, sep='\t', index=False)
 
-        data['ChromSort'] = data.Chrom.apply(lambda c: int(c[3:]))
-        data['TempPos'] = data.Offsets.apply(lambda os: int(os.split(',')[0]))
-        data = data.sort_values(['ChromSort', 'TempPos'])
-        data.drop(columns=['Xref', 'VarRef', 'ChromSort', 'TempPos'], inplace=True)
-        assert(len(data.Name) == len(data.Name.unique()))
+        data = sort_and_clean(data)
         data.to_csv(output.table, sep='\t', index=False)
