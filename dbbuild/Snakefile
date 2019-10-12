@@ -157,7 +157,9 @@ rule markers:
         idmap = populate_idmap(data)
         idmap.to_csv(output.idmap, sep='\t', index=False)
 
+        data['ChromSort'] = data.Chrom.apply(lambda c: int(c[3:]))
         data['TempPos'] = data.Offsets.apply(lambda os: int(os.split(',')[0]))
-        data = data.sort_values(['Chrom', 'TempPos'])
-        data.drop(columns=['Xref', 'VarRef', 'TempPos'], inplace=True)
+        data = data.sort_values(['ChromSort', 'TempPos'])
+        data.drop(columns=['Xref', 'VarRef', 'ChromSort', 'TempPos'], inplace=True)
+        assert(len(data.Name) == len(data.Name.unique()))
         data.to_csv(output.table, sep='\t', index=False)

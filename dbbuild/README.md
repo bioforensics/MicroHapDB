@@ -111,6 +111,11 @@ For example:
 
 ## Running the Database Build
 
+- Python 3
+- Snakemake
+- pyfaidx
+- GRCh38
+
 ```
 snakemake tables
 ```

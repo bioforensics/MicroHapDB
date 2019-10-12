@@ -48,6 +48,8 @@ def linköping_marker_coords(vcf, mapping):
     next(mapping)
     for line in mapping:
         marker, rsid, *values = line.strip().split('\t')
+        if marker.endswith(('A', 'B')):
+            marker = marker[:-1]
         marker_rsids[marker].append(rsid)
 
     for marker, rsids in marker_rsids.items():
