@@ -78,8 +78,8 @@ def add_marker_permids(data, refr):
     hasher = PearsonHasher(4)
     for n, row in data.iterrows():
         offsets = [int(o) for o in row['Offsets'].split(',')]
-        localoffsets = [o - offsets[0] for o in offsets]
         minpos, maxpos = min(offsets), max(offsets) + 1
+        localoffsets = [o - offsets[0] for o in offsets]
         markerseq = seqs[row['Chrom']][minpos:maxpos].seq
         markerseq = str(markerseq).upper()
         localoffsets = list(map(str, localoffsets))
@@ -125,7 +125,7 @@ SOURCES = [os.path.basename(file) for file in glob('sources/*') if os.path.isdir
 
 rule tables:
     input:
-        expand('{table}.tsv', table=['marker', 'population', 'frequency', 'idmap', 'variantmap'])
+        expand('{table}.tsv', table=['marker', 'population', 'frequency', 'idmap', 'variantmap', 'sequences'])
 
 
 rule populations:
@@ -190,3 +190,22 @@ rule markers:
 
         data = sort_and_clean(data)
         data.to_csv(output.table, sep='\t', index=False)
+
+
+rule sequences:
+    input:
+        markers='marker.tsv',
+        refr=config['refr'],
+    output:
+        seqs='sequences.tsv'
+    run:
+        seqs = FastaIdx(input.refr)
+        markers = pandas.read_csv(input.markers, sep='\t')
+        with open(output.seqs, 'w') as fh:
+            print('Marker', 'Chrom', 'LeftFlank', 'RightFlank', 'Sequence', sep='\t', file=fh)
+            for n, row in markers.iterrows():
+                offsets = [int(o) for o in row['Offsets'].split(',')]
+                minpos, maxpos = min(offsets) - 500, max(offsets) + 501
+                flankingseq = seqs[row['Chrom']][minpos:maxpos].seq
+                flankingseq = str(flankingseq).upper()
+                print(row['Name'], row['Chrom'], minpos, maxpos, flankingseq, sep='\t', file=fh)

@@ -6,7 +6,35 @@ However, a bit of preliminary work was required to prepare each independent data
 These details are described here, and those who are especially curious or who wish to reproduce this work should find everything they need here.
 
 
-## Sources
+## Rebuilding the Database From Scratch: The Short Version
+
+You'll need the following software:
+
+- Python 3
+- [Pandas][]
+- [Snakemake][]
+- [pyfaidx][]
+
+And the following data:
+
+- Human reference genome (version GRCh38; http://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz)
+
+With these dependencies installed, invoke the following command in the `dbbuild/` directory to re-build the database from scratch.
+
+```
+snakemake --config refr=/path/to/hg38.fasta -p tables
+```
+
+FIXME
+
+- [ ] include sequences?
+- [ ] finish documentation
+- [ ] update tests
+
+FIXME
+
+
+## The Long Version: Sources
 
 Each source of microhap data has a dedicated directory located in `dbbuild/sources/`.
 As of this writing, this includes `dbbuild/sources/alfred2018/`, `dbbuild/sources/vandergaag2018/`, and `dbbuild/sources/staadig2019/`.
@@ -109,13 +137,6 @@ For example:
   Since there is not yet any publication associated with the data, MicroHapDB uses the label `ISFG2019:P597` for this source of data, (poster 597 at ISFG 2019).
 
 
-## Running the Database Build
-
-- Python 3
-- Snakemake
-- pyfaidx
-- GRCh38
-
-```
-snakemake tables
-```
+[Pandas]: https://pandas.pydata.org
+[Snakemake]: https://snakemake.readthedocs.io/en/stable/
+[pyfaidx]: https://github.com/mdshw5/pyfaidx

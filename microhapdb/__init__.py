@@ -19,15 +19,13 @@ del get_versions
 
 
 idmap = pandas.read_csv(data_file('idmap.tsv'), sep='\t')
-frequencies = pandas.read_csv(data_file('allele.tsv'), sep='\t')
+frequencies = pandas.read_csv(data_file('frequency.tsv'), sep='\t')
 markers = pandas.read_csv(data_file('marker.tsv'), sep='\t')
 populations = pandas.read_csv(data_file('population.tsv'), sep='\t')
-variants = pandas.read_csv(data_file('variant.tsv'), sep='\t')
 variantmap = pandas.read_csv(data_file('variantmap.tsv'), sep='\t')
 
 tables = {
-    'variant': variants,
     'marker': markers,
     'population': populations,
-    'allele': frequencies,
+    'frequency': frequencies,
 }

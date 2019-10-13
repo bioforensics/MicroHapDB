@@ -144,7 +144,6 @@ If you use this package, please cite our work.
 
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
-[lovd]: http://www.lovd.nl/3.0/home
 [Pandas]: https://pandas.pydata.org
 [travisbadge]: https://img.shields.io/travis/bioforensics/MicroHapDB.svg
 [pypibadge]: https://img.shields.io/pypi/v/microhapdb.svg
