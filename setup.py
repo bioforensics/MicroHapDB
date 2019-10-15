@@ -28,7 +28,7 @@ setup(
     url='https://github.com/bioforensics/microhapdb',
     author='Daniel Standage',
     author_email='daniel.standage@nbacc.dhs.gov',
-    packages=['microhapdb'],
+    packages=['microhapdb', 'microhapdb.cli'],
     package_data={
         'microhapdb': ['microhapdb/data/*', 'microhapdb/data/raw/*']
     },
