@@ -1,8 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # -----------------------------------------------------------------------------
-# Copyright (c) 2018, Battelle National Biodefense Institute.
+# Copyright (c) 2019, Battelle National Biodefense Institute.
 #
 # This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
 # and is licensed under the BSD license: see LICENSE.txt.
@@ -10,6 +7,7 @@
 
 from argparse import RawDescriptionHelpFormatter
 import microhapdb
+from microhapdb.marker import print_detail, print_table
 from textwrap import dedent
 
 
@@ -19,7 +17,7 @@ def subparser(subparsers):
     Examples::
 
         microhapdb marker mh01NK-001
-        microhapdb marker --format=detail MHDBM-dc55cd9e
+        microhapdb marker --format=detail --minlen=225 MHDBM-dc55cd9e
         microhapdb marker --region=chr18:1-25000000
         microhapdb marker --query='Source == "ALFRED"'
         microhapdb marker --query='Name.str.contains("PK")'
@@ -29,6 +27,14 @@ def subparser(subparsers):
         'marker', description=desc, epilog=epilog, formatter_class=RawDescriptionHelpFormatter,
     )
     subparser.add_argument('--format', choices=['table', 'detail'], default='table')
+    subparser.add_argument(
+        '--delta', metavar='D', type=int, default=25, help='extend D nucleotides beyond the '
+        'marker extent when computing amplicon boundaries (detail format only); by default D=25'
+    )
+    subparser.add_argument(
+        '--min-length', metavar='L', type=int, default=250, help='minimum amplicon length (detail '
+        'format only); by default L=250'
+    )
     subparser.add_argument(
         '-r', '--region', metavar='RGN', help='restrict results to the '
         'specified genomic region; format chrX:YYYY-ZZZZZ'
@@ -49,4 +55,5 @@ def main(args):
         result = microhapdb.markers[microhapdb.markers.Name.isin(idents)]
     else:
         result = microhapdb.markers
-    print(result.to_string(index=False))
+    view = print_table if args.format == 'table' else print_detail
+    view(result, delta=args.delta, minlen=args.min_length)

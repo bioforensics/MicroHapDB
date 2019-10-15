@@ -1,8 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # -----------------------------------------------------------------------------
-# Copyright (c) 2018, Battelle National Biodefense Institute.
+# Copyright (c) 2019, Battelle National Biodefense Institute.
 #
 # This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
 # and is licensed under the BSD license: see LICENSE.txt.
