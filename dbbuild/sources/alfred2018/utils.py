@@ -130,6 +130,8 @@ def alfred_frequencies(instream):
         lines = iter(chunk.split('\n'))
         header1 = next(lines)
         xref, _, _, markerid = header1.split(' | ')
+        if '-' not in markerid:
+            markerid = markerid[:6] + '-' + markerid[6:]
         header2 = next(lines)
         alleles = header2.split()[2:]
         alleles = [cleanup(a, xref, indels) for a in alleles]

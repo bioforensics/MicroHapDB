@@ -93,7 +93,6 @@ def by_id(ident):
                ID     Name  Source
     77  SA004240K  Punjabi  ALFRED
     '''
-
     if id_in_series(ident, microhapdb.populations.ID) or id_in_series(ident, microhapdb.populations.Name):
         idlist = standardize_population_ids([ident])
         return microhapdb.populations[microhapdb.populations.ID.isin(idlist)]

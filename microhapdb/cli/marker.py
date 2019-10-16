@@ -17,7 +17,7 @@ def subparser(subparsers):
     Examples::
 
         microhapdb marker mh01NK-001
-        microhapdb marker --format=detail --minlen=225 MHDBM-dc55cd9e
+        microhapdb marker --format=detail --min-length=125 MHDBM-dc55cd9e
         microhapdb marker --region=chr18:1-25000000
         microhapdb marker --query='Source == "ALFRED"'
         microhapdb marker --query='Name.str.contains("PK")'
