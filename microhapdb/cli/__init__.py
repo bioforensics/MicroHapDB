@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # -----------------------------------------------------------------------------
 # Copyright (c) 2019, Battelle National Biodefense Institute.
 #
@@ -26,6 +28,16 @@ mains = {
      'frequency': frequency.main,
 }
 
+bubbletext = r'''
+≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠
+ __  __ _            _  _           ___  ___
+|  \/  (_)__ _ _ ___| || |__ _ _ __|   \| _ )
+| |\/| | / _| '_/ _ \ __ / _` | '_ \ |) | _ \
+|_|  |_|_\__|_| \___/_||_\__,_| .__/___/|___/
+                              |_|
+≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠
+'''
+
 
 def print_files():
     """Print the location of the installed data files on the system.
@@ -41,15 +53,6 @@ def print_files():
 
 def get_parser():
     """Construct an argument parser for the command-line interface."""
-    bubbletext = r'''
-≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠
- __  __ _            _  _           ___  ___
-|  \/  (_)__ _ _ ___| || |__ _ _ __|   \| _ )
-| |\/| | / _| '_/ _ \ __ / _` | '_ \ |) | _ \
-|_|  |_|_\__|_| \___/_||_\__,_| .__/___/|___/
-                              |_|
-≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠
-'''
     cli = argparse.ArgumentParser(
         description=bubbletext,
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -76,9 +79,12 @@ def main(args=None):
     if args is None:  # pragma: no cover
         args = get_parser().parse_args()
 
-    # If no arguments are provided, invoke --help mode.
-    # if set([getattr(args, key) for key in vars(args)]) == set([False, None]):
-    #     get_parser().parse_args(['-h'])
+    # If no arguments are provided, invoke --help mode
+    try:
+        if set([getattr(args, key) for key in vars(args)]) == set([False, None]):
+            get_parser().parse_args(['-h'])
+    except TypeError:
+        pass
 
     if args.files:
         print_files()

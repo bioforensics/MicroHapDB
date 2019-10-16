@@ -12,7 +12,7 @@ from textwrap import dedent
 
 
 def subparser(subparsers):
-    desc = 'Retrieve marker and population records by name or identifier'
+    desc = microhapdb.cli.bubbletext + '\nRetrieve population allele frequencies'
     epilog = """\
     Examples::
 

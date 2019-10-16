@@ -12,7 +12,7 @@ from textwrap import dedent
 
 
 def subparser(subparsers):
-    desc = 'Retrieve marker records by identifier or query'
+    desc = microhapdb.cli.bubbletext + '\nRetrieve marker records by identifier or query'
     epilog = """\
     Examples::
 

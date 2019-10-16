@@ -7,16 +7,17 @@
 
 from argparse import RawDescriptionHelpFormatter
 import microhapdb
+from microhapdb.population import print_detail, print_table
 from textwrap import dedent
 
 
 def subparser(subparsers):
-    desc = 'Retrieve population records by identifier or query'
+    desc = microhapdb.cli.bubbletext + '\nRetrieve population records by identifier or query'
     epilog = """\
     Examples::
 
         microhapdb population SA004244O
-        microhapdb population Han Japanese Korean
+        microhapdb population Han Japanese Koreans
         microhapdb population --format=detail 'Melanesian, Nasioi'
         microhapdb population --query='Source == "10.1016/j.fsigen.2018.05.008"'
     """
@@ -39,4 +40,5 @@ def main(args):
         result = microhapdb.populations[microhapdb.populations.ID.isin(idents)]
     else:
         result = microhapdb.populations
-    print(result.to_string(index=False))
+    view = print_table if args.format == 'table' else print_detail
+    view(result)

@@ -12,6 +12,7 @@ from microhapdb.util import data_file
 from microhapdb import cli
 from microhapdb import retrieve
 from microhapdb import marker
+from microhapdb import population
 import os
 from pkg_resources import resource_filename
 import pandas

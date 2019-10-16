@@ -11,7 +11,7 @@ from textwrap import dedent
 
 
 def subparser(subparsers):
-    desc = 'Retrieve marker or population records by name or identifier'
+    desc = microhapdb.cli.bubbletext + '\nRetrieve marker or population records by name or identifier'
     epilog = """\
     Examples::
 

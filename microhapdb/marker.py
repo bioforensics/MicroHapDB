@@ -92,6 +92,4 @@ def marker_view(data, delta=25, minlen=250):
 
 def print_detail(table, delta=25, minlen=250):
     for n, row in table.iterrows():
-        if n > 0:
-            print('\n')
         marker_view(row, delta=delta, minlen=minlen)
