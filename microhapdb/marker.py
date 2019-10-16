@@ -56,9 +56,11 @@ def marker_view(data, delta=25, minlen=250):
     )
     print('    Target amplicon\n        -', amplicon)
     ampoffsets = [o - astart for o in offsets]
+    markeroffsets = [o - offsets[0] for o in offsets]
     varrefs = microhapdb.variantmap[microhapdb.variantmap.Marker == data.Name].Variant
     print('    Constituent variants')
     print('        - chromosome offsets:', data.Offsets)
+    print('        - marker offsets:', ','.join([str(o) for o in markeroffsets]))
     print('        - amplicon offsets:', ','.join([str(o) for o in ampoffsets]))
     print('        - cross-references:', ', '.join(varrefs))
     alleles = sorted(
@@ -67,8 +69,9 @@ def marker_view(data, delta=25, minlen=250):
     print('    Observed alleles')
     for allele in alleles:
         print('        -', allele)
-    print('')
+    print('\n')
 
+    print('--[ Amplicon Sequence ]--')
     prev = 0
     for o in ampoffsets:
         o_prev = o - prev
