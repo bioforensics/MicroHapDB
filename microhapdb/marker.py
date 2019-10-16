@@ -40,14 +40,27 @@ class TargetAmplicon():
         return list(map(int, self.data.Offsets.split(',')))
 
     @property
+    def variant_lengths(self):
+        lengths = defaultdict(int)
+        for allele in self.alleles:
+            suballeles = allele.split(',')
+            for n, a in enumerate(suballeles):
+                if len(a) > lengths[n]:
+                    lengths[n] = len(a)
+        lengths = [lengths[l] for l in range(len(suballeles))]
+        return lengths
+
+    @property
     def marker_extent(self):
         o = self.offsets
-        return min(o), max(o) + 1
+        vl = self.variant_lengths
+        return min(o), max(o) + vl[-1]
 
     @property
     def amplicon_interval(self):
         o = self.offsets
-        start, end = min(o) - self.delta, max(o) + self.delta + 1
+        vl = self.variant_lengths
+        start, end = min(o) - self.delta, max(o) + self.delta + vl[-1]
         length = end - start
         if length < self.minlen:
             diff = self.minlen - length
@@ -135,21 +148,13 @@ class TargetAmplicon():
 
     def print_detail_ampliconseq(self, out):
         print('--[ Target Amplicon Sequence with Alleles ]--', file=out)
-        lengths = defaultdict(int)
-        for allele in self.alleles:
-            suballeles = allele.split(',')
-            for n, a in enumerate(suballeles):
-                if len(a) > lengths[n]:
-                    lengths[n] = len(a)
-        lengths = [lengths[l] for l in range(len(suballeles))]
-
+        lengths = self.variant_lengths
         prev = 0
         for o, l in zip(self.amplicon_offsets, lengths):
             o_prev = o - prev
             print(' ' * o_prev, '*' * l, sep='', end='', file=out)
             prev = o + l
         print('', file=out)
-
         print(self.amplicon_seq, sep='', file=out)
         for allele in self.alleles:
             prev = 0
@@ -160,7 +165,7 @@ class TargetAmplicon():
                     end='', file=out
                 )
                 prev = o + l
-            final = len(self.amplicon_seq) - o - 1
+            final = len(self.amplicon_seq) - o - lengths[-1]
             print('.' * final, file=out)
 
     def __str__(self):
