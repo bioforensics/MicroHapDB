@@ -40,10 +40,9 @@ def marker_view(data, delta=25, minlen=250):
     print(data.Name, '   a.k.a', ', '.join(xrefs), end='\n\n')
     print('Marker Definition (GRCh38)')
     offsets = list(map(int, data.Offsets.split(',')))
-    extent = '{chr:s}:{start:d}-{end:d}'.format(
-        chr=data.Chrom, start=min(offsets), end=max(offsets) + 1
-    )
-    print('    Marker extent\n        -', extent)
+    estart, eend = min(offsets), max(offsets) + 1
+    extent = '{chr:s}:{start:d}-{end:d}'.format(chr=data.Chrom, start=estart, end=eend)
+    print('    Marker extent\n        - {ext:s} ({l:d} bp)'.format(ext=extent, l=eend - estart))
     astart, aend = min(offsets) - delta, max(offsets) + delta + 1
     alength = aend - astart
     if alength < minlen:
@@ -52,11 +51,15 @@ def marker_view(data, delta=25, minlen=250):
         astart -= extend
         aend += extend
         alength = aend - astart
-    amplicon = '{chr:s}:{start:d}-{end:d}'.format(chr=data.Chrom, start=astart, end=aend)
+    amplicon = '{chr:s}:{start:d}-{end:d} ({l:d} bp)'.format(
+        chr=data.Chrom, start=astart, end=aend, l=aend - astart
+    )
     print('    Target amplicon\n        -', amplicon)
+    ampoffsets = [o - astart for o in offsets]
     varrefs = microhapdb.variantmap[microhapdb.variantmap.Marker == data.Name].Variant
     print('    Constituent variants')
     print('        - chromosome offsets:', data.Offsets)
+    print('        - amplicon offsets:', ','.join([str(o) for o in ampoffsets]))
     print('        - cross-references:', ', '.join(varrefs))
     alleles = sorted(
         microhapdb.frequencies[microhapdb.frequencies.Marker == data.Name].Allele.unique()
@@ -66,7 +69,6 @@ def marker_view(data, delta=25, minlen=250):
         print('        -', allele)
     print('')
 
-    ampoffsets = [o - astart for o in offsets]
     prev = 0
     for o in ampoffsets:
         o_prev = o - prev
