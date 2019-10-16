@@ -27,7 +27,6 @@ snakemake --config refr=/path/to/hg38.fasta -p tables
 
 FIXME
 
-- [ ] include sequences?
 - [ ] finish documentation
 - [ ] update tests
 
@@ -45,15 +44,16 @@ Re-compiling the database to include additional data sources is a matter of crea
 
 ## Data Required for Each Source
 
-Each source directory must contain 4 data files.
+Each source directory must contain 4-5 data files.
 A description of each required file is given below.
 
 - `marker.tsv`
 - `population.tsv`
 - `frequency.tsv`
 - `source.txt`
+- `indels.tsv` (required only if marker definitions include insertion/deletion variants)
 
-In addition to these 4 files, it is expected that raw original data files will be provided, along with code to transform the data into the required format and instructions for running the code.
+In addition to these 4-5 files, it is expected that raw original data files will be provided, along with code to transform the data into the required format and instructions for running the code.
 No constraints are imposed regarding how these supporting files are named, what programming language is used, etc.—only that the pre-processing procedure can be replicated without requiring an unreasonable amount of time or effort.
 
 ### `marker.tsv`
@@ -135,6 +135,26 @@ For example:
 - A poster presented at ISFG 2019 described an evaluation of 45 microhaps on a Swedish population.
   The authors were kind enough to share their data and gave permission have it included in MicroHapDB.
   Since there is not yet any publication associated with the data, MicroHapDB uses the label `ISFG2019:P597` for this source of data, (poster 597 at ISFG 2019).
+
+
+### `indel.tsv`
+
+The `indel.tsv` file contains insertion/deletion variant data for any markers that include indels.
+It includes the following fields.
+
+- `Marker`: the `Name` of the marker
+- `VariantIndex`: the index of the variant within the microhap marker; the first variant in the marker is `0`, the next is `1`, and so on
+- `Refr`: the allele represented in the reference genome
+- `Alt`: the alternate allele (or comma-separated list of alternate alleles) present in the marker definition
+
+For example, the `indel.tsv` file for ALFRED looks like this.
+
+```
+Marker	VariantIndex	Refr	Alt
+mh07KK-081	0	TA	T
+mh11KK-091	0	TG	T
+mh22KK-064	3	AATAATT	A
+```
 
 
 [Pandas]: https://pandas.pydata.org

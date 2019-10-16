@@ -61,7 +61,8 @@ def marker_variants(markerstream, vcfstream):
                 rsids.append(rsid)
             else:
                 # Only variant not present in dbSNP
-                assert (chrom, o) == ('chr22', 44857884), (chrom, o)
+                assert chrom == 'chr22'
+                assert o in (44857884, 44857930, 44857946)
         yield name, chrom, offsets, rsids
 
 

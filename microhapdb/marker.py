@@ -41,13 +41,25 @@ class TargetAmplicon():
 
     @property
     def variant_lengths(self):
-        lengths = defaultdict(int)
-        for allele in self.alleles:
-            suballeles = allele.split(',')
-            for n, a in enumerate(suballeles):
-                if len(a) > lengths[n]:
-                    lengths[n] = len(a)
-        lengths = [lengths[l] for l in range(len(suballeles))]
+        nvars = self.alleles[0].count(',') + 1
+        lengths = [1] * nvars
+        for n, row in microhapdb.indels[microhapdb.indels.Marker == self.data.Name].iterrows():
+            assert row.VariantIndex < nvars, (row.VariantIndex, nvars)
+            varalleles = [row.Refr] + row.Alt.split(',')
+            varallelelengths = [len(va) for va in varalleles]
+            lengths[row.VariantIndex] = max(varallelelengths)
+        return lengths
+
+    @property
+    def reference_lengths(self):
+        lengths = list()
+        ind = microhapdb.indels
+        for n in range(len(self.alleles[0].split(','))):
+            refrlength = 1
+            result = ind[(ind.Marker == self.data.Name) & (ind.VariantIndex == n)]
+            if len(result) == 1:
+                refrlength = len(result.Refr.iloc[0])
+            lengths.append(refrlength)
         return lengths
 
     @property
@@ -148,25 +160,57 @@ class TargetAmplicon():
 
     def print_detail_ampliconseq(self, out):
         print('--[ Target Amplicon Sequence with Alleles ]--', file=out)
-        lengths = self.variant_lengths
+        blocks = list()
         prev = 0
-        for o, l in zip(self.amplicon_offsets, lengths):
+        zipper = zip(self.amplicon_offsets, self.variant_lengths, self.reference_lengths)
+        for n, (o, vl, rl) in enumerate(zipper):
             o_prev = o - prev
-            print(' ' * o_prev, '*' * l, sep='', end='', file=out)
-            prev = o + l
+            if o_prev > 0:
+                blocks.append(('span', o_prev))
+            blocks.append(('variant', vl))
+            prev = o + rl
+        final = len(self.amplicon_seq) - o - vl
+        if final > 0:
+            blocks.append(('span', final))
+
+        # Top row: variant indicators
+        for blocktype, blocklength in blocks:
+            char = ' ' if blocktype == 'span' else '*'
+            print(char * blocklength, end='', file=out)
         print('', file=out)
-        print(self.amplicon_seq, sep='', file=out)
-        for allele in self.alleles:
-            prev = 0
-            for o, a, l in zip(self.amplicon_offsets, allele.split(','), lengths):
-                o_prev = o - prev
-                print(
-                    '.' * o_prev, '{allele:-<{length:d}s}'.format(allele=a, length=l), sep='',
-                    end='', file=out
+
+        # Second row: amplicon sequence
+        i = 0
+        n = -1
+        refrlengths = self.reference_lengths
+        for blocktype, blocklength in blocks:
+            if blocktype == 'span':
+                print(self.amplicon_seq[i:i + blocklength], end='', file=out)
+                i += blocklength
+            else:
+                n += 1
+                refrseq = '{seq:-<{length:d}s}'.format(
+                    seq=self.amplicon_seq[i:i + refrlengths[n]],
+                    length=blocklength,
                 )
-                prev = o + l
-            final = len(self.amplicon_seq) - o - lengths[-1]
-            print('.' * final, file=out)
+                print(refrseq, end='', file=out)
+                i += refrlengths[n]
+        print('', file=out)
+
+        # Row 3+: alleles
+        for allele in self.alleles:
+            allelevars = allele.split(',')
+            n = -1
+            for blocktype, blocklength in blocks:
+                if blocktype == 'span':
+                    print('.' * blocklength, end='', file=out)
+                else:
+                    n += 1
+                    allelestr = '{allele:-<{length:d}s}'.format(
+                        allele=allelevars[n], length=self.variant_lengths[n]
+                    )
+                    print(allelestr, end='', file=out)
+            print('', file=out)
 
     def __str__(self):
         out = StringIO()

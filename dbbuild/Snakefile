@@ -125,7 +125,7 @@ SOURCES = [os.path.basename(file) for file in glob('sources/*') if os.path.isdir
 
 rule tables:
     input:
-        expand('{table}.tsv', table=['marker', 'population', 'frequency', 'idmap', 'variantmap', 'sequences'])
+        expand('{table}.tsv', table=['marker', 'population', 'frequency', 'idmap', 'variantmap', 'sequences', 'indels'])
 
 
 rule populations:
@@ -209,3 +209,15 @@ rule sequences:
                 flankingseq = seqs[row['Chrom']][minpos:maxpos].seq
                 flankingseq = str(flankingseq).upper()
                 print(row['Name'], row['Chrom'], minpos, maxpos, flankingseq, sep='\t', file=fh)
+
+
+rule indels:
+    input: glob('sources/*/indels.tsv')
+    output: 'indels.tsv'
+    run:
+        dfs = list()
+        for freqfile in input:
+            df = pandas.read_csv(freqfile, sep='\t', index_col=None)
+            dfs.append(df)
+        data = pandas.concat(dfs, axis=0, ignore_index=True)
+        data.sort_values('Marker').to_csv(output[0], sep='\t', index=False)
