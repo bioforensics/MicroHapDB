@@ -28,7 +28,6 @@ snakemake --config refr=/path/to/hg38.fasta -p tables
 FIXME
 
 - [ ] finish documentation
-- [ ] update testsc
 
 FIXME
 

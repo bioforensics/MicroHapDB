@@ -18,6 +18,42 @@ def test_standardize_ids():
     assert list(standardize_ids(['Han']).values) == ['SA004059S', 'SA004058R', 'SA000001B', 'SA000009J']
 
 
+def test_assumptions():
+    assert len(microhapdb.populations) == 96 + 3 + 1
+
+
+def test_populations():
+    """Population data
+
+    >>> import microhapdb
+    >>> p = microhapdb.populations
+    >>> p[p.ID == 'SA000040E']
+               ID     Name  Source
+    47  SA000040E  Kachari  ALFRED
+    >>> p[p.ID == 'SA000936S']
+               ID     Name  Source
+    52  SA000936S  Koreans  ALFRED
+    >>> p[p.Name == 'Han']
+               ID Name  Source
+    29  SA004059S  Han  ALFRED
+    30  SA004058R  Han  ALFRED
+    31  SA000001B  Han  ALFRED
+    32  SA000009J  Han  ALFRED
+    >>> p.query('Name.str.contains("Afr")')
+              ID               Name                        Source
+    1     Africa             Africa  10.1016/j.fsigen.2018.05.008
+    2  SA004047P  African Americans                        ALFRED
+    3  SA000101C  African Americans                        ALFRED
+    4  SA004242M    Afro-Caribbeans                        ALFRED
+    """
+    pop = microhapdb.populations
+    assert pop.shape == (100, 3)
+    assert pop[pop.ID == 'SA004049R'].Name.values == ['Finns']
+    assert pop[pop.ID == 'SA000028K'].Name.values == ['Karitiana']
+    result = pop[pop.Name.str.contains('Jews')].ID.values
+    assert list(result) == ['SA000490N', 'SA000015G', 'SA000096P', 'SA000016H']
+
+
 def test_pop_table(capsys):
     masai = microhapdb.populations[microhapdb.populations.Name == 'Masai']
     microhapdb.population.print_table(masai)

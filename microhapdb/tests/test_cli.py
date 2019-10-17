@@ -71,7 +71,7 @@ def test_parser():
     assert cli.id == []
 
 
-def test_main(capsys):
+def test_main_pop_noargs(capsys):
     args = get_parser().parse_args(['population'])
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
@@ -79,7 +79,58 @@ def test_main(capsys):
     assert len(outlines) == 1 + 96 + 3 + 1  # 1 header line + 96 ALFRED + 3 LOVD + 1 Linköping
 
 
-def test_main_region_mode(capsys):
+def test_main_pop_detail(capsys):
+    args = get_parser().parse_args(['population', '--format=detail', 'Koreans'])
+    microhapdb.cli.main(args)
+    out, err = capsys.readouterr()
+    assert '876 total allele frequencies available' in out
+
+
+def test_main_pop_query(capsys):
+    args = get_parser().parse_args(['population', '--query', 'Source == "10.1016/j.fsigen.2018.05.008"'])
+    microhapdb.cli.main(args)
+    out, err = capsys.readouterr()
+    testout = '''
+     ID    Name                        Source
+ Africa  Africa  10.1016/j.fsigen.2018.05.008
+   Asia    Asia  10.1016/j.fsigen.2018.05.008
+     NL      NL  10.1016/j.fsigen.2018.05.008
+'''
+    assert testout.strip() == out.strip()
+
+
+def test_main_marker_noargs(capsys):
+    args = get_parser().parse_args(['marker'])
+    microhapdb.cli.main(args)
+    out, err = capsys.readouterr()
+    outlines = out.strip().split('\n')
+    assert len(outlines) == 198 + 15 + 40 + 1
+
+
+def test_main_marker_detail(capsys):
+    args = get_parser().parse_args(['marker', '--format=detail', 'mh01CP-008'])
+    microhapdb.cli.main(args)
+    out, err = capsys.readouterr()
+    assert '>mh01CP-008\nGACATCACGCCACTGCT\n' in out
+
+
+def test_main_marker_query(capsys):
+    args = get_parser().parse_args(['marker', '--query', 'Chrom == "chr19"'])
+    microhapdb.cli.main(args)
+    out, err = capsys.readouterr()
+    testout = '''
+       Name          PermID Reference  Chrom                                       Offsets   AvgAe         Source
+ mh19KK-056  MHDBM-d6ff8635    GRCh38  chr19                               4852124,4852324  2.4143         ALFRED
+ mh19CP-007  MHDBM-49dbcc57    GRCh38  chr19                    14310739,14310772,14310780  3.0813         ALFRED
+ mh19KK-299  MHDBM-8cbeb11c    GRCh38  chr19  22546697,22546748,22546779,22546810,22546850  3.8989         ALFRED
+  mh19AT-47  MHDBM-8f439540    GRCh38  chr19                    22546697,22546748,22546779  1.4537  ISFG2019:P597
+ mh19KK-301  MHDBM-2069446a    GRCh38  chr19           50938487,50938502,50938526,50938550  1.8143         ALFRED
+ mh19KK-057  MHDBM-eb558c37    GRCh38  chr19                    51654948,51655025,51655062  2.1923         ALFRED
+'''
+    assert testout.strip() == out.strip()
+
+
+def test_main_marker_region_mode(capsys):
     arglist = ['marker', '--region', 'chr15']
     args = get_parser().parse_args(arglist)
     microhapdb.cli.main(args)
@@ -89,11 +140,28 @@ def test_main_region_mode(capsys):
     assert len(outlines) == 13 + 1  # 13 markers + 1 header line
 
 
-def test_main_region_mode_failure(capsys):
+def test_main_marker_region_mode_failure(capsys):
     arglist = ['marker', '--region', 'chr15:']
     args = get_parser().parse_args(arglist)
     with pytest.raises(ValueError, match=r'cannot parse region "chr15:"'):
         microhapdb.cli.main(args)
+
+
+@pytest.mark.parametrize('pop,marker,allele,numrows', [
+    ('--population=Swedish', None, None, 138),
+    ('--population=SA000009J', '--marker=mh13KK-218', None, 15),
+    (None, '--marker=mh13KK-218', '--allele=C,T,C,T', 97),
+    (None, '--marker=mh14PK-72639', None, 46),
+    (None, None, None, 82671)
+])
+def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
+    testargs = (pop, marker, allele)
+    arglist = ['frequency'] + [arg for arg in testargs if arg is not None]
+    args = get_parser().parse_args(arglist)
+    microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    outlines = terminal.out.strip().split('\n')
+    assert len(outlines) == numrows
 
 
 def test_lookup(capsys):
