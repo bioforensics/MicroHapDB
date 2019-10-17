@@ -21,3 +21,26 @@ def data_file(path):
     pathparts = path.split('/')
     relpath = os.path.join('data', *pathparts)
     return resource_filename('microhapdb', relpath)
+
+
+def parse_regionstr(regionstr):
+    '''Retrieve chromosome name and coordinates from a region string
+
+    Region string is expected to be in one of the two following formats: 'chr3'
+    or 'chr3:1000000-5000000'.
+
+    >>> parse_regionstr('chr12')
+    ('chr12', None, None)
+    >>> parse_regionstr('chr12:345-678')
+    ('chr12', 345, 678)
+    '''
+    chrom, start, end = None, None, None
+    if ':' in regionstr:
+        chrom, rng = regionstr.split(':')
+        if rng.count('-') != 1:
+            raise ValueError('cannot parse region "{}"'.format(regionstr))
+        startstr, endstr = rng.split('-')
+        start, end = int(startstr), int(endstr)
+    else:
+        chrom = regionstr
+    return chrom, start, end

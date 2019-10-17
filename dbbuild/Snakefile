@@ -1,249 +1,223 @@
 # -----------------------------------------------------------------------------
-# Copyright (c) 2018, Battelle National Biodefense Institute.
+# Copyright (c) 2019, Battelle National Biodefense Institute.
 #
 # This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-# Import from standard libraries
-from gzip import open as gzopen
-from hashlib import sha1
-from os import chmod
-from urllib.request import urlretrieve
-
+from glob import glob
+import os
 import pandas
-
-# Import from internal libraries
-from allele import allele_frequencies_alfred, allele_frequencies_lovd, allele_frequencies_linköping
-from files import smartopen
-from locus import alfred_locus_list, alfred_loci_prelim, lovd_loci_prelim, linköping_loci_prelim, combine_loci
-from locus import alfred_locus_scrape
-from population import population_summary
-from variant import dbsnp_subset_command, retrieve_proximal_variants
+from pearhash.pearhash import PearsonHasher
+from pyfaidx import Fasta as FastaIdx
 
 
-ALL_ALFRED_LOCI = list()
-with smartopen('alfred/Microhap_alleleF_198.txt', 'r') as instream:
-    for locusid, locusname in alfred_locus_list(instream):
-        ALL_ALFRED_LOCI.append(locusid)
+def load_source_data(table, source):
+    src = source.read().strip()
+    data = pandas.read_csv(table, sep='\t', index_col=None)
+    data['Source'] = src
+    return data
+
+
+def merge_markers(markerfiles, sourcefiles):
+    dfs = list()
+    for markerfile, sourcefile in zip(markerfiles, sourcefiles):
+        with open(sourcefile, 'r') as fh:
+            df = load_source_data(markerfile, fh)
+            dfs.append(df)
+    data = pandas.concat(dfs, axis=0, ignore_index=True)
+    return data
+
+
+def write_variant_map(data, output):
+    print('Variant', 'Marker', sep='\t', file=output)
+    for n, row in data.iterrows():
+        marker = row['Name']
+        for variant in row['VarRef'].split(','):
+            print(variant, marker, sep='\t', file=output)
+
+
+def populate_idmap(data):
+    idmap = {
+        'Xref': list(),
+        'ID': list(),
+    }
+    for n, row in data.iterrows():
+        if row['Xref'] == '' or row['Xref'] is None or pandas.isnull(row['Xref']):
+            continue
+        for xref in row['Xref'].split(','):
+            idmap['Xref'].append(xref)
+            idmap['ID'].append(row['Name'])
+    data = pandas.DataFrame(idmap).sort_values('ID')
+    return data
+
+
+def parse_fasta(data):
+    """Load sequences in Fasta format.
+    This generator function yields a tuple containing a defline and a sequence
+    for each record in the Fasta data. Stolen shamelessly from
+    http://stackoverflow.com/a/7655072/459780.
+    """
+    name, seq = None, []
+    for line in data:
+        line = line.rstrip()
+        if line.startswith('>'):
+            if name:
+                yield (name, ''.join(seq))
+            name, seq = line, []
+        else:
+            seq.append(line)
+    if name:  # pragma: no cover
+        yield (name, ''.join(seq))
+
+
+def add_marker_permids(data, refr):
+    seqs = FastaIdx(refr)
+
+    permids = list()
+    hasher = PearsonHasher(4)
+    for n, row in data.iterrows():
+        offsets = [int(o) for o in row['Offsets'].split(',')]
+        minpos, maxpos = min(offsets), max(offsets) + 1
+        localoffsets = [o - offsets[0] for o in offsets]
+        markerseq = seqs[row['Chrom']][minpos:maxpos].seq
+        markerseq = str(markerseq).upper()
+        localoffsets = list(map(str, localoffsets))
+        hash_input = ','.join(localoffsets + [markerseq])
+        marker_hash = hasher.hash(hash_input.encode('utf-8')).hexdigest()
+        permid = 'MHDBM-' + marker_hash
+        permids.append(permid)
+
+    data['PermID'] = pandas.Series(permids)
+
+
+def compute_marker_ae(data, freqs):
+    aes = list()
+    for n, marker in enumerate(data['Name']):
+        if n > 0 and n % 20 == 0:
+            print('...calculated AvgAe for', n, 'markers')
+        ae_per_pop = list()
+        for pop in freqs[freqs.Marker == marker].Population.unique():
+            ae_recip = 0.0
+            for freq in freqs[(freqs.Marker == marker) & (freqs.Population == pop)].Frequency:
+                ae_recip += freq ** 2
+            ae = 1.0 / ae_recip
+            ae_per_pop.append(ae)
+        if len(ae_per_pop) > 0:
+            avg_ae = sum(ae_per_pop) / len(ae_per_pop)
+            aes.append('{:.04f}'.format(avg_ae))
+        else:
+            aes.append(None)
+    return data.assign(AvgAe=pandas.Series(aes))
+
+
+def sort_and_clean(data):
+    data['ChromSort'] = data.Chrom.apply(lambda c: int(c[3:]))
+    data['TempPos'] = data.Offsets.apply(lambda os: int(os.split(',')[0]))
+    data = data.sort_values(['ChromSort', 'TempPos'])
+    data.drop(columns=['Xref', 'VarRef', 'ChromSort', 'TempPos'], inplace=True)
+    assert(len(data.Name) == len(data.Name.unique()))
+    return data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'AvgAe', 'Source']]
+
+
+SOURCES = [os.path.basename(file) for file in glob('sources/*') if os.path.isdir(file)]
 
 
 rule tables:
     input:
-        expand('{table}.tsv', table=['allele', 'marker', 'population', 'variant', 'idmap', 'variantmap'])
+        expand('{table}.tsv', table=['marker', 'population', 'frequency', 'idmap', 'variantmap', 'sequences', 'indels'])
 
 
-# -----------------------------------------------------------------------------
-# Loci
-# -----------------------------------------------------------------------------
-
-
-rule scrapelocus:
-    input: 'alfred/downloads/locus-detail/{locus}.html.gz'
+rule populations:
+    input:
+        expand('sources/{source}/population.tsv', source=SOURCES),
+        expand('sources/{source}/source.txt', source=SOURCES),
     output:
-        'intermediate/locus-variants/{locus}.tsv.gz',
-        'intermediate/locus-alleles/{locus}.tsv.gz'
+        table='population.tsv'
     run:
-        with smartopen(input[0], 'r') as instream:
-            alfred_locus_scrape(wildcards.locus, instream, output[1], output[0])
+        numsources = int(len(input) / 2)
+        popfiles = input[:numsources]
+        sourcefiles = input[numsources:]
+
+        dfs = list()
+        for popfile, sourcefile in zip(popfiles, sourcefiles):
+            with open(sourcefile, 'r') as fh:
+                df = load_source_data(popfile, fh)
+                dfs.append(df)
+        data = pandas.concat(dfs, axis=0, ignore_index=True)
+        assert len(data.ID) == len(data.ID.unique())
+        data.sort_values('Name').to_csv(output.table, sep='\t', index=False)
 
 
-rule alfred_loci_prelim:
+rule frequencies:
+    input: expand('sources/{source}/frequency.tsv', source=SOURCES)
+    output: 'frequency.tsv'
+    run:
+        dfs = list()
+        for freqfile in input:
+            df = pandas.read_csv(freqfile, sep='\t', index_col=None)
+            dfs.append(df)
+        data = pandas.concat(dfs, axis=0, ignore_index=True)
+        data.sort_values(['Marker', 'Population']).to_csv(output[0], sep='\t', index=False)
+
+
+rule markers:
     input:
-        'alfred/Microhap_alleleF_198.txt',
-        'alfred/curated/alfred-microhap-coords-hg38.tsv'
-    output: 'intermediate/alfred-loci.tsv'
-    run:
-        with smartopen(input[0], 'r') as freqinput, smartopen(input[1], 'r') as coordinput, smartopen(output[0], 'w') as outstream:
-            print('Chrom', 'Start', 'End', 'Source', 'AlfredID', 'AlfredName', sep='\t', file=outstream)
-            for values in alfred_loci_prelim(freqinput, coordinput):
-                print(*values, sep='\t', file=outstream)
-
-
-rule lovd_loci_prelim:
-    input: 'lovd/lovd-microhap-loci.txt'
-    output: 'intermediate/lovd-loci.tsv'
-    run:
-        with smartopen(input[0], 'r') as instream, smartopen(output[0], 'w') as outstream:
-            print('Chrom', 'Start', 'End', 'Source', 'LovdID', sep='\t', file=outstream)
-            for values in lovd_loci_prelim(instream):
-                print(*values, sep='\t', file=outstream)
-
-
-rule linköping_loci_prelim:
-    input:
-        'linkoping/microhap-definitions.tsv',
-        'linkoping/snps-GRCh38.vcf.gz'
-    output: 'intermediate/linköping-loci.tsv'
-    run:
-        with smartopen(input[0], 'r') as defstream, smartopen(input[1], 'r') as varstream, smartopen(output[0], 'w') as outstream:
-            print('Chrom', 'Start', 'End', 'Source', 'Label', file=outstream)
-            for values in linköping_loci_prelim(defstream, varstream):
-                print(*values, sep='\t', file=outstream)
-
-
-rule combine_loci:
-    input:
-        'intermediate/alfred-loci.tsv',
-        'intermediate/lovd-loci.tsv',
-        'intermediate/linköping-loci.tsv'
+        config['refr'],
+        'frequency.tsv',
+        expand('sources/{source}/marker.tsv', source=SOURCES),
+        expand('sources/{source}/source.txt', source=SOURCES),
     output:
-        'intermediate/locus-prelim.tsv',
-        'intermediate/locusids.tsv.gz'
+        table='marker.tsv',
+        varmap='variantmap.tsv',
+        idmap='idmap.tsv'
     run:
-        with smartopen(input[0], 'r') as alfredstream, smartopen(input[1], 'r') as lovdstream, smartopen(input[2], 'r') as linkstream, smartopen(output[0], 'w') as outstream, smartopen(output[1], 'w') as idstream:
-            print('ID', 'Reference', 'Chrom', 'Start', 'End', 'Source', sep='\t', file=outstream)
-            for values in combine_loci(alfredstream, lovdstream, linkstream):
-                fp = idstream if len(values) == 3 else outstream
-                print(*values, sep='\t', file=fp)
+        freqfile = input[1]
+        input = input[2:]
+        numsources = int(len(input) / 2)
+        markerfiles = input[:numsources]
+        sourcefiles = input[numsources:]
+
+        data = merge_markers(markerfiles, sourcefiles)
+        with open(output.varmap, 'w') as fh:
+            write_variant_map(data, fh)
+        add_marker_permids(data, config['refr'])
+        freqs = pandas.read_csv(freqfile, sep='\t')
+        data = compute_marker_ae(data, freqs)
+
+        idmap = populate_idmap(data)
+        idmap.to_csv(output.idmap, sep='\t', index=False)
+
+        data = sort_and_clean(data)
+        data.to_csv(output.table, sep='\t', index=False)
 
 
-rule score_loci:
+rule sequences:
     input:
-        'intermediate/locus-prelim.tsv',
-        'allele.tsv'
+        markers='marker.tsv',
+        refr=config['refr'],
     output:
-        'marker.tsv'
+        seqs='sequences.tsv'
     run:
-        loci = pandas.read_table(input[0])
-        freqs = pandas.read_table(input[1])
-        aes = list()
-        for n, locusid in enumerate(loci['ID']):
-            if n > 0 and n % 10 == 0:
-                print('....processed', n, 'loci')
-            ae_per_pop = list()
-            for pop in freqs[freqs.Marker == locusid].Population.unique():
-                ae_recip = 0.0
-                for freq in freqs[(freqs.Marker == locusid) & (freqs.Population == pop)].Frequency:
-                    ae_recip += freq ** 2
-                ae = 1.0 / ae_recip
-                ae_per_pop.append(ae)
-            if len(ae_per_pop) > 0:
-                avg_ae = sum(ae_per_pop) / len(ae_per_pop)
-                aes.append('{:.04f}'.format(avg_ae))
-            else:
-                aes.append(None)
-        loci = loci.assign(AvgAe=pandas.Series(aes))
-        column_order = ['ID', 'Reference', 'Chrom', 'Start', 'End', 'AvgAe',
-                        'Source']
-        loci = loci[column_order]
-        loci.to_csv(output[0], sep='\t', index=False)
+        seqs = FastaIdx(input.refr)
+        markers = pandas.read_csv(input.markers, sep='\t')
+        with open(output.seqs, 'w') as fh:
+            print('Marker', 'Chrom', 'LeftFlank', 'RightFlank', 'Sequence', sep='\t', file=fh)
+            for n, row in markers.iterrows():
+                offsets = [int(o) for o in row['Offsets'].split(',')]
+                minpos, maxpos = min(offsets) - 500, max(offsets) + 501
+                flankingseq = seqs[row['Chrom']][minpos:maxpos].seq
+                flankingseq = str(flankingseq).upper()
+                print(row['Name'], row['Chrom'], minpos, maxpos, flankingseq, sep='\t', file=fh)
 
 
-# -----------------------------------------------------------------------------
-# Populations
-# -----------------------------------------------------------------------------
-
-rule population:
-    input:
-        'alfred/Microhap_alleleF_198.txt',
-        'lovd/pops.tsv'
-    output:
-        'population.tsv',
-        'intermediate/popids.tsv.gz'
+rule indels:
+    input: glob('sources/*/indels.tsv')
+    output: 'indels.tsv'
     run:
-        with smartopen(input[0], 'r') as alfredstream, smartopen(input[1], 'r') as lovdstream, smartopen(output[0], 'w') as outstream, smartopen(output[1], 'w') as idstream:
-            print('ID', 'Name', 'Source', sep='\t', file=outstream)
-            for popid, poplabel, popname, source in population_summary(alfredstream, lovdstream):
-                print(popid, popname, source, sep='\t', file=outstream)
-                print(poplabel, 'population', popid, sep='\t', file=idstream)
-
-
-# -----------------------------------------------------------------------------
-# Variants
-# -----------------------------------------------------------------------------
-
-
-rule dbsnp_subset:
-    input:
-        'intermediate/locus-prelim.tsv',
-        config['dbsnp']
-    output: 'intermediate/dbsnp-subset.vcf'
-    run:
-        cmd = dbsnp_subset_command(*input, *output)
-        shell(cmd)
-
-
-rule locus_variants:
-    """Aggregate all microhap locus variant data."""
-    input: expand('intermediate/locus-variants/{locus}.tsv.gz', locus=ALL_ALFRED_LOCI)
-    output: 'intermediate/alfred-variants-all.tsv'
-    run:
-        with smartopen(output[0], 'w') as outstream:
-            print('Locus', 'dbSNPID', 'AlfredID', 'Reference', 'Alternate', sep='\t', file=outstream)
-        shell('gunzip -c {input} >> {output}')
-
-
-rule parse_variant_data:
-    input:
-        'intermediate/dbsnp-subset.vcf',
-        'intermediate/alfred-variants-all.tsv',
-        'lovd/lovd-microhap-variants.tsv',
-        'linkoping/linkoping-microhap-variants.tsv',
-        'intermediate/locusids.tsv.gz'
-    output:
-        'variant.tsv',
-        'variantmap.tsv',
-        'intermediate/varids.tsv.gz',
-    run:
-        with smartopen(output[0], 'w') as variantstream, smartopen(output[1], 'w') as varmap, smartopen(output[2], 'w') as varidstream, smartopen(input[0], 'r') as dbsnp, smartopen(input[1], 'r') as alfred, smartopen(input[2], 'r') as lovd, smartopen(input[3], 'r') as linkoping, smartopen(input[4], 'r') as locusids:
-            locus_ids = dict()
-            for line in locusids:
-                xref, table, lid = line.strip().split()
-                locus_ids[xref] = lid
-
-            print('ID', 'Reference', 'Chrom', 'Position', 'Alleles', 'Source', sep='\t', file=variantstream)
-            print('MarkerID', 'VariantID', sep='\t', file=varmap)
-            for n, v in enumerate(retrieve_proximal_variants(dbsnp, alfred, lovd, linkoping), 1):
-                varid = 'MHDBV{:09d}'.format(n)
-                print(varid, 'GRCh38', v.chrom, v.pos, v.alleles, v.source, sep='\t', file=variantstream)
-                if v.dbsnpid is not None:
-                    print(v.dbsnpid, 'variant', varid, sep='\t', file=varidstream)
-                for xref in v.xref:
-                    print(xref, 'variant', varid, sep='\t', file=varidstream)
-                for markerlabel in v.markerlabel:
-                    markerid = locus_ids[markerlabel]
-                    print(markerid, varid, sep='\t', file=varmap)
-
-
-# -----------------------------------------------------------------------------
-# ID mapping
-# -----------------------------------------------------------------------------
-
-rule idmap:
-    input: expand('intermediate/{table}.tsv.gz', table=['popids', 'locusids', 'varids'])
-    output: 'idmap.tsv'
-    run:
-        with smartopen(output[0], 'w') as outstream:
-            print('XRef', 'Table', 'mhdbID', sep='\t', file=outstream)
-        shell('gunzip -c {input} >> {output}')
-
-
-# -----------------------------------------------------------------------------
-# Alleles
-# -----------------------------------------------------------------------------
-
-rule allelefreq:
-    """Format allele frequency data."""
-    input:
-        'alfred/Microhap_alleleF_198.txt',
-        'alfred/curated/indel-alleles.json',
-        'lovd/lovd-microhap-loci.txt',
-        'lovd/lovd-allele-frequencies.txt',
-        'linkoping/microhap-definitions.tsv',
-        'linkoping/microhap-frequencies.tsv',
-        'idmap.tsv'
-    output: 'allele.tsv'
-    run:
-        with smartopen(output[0], 'w') as outstream, smartopen(input[6], 'r') as instream:
-            mapping = dict()
-            for line in instream:
-                values = line.strip().split()
-                mapping[values[0]] = values[2]
-            print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=outstream)
-            for af in allele_frequencies_alfred(input[0], input[1]):
-                print(mapping[af.locusid], mapping[af.popid], af.allele, af.freq, sep='\t', file=outstream)
-            for af in allele_frequencies_lovd(input[2], input[3]):
-                print(mapping[af.locusid], mapping[af.popid], af.allele, af.freq, sep='\t', file=outstream)
-            for af in allele_frequencies_linköping(input[4], input[5]):
-                print(mapping[af.locusid], mapping[af.popid], af.allele, af.freq, sep='\t', file=outstream)
+        dfs = list()
+        for freqfile in input:
+            df = pandas.read_csv(freqfile, sep='\t', index_col=None)
+            dfs.append(df)
+        data = pandas.concat(dfs, axis=0, ignore_index=True)
+        data.sort_values('Marker').to_csv(output[0], sep='\t', index=False)

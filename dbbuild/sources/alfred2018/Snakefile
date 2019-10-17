@@ -1,0 +1,87 @@
+# -----------------------------------------------------------------------------
+# Copyright (c) 2019, Battelle National Biodefense Institute.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
+# and is licensed under the BSD license: see LICENSE.txt.
+# -----------------------------------------------------------------------------
+
+from utils import smartopen, parse_markers_from_table
+from utils import alfred_marker_detail_scrape, alfred_marker_coords
+from utils import alfred_pop_data, alfred_frequencies
+
+
+MARKERS = parse_markers_from_table('downloads/Microhap_alleleF_198.txt')
+
+
+rule all:
+    input: 'marker.tsv', 'population.tsv', 'frequency.tsv'
+
+
+rule marker_rsids:
+    input: expand('downloads/marker-detail/{marker}.html.gz', marker=MARKERS)
+    output:
+        mapping='marker-rsids.tsv',
+        rsidlist='all-rsids.txt'
+    run:
+        allrsids = set()
+        with smartopen(output.mapping, 'w') as mapout, smartopen(output.rsidlist, 'w') as rsidout:
+            print('Name', 'Xref', 'rsIDs', sep='\t', file=mapout)
+            for filename in input:
+                with smartopen(filename, 'r') as fh:
+                    name, rsids = alfred_marker_detail_scrape(fh)
+                    xref = filename.split('/')[-1].split('.')[0]
+                    print(name, xref, ','.join(rsids), sep='\t', file=mapout)
+                    allrsids.update(rsids)
+            print(*sorted(allrsids), sep='\n', file=rsidout)
+
+
+rule dbsnp_subset:
+    input:
+        rsidlist='all-rsids.txt',
+        dbsnp=config['dbsnp'],
+        rsidx=config['rsidx'],
+    output: 'dbsnp-subset.vcf.gz'
+    run:
+        rsids = list()
+        with smartopen(input.rsidlist, 'r') as fh:
+            for line in fh:
+                rsids.append(line.strip())
+        command = 'rsidx search --header --out {out:s} {dbsnp:s} {rsidx:s} {ids:s}'.format(
+            out=output[0], dbsnp=input.dbsnp, rsidx=input.rsidx, ids=' '.join(rsids)
+        )
+        shell(command)
+
+
+rule marker_coords:
+    input:
+        dbsnp='dbsnp-subset.vcf.gz',
+        markers='marker-rsids.tsv'
+    output: 'marker.tsv'
+    run:
+        with smartopen(input.dbsnp, 'r') as vcf, smartopen(input.markers, 'r') as mapping:
+            with smartopen(output[0], 'w') as out:
+                print('Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef', sep='\t', file=out)
+                for name, xref, chrom, offsets, varids in alfred_marker_coords(vcf, mapping):
+                    offsetstr = ','.join(map(str, offsets))
+                    variants = ','.join(varids)
+                    print(name, xref, 'GRCh38', chrom, offsetstr, variants, sep='\t', file=out)
+
+
+rule population:
+    input: 'downloads/Microhap_alleleF_198.txt'
+    output: 'population.tsv'
+    run:
+        with smartopen(input[0], 'r') as infh, smartopen(output[0], 'w') as outfh:
+            print('ID', 'Name', sep='\t', file=outfh)
+            for data in alfred_pop_data(infh):
+                print(*data, sep='\t', file=outfh)
+
+
+rule frequency:
+    input: 'downloads/Microhap_alleleF_198.txt'
+    output: 'frequency.tsv'
+    run:
+        with smartopen(input[0], 'r') as infh, smartopen(output[0], 'w') as outfh:
+            print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=outfh)
+            for data in alfred_frequencies(infh):
+                print(*data, sep='\t', file=outfh)

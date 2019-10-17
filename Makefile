@@ -6,7 +6,7 @@ help: Makefile
 
 ## test:      execute the automated test suite
 test:
-	pytest --cov=microhapdb --doctest-modules microhapdb/test_*.py microhapdb/cli.py microhapdb/retrieve.py
+	pytest --cov=microhapdb --doctest-modules microhapdb/cli/*.py microhapdb/retrieve.py microhapdb/tests/test_*.py
 
 ## devdeps:   install development dependencies
 devdeps:
@@ -20,4 +20,4 @@ clean:
 
 ## style:     check code style against PEP8
 style:
-	pycodestyle --ignore=E501 microhapdb/*.py dbbuild/*.py dbbuild/Snakefile
+	pycodestyle --ignore=E501 microhapdb/*.py

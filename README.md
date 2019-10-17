@@ -7,10 +7,12 @@
 Daniel Standage, 2018-2019  
 https://github.com/bioforensics/microhapdb
 
-**MicroHapDB** is a package designed for scientists and researchers interested in microhaplotype analysis.
-This package is a distribution and convenience mechanism and does not implement any analytics itself.
-All microhaplotype data was obtained from public sources, including the [Allele Frequency Database (ALFRED)][alfred]<sup>[1-3]</sup> and published papers and posters<sup>[4-5]</sup>.
-We're eager to consider integrating additional microhap marker and frequency data from other sources.
+**MicroHapDB** is a database designed for scientists and researchers interested in using microhaplotype markers in forensic analysis.
+The database is distributed as a collection of tabular data files in plain text, which can be queried directly or using MicroHapDB's Python API or command-line interface.
+All microhaplotype marker and allele frequency data was obtained from public sources, including the [Allele Frequency Database (ALFRED)][alfred]<sup>[1-3]</sup> and published papers and posters<sup>[4-5]</sup>.
+Instructions for extending your own local copy of the database with private data are provided.
+However, we are eager to integrate microhap marker and frequency data from additional sources into the public database.
+
 
 ## Installation
 
@@ -27,11 +29,12 @@ conda install pytest
 pytest --pyargs microhapdb --doctest-modules
 ```
 
-MicroHapDB requires Python version 3 and the [Pandas][] library.
+Conda ensures the correct installation of Python version 3 and the [Pandas][] library, which are required by MicroHapDB.
+
 
 ## Usage
 
-MicroHapDB provides several convenient methods to access microhaplotype data.
+MicroHapDB provides several convenient methods to query microhaplotype marker, population, and allele frequency data.
 
 - a command-line interface
 - a Python API
@@ -39,80 +42,155 @@ MicroHapDB provides several convenient methods to access microhaplotype data.
 
 ### Command-line interface
 
-Invoke `microhapdb --help` for a description of the command-line configuration options and several usage examples.
+The `microhapdb` command supports four primary operations.
+
+- `microhapdb marker`: query marker definitions using microhap names or identifiers, or variant rsIDs (such as `mh01KK-172`, `mh06PK-24844`, or `rs8192488`)
+- `microhapdb population`: query population info using names or identifiers (such as `Italians` or `SA004240K`)
+- `microhapdb frequency`: query allele frequencies using marker and population identifiers
+- `microhapdb lookup`: query all data using any name or identifier
+
+Invoke `microhapdb marker --help` (and so on) for query instructions and usage examples.
+
+```
+[standage@lappy ~] $ microhapdb marker mh01KK-172
+       Name          PermID Reference Chrom                  Offsets   AvgAe  Source
+ mh01KK-172  MHDBM-d5a744a2    GRCh38  chr1  1551453,1551522,1551678  2.6731  ALFRED
+[standage@lappy ~] $ microhapdb marker --format=detail mh01KK-172
+--------------------------------------------------------- [ MicroHapulator ]----
+mh01KK-172    a.k.a MHDBM-d5a744a2, SI664721A
+
+Marker Definition (GRCh38)
+    Marker extent
+        - chr1:1551453-1551679 (226 bp)
+    Target amplicon
+        - chr1:1551428-1551704 (276 bp)
+    Constituent variants
+        - chromosome offsets: 1551453,1551522,1551678
+        - marker offsets: 0,69,225
+        - amplicon offsets: 25,94,250
+        - cross-references: rs3128342, rs3766176, rs1887284
+    Observed alleles
+        - A,C,A
+        - A,C,G
+        - A,T,A
+        - A,T,G
+        - C,T,G
+
+
+--[ Marker Sequence ]--
+>mh01KK-172
+CAATCAGCAAAAAATGAATTGAGAAGTACAAAGTAAATTTCACTTGCGATCAAATTCTACCTACGTGTGTGTGCCAGCTG
+CACCAAATGCTACCTGTACACTCAGATTCCCAGAGCCCATCCCCACTGGTCAGGGAGGGGGAGGCCTGACAGCTGCTGCA
+CTGGGCGCTGCTTCCCGAGCTCCCATCCTGCCCACCAGCCTTTCTCGACCAGGGTCCCGATTCGCG
+
+
+--[ Target Amplicon Sequence with Alleles ]--
+                         *                                                                    *                                                                                                                                                           *
+CACCCAAGCTGCTTTTGTTGGGCTACAATCAGCAAAAAATGAATTGAGAAGTACAAAGTAAATTTCACTTGCGATCAAATTCTACCTACGTGTGTGTGCCAGCTGCACCAAATGCTACCTGTACACTCAGATTCCCAGAGCCCATCCCCACTGGTCAGGGAGGGGGAGGCCTGACAGCTGCTGCACTGGGCGCTGCTTCCCGAGCTCCCATCCTGCCCACCAGCCTTTCTCGACCAGGGTCCCGATTCGCGGACGCCAACGGCCCAACCTATCTCT
+.........................A....................................................................C...........................................................................................................................................................A.........................
+.........................A....................................................................C...........................................................................................................................................................G.........................
+.........................A....................................................................T...........................................................................................................................................................A.........................
+.........................A....................................................................T...........................................................................................................................................................G.........................
+.........................C....................................................................T...........................................................................................................................................................G.........................
+--------------------------------------------------------------------------------
+
+[standage@lappy ~] $ microhapdb frequency --population=Yoruba --marker=mh01KK-172
+     Marker Population Allele  Frequency
+ mh01KK-172  SA000036J  A,C,G      0.230
+ mh01KK-172  SA000036J  A,C,A      0.000
+ mh01KK-172  SA000036J  A,T,G      0.527
+ mh01KK-172  SA000036J  A,T,A      0.236
+ mh01KK-172  SA000036J  C,T,G      0.007
+```
 
 ### Python API
 
 Programmatic access to microhap data within Python is as simple as invoking `import microhapdb` and querying the following tables.
 
-- `microhapdb.frequencies`
 - `microhapdb.markers`
 - `microhapdb.populations`
-- `microhapdb.variants`
+- `microhapdb.frequencies`
 
 Each is a [Pandas][]<sup>[6]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
-There are also two auxiliary tables: one that contains a mapping of all variants to their corresponding microhap markers, and another table cross-referencing external IDs/labels/names with internal MicroHapDB identifiers.
-
-- `microhapdb.variantmap`
-- `microhapdb.idmap`
-
-The helper function `microhapdb.id_xref` is also useful for retrieving data using any valid identifiers.
-The following example demonstrates how data across the different tables can be cross-referenced.
 
 ```python
 >>> import microhapdb
->>> microhapdb.id_xref('mh02KK-136')
-              ID Reference Chrom      Start        End   AvgAe  Source
-151  MHDBM000152    GRCh38  chr2  227227672  227227743  3.7742  ALFRED
+>>> microhapdb.markers[microhapdb.markers.Name == 'mh02KK-136']
+          Name          PermID Reference Chrom                        Offsets   AvgAe  Source
+35  mh02KK-136  MHDBM-eb83984f    GRCh38  chr2  227227672,227227689,227227742  3.7742  ALFRED
 >>> pops = microhapdb.populations.query('Name.str.contains("Amer")')
 >>> pops
-             ID                Name  Source
-2   MHDBP000003   African Americans  ALFRED
-3   MHDBP000004   African Americans  ALFRED
-21  MHDBP000022  European Americans  ALFRED
+           ID                Name  Source
+2   SA004047P   African Americans  ALFRED
+3   SA000101C   African Americans  ALFRED
+21  SA004250L  European Americans  ALFRED
 >>> f = microhapdb.frequencies
->>> f[(f.Marker == "MHDBM000152") & (f.Population.isin(pops.ID))]
-            Marker   Population Allele  Frequency
-75117  MHDBM000152  MHDBP000003  G,T,C      0.172
-75118  MHDBM000152  MHDBP000003  G,T,A      0.103
-75119  MHDBM000152  MHDBP000003  G,C,C      0.029
-75120  MHDBM000152  MHDBP000003  G,C,A      0.000
-75121  MHDBM000152  MHDBP000003  T,T,C      0.293
-75122  MHDBM000152  MHDBP000003  T,T,A      0.063
-75123  MHDBM000152  MHDBP000003  T,C,C      0.132
-75124  MHDBM000152  MHDBP000003  T,C,A      0.207
-75333  MHDBM000152  MHDBP000004  G,T,C      0.156
-75334  MHDBM000152  MHDBP000004  G,T,A      0.148
-75335  MHDBM000152  MHDBP000004  G,C,C      0.016
-75336  MHDBM000152  MHDBP000004  G,C,A      0.000
-75337  MHDBM000152  MHDBP000004  T,T,C      0.336
-75338  MHDBM000152  MHDBP000004  T,T,A      0.049
-75339  MHDBM000152  MHDBP000004  T,C,C      0.156
-75340  MHDBM000152  MHDBP000004  T,C,A      0.139
-75525  MHDBM000152  MHDBP000022  G,T,C      0.384
-75526  MHDBM000152  MHDBP000022  G,T,A      0.202
-75527  MHDBM000152  MHDBP000022  G,C,C      0.000
-75528  MHDBM000152  MHDBP000022  G,C,A      0.000
-75529  MHDBM000152  MHDBP000022  T,T,C      0.197
-75530  MHDBM000152  MHDBP000022  T,T,A      0.000
-75531  MHDBM000152  MHDBP000022  T,C,C      0.071
-75532  MHDBM000152  MHDBP000022  T,C,A      0.146
+>>> f[(f.Marker == 'mh02KK-136') & (f.Population.isin(pops.ID))]
+           Marker Population Allele  Frequency
+10615  mh02KK-136  SA000101C  G,T,C      0.172
+10616  mh02KK-136  SA000101C  G,T,A      0.103
+10617  mh02KK-136  SA000101C  G,C,C      0.029
+10618  mh02KK-136  SA000101C  G,C,A      0.000
+10619  mh02KK-136  SA000101C  T,T,C      0.293
+10620  mh02KK-136  SA000101C  T,T,A      0.063
+10621  mh02KK-136  SA000101C  T,C,C      0.132
+10622  mh02KK-136  SA000101C  T,C,A      0.207
+10831  mh02KK-136  SA004047P  G,T,C      0.156
+10832  mh02KK-136  SA004047P  G,T,A      0.148
+10833  mh02KK-136  SA004047P  G,C,C      0.016
+10834  mh02KK-136  SA004047P  G,C,A      0.000
+10835  mh02KK-136  SA004047P  T,T,C      0.336
+10836  mh02KK-136  SA004047P  T,T,A      0.049
+10837  mh02KK-136  SA004047P  T,C,C      0.156
+10838  mh02KK-136  SA004047P  T,C,A      0.139
+11023  mh02KK-136  SA004250L  G,T,C      0.384
+11024  mh02KK-136  SA004250L  G,T,A      0.202
+11025  mh02KK-136  SA004250L  G,C,C      0.000
+11026  mh02KK-136  SA004250L  G,C,A      0.000
+11027  mh02KK-136  SA004250L  T,T,C      0.197
+11028  mh02KK-136  SA004250L  T,T,A      0.000
+11029  mh02KK-136  SA004250L  T,C,C      0.071
+11030  mh02KK-136  SA004250L  T,C,A      0.146
 ```
 
 See the [Pandas][] documentation for more details on dataframe access and query methods.
 
+MicroHapDB also includes 4 auxiliary tables, which may be useful in a variety of scenarios.
+
+- `microhapdb.variantmap`: contains a mapping of dbSNP variants to their corresponding microhap markers
+- `microhapdb.idmap`: cross-references external names and identifiers with internal MicroHapDB identifiers
+- `microhapdb.sequences`: contains the sequence spanning and flanking each microhap locus
+- `microhapdb.indels`: contains variant information for markers that include insertion/deletion variants
+
 ### Tab-delimited text files
 
-The data behind MicroHapDB is contained in 6 tab-delimited text files.
-If you'd prefer not to use MicroHapDB's command-line interface or Python API, it should be trivial load these files directly into R, Julia, or the data science environment of your choice.
-Invoke `microhapdb files` on the command line to see the location of the installed `.tsv` files.
+The data in MicroHapDB is contained within 7 tab-delimited text files.
+If you'd prefer not to use MicroHapDB's command-line interface or Python API, it should be straightfoward to load these files directly into R, Julia, or the data science environment of your choice.
+Invoke `microhapdb --files` on the command line to see the location of the installed `.tsv` files.
 
+- `frequency.tsv`: allele frequency data, indexed by marker and population
+- `idmap.tsv`: mapping of external identifiers to microhap names
+- `indels.tsv`: variant description for markers that include insertion/deletion variants
 - `marker.tsv`: microhaplotype marker definitions
-- `variant.tsv`: variants associated with each microhap marker
-- `allele.tsv`: allele frequencies for 148 markers across 84 populations
-- `population.tsv`: summary of the populations studied
-- `variantmap.tsv`: identifies which variants are associated with which markers
-- `idmap.tsv`: mapping of all IDs/names/labels to internal MicroHapDB IDs
+- `population.tsv`: population descriptions
+- `sequences.tsv`: sequences spanning and flanking each microhap locus
+- `variantmap.tsv`: a mapping of dbSNP variants to their corresponding microhap markers
+
+
+## Adding Markers to MicroHapDB
+
+> *I have some private microhap markers.
+> Is it possible to include these in my MicroHapDB queries?*
+
+Certainly!
+See the [dbbuild](dbbuild/) directory for instructions on rebuilding the database with additional sources of data.
+
+> *I have published (or am getting ready to publish) a new panel of microhap markers and allele frequencies.
+> Could you add these to MicroHapDB?*
+
+Certainly!
+The instructions in the [dbbuild](dbbuild/) directory describe what data files are required.
+We would be happy to assist getting data into the correct format if that would help—just let us know by opening a thread on [MicroHapDB's issue tracker](https://github.com/bioforensics/MicroHapDB/issues/new).
 
 
 ## Citation
@@ -132,7 +210,7 @@ If you use this package, please cite our work.
 
 <sup>[2]</sup>Kidd KK, Pakstis AJ, Speed WC, Lagace R, Wootton S, Chang J (2018) Selecting microhaplotypes optimized for different purposes. *Electrophoresis*, [doi:10.1002/elps.201800092](https://doi.org/10.1002/elps.201800092).
 
-<sup>[3]</sup>Kidd KK, Rajeevan H (2018) ALFRED data download. *The Allele Frequency Database*, https://alfred.med.yale.edu/alfred/selectDownload/Microhap_alleleF_198.txt. Accessed December 10, 2018.
+<sup>[3]</sup>Kidd KK, Rajeevan H (2018) ALFRED data download. *The Allele Frequency Database*, https://alfred.med.yale.edu/alfred/selectDownload/Microhap_alleleF_198.txt. Accessed December 7, 2018.
 
 <sup>[4]</sup>van der Gaag KJ, de Leeuw RH, Laros JFJ, den Dunnen JT, de Knijff P (2018) Short hypervariable microhaplotypes: A novel set of very short high discriminating power loci without stutter artefacts. *Forensic Science International: Genetics*, 35:169-175, [doi:10.1016/j.fsigen.2018.05.008](https://doi.org/10.1016/j.fsigen.2018.05.008).
 
@@ -144,7 +222,6 @@ If you use this package, please cite our work.
 
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
-[lovd]: http://www.lovd.nl/3.0/home
 [Pandas]: https://pandas.pydata.org
 [travisbadge]: https://img.shields.io/travis/bioforensics/MicroHapDB.svg
 [pypibadge]: https://img.shields.io/pypi/v/microhapdb.svg

@@ -1,0 +1,59 @@
+# -----------------------------------------------------------------------------
+# Copyright (c) 2019, Battelle National Biodefense Institute.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
+# and is licensed under the BSD license: see LICENSE.txt.
+# -----------------------------------------------------------------------------
+
+from utils import smartopen, linköping_marker_coords, linköping_allele_frequencies
+
+
+rule all:
+    input: 'marker.tsv', 'population.tsv', 'frequency.tsv'
+
+
+rule dbsnp_subset:
+    input:
+        markers='marker-variants.tsv',
+        dbsnp=config['dbsnp'],
+        rsidx=config['rsidx'],
+    output: 'dbsnp-subset.vcf.gz'
+    run:
+        rsids = list()
+        with smartopen(input.markers, 'r') as fh:
+            next(fh)
+            for line in fh:
+                name, rsid, chrom, pos, ref = line.split('\t')
+                rsids.append(rsid)
+        command = 'rsidx search --header --out {out:s} {dbsnp:s} {rsidx:s} {ids:s}'.format(
+            out=output[0], dbsnp=input.dbsnp, rsidx=input.rsidx, ids=' '.join(rsids)
+        )
+        shell(command)
+
+
+rule marker_coords:
+    input:
+        dbsnp='dbsnp-subset.vcf.gz',
+        markers='marker-variants.tsv'
+    output: 'marker.tsv'
+    run:
+        with smartopen(input.dbsnp, 'r') as vcf, smartopen(input.markers, 'r') as mapping:
+            with smartopen(output[0], 'w') as out:
+                print('Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef', sep='\t', file=out)
+                for name, chrom, offsets, variants in linköping_marker_coords(vcf, mapping):
+                    offsetstr = ','.join(map(str, offsets))
+                    varstr = ','.join(variants)
+                    print(name, '', 'GRCh38', chrom, offsetstr, varstr, sep='\t', file=out)
+
+
+rule frequency:
+    input:
+        freqs='allele-frequencies.tsv',
+        markers='marker.tsv'
+    output: 'frequency.tsv'
+    run:
+        with smartopen(input.freqs, 'r') as freqfh, smartopen(input.markers, 'r') as markerfh:
+            with smartopen(output[0], 'w') as out:
+                print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=out)
+                for name, allele, frequency in linköping_allele_frequencies(freqfh, markerfh):
+                    print(name, 'Swedish', allele, '{:.4f}'.format(frequency), sep='\t', file=out)

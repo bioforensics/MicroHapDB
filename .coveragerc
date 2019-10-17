@@ -3,4 +3,4 @@ show_missing = True
 
 [run]
 branch = True
-omit = microhapdb/_version.py, microhapdb/tests/*.py
+omit = microhapdb/_version.py, microhapdb/tests/test_*.py
