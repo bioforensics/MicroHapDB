@@ -5,10 +5,10 @@ Folks interested only in using public data will likely be most interested in the
 This directory describes how those data files were constructed, and includes instructions for rebuilding the database from scratch
 We expect this will be helpful for folks who want to reproduce the database build or who want to integrate additional public or private data.
 
-If you would like to rebuild your personal copy of MicroHapDB to include private microhap data, see the documentation below.
+If you would like to rebuild your personal copy of MicroHapDB to **include private microhap data**, see the documentation below.
 Rebuilding your personal copy of MicroHapDB does not alter the public MicroHapDB database.
 
-If you would like to submit new data to be included in MicroHapDB publicly, let us know by opening a new thread on [MicroHapDB's issue tracker](https://github.com/bioforensics/MicroHapDB/issues/new) and attaching your data files.
+If you would like to **submit new data to be included in MicroHapDB publicly**, let us know by opening a new thread on [MicroHapDB's issue tracker](https://github.com/bioforensics/MicroHapDB/issues/new) and attaching your data files.
 Alternatively, you can submit a pull request to the MicroHapDB Github repository.
 
 

@@ -29,7 +29,7 @@ conda install pytest
 pytest --pyargs microhapdb --doctest-modules
 ```
 
-Installing with `conda` ensures the correct installation of Python version 3 and the [Pandas][] library, which are required by MicroHapDB.
+Conda ensures the correct installation of Python version 3 and the [Pandas][] library, which are required by MicroHapDB.
 
 
 ## Usage
