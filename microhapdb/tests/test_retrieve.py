@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-#
 # -----------------------------------------------------------------------------
 # Copyright (c) 2018, Battelle National Biodefense Institute.
 #
@@ -10,6 +8,7 @@
 
 import microhapdb
 from microhapdb.retrieve import by_id, by_region
+from microhapdb.retrieve import standardize_marker_ids, standardize_population_ids
 import pytest
 
 
@@ -49,3 +48,10 @@ def test_retrieve_by_region():
     assert sorted(results.Name.values) == sorted([
         'mh12KK-093', 'mh12KK-045', 'mh12KK-042', 'mh12KK-046', 'mh12AT-25'
     ])
+
+
+def test_marker_ids():
+    assert len(standardize_marker_ids(['BoGUSid'])) == 0
+    assert list(standardize_marker_ids(['mh05KK-058'])) == ['mh05KK-058']
+    assert list(standardize_marker_ids(['SI664549I'])) == ['mh01KK-117']
+    assert list(standardize_marker_ids(['MHDBM-3d69621c'])) == ['mh11KK-040', 'mh11AT-23']
