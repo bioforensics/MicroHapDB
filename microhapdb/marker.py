@@ -180,7 +180,7 @@ class TargetAmplicon():
             print(char * blocklength, end='', file=out)
         if blocks[-1][0] == 'variant':
             # only print final block if it's a variant; eliminate trailing whitespace
-            print('*' * blocklength, end='', file=out)
+            print('*' * blocks[-1][1], end='', file=out)
         print('', file=out)
 
         # Second row: amplicon sequence

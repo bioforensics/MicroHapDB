@@ -12,12 +12,14 @@ import pytest
 
 
 def test_standardize_ids():
+    assert list(standardize_ids(['FakeIdentifier']).values) == []
     assert list(standardize_ids(['mh11KK-089']).values) == ['mh11KK-089']
+    assert list(standardize_ids(['SI664625D']).values) == ['mh17KK-110']
     assert list(standardize_ids(['MHDBM-19b49670']).values) == ['mh11KK-187']
     assert list(standardize_ids(['MHDBM-07c8d144']).values) == ['mh04KK-010', 'mh04AT-10']
     assert list(standardize_ids(['rs9925859']).values) == ['mh16PK-83544']
     assert list(standardize_ids(['rs1533623']).values) == ['mh01KK-205', 'mh01AT-02']
-    assert list(standardize_ids(['rs4697751', 'mh11KK-092', 'MHDBM-22a6ab26']).values) == ['mh04CP-007', 'mh05KK-123', 'mh11KK-092']
+    assert list(standardize_ids(['rs4697751', 'SI664918I', 'MHDBM-22a6ab26']).values) == ['mh04CP-007', 'mh05KK-123', 'mh11KK-092']
 
 
 def test_marker_table(capsys):
@@ -83,6 +85,105 @@ CGGCACGTGGCTGTCTCTCTGGGCCTCCTCCTCCTAGGAAGGGCGTGCCCTCCTTGCTCCCTCTGGGCTTCCCAGAAACC
 ..........C............................A.......................................T..........
 ..........C............................C.......................................T..........
 ..........T............................A.......................................T..........
+--------------------------------------------------------------------------------
+'''
+    terminal = capsys.readouterr()
+    assert terminal.out.strip() == testout.strip()
+
+
+def test_marker_detail_long(capsys):
+    marker = microhapdb.markers[microhapdb.markers.Name == 'mh05KK-170']
+    microhapdb.marker.print_detail(marker, delta=20, minlen=125)
+    testout = '''
+--------------------------------------------------------- [ MicroHapulator ]----
+mh05KK-170    a.k.a MHDBM-22ddbb7d, SI664573F
+
+Marker Definition (GRCh38)
+    Marker extent
+        - chr5:2447909-2448046 (137 bp)
+    Target amplicon
+        - chr5:2447889-2448066 (177 bp)
+    Constituent variants
+        - chromosome offsets: 2447909,2447937,2448031,2448045
+        - marker offsets: 0,28,122,136
+        - amplicon offsets: 20,48,142,156
+        - cross-references: rs74865590, rs438055, rs370672, rs6555108
+    Observed alleles
+        - C,A,A,A
+        - C,A,A,G
+        - C,A,G,A
+        - C,A,G,G
+        - C,G,A,A
+        - C,G,A,G
+        - C,G,G,A
+        - C,G,G,G
+        - T,A,A,A
+        - T,A,A,G
+
+
+--[ Marker Sequence ]--
+>mh05KK-170
+CCACAGTTGAAGAGAGAGAGCATGAGACAGCTTGATCGAAATGGTGAAGCTTTGGAGAGATTTTGCGGGGAATGCACTGG
+AGAACCATGAAGATGTGGAAACAAACAAACAAACAAAAAACCGCTTTTGCATCTTCA
+
+
+--[ Target Amplicon Sequence with Alleles ]--
+                    *                           *                                                                                             *             *
+TTTCTTAACAAAACTGAAGGCCACAGTTGAAGAGAGAGAGCATGAGACAGCTTGATCGAAATGGTGAAGCTTTGGAGAGATTTTGCGGGGAATGCACTGGAGAACCATGAAGATGTGGAAACAAACAAACAAACAAAAAACCGCTTTTGCATCTTCAGACATCTCACTTGTCATCAC
+....................C...........................A.............................................................................................A.............A....................
+....................C...........................A.............................................................................................A.............G....................
+....................C...........................A.............................................................................................G.............A....................
+....................C...........................A.............................................................................................G.............G....................
+....................C...........................G.............................................................................................A.............A....................
+....................C...........................G.............................................................................................A.............G....................
+....................C...........................G.............................................................................................G.............A....................
+....................C...........................G.............................................................................................G.............G....................
+....................T...........................A.............................................................................................A.............A....................
+....................T...........................A.............................................................................................A.............G....................
+--------------------------------------------------------------------------------
+'''
+    terminal = capsys.readouterr()
+    assert terminal.out.strip() == testout.strip()
+
+
+def test_marker_detail_short(capsys):
+    marker = microhapdb.markers[microhapdb.markers.Name == 'mh16PK-83544']
+    microhapdb.marker.print_detail(marker, delta=0, minlen=0)
+    testout = '''
+--------------------------------------------------------- [ MicroHapulator ]----
+mh16PK-83544    a.k.a MHDBM-c80956b4
+
+Marker Definition (GRCh38)
+    Marker extent
+        - chr16:85934074-85934138 (64 bp)
+    Target amplicon
+        - chr16:85934074-85934138 (64 bp)
+    Constituent variants
+        - chromosome offsets: 85934074,85934082,85934105,85934115,85934128,85934137
+        - marker offsets: 0,8,31,41,54,63
+        - amplicon offsets: 0,8,31,41,54,63
+        - cross-references: rs66509440, rs66804793, rs528179479, rs9925859, rs9929895, rs74032085
+    Observed alleles
+        - C,G,G,C,A,T
+        - C,G,G,G,A,T
+        - C,G,G,G,G,T
+        - T,A,C,G,T,C
+        - T,A,G,G,T,C
+
+
+--[ Marker Sequence ]--
+>mh16PK-83544
+CGGGCGGTGTGTGGCTGAAGGGCAAGAGAAAGGAGAGACTGCGGCTGGGAACCCATATGGGAAT
+
+
+--[ Target Amplicon Sequence with Alleles ]--
+*       *                      *         *            *        *
+CGGGCGGTGTGTGGCTGAAGGGCAAGAGAAAGGAGAGACTGCGGCTGGGAACCCATATGGGAAT
+C.......G......................G.........C............A........T
+C.......G......................G.........G............A........T
+C.......G......................G.........G............G........T
+T.......A......................C.........G............T........C
+T.......A......................G.........G............T........C
 --------------------------------------------------------------------------------
 '''
     terminal = capsys.readouterr()
@@ -218,6 +319,48 @@ GTGACATTGGCGGTTGTGACGCTCAGCTCACCAGTCCTGCCTACTTGCCAGCAGGTATT----CTCAGAGGGACCACAG-
 ..........CGG......CGT.............CCTGCC.................TTCTT...............GTGAG..CC...T..........
 ..........CGG......TGC.............CCTGCC.................TTCTT...............GTGAG..CT...G..........
 ..........TGG......CGC.............CCTGCC.................TTCTT...............GTGAG..CT...G..........
+--------------------------------------------------------------------------------
+'''
+    terminal = capsys.readouterr()
+    assert terminal.out.strip() == testout.strip()
+
+
+def test_amplicon_object(capsys):
+    amp = microhapdb.marker.TargetAmplicon('mh11KK-090', delta=10, minlen=60)
+    print(amp)
+    testout = '''
+--------------------------------------------------------- [ MicroHapulator ]----
+mh11KK-090    a.k.a MHDBM-f67cb0d4, SI664596K
+
+Marker Definition (GRCh38)
+    Marker extent
+        - chr11:113425551-113425564 (13 bp)
+    Target amplicon
+        - chr11:113425527-113425588 (61 bp)
+    Constituent variants
+        - chromosome offsets: 113425551,113425563
+        - marker offsets: 0,12
+        - amplicon offsets: 24,36
+        - cross-references: rs1079598, rs1079597
+    Observed alleles
+        - A,C
+        - A,T
+        - G,C
+        - G,T
+
+
+--[ Marker Sequence ]--
+>mh11KK-090
+AGATTCGCCTTTC
+
+
+--[ Target Amplicon Sequence with Alleles ]--
+                        *           *
+AAGGGCAGCAGGAACCACATGATCAGATTCGCCTTTCGAATAGGTGATTCTGACAGCACTG
+........................A...........C........................
+........................A...........T........................
+........................G...........C........................
+........................G...........T........................
 --------------------------------------------------------------------------------
 '''
     terminal = capsys.readouterr()
