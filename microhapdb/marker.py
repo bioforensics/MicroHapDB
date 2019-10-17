@@ -8,6 +8,7 @@
 from collections import defaultdict
 from math import ceil
 import microhapdb
+from microhapdb.retrieve import id_in_series
 from io import StringIO
 
 
@@ -174,9 +175,12 @@ class TargetAmplicon():
             blocks.append(('span', final))
 
         # Top row: variant indicators
-        for blocktype, blocklength in blocks:
+        for blocktype, blocklength in blocks[:-1]:
             char = ' ' if blocktype == 'span' else '*'
             print(char * blocklength, end='', file=out)
+        if blocks[-1][0] == 'variant':
+            # only print final block if it's a variant; eliminate trailing whitespace
+            print('*' * blocklength, end='', file=out)
         print('', file=out)
 
         # Second row: amplicon sequence
@@ -214,7 +218,7 @@ class TargetAmplicon():
 
     def __str__(self):
         out = StringIO()
-        print('-' * 58, '[ MicroHapulator ]---', file=out)
+        print('-' * 57, '[ MicroHapulator ]----', file=out)
         print(self.data.Name, '   a.k.a', ', '.join(self.xrefs), end='\n\n', file=out)
         self.print_detail_definition(out)
         self.print_detail_markerseq(out)

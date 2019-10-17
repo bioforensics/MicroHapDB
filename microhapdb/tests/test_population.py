@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-#
 # -----------------------------------------------------------------------------
 # Copyright (c) 2019, Battelle National Biodefense Institute.
 #
@@ -31,7 +29,7 @@ def test_pop_table(capsys):
     assert terminal.out.strip() == testout.strip()
 
 
-def test_pop_table(capsys):
+def test_pop_table_multi(capsys):
     hanchinese = microhapdb.populations[microhapdb.populations.Name == 'Han']
     microhapdb.population.print_table(hanchinese)
     testout = '''
@@ -49,7 +47,7 @@ def test_pop_detail(capsys):
     hausa = microhapdb.populations[microhapdb.populations.Name == 'Hausa']
     microhapdb.population.print_detail(hausa)
     testout = '''
----------------------------------------------------------[ MicroHapulator ]----
+----------------------------------------------------------[ MicroHapulator ]----
 Hausa    (SA000100B; source=ALFRED)
 
 - 878 total allele frequencies available
@@ -81,7 +79,7 @@ def test_pop_detail_multi(capsys):
     japanese = microhapdb.populations[microhapdb.populations.Name == 'Japanese']
     microhapdb.population.print_detail(japanese)
     testout = '''
----------------------------------------------------------[ MicroHapulator ]----
+----------------------------------------------------------[ MicroHapulator ]----
 Japanese    (SA004060K; source=ALFRED)
 
 - 1070 total allele frequencies available
@@ -105,7 +103,7 @@ Japanese    (SA004060K; source=ALFRED)
          2|****
 --------------------------------------------------------------------------------
 
----------------------------------------------------------[ MicroHapulator ]----
+----------------------------------------------------------[ MicroHapulator ]----
 Japanese    (SA000010B; source=ALFRED)
 
 - 878 total allele frequencies available
