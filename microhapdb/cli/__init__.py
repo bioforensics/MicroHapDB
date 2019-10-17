@@ -45,7 +45,7 @@ def print_files():
     This is helpful if the user wants to data science the TSV tables directly.
     """
     tables = (
-        'marker', 'population', 'frequency', 'variantmap', 'idmap'
+        'marker', 'population', 'frequency', 'variantmap', 'idmap', 'sequence', 'indels'
     )
     for table in tables:
         print(microhapdb.data_file(table + '.tsv'))
