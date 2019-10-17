@@ -1,9 +1,15 @@
-# MicroHapDB Build
+# Extending MicroHapDB or Rebuilding from Scratch
 
 MicroHapDB is a collection of microhaplotype marker and allele frequency data integrated from a variety of public sources.
-Most users will be primarily interested in MicroHapDB's data tables and access methods (CLI and Python API).
-However, a bit of preliminary work was required to prepare each independent data source for compilation into a single database.
-These details are described here, and those who are especially curious or who wish to reproduce this work should find everything they need here.
+Folks interested only in using public data will likely be most interested in the data files in the `microhapdb/data/` director, and the Python wrapper MicroHapDB provides for querying these files.
+This directory describes how those data files were constructed, and includes instructions for rebuilding the database from scratch
+We expect this will be helpful for folks who want to reproduce the database build or who want to integrate additional public or private data.
+
+If you would like to rebuild your personal copy of MicroHapDB to include private microhap data, see the documentation below.
+Rebuilding your personal copy of MicroHapDB does not alter the public MicroHapDB database.
+
+If you would like to submit new data to be included in MicroHapDB publicly, let us know by opening a new thread on [MicroHapDB's issue tracker](https://github.com/bioforensics/MicroHapDB/issues/new) and attaching your data files.
+Alternatively, you can submit a pull request to the MicroHapDB Github repository.
 
 
 ## Rebuilding the Database From Scratch: The Short Version
@@ -19,24 +25,21 @@ And the following data:
 
 - Human reference genome (version GRCh38; http://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz)
 
-With these dependencies installed, invoke the following command in the `dbbuild/` directory to re-build the database from scratch.
+With these dependencies installed, clone the MicroHapDB git repository and use Snakemake to rebuild the database in the `dbbuild/` directory.
 
 ```
-snakemake --config refr=/path/to/hg38.fasta -p tables
+git clone https://github.com/bioforensics/MicroHapDB.git
+cd MicroHapDB/dbbuild/
+wget http://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz
+gunzip hg38.fa.gz
+snakemake --config refr=hg38.fa -p tables
 ```
-
-FIXME
-
-- [ ] finish documentation
-
-FIXME
-
 
 ## The Long Version: Sources
 
 Each source of microhap data has a dedicated directory located in `dbbuild/sources/`.
 As of this writing, this includes `dbbuild/sources/alfred2018/`, `dbbuild/sources/vandergaag2018/`, and `dbbuild/sources/staadig2019/`.
-Re-compiling the database to include additional data sources is a matter of creating a new directory<sup>1</sup> in `dbbuild/sources/`, populating it with appropriately formatted files (described in section "**Data Required for Each Source**"), and executing the database build workflow (described in section "**Running the Database Build**").
+Re-compiling the database to include additional data sources is a matter of creating a new directory<sup>1</sup> in `dbbuild/sources/`, populating it with appropriately formatted files (described in section "**Data Required for Each Source**"), and executing the database build workflow (the `snakemake` command described above).
 
 <sup>1</sup>Directories should have descriptive names, corresponding to a database name or the first author of a corresponding publication, followed by the year of access or publication.
 

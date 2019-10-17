@@ -21,10 +21,10 @@ __version__ = get_versions()['version']
 del get_versions
 
 
-frequencies = pandas.read_csv(data_file('frequency.tsv'), sep='\t')
-idmap = pandas.read_csv(data_file('idmap.tsv'), sep='\t')
 markers = pandas.read_csv(data_file('marker.tsv'), sep='\t')
 populations = pandas.read_csv(data_file('population.tsv'), sep='\t')
-sequences = pandas.read_csv(data_file('sequences.tsv'), sep='\t')
+frequencies = pandas.read_csv(data_file('frequency.tsv'), sep='\t')
 variantmap = pandas.read_csv(data_file('variantmap.tsv'), sep='\t')
+idmap = pandas.read_csv(data_file('idmap.tsv'), sep='\t')
+sequences = pandas.read_csv(data_file('sequences.tsv'), sep='\t')
 indels = pandas.read_csv(data_file('indels.tsv'), sep='\t')
