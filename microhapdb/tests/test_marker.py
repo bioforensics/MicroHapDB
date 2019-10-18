@@ -395,3 +395,17 @@ AAGGGCAGCAGGAACCACATGATCAGATTCGCCTTTCGAATAGGTGATTCTGACAGCACTG
 '''
     terminal = capsys.readouterr()
     assert terminal.out.strip() == testout.strip()
+
+
+@pytest.mark.parametrize('name,data', [
+    ('mh04KK-010', 'mh04KK-010  MHDBM-07c8d144    GRCh38  chr4  1985210,1985244  2.7234  ALFRED'),
+    ('mh08PK-46625', 'mh08PK-46625  MHDBM-840756f3    GRCh38  chr8  1194352,1194356,1194364,1194371  2.6273  10.1016/j.fsigen.2018.05.008'),
+    ('mh04AT-10', 'mh04AT-10  MHDBM-07c8d144    GRCh38  chr4  1985210,1985244  3.8364  ISFG2019:P597'),
+    ('mh01NH-03', 'mh01NH-03  MHDBM-e7a95c5e    GRCh38  chr1  184807944,184807966,184808042  2.3711  10.1016/j.legalmed.2015.06.003'),
+])
+def test_all_sources(name, data, capsys):
+    marker = microhapdb.markers[microhapdb.markers.Name == name]
+    microhapdb.marker.print_table(marker)
+    terminal = capsys.readouterr()
+    print(terminal.out)
+    assert data in terminal.out

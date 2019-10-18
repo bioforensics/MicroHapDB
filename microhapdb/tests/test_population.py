@@ -164,3 +164,17 @@ Japanese    (SA000010B; source=ALFRED)
 '''
     terminal = capsys.readouterr()
     assert terminal.out.strip() == testout.strip()
+
+
+@pytest.mark.parametrize('ident,data', [
+    ('SA000019K', 'SA000019K  Russians  ALFRED'),
+    ('Asia', 'Asia  Asia  10.1016/j.fsigen.2018.05.008'),
+    ('Swedish', 'Swedish  Swedish  ISFG2019:P597'),
+    ('HiroakiCohort', 'HiroakiCohort  HiroakiCohort  10.1016/j.legalmed.2015.06.003'),
+])
+def test_all_sources(ident, data, capsys):
+    pop = microhapdb.populations[microhapdb.populations.ID == ident]
+    microhapdb.population.print_table(pop)
+    terminal = capsys.readouterr()
+    print(terminal.out)
+    assert data in terminal.out

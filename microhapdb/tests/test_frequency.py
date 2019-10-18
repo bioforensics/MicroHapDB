@@ -61,3 +61,18 @@ def test_allele_frequencies():
     assert len(result) == 96
     result = af.query('Marker == "mh21KK-315" & Allele == "A,C,T" & Population == "SA001773S"').Frequency.values[0]
     assert result == pytest.approx(0.025)
+
+
+@pytest.mark.parametrize('marker,pop,allele,data', [
+    ('mh22KK-064', 'SA000009J', 'A,A,T,AATAATT', 'mh22KK-064  SA000009J  A,A,T,AATAATT      0.828'),
+    ('mh06PK-24844', 'NL', 'C,C,G,C,C,C,A,A,A,A', 'mh06PK-24844         NL  C,C,G,C,C,C,A,A,A,A      0.005'),
+    ('mh20AT-40', 'Swedish', 'T,C,G', 'mh20AT-40    Swedish  T,C,G     0.0806'),
+    ('mh11NH-17', 'HiroakiCohort', 'C,G,G', 'mh11NH-17  HiroakiCohort  C,G,G      0.153'),
+])
+def test_all_sources(marker, pop, allele, data, capsys):
+    arglist = ['frequency', '--marker', marker, '--population', pop, '--allele', allele]
+    args = microhapdb.cli.get_parser().parse_args(arglist)
+    microhapdb.cli.frequency.main(args)
+    terminal = capsys.readouterr()
+    print(terminal.out)
+    assert data in terminal.out
