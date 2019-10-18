@@ -32,16 +32,16 @@ def test_markers():
     >>> m = microhapdb.markers
     >>> m[m.Name == 'mh18CP-005']
                Name          PermID Reference  Chrom                          Offsets   AvgAe  Source
-    218  mh18CP-005  MHDBM-a85754d3    GRCh38  chr18  8892864,8892893,8892896,8892907  3.6614  ALFRED
+    239  mh18CP-005  MHDBM-a85754d3    GRCh38  chr18  8892864,8892893,8892896,8892907  3.6614  ALFRED
     >>> m[m.Name == 'mh01KK-117']
               Name          PermID Reference Chrom                                  Offsets  AvgAe  Source
-    14  mh01KK-117  MHDBM-39dc025f    GRCh38  chr1  204664211,204664268,204664371,204664397  3.933  ALFRED
+    17  mh01KK-117  MHDBM-39dc025f    GRCh38  chr1  204664211,204664268,204664371,204664397  3.933  ALFRED
     >>> m[m.Name == 'mh11PK-63643']
                  Name          PermID Reference  Chrom                                            Offsets  AvgAe                        Source
-    135  mh11PK-63643  MHDBM-c5ce121f    GRCh38  chr11  34415814,34415816,34415818,34415835,34415836,3...  4.033  10.1016/j.fsigen.2018.05.008
+    151  mh11PK-63643  MHDBM-c5ce121f    GRCh38  chr11  34415814,34415816,34415818,34415835,34415836,3...  4.033  10.1016/j.fsigen.2018.05.008
     >>> m[m.Name == 'mh02AT-05']
              Name          PermID Reference Chrom                        Offsets   AvgAe         Source
-    34  mh02AT-05  MHDBM-c3feaba8    GRCh38  chr2  160222899,160222923,160222938  5.1944  ISFG2019:P597
+    39  mh02AT-05  MHDBM-c3feaba8    GRCh38  chr2  160222899,160222923,160222938  5.1944  ISFG2019:P597
     """
     m = microhapdb.markers
     vm = microhapdb.variantmap

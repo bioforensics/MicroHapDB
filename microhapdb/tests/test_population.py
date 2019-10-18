@@ -28,10 +28,10 @@ def test_populations():
     >>> p = microhapdb.populations
     >>> p[p.ID == 'SA000040E']
                ID     Name  Source
-    47  SA000040E  Kachari  ALFRED
+    48  SA000040E  Kachari  ALFRED
     >>> p[p.ID == 'SA000936S']
                ID     Name  Source
-    52  SA000936S  Koreans  ALFRED
+    53  SA000936S  Koreans  ALFRED
     >>> p[p.Name == 'Han']
                ID Name  Source
     29  SA004059S  Han  ALFRED
