@@ -1,4 +1,4 @@
-# Linköping Panel Evaluation (Sweden)
+# NRIPS/Jutendo Study
 
 ## Citations
 

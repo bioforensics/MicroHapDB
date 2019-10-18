@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Marker definitions and allele frequencies for a 40 microhap panel presented at ISFG 2019 (see #25).
+- Marker definitions and allele frequencies for 27 microhaps published in a 2015 *Legal Medicine* paper (see #31).
 
 ### Changed
 - Replaced all references to `locus` and `loci` with `marker` and `markers` in the main code base (see #23).
