@@ -23,12 +23,11 @@ def test_standardize_ids():
 
 
 def test_assumptions():
-    assert len(microhapdb.markers) == 198 + 15 + 40
+    assert len(microhapdb.markers) == 198 + 15 + 40 + 26
 
 
 def test_markers():
-    """Microhaplotype marker data
-
+    """
     >>> import microhapdb
     >>> m = microhapdb.markers
     >>> m[m.Name == 'mh18CP-005']
@@ -46,11 +45,11 @@ def test_markers():
     """
     m = microhapdb.markers
     vm = microhapdb.variantmap
-    assert m.shape == (253, 7)
+    assert m.shape == (279, 7)
     result = m[m.Chrom == 'chr19']
-    assert len(result) == 6
+    assert len(result) == 7
     varids = vm[vm.Marker.isin(result.Name)].Variant.unique()
-    assert len(varids) == 17
+    assert len(varids) == 20
 
 
 def test_marker_table(capsys):

@@ -12,12 +12,11 @@ import pytest
 
 
 def test_assumptions():
-    assert len(microhapdb.frequencies) == 81918 + 366 + 386
+    assert len(microhapdb.frequencies) == 81918 + 366 + 386 + 33
 
 
 def test_allele_frequencies():
-    """Allele frequencies for 198 markers across 96 populations.
-
+    """
     >>> import microhapdb
     >>> f = microhapdb.frequencies
     >>> f[f.Marker == 'mh15CP-003'].Allele.unique()
@@ -55,7 +54,7 @@ def test_allele_frequencies():
     60276  mh15CP-003  SA004049R  A,A,C      0.318
     """
     af = microhapdb.frequencies
-    assert af.shape == (82670, 4)
+    assert af.shape == (82703, 4)
     result = af[af.Marker == 'mh21KK-315'].Allele.unique()
     assert len(result) == 8
     result = af[(af.Marker == 'mh21KK-315') & (af.Allele == 'A,C,T')]

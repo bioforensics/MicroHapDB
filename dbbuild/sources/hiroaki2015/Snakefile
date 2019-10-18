@@ -14,7 +14,7 @@ rule all:
 
 rule dbsnp_subset:
     input:
-        markers='prelim-marker-data.tsv',
+        markers='table1-subset.tsv',
         dbsnp=config['dbsnp'],
         rsidx=config['rsidx'],
     output: 'dbsnp-subset.vcf.gz'
@@ -34,14 +34,14 @@ rule dbsnp_subset:
 rule marker_coords:
     input:
         dbsnp='dbsnp-subset.vcf.gz',
-        markers='prelim-marker-data.tsv'
+        markers='table1-subset.tsv'
     output: 'marker.tsv'
     run:
         with smartopen(input.dbsnp, 'r') as vcf, smartopen(input.markers, 'r') as markers:
             with smartopen(output[0], 'w') as out:
                 print('Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef', sep='\t', file=out)
                 for name, chrom, offsets, variants in marker_coords(vcf, markers):
-                    if name == 'mhNH04-08':
+                    if name == 'mh04NH-08':
                         # Problematic marker definition; see README.md
                         continue
                     offsetstr = ','.join(map(str, offsets))

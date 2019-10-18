@@ -19,12 +19,11 @@ def test_standardize_ids():
 
 
 def test_assumptions():
-    assert len(microhapdb.populations) == 96 + 3 + 1
+    assert len(microhapdb.populations) == 96 + 3 + 1 + 1
 
 
 def test_populations():
-    """Population data
-
+    """
     >>> import microhapdb
     >>> p = microhapdb.populations
     >>> p[p.ID == 'SA000040E']
@@ -47,7 +46,7 @@ def test_populations():
     4  SA004242M    Afro-Caribbeans                        ALFRED
     """
     pop = microhapdb.populations
-    assert pop.shape == (100, 3)
+    assert pop.shape == (101, 3)
     assert pop[pop.ID == 'SA004049R'].Name.values == ['Finns']
     assert pop[pop.ID == 'SA000028K'].Name.values == ['Karitiana']
     result = pop[pop.Name.str.contains('Jews')].ID.values
