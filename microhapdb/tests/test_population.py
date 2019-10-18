@@ -19,20 +19,19 @@ def test_standardize_ids():
 
 
 def test_assumptions():
-    assert len(microhapdb.populations) == 96 + 3 + 1
+    assert len(microhapdb.populations) == 96 + 3 + 1 + 1
 
 
 def test_populations():
-    """Population data
-
+    """
     >>> import microhapdb
     >>> p = microhapdb.populations
     >>> p[p.ID == 'SA000040E']
                ID     Name  Source
-    47  SA000040E  Kachari  ALFRED
+    48  SA000040E  Kachari  ALFRED
     >>> p[p.ID == 'SA000936S']
                ID     Name  Source
-    52  SA000936S  Koreans  ALFRED
+    53  SA000936S  Koreans  ALFRED
     >>> p[p.Name == 'Han']
                ID Name  Source
     29  SA004059S  Han  ALFRED
@@ -47,7 +46,7 @@ def test_populations():
     4  SA004242M    Afro-Caribbeans                        ALFRED
     """
     pop = microhapdb.populations
-    assert pop.shape == (100, 3)
+    assert pop.shape == (101, 3)
     assert pop[pop.ID == 'SA004049R'].Name.values == ['Finns']
     assert pop[pop.ID == 'SA000028K'].Name.values == ['Karitiana']
     result = pop[pop.Name.str.contains('Jews')].ID.values
@@ -165,3 +164,17 @@ Japanese    (SA000010B; source=ALFRED)
 '''
     terminal = capsys.readouterr()
     assert terminal.out.strip() == testout.strip()
+
+
+@pytest.mark.parametrize('ident,data', [
+    ('SA000019K', 'SA000019K  Russians  ALFRED'),
+    ('Asia', 'Asia  Asia  10.1016/j.fsigen.2018.05.008'),
+    ('Swedish', 'Swedish  Swedish  ISFG2019:P597'),
+    ('HiroakiCohort', 'HiroakiCohort  HiroakiCohort  10.1016/j.legalmed.2015.06.003'),
+])
+def test_all_sources(ident, data, capsys):
+    pop = microhapdb.populations[microhapdb.populations.ID == ident]
+    microhapdb.population.print_table(pop)
+    terminal = capsys.readouterr()
+    print(terminal.out)
+    assert data in terminal.out

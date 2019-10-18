@@ -23,34 +23,33 @@ def test_standardize_ids():
 
 
 def test_assumptions():
-    assert len(microhapdb.markers) == 198 + 15 + 40
+    assert len(microhapdb.markers) == 198 + 15 + 40 + 26
 
 
 def test_markers():
-    """Microhaplotype marker data
-
+    """
     >>> import microhapdb
     >>> m = microhapdb.markers
     >>> m[m.Name == 'mh18CP-005']
                Name          PermID Reference  Chrom                          Offsets   AvgAe  Source
-    218  mh18CP-005  MHDBM-a85754d3    GRCh38  chr18  8892864,8892893,8892896,8892907  3.6614  ALFRED
+    239  mh18CP-005  MHDBM-a85754d3    GRCh38  chr18  8892864,8892893,8892896,8892907  3.6614  ALFRED
     >>> m[m.Name == 'mh01KK-117']
               Name          PermID Reference Chrom                                  Offsets  AvgAe  Source
-    14  mh01KK-117  MHDBM-39dc025f    GRCh38  chr1  204664211,204664268,204664371,204664397  3.933  ALFRED
+    17  mh01KK-117  MHDBM-39dc025f    GRCh38  chr1  204664211,204664268,204664371,204664397  3.933  ALFRED
     >>> m[m.Name == 'mh11PK-63643']
                  Name          PermID Reference  Chrom                                            Offsets  AvgAe                        Source
-    135  mh11PK-63643  MHDBM-c5ce121f    GRCh38  chr11  34415814,34415816,34415818,34415835,34415836,3...  4.033  10.1016/j.fsigen.2018.05.008
+    151  mh11PK-63643  MHDBM-c5ce121f    GRCh38  chr11  34415814,34415816,34415818,34415835,34415836,3...  4.033  10.1016/j.fsigen.2018.05.008
     >>> m[m.Name == 'mh02AT-05']
              Name          PermID Reference Chrom                        Offsets   AvgAe         Source
-    34  mh02AT-05  MHDBM-c3feaba8    GRCh38  chr2  160222899,160222923,160222938  5.1944  ISFG2019:P597
+    39  mh02AT-05  MHDBM-c3feaba8    GRCh38  chr2  160222899,160222923,160222938  5.1944  ISFG2019:P597
     """
     m = microhapdb.markers
     vm = microhapdb.variantmap
-    assert m.shape == (253, 7)
+    assert m.shape == (279, 7)
     result = m[m.Chrom == 'chr19']
-    assert len(result) == 6
+    assert len(result) == 7
     varids = vm[vm.Marker.isin(result.Name)].Variant.unique()
-    assert len(varids) == 17
+    assert len(varids) == 20
 
 
 def test_marker_table(capsys):
@@ -396,3 +395,17 @@ AAGGGCAGCAGGAACCACATGATCAGATTCGCCTTTCGAATAGGTGATTCTGACAGCACTG
 '''
     terminal = capsys.readouterr()
     assert terminal.out.strip() == testout.strip()
+
+
+@pytest.mark.parametrize('name,data', [
+    ('mh04KK-010', 'mh04KK-010  MHDBM-07c8d144    GRCh38  chr4  1985210,1985244  2.7234  ALFRED'),
+    ('mh08PK-46625', 'mh08PK-46625  MHDBM-840756f3    GRCh38  chr8  1194352,1194356,1194364,1194371  2.6273  10.1016/j.fsigen.2018.05.008'),
+    ('mh04AT-10', 'mh04AT-10  MHDBM-07c8d144    GRCh38  chr4  1985210,1985244  3.8364  ISFG2019:P597'),
+    ('mh01NH-03', 'mh01NH-03  MHDBM-e7a95c5e    GRCh38  chr1  184807944,184807966,184808042  2.3711  10.1016/j.legalmed.2015.06.003'),
+])
+def test_all_sources(name, data, capsys):
+    marker = microhapdb.markers[microhapdb.markers.Name == name]
+    microhapdb.marker.print_table(marker)
+    terminal = capsys.readouterr()
+    print(terminal.out)
+    assert data in terminal.out

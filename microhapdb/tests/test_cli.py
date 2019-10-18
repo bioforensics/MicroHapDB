@@ -76,7 +76,7 @@ def test_main_pop_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split('\n')
-    assert len(outlines) == 1 + 96 + 3 + 1  # 1 header line + 96 ALFRED + 3 LOVD + 1 Linköping
+    assert len(outlines) == 1 + 96 + 3 + 1 + 1  # 1 header line + 96 ALFRED + 3 LOVD + 1 Linköping + 1 NRIPS
 
 
 def test_main_pop_detail(capsys):
@@ -104,7 +104,7 @@ def test_main_marker_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split('\n')
-    assert len(outlines) == 198 + 15 + 40 + 1
+    assert len(outlines) == 198 + 15 + 40 + 26 + 1
 
 
 def test_main_marker_detail(capsys):
@@ -119,13 +119,14 @@ def test_main_marker_query(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     testout = '''
-       Name          PermID Reference  Chrom                                       Offsets   AvgAe         Source
- mh19KK-056  MHDBM-d6ff8635    GRCh38  chr19                               4852124,4852324  2.4143         ALFRED
- mh19CP-007  MHDBM-49dbcc57    GRCh38  chr19                    14310739,14310772,14310780  3.0813         ALFRED
- mh19KK-299  MHDBM-8cbeb11c    GRCh38  chr19  22546697,22546748,22546779,22546810,22546850  3.8989         ALFRED
-  mh19AT-47  MHDBM-8f439540    GRCh38  chr19                    22546697,22546748,22546779  1.4537  ISFG2019:P597
- mh19KK-301  MHDBM-2069446a    GRCh38  chr19           50938487,50938502,50938526,50938550  1.8143         ALFRED
- mh19KK-057  MHDBM-eb558c37    GRCh38  chr19                    51654948,51655025,51655062  2.1923         ALFRED
+       Name          PermID Reference  Chrom                                       Offsets   AvgAe                          Source
+ mh19KK-056  MHDBM-d6ff8635    GRCh38  chr19                               4852124,4852324  2.4143                          ALFRED
+ mh19CP-007  MHDBM-49dbcc57    GRCh38  chr19                    14310739,14310772,14310780  3.0813                          ALFRED
+  mh19NH-23  MHDBM-dd72537b    GRCh38  chr19                    22052723,22052774,22052817     NaN  10.1016/j.legalmed.2015.06.003
+ mh19KK-299  MHDBM-8cbeb11c    GRCh38  chr19  22546697,22546748,22546779,22546810,22546850  3.8989                          ALFRED
+  mh19AT-47  MHDBM-8f439540    GRCh38  chr19                    22546697,22546748,22546779  1.4537                   ISFG2019:P597
+ mh19KK-301  MHDBM-2069446a    GRCh38  chr19           50938487,50938502,50938526,50938550  1.8143                          ALFRED
+ mh19KK-057  MHDBM-eb558c37    GRCh38  chr19                    51654948,51655025,51655062  2.1923                          ALFRED
 '''
     assert testout.strip() == out.strip()
 
@@ -152,7 +153,7 @@ def test_main_marker_region_mode_failure(capsys):
     ('--population=SA000009J', '--marker=mh13KK-218', None, 15),
     (None, '--marker=mh13KK-218', '--allele=C,T,C,T', 97),
     (None, '--marker=mh14PK-72639', None, 46),
-    (None, None, None, 82671)
+    (None, None, None, 82704)
 ])
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
     testargs = (pop, marker, allele)
