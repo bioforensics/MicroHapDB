@@ -1,0 +1,53 @@
+# Linköping Panel Evaluation (Sweden)
+
+## Citations
+
+Hiroaki N, Fujii K, Kitayama T, Sekiguchi K, Nakanishi H, Saito K (2015) Approaches for identifying multiple-SNP haplotype blocks for use in human identification. *Legal Medicine*, 17(5):415-420, [doi:10.1016/j.legalmed.2015.06.003](https://doi.org/10.1016/j.legalmed.2015.06.003).
+
+## Build Process
+
+The following software is required to compile the published data into the table format required by MicroHapDB.
+
+- Python 3
+- [Snakemake][]
+- [rsidx][]
+
+A recent version of the dbSNP database is also required, both the VCF file and the corresponding tabix index.
+
+Run the following commands from the `dbbuild/sources/hiroaki2015/` directory to compile the data into the table format required by MicroHapDB.
+
+```bash
+# Build rsidx index if it doesn't yet exist; requires > 1 hour
+rsidx index /path/to/dbSNP.vcf.gz /path/to/dbSNP.rsidx
+
+# Compile the data tables
+snakemake --config dbsnp=/path/to/dbSNP.vcf.gz rsidx=/path/to/dbSNP.rsidx -p all
+```
+
+## Manual Pre-processing
+
+The file `table1-subset.tsv` was created manually from Table 1 of the manuscript.
+The file `frequency.tsv` was created manually from Table 2 of the manuscript.
+In both cases, marker numbers were converted into marker names using the `mh<chrom>NH-<number>` convention.
+
+
+## Problematic marker
+
+The dbSNP IDs reported for marker #8 correspond to variants that span over 100kb in both GRCh37 and GRCh38.
+
+```
+RSIDs	GRCh37	GRCh38
+rs1026338	69528212	68662494
+rs2278918	69425762	68560044
+rs2278917	69528302	68662584
+		
+Min	69425762	68560044
+Max	69528302	68662584
+Span	102541	102541
+```
+
+This marker was therefore discarded during the data processing procedure.
+
+
+[Snakemake]: https://snakemake.readthedocs.io/en/stable/
+[rsidx]: https://github.com/bioforensics/rsidx
