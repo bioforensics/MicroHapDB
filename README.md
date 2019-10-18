@@ -7,7 +7,7 @@
 Daniel Standage, 2018-2019  
 https://github.com/bioforensics/microhapdb
 
-**MicroHapDB** is a database designed for scientists and researchers interested in using microhaplotype markers in forensic analysis.
+**MicroHapDB** is a portable database designed for scientists and researchers interested in using microhaplotype markers in forensic analysis.
 The database is distributed as a collection of tabular data files in plain text, which can be queried directly or using MicroHapDB's Python API or command-line interface.
 All microhaplotype marker and allele frequency data was obtained from public sources, including the [Allele Frequency Database (ALFRED)][alfred]<sup>[1-3]</sup> and published papers and posters<sup>[4-5]</sup>.
 Instructions for extending your own local copy of the database with private data are provided.
@@ -51,57 +51,7 @@ The `microhapdb` command supports four primary operations.
 
 Invoke `microhapdb marker --help` (and so on) for query instructions and usage examples.
 
-```
-[standage@lappy ~] $ microhapdb marker mh01KK-172
-       Name          PermID Reference Chrom                  Offsets   AvgAe  Source
- mh01KK-172  MHDBM-d5a744a2    GRCh38  chr1  1551453,1551522,1551678  2.6731  ALFRED
-[standage@lappy ~] $ microhapdb marker --format=detail mh01KK-172
---------------------------------------------------------- [ MicroHapulator ]----
-mh01KK-172    a.k.a MHDBM-d5a744a2, SI664721A
-
-Marker Definition (GRCh38)
-    Marker extent
-        - chr1:1551453-1551679 (226 bp)
-    Target amplicon
-        - chr1:1551428-1551704 (276 bp)
-    Constituent variants
-        - chromosome offsets: 1551453,1551522,1551678
-        - marker offsets: 0,69,225
-        - amplicon offsets: 25,94,250
-        - cross-references: rs3128342, rs3766176, rs1887284
-    Observed alleles
-        - A,C,A
-        - A,C,G
-        - A,T,A
-        - A,T,G
-        - C,T,G
-
-
---[ Marker Sequence ]--
->mh01KK-172
-CAATCAGCAAAAAATGAATTGAGAAGTACAAAGTAAATTTCACTTGCGATCAAATTCTACCTACGTGTGTGTGCCAGCTG
-CACCAAATGCTACCTGTACACTCAGATTCCCAGAGCCCATCCCCACTGGTCAGGGAGGGGGAGGCCTGACAGCTGCTGCA
-CTGGGCGCTGCTTCCCGAGCTCCCATCCTGCCCACCAGCCTTTCTCGACCAGGGTCCCGATTCGCG
-
-
---[ Target Amplicon Sequence with Alleles ]--
-                         *                                                                    *                                                                                                                                                           *
-CACCCAAGCTGCTTTTGTTGGGCTACAATCAGCAAAAAATGAATTGAGAAGTACAAAGTAAATTTCACTTGCGATCAAATTCTACCTACGTGTGTGTGCCAGCTGCACCAAATGCTACCTGTACACTCAGATTCCCAGAGCCCATCCCCACTGGTCAGGGAGGGGGAGGCCTGACAGCTGCTGCACTGGGCGCTGCTTCCCGAGCTCCCATCCTGCCCACCAGCCTTTCTCGACCAGGGTCCCGATTCGCGGACGCCAACGGCCCAACCTATCTCT
-.........................A....................................................................C...........................................................................................................................................................A.........................
-.........................A....................................................................C...........................................................................................................................................................G.........................
-.........................A....................................................................T...........................................................................................................................................................A.........................
-.........................A....................................................................T...........................................................................................................................................................G.........................
-.........................C....................................................................T...........................................................................................................................................................G.........................
---------------------------------------------------------------------------------
-
-[standage@lappy ~] $ microhapdb frequency --population=Yoruba --marker=mh01KK-172
-     Marker Population Allele  Frequency
- mh01KK-172  SA000036J  A,C,G      0.230
- mh01KK-172  SA000036J  A,C,A      0.000
- mh01KK-172  SA000036J  A,T,G      0.527
- mh01KK-172  SA000036J  A,T,A      0.236
- mh01KK-172  SA000036J  C,T,G      0.007
-```
+<img alt="MicroHapDB UNIX CLI" src="img/microhapdb-unix-cli.gif" width="600px" />
 
 ### Python API
 
@@ -113,45 +63,7 @@ Programmatic access to microhap data within Python is as simple as invoking `imp
 
 Each is a [Pandas][]<sup>[6]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
 
-```python
->>> import microhapdb
->>> microhapdb.markers[microhapdb.markers.Name == 'mh02KK-136']
-          Name          PermID Reference Chrom                        Offsets   AvgAe  Source
-35  mh02KK-136  MHDBM-eb83984f    GRCh38  chr2  227227672,227227689,227227742  3.7742  ALFRED
->>> pops = microhapdb.populations.query('Name.str.contains("Amer")')
->>> pops
-           ID                Name  Source
-2   SA004047P   African Americans  ALFRED
-3   SA000101C   African Americans  ALFRED
-21  SA004250L  European Americans  ALFRED
->>> f = microhapdb.frequencies
->>> f[(f.Marker == 'mh02KK-136') & (f.Population.isin(pops.ID))]
-           Marker Population Allele  Frequency
-10615  mh02KK-136  SA000101C  G,T,C      0.172
-10616  mh02KK-136  SA000101C  G,T,A      0.103
-10617  mh02KK-136  SA000101C  G,C,C      0.029
-10618  mh02KK-136  SA000101C  G,C,A      0.000
-10619  mh02KK-136  SA000101C  T,T,C      0.293
-10620  mh02KK-136  SA000101C  T,T,A      0.063
-10621  mh02KK-136  SA000101C  T,C,C      0.132
-10622  mh02KK-136  SA000101C  T,C,A      0.207
-10831  mh02KK-136  SA004047P  G,T,C      0.156
-10832  mh02KK-136  SA004047P  G,T,A      0.148
-10833  mh02KK-136  SA004047P  G,C,C      0.016
-10834  mh02KK-136  SA004047P  G,C,A      0.000
-10835  mh02KK-136  SA004047P  T,T,C      0.336
-10836  mh02KK-136  SA004047P  T,T,A      0.049
-10837  mh02KK-136  SA004047P  T,C,C      0.156
-10838  mh02KK-136  SA004047P  T,C,A      0.139
-11023  mh02KK-136  SA004250L  G,T,C      0.384
-11024  mh02KK-136  SA004250L  G,T,A      0.202
-11025  mh02KK-136  SA004250L  G,C,C      0.000
-11026  mh02KK-136  SA004250L  G,C,A      0.000
-11027  mh02KK-136  SA004250L  T,T,C      0.197
-11028  mh02KK-136  SA004250L  T,T,A      0.000
-11029  mh02KK-136  SA004250L  T,C,C      0.071
-11030  mh02KK-136  SA004250L  T,C,A      0.146
-```
+<img alt="MicroHapDB Python API" src="img/microhapdb-python-api.gif" width="600px" />
 
 See the [Pandas][] documentation for more details on dataframe access and query methods.
 
