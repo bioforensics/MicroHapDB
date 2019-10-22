@@ -12,8 +12,7 @@ import versioneer
 
 
 desc = (
-    'Data package providing convenient programmatic access to published '
-    'microhaplotype data.'
+    'Portable database of microhaplotype marker and allele frequency data'
 )
 with open('README.md', 'r') as infile:
     longdesc = infile.read()
@@ -25,10 +24,10 @@ setup(
     description=desc,
     long_description=longdesc,
     long_description_content_type='text/markdown',
-    url='https://github.com/bioforensics/microhapdb',
+    url='https://github.com/bioforensics/MicroHapDB',
     author='Daniel Standage',
     author_email='daniel.standage@nbacc.dhs.gov',
-    packages=['microhapdb', 'microhapdb.cli'],
+    packages=['microhapdb', 'microhapdb.cli', 'microhapdb.tests'],
     package_data={
         'microhapdb': ['microhapdb/data/*', 'microhapdb/data/raw/*']
     },
