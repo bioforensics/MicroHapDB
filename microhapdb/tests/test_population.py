@@ -187,6 +187,7 @@ Japanese    (MHDBP-63967b883e; source=10.1016/j.legalmed.2015.06.003)
     ('MHDBP-936bc36f79', 'MHDBP-936bc36f79  Asia  10.1016/j.fsigen.2018.05.008'),
     ('MHDBP-7c055e7ee8', 'MHDBP-7c055e7ee8  Swedish  ISFG2019:P597'),
     ('MHDBP-63967b883e', 'MHDBP-63967b883e  Japanese  10.1016/j.legalmed.2015.06.003'),
+    ('MHDBP-48c2cfb2aa', 'MHDBP-48c2cfb2aa  Han  10.1016/j.fsigen.2019.02.018'),
 ])
 def test_all_sources(ident, data, capsys):
     pop = microhapdb.populations[microhapdb.populations.ID == ident]
