@@ -1,0 +1,38 @@
+# -----------------------------------------------------------------------------
+# Copyright (c) 2019, Battelle National Biodefense Institute.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
+# and is licensed under the BSD license: see LICENSE.txt.
+# -----------------------------------------------------------------------------
+
+from collections import defaultdict
+
+
+rule all:
+    input: 'marker.tsv', 'frequency.tsv'
+
+
+rule markers:
+    input: 'prelim-marker-variants.tsv'
+    output: 'marker.tsv'
+    run:
+        marker_variants = defaultdict(list)
+        with open(input[0], 'r') as fh:
+            next(fh)
+            for line in fh:
+                name, rsid, chromnum, posstr = line.strip().split('\t')
+                chrom = 'chr' + chromnum
+                pos = int(posstr) - 1
+                marker_variants[name].append((chrom, pos, rsid))
+
+        with open(output[0], 'w') as fh:
+            print('Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef', sep='\t', file=fh)
+            for name, varlist in sorted(marker_variants.items()):
+                standardname = 'mh' + name[2:6] + '-' + name[6:]
+                chrom = varlist[0][0]
+                offsets = [p for c, p, r in varlist]
+                rsids = [r for c, p, r in varlist]
+                assert offsets == sorted(offsets)
+                offsetstr = ','.join(map(str, offsets))
+                rsidstr = ','.join(rsids)
+                print(standardname, '', 'GRCh38', chrom, offsetstr, rsidstr, sep='\t', file=fh)
