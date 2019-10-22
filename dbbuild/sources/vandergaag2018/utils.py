@@ -81,6 +81,11 @@ def parse_frequencies(markerstream, freqstream):
             alleles[markerid][haplotype] = allelestr
 
     next(freqstream)
+    popids = {
+        'Africa': 'MHDBP-3dab7bdd14',
+        'Asia': 'MHDBP-936bc36f79',
+        'NL': 'MHDBP-383d86606a',
+    }
     markerid = None
     for line in freqstream:
         values = line.strip().split('\t')
@@ -93,4 +98,4 @@ def parse_frequencies(markerstream, freqstream):
             freqs = values[1:]
             for freq, pop in zip(freqs, ('NL', 'Asia', 'Africa')):
                 allele = alleles[markerid][haplotype]
-                yield markerid, pop, allele, '{:.4f}'.format(float(freq))
+                yield markerid, popids[pop], allele, '{:.4f}'.format(float(freq))

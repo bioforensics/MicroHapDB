@@ -22,6 +22,8 @@ Credit goes to Rebecca Mitchell for this work!
 
 These files were manually exported to TSV format to facilitate subsequent processing.
 
+The population ID was created by appending the output of `echo $'10.1016/j.fsigen.2019.02.018\tHan' | md5 | cut -c 1-10` to the prefix `MHDBP-`.
+
 
 ## Problematic allele
 

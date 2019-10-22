@@ -107,7 +107,7 @@ The `frequency.tsv` file contains population allele frequency data for the micro
 It includes the following fields.
 
 - `Marker`: the `Name` of the marker
-- `Population`: a `Xref` identifer of the population
+- `Population`: the unique identifer of the population
 - `Allele`: the allele of each variant in the microhap, separated by dashes
 - `Frequency`: the frequency of the allele in the specified population (a real number between 0.0 and 1.0)
 

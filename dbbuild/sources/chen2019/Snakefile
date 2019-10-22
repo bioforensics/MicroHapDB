@@ -49,4 +49,4 @@ rule frequencies:
                 name, allele, freq = line.strip().split('\t')
                 standardname = 'mh' + name[2:6] + '-' + name[6:]
                 allelestr = ','.join(allele)
-                print(standardname, 'HanChen2019Mixtures', allelestr, freq, sep='\t', file=outfh)
+                print(standardname, 'MHDBP-48c2cfb2aa', allelestr, freq, sep='\t', file=outfh)

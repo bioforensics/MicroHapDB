@@ -30,6 +30,8 @@ The file `table1-subset.tsv` was created manually from Table 1 of the manuscript
 The file `frequency.tsv` was created manually from Table 2 of the manuscript.
 In both cases, marker numbers were converted into marker names using the `mh<chrom>NH-<number>` convention.
 
+The population ID was created by appending the output of `echo $'10.1016/j.legalmed.2015.06.003\tJapanese' | md5 | cut -c 1-10` to the prefix `MHDBP-`.
+
 
 ## Problematic marker
 

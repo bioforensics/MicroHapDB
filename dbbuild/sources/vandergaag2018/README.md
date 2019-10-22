@@ -30,6 +30,17 @@ The file `table-S2.txt` was created by copying the table from the supplementary 
 
 The file `population.tsv` was created manually.
 
+The population IDs were created by appending the output of the following commands to the prefix `MHDBP-`.
+
+```
+$ echo $'10.1016/j.fsigen.2018.05.008\tAfrica' | md5 | cut -c 1-10
+3dab7bdd14
+$ echo $'10.1016/j.fsigen.2018.05.008\tAsia' | md5 | cut -c 1-10
+936bc36f79
+$ echo $'10.1016/j.fsigen.2018.05.008\tNL' | md5 | cut -c 1-10
+383d86606a
+```
+
 
 [Snakemake]: https://snakemake.readthedocs.io/en/stable/
 [htslib]: https://github.com/samtools/htslib
