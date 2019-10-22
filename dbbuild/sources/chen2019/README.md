@@ -11,11 +11,8 @@ The following software is required to compile the published data into the table 
 - Python 3
 - [Snakemake][]
 
-Run the following command from the `dbbuild/sources/chen2019/` directory to compile the data into the table format required by MicroHapDB.
+To compile the data into the table format required by MicroHapDB, run the `snakemake` command from the `dbbuild/sources/chen2019/` directory.
 
-```bash
-snakemake --config dbsnp=/path/to/dbSNP.vcf.gz rsidx=/path/to/dbSNP.rsidx -p all
-```
 
 ## Manual Pre-processing
 
