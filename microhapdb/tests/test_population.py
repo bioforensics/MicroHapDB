@@ -15,11 +15,12 @@ def test_standardize_ids():
     assert list(standardize_ids(['SA004057Q']).values) == ['SA004057Q']
     assert list(standardize_ids(['Mende']).values) == ['SA004244O']
     assert list(standardize_ids(['Maya, Yucatan', 'SA000055K', 'Greeks']).values) == ['SA002767W', 'SA000055K', 'SA000013E']
-    assert list(standardize_ids(['Han']).values) == ['SA004059S', 'SA004058R', 'SA000001B', 'SA000009J']
+    print(list(standardize_ids(['Han']).values))
+    assert list(standardize_ids(['Han']).values) == ['SA004058R', 'SA004059S', 'MHDBP-48c2cfb2aa', 'SA000009J', 'SA000001B']
 
 
 def test_assumptions():
-    assert len(microhapdb.populations) == 96 + 3 + 1 + 1
+    assert len(microhapdb.populations) == 96 + 3 + 1 + 1 + 1
 
 
 def test_populations():
@@ -28,25 +29,26 @@ def test_populations():
     >>> p = microhapdb.populations
     >>> p[p.ID == 'SA000040E']
                ID     Name  Source
-    48  SA000040E  Kachari  ALFRED
+    49  SA000040E  Kachari  ALFRED
     >>> p[p.ID == 'SA000936S']
                ID     Name  Source
-    53  SA000936S  Koreans  ALFRED
+    54  SA000936S  Koreans  ALFRED
     >>> p[p.Name == 'Han']
-               ID Name  Source
-    29  SA004059S  Han  ALFRED
-    30  SA004058R  Han  ALFRED
-    31  SA000001B  Han  ALFRED
-    32  SA000009J  Han  ALFRED
+                      ID Name                        Source
+    29         SA004058R  Han                        ALFRED
+    30         SA004059S  Han                        ALFRED
+    31  MHDBP-48c2cfb2aa  Han  10.1016/j.fsigen.2019.02.018
+    32         SA000009J  Han                        ALFRED
+    33         SA000001B  Han                        ALFRED
     >>> p.query('Name.str.contains("Afr")')
-              ID               Name                        Source
-    1     Africa             Africa  10.1016/j.fsigen.2018.05.008
-    2  SA004047P  African Americans                        ALFRED
-    3  SA000101C  African Americans                        ALFRED
-    4  SA004242M    Afro-Caribbeans                        ALFRED
+                     ID               Name                        Source
+    1  MHDBP-3dab7bdd14             Africa  10.1016/j.fsigen.2018.05.008
+    2         SA000101C  African Americans                        ALFRED
+    3         SA004047P  African Americans                        ALFRED
+    4         SA004242M    Afro-Caribbeans                        ALFRED
     """
     pop = microhapdb.populations
-    assert pop.shape == (101, 3)
+    assert pop.shape == (102, 3)
     assert pop[pop.ID == 'SA004049R'].Name.values == ['Finns']
     assert pop[pop.ID == 'SA000028K'].Name.values == ['Karitiana']
     result = pop[pop.Name.str.contains('Jews')].ID.values
@@ -68,11 +70,12 @@ def test_pop_table_multi(capsys):
     hanchinese = microhapdb.populations[microhapdb.populations.Name == 'Han']
     microhapdb.population.print_table(hanchinese)
     testout = '''
-        ID Name  Source
- SA004059S  Han  ALFRED
- SA004058R  Han  ALFRED
- SA000001B  Han  ALFRED
- SA000009J  Han  ALFRED
+               ID Name                        Source
+        SA004058R  Han                        ALFRED
+        SA004059S  Han                        ALFRED
+ MHDBP-48c2cfb2aa  Han  10.1016/j.fsigen.2019.02.018
+        SA000009J  Han                        ALFRED
+        SA000001B  Han                        ALFRED
 '''
     terminal = capsys.readouterr()
     assert terminal.out.strip() == testout.strip()
@@ -161,6 +164,19 @@ Japanese    (SA000010B; source=ALFRED)
          4|**************************************************************************************************
          2|****
 --------------------------------------------------------------------------------
+
+----------------------------------------------------------[ MicroHapulator ]----
+Japanese    (MHDBP-63967b883e; source=10.1016/j.legalmed.2015.06.003)
+
+- 33 total allele frequencies available
+  for 7 markers
+
+# Alleles | # Markers
+---------------------
+         7|*
+         6|*
+         4|*****
+--------------------------------------------------------------------------------
 '''
     terminal = capsys.readouterr()
     assert terminal.out.strip() == testout.strip()
@@ -168,9 +184,10 @@ Japanese    (SA000010B; source=ALFRED)
 
 @pytest.mark.parametrize('ident,data', [
     ('SA000019K', 'SA000019K  Russians  ALFRED'),
-    ('Asia', 'Asia  Asia  10.1016/j.fsigen.2018.05.008'),
-    ('Swedish', 'Swedish  Swedish  ISFG2019:P597'),
-    ('HiroakiCohort', 'HiroakiCohort  HiroakiCohort  10.1016/j.legalmed.2015.06.003'),
+    ('MHDBP-936bc36f79', 'MHDBP-936bc36f79  Asia  10.1016/j.fsigen.2018.05.008'),
+    ('MHDBP-7c055e7ee8', 'MHDBP-7c055e7ee8  Swedish  ISFG2019:P597'),
+    ('MHDBP-63967b883e', 'MHDBP-63967b883e  Japanese  10.1016/j.legalmed.2015.06.003'),
+    ('MHDBP-48c2cfb2aa', 'MHDBP-48c2cfb2aa  Han  10.1016/j.fsigen.2019.02.018'),
 ])
 def test_all_sources(ident, data, capsys):
     pop = microhapdb.populations[microhapdb.populations.ID == ident]

@@ -56,4 +56,4 @@ rule frequency:
             with smartopen(output[0], 'w') as out:
                 print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=out)
                 for name, allele, frequency in linköping_allele_frequencies(freqfh, markerfh):
-                    print(name, 'Swedish', allele, '{:.4f}'.format(frequency), sep='\t', file=out)
+                    print(name, 'MHDBP-7c055e7ee8', allele, '{:.4f}'.format(frequency), sep='\t', file=out)
