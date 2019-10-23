@@ -10,6 +10,7 @@
 import microhapdb
 from microhapdb.cli import get_parser
 import pytest
+from tempfile import NamedTemporaryFile
 
 
 def test_main_no_args(capsys):
@@ -166,6 +167,49 @@ def test_main_marker_region_mode_failure(capsys):
     args = get_parser().parse_args(arglist)
     with pytest.raises(ValueError, match=r'cannot parse region "chr15:"'):
         microhapdb.cli.main(args)
+
+
+def test_main_marker_panel(capsys):
+    with NamedTemporaryFile() as panelfile:
+        with open(panelfile.name, 'w') as fh:
+            for marker in ['mh05KK-058', 'mh06KK-101', 'mh20KK-035']:
+                print(marker, file=fh)
+        arglist = ['marker', '--panel', panelfile.name]
+        args = get_parser().parse_args(arglist)
+        microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    testout = '''
+       Name          PermID Reference  Chrom                     Offsets   AvgAe  Source
+ mh06KK-101  MHDBM-8a2c760e    GRCh38   chr6         170280714,170280900  1.7068  ALFRED
+ mh05KK-058  MHDBM-d6c594d2    GRCh38  chr15  28120284,28120471,28120586  2.1016  ALFRED
+ mh20KK-035  MHDBM-92f3685a    GRCh38  chr20             2088698,2088728  2.0937  ALFRED
+'''
+    print(terminal.out)
+    assert testout.strip() == terminal.out.strip()
+
+
+def test_main_marker_panel_query_conflict(capsys):
+    with NamedTemporaryFile() as panelfile:
+        with open(panelfile.name, 'w') as fh:
+            for marker in ['mh05KK-058', 'mh06KK-101', 'mh20KK-035']:
+                print(marker, file=fh)
+        arglist = ['marker', '--panel', panelfile.name, '--query', 'PermID == "MHDBM-8a2c760e"']
+        args = get_parser().parse_args(arglist)
+        microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    assert 'ignoring user-supplied marker IDs in --query mode' in terminal.err
+
+
+def test_main_marker_panel_region_conflict(capsys):
+    with NamedTemporaryFile() as panelfile:
+        with open(panelfile.name, 'w') as fh:
+            for marker in ['mh05KK-058', 'mh06KK-101', 'mh20KK-035']:
+                print(marker, file=fh)
+        arglist = ['marker', '--panel', panelfile.name, '--region=chr12']
+        args = get_parser().parse_args(arglist)
+        microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    assert 'ignoring user-supplied marker IDs in --region mode' in terminal.err
 
 
 @pytest.mark.parametrize('pop,marker,allele,numrows', [
