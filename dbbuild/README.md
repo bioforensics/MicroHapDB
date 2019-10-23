@@ -35,6 +35,12 @@ gunzip hg38.fa.gz
 snakemake --config refr=hg38.fa -p tables
 ```
 
+If the Snakemake build process completes successfully, copy the newly created database tables to MicroHapDB's main data directory to complete the update!
+
+```
+cp *.tsv ../microhapdb/data/
+```
+
 ## The Long Version: Sources
 
 Each source of microhap data has a dedicated directory located in `dbbuild/sources/`.
@@ -157,6 +163,29 @@ mh07KK-081	0	TA	T
 mh11KK-091	0	TG	T
 mh22KK-064	3	AATAATT	A
 ```
+
+## PermIDs
+
+In addition to the marker names submitted by the community, MicroHapDB mints a "PermID" for each microhap marker.
+These identifiers follow the pattern `MHDBM-<hash>`, where `<hash>` is computed as described below.
+The PermID is designed to be stable even if reference genome assemblies are updated (thus changing the variant coordinate system), or if different researchers identify the same marker independently and assign it different names.
+
+The hash is computed as follows.
+
+- calculate the offset of each variant in the marker
+- retrieve the sequence of the marker extent
+- concatenate all of these values into a single character string, separated by commas
+- compute the 32-bit [Pearson hash](pearhash/) of this string
+
+So for example, for marker `mh07PK-38311`:
+
+- the string is `0,6,12,58,ACCCAGAAGATACTAAGGTAAGGAAGGAGGAATTGGACTTTACTCAGAAAAGACCTCCT`
+- the hash is `PearsonHash32(0,6,12,58,ACCCAGAAGATACTAAGGTAAGGAAGGAGGAATTGGACTTTACTCAGAAAAGACCTCCT) = 3ae6dc1b`
+
+...and therefore the PermID is `MHDBM-3ae6dc1b`.
+
+MicroHapDB uses the [pearhash](https://github.com/ze-phyr-us/pearhash) library under the MIT license to compute Pearson hashes.
+
 
 
 [Pandas]: https://pandas.pydata.org
