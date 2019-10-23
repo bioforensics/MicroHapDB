@@ -7,11 +7,10 @@
 Daniel Standage, 2018-2019  
 https://github.com/bioforensics/microhapdb
 
-**MicroHapDB** is a portable database designed for scientists and researchers interested in using microhaplotype markers in forensic analysis.
-The database is distributed as a collection of tabular data files in plain text, which can be queried directly or using MicroHapDB's Python API or command-line interface.
-All microhaplotype marker and allele frequency data was obtained from public sources, including the [Allele Frequency Database (ALFRED)][alfred]<sup>[1-3]</sup> and published papers and posters<sup>[4-7]</sup>.
-Instructions for extending your own local copy of the database with private data are provided.
-However, we are eager to integrate microhap marker and frequency data from additional sources into the public database.
+**MicroHapDB** is a portable database intended for scientists and researchers interested in using microhaplotype markers for forensic analysis.
+The database includes a comprehensive collection of marker and allele frequency data from published sources, including the [Allele Frequency Database (ALFRED)][alfred]<sup>[1-3]</sup> as well as published papers and posters<sup>[4-7]</sup>.
+The entire contents of the database are distributed with each copy of MicroHapDB, and instructions for adding private data to a local copy of the database are provided.
+MicroHapDB is designed to be user-friendly for both practitioners and researchers, supporting a range of access methods from browsing to simple text queries to complex queries to full programmatic access via a Python API.
 
 
 ## Installation
@@ -34,28 +33,36 @@ Conda ensures the correct installation of Python version 3 and the [Pandas][] li
 
 ## Usage
 
-MicroHapDB provides several convenient methods to query microhaplotype marker, population, and allele frequency data.
+### Browsing
 
-- a command-line interface
-- a Python API
-- a collection of tab-delimited text files
+Typing `microhapdb marker` on the command line will print a complete listing of all microhap markers in MicroHapDB to your terminal window.
+The commands `microhapdb population` and `microhapdb frequency` will do the same for population descriptions and allele frequencies.
 
-### Command-line interface
+> *__WARNING__: it's unlikely the entire data table will fit on your screen at once, so you may have to scroll back in your terminal to view all rows of the table.*
 
-The `microhapdb` command supports four primary operations.
+Alternatively, the files `marker.tsv`, `population.tsv`, and `frequency.tsv` can be opened in Excel or loaded into your statistics/datascience environment of choice.
+Type `microhapdb --files` on the command line to see the location of these files.
 
-- `microhapdb marker`: query marker definitions using microhap names or identifiers, or variant rsIDs (such as `mh01KK-172`, `mh06PK-24844`, or `rs8192488`)
-- `microhapdb population`: query population info using names or identifiers (such as `Italians` or `SA004240K`)
-- `microhapdb frequency`: query allele frequencies using marker and population identifiers
-- `microhapdb lookup`: query all data using any name or identifier
+### Database queries
 
-Invoke `microhapdb marker --help` (and so on) for query instructions and usage examples.
+The `microhapdb lookup <identifier>` command searches all data tables for relevant records with a user-provided name, identifier, or description, such as `mh06PK-24844`, `rs8192488`, or `Yoruba`.
+
+The `microhapdb marker <identifier>` command searches the microhap markers with one or more user-provided names or identifiers.
+The command also supports region-based queries (such as `chr1` or `chr12:1000000-5000000`), and can print either a tabular report or a detailed report.
+Run `microhapdb marker --help` for additional details.
+
+The `microhapdb population <identifier>` command searches the population & cohort table with one or more user-provided names or identifiers.
+Run `microhapdb population --help` for additional details.
+
+The `microhapdb frequency --marker <markerID> --population <popID> --allele <allele>` command searches the allele frequency table.
+The search can be restricted using all query terms (marker, population, and allele), or broadened by dropping one or more of the query terms.
+Run `microhapdb frequency --help` for additional details.
 
 <img alt="MicroHapDB UNIX CLI" src="img/microhapdb-unix-cli.gif" width="600px" />
 
 ### Python API
 
-Programmatic access to microhap data within Python is as simple as invoking `import microhapdb` and querying the following tables.
+To access MicroHapDB from Python, simply invoke `import microhapdb` and query the following tables.
 
 - `microhapdb.markers`
 - `microhapdb.populations`
@@ -73,20 +80,6 @@ MicroHapDB also includes 4 auxiliary tables, which may be useful in a variety of
 - `microhapdb.idmap`: cross-references external names and identifiers with internal MicroHapDB identifiers
 - `microhapdb.sequences`: contains the sequence spanning and flanking each microhap locus
 - `microhapdb.indels`: contains variant information for markers that include insertion/deletion variants
-
-### Tab-delimited text files
-
-The data in MicroHapDB is contained within 7 tab-delimited text files.
-If you'd prefer not to use MicroHapDB's command-line interface or Python API, it should be straightfoward to load these files directly into R, Julia, or the data science environment of your choice.
-Invoke `microhapdb --files` on the command line to see the location of the installed `.tsv` files.
-
-- `frequency.tsv`: allele frequency data, indexed by marker and population
-- `idmap.tsv`: mapping of external identifiers to microhap names
-- `indels.tsv`: variant description for markers that include insertion/deletion variants
-- `marker.tsv`: microhaplotype marker definitions
-- `population.tsv`: population descriptions
-- `sequences.tsv`: sequences spanning and flanking each microhap locus
-- `variantmap.tsv`: a mapping of dbSNP variants to their corresponding microhap markers
 
 
 ## Adding Markers to MicroHapDB

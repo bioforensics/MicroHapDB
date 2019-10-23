@@ -83,7 +83,7 @@ def test_marker_detail(capsys):
     marker = microhapdb.markers[microhapdb.markers.Name == 'mh09AT-17']
     microhapdb.marker.print_detail(marker, delta=10, minlen=90)
     testout = '''
---------------------------------------------------------- [ MicroHapulator ]----
+--------------------------------------------------------------[ MicroHapDB ]----
 mh09AT-17    a.k.a MHDBM-b34d6dc3
 
 Marker Definition (GRCh38)
@@ -125,7 +125,7 @@ def test_marker_detail_long(capsys):
     marker = microhapdb.markers[microhapdb.markers.Name == 'mh05KK-170']
     microhapdb.marker.print_detail(marker, delta=20, minlen=125)
     testout = '''
---------------------------------------------------------- [ MicroHapulator ]----
+--------------------------------------------------------------[ MicroHapDB ]----
 mh05KK-170    a.k.a MHDBM-22ddbb7d, SI664573F
 
 Marker Definition (GRCh38)
@@ -180,7 +180,7 @@ def test_marker_detail_short(capsys):
     marker = microhapdb.markers[microhapdb.markers.Name == 'mh16PK-83544']
     microhapdb.marker.print_detail(marker, delta=0, minlen=0)
     testout = '''
---------------------------------------------------------- [ MicroHapulator ]----
+--------------------------------------------------------------[ MicroHapDB ]----
 mh16PK-83544    a.k.a MHDBM-c80956b4
 
 Marker Definition (GRCh38)
@@ -225,7 +225,7 @@ def test_marker_detail_multi(capsys):
     markers = microhapdb.markers[microhapdb.markers.Name.isin(markerids)]
     microhapdb.marker.print_detail(markers, delta=10, minlen=80)
     testout = '''
---------------------------------------------------------- [ MicroHapulator ]----
+--------------------------------------------------------------[ MicroHapDB ]----
 mh06PK-24844    a.k.a MHDBM-aa39cbba
 
 Marker Definition (GRCh38)
@@ -269,7 +269,7 @@ AGGAAGAAAGTGATTACATCC-AAACGTGAGCAGGAG-GAAACTCGGAACATACTGTTTTTAAGAACTAGTATCACTAGA
 .............T......C-..............GA......C........C...T...AAG.....G.............
 --------------------------------------------------------------------------------
 
---------------------------------------------------------- [ MicroHapulator ]----
+--------------------------------------------------------------[ MicroHapDB ]----
 mh18PK-87558    a.k.a MHDBM-1e5374f1
 
 Marker Definition (GRCh38)
@@ -303,7 +303,7 @@ AGCCTAGCCAAGAGCTGTCAGGTGTTAGCAACGAGGATTTAGAAAAAACAGGTACAAATTATTTCATCACCCAGGTAGTG
 .................T..............G...A....G...............A.....T.................
 --------------------------------------------------------------------------------
 
---------------------------------------------------------- [ MicroHapulator ]----
+--------------------------------------------------------------[ MicroHapDB ]----
 mh22PK-104638    a.k.a MHDBM-eb63e78f
 
 Marker Definition (GRCh38)
@@ -359,7 +359,7 @@ def test_amplicon_object(capsys):
     amp = microhapdb.marker.TargetAmplicon('mh11KK-090', delta=10, minlen=60)
     print(amp)
     testout = '''
---------------------------------------------------------- [ MicroHapulator ]----
+--------------------------------------------------------------[ MicroHapDB ]----
 mh11KK-090    a.k.a MHDBM-f67cb0d4, SI664596K
 
 Marker Definition (GRCh38)
