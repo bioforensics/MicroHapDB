@@ -22,7 +22,7 @@ def print_table(table, **kwargs):
 
 def print_detail(table):
     for n, row in table.iterrows():
-        print('----------------------------------------------------------[ MicroHapulator ]----')
+        print('--------------------------------------------------------------[ MicroHapDB ]----')
         print('{name:s}    ({id:s}; source={src:s})\n'.format(id=row.ID, name=row.Name, src=row.Source))
         result = microhapdb.frequencies[microhapdb.frequencies.Population == row.ID]
         markers = sorted(result.Marker.unique())
