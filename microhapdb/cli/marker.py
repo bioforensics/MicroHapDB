@@ -67,9 +67,14 @@ def main(args):
     elif len(args.id) > 0 or args.panel is not None:
         idents = args.id
         if args.panel:
-            with open(args.panel, 'r') as fh:
-                for line in fh:
-                    idents.append(line.strip())
+            if args.panel == 'alpha':
+                idents.extend(microhapdb.panel.panel_alpha())
+            elif args.panel == 'beta':
+                idents.extend(microhapdb.panel.panel_beta())
+            else:
+                with open(args.panel, 'r') as fh:
+                    for line in fh:
+                        idents.append(line.strip())
         idents = microhapdb.retrieve.standardize_marker_ids(idents)
         result = microhapdb.markers[microhapdb.markers.Name.isin(idents)]
     else:

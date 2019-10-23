@@ -9,6 +9,7 @@
 
 import microhapdb
 from microhapdb.cli import get_parser
+from microhapdb.util import data_file
 import pytest
 from tempfile import NamedTemporaryFile
 
@@ -227,6 +228,20 @@ def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
     terminal = capsys.readouterr()
     outlines = terminal.out.strip().split('\n')
     assert len(outlines) == numrows
+
+
+@pytest.mark.parametrize('panel', [
+    'alpha',
+    'beta',
+])
+def test_main_panel(panel, capsys):
+    arglist = ['marker', '--panel', panel, '--format=fasta']
+    args = get_parser().parse_args(arglist)
+    microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    testout = data_file('tests/panel-' + panel + '.fasta')
+    with open(testout, 'r') as fh:
+        assert fh.read().strip() == terminal.out.strip()
 
 
 def test_lookup(capsys):

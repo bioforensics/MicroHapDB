@@ -29,7 +29,7 @@ setup(
     author_email='daniel.standage@nbacc.dhs.gov',
     packages=['microhapdb', 'microhapdb.cli', 'microhapdb.tests'],
     package_data={
-        'microhapdb': ['microhapdb/data/*', 'microhapdb/data/raw/*']
+        'microhapdb': ['microhapdb/data/*', 'microhapdb/data/tests/*']
     },
     include_package_data=True,
     install_requires=['pandas', 'pytest>=5.0'],
