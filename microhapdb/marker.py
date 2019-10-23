@@ -116,6 +116,26 @@ class TargetAmplicon():
         ampseq = fullseq[seqstart:seqend]
         return ampseq
 
+    @property
+    def fasta(self):
+        out = StringIO()
+        defline = '>{name:s} PermID={pid:s}'.format(name=self.data.Name, pid=self.data.PermID)
+        result = microhapdb.idmap[microhapdb.idmap.ID == self.data.Name]
+        if len(result) > 0:
+            xrefstr = ','.join(result.Xref)
+            defline += ' Xref={x:s}'.format(x=xrefstr)
+        print(defline, file=out)
+
+        ampseq = self.amplicon_seq
+        if len(ampseq) < 80:
+            print(ampseq, file=out)
+        else:
+            i = 0
+            while i < len(ampseq):
+                print(ampseq[i:i + 80], file=out)
+                i += 80
+        return out.getvalue().strip()
+
     def print_detail_definition(self, out):
         print('Marker Definition (GRCh38)', file=out)
         estart, eend = self.marker_extent
@@ -250,6 +270,12 @@ def standardize_ids(idents):
 
 def print_table(table, **kwargs):
     print(table.to_string(index=False))
+
+
+def print_fasta(table, delta=25, minlen=250):
+    for n, row in table.iterrows():
+        amplicon = TargetAmplicon(row, delta=delta, minlen=minlen)
+        print(amplicon.fasta)
 
 
 def print_detail(table, delta=25, minlen=250):

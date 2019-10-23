@@ -7,7 +7,7 @@
 
 from argparse import RawDescriptionHelpFormatter
 import microhapdb
-from microhapdb.marker import print_detail, print_table
+from microhapdb.marker import print_detail, print_table, print_fasta
 from textwrap import dedent
 
 
@@ -17,6 +17,7 @@ def subparser(subparsers):
     Examples::
 
         microhapdb marker mh01NK-001
+        microhapdb marker --format=fasta mh13KK-218 mh04CP-002 mh02AT-05
         microhapdb marker --format=detail --min-length=125 MHDBM-dc55cd9e
         microhapdb marker --region=chr18:1-25000000
         microhapdb marker --query='Source == "ALFRED"'
@@ -26,14 +27,15 @@ def subparser(subparsers):
     subparser = subparsers.add_parser(
         'marker', description=desc, epilog=epilog, formatter_class=RawDescriptionHelpFormatter,
     )
-    subparser.add_argument('--format', choices=['table', 'detail'], default='table')
+    subparser.add_argument('--format', choices=['table', 'detail', 'fasta'], default='table')
     subparser.add_argument(
         '--delta', metavar='D', type=int, default=25, help='extend D nucleotides beyond the '
-        'marker extent when computing amplicon boundaries (detail format only); by default D=25'
+        'marker extent when computing amplicon boundaries (detail and fasta format only); by '
+        'default D=25'
     )
     subparser.add_argument(
         '--min-length', metavar='L', type=int, default=250, help='minimum amplicon length (detail '
-        'format only); by default L=250'
+        'and fasta format only); by default L=250'
     )
     subparser.add_argument(
         '-r', '--region', metavar='RGN', help='restrict results to the '
@@ -55,5 +57,10 @@ def main(args):
         result = microhapdb.markers[microhapdb.markers.Name.isin(idents)]
     else:
         result = microhapdb.markers
-    view = print_table if args.format == 'table' else print_detail
+    viewfuncs = {
+        'table': print_table,
+        'detail': print_detail,
+        'fasta': print_fasta
+    }
+    view = viewfuncs[args.format]
     view(result, delta=args.delta, minlen=args.min_length)
