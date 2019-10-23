@@ -9,7 +9,7 @@ from itertools import combinations
 import microhapdb
 
 
-def panel_alpha():
+def alpha():
     '''Initial minimum-effort panel selection.
 
     There are many factors to consider when designing a panel. This method ignores most of those
@@ -23,7 +23,7 @@ def panel_alpha():
     return list(markers.Name)
 
 
-def panel_alpha_legacy():
+def alpha_legacy():
     '''The results of the initial alpha panel design'''
     return [
         'mh01KK-117', 'mh10KK-163', 'mh11KK-180', 'mh12CP-008', 'mh13KK-218', 'mh14CP-003',
@@ -33,10 +33,10 @@ def panel_alpha_legacy():
     ]
 
 
-def panel_beta():
+def beta():
     '''First attempt at optimizing panel design.
 
-    Slightly less unsophisticated approach to panel selection than panel_alpha,
+    Slightly less unsophisticated approach to panel selection than alpha,
     but still ignoring some important considerations. This method focuses on a
     few simple filters and simple operations.
     - discard any microhap not present in ALFRED
@@ -88,7 +88,7 @@ def panel_beta():
     return list(panel.Name)
 
 
-def panel_beta_legacy():
+def beta_legacy():
     '''The results of the initial beta panel design'''
     return [
         'mh01CP-016', 'mh01KK-117', 'mh01KK-205', 'mh02KK-136', 'mh02KK-138', 'mh03CP-005',

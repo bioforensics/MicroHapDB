@@ -67,10 +67,9 @@ def main(args):
     elif len(args.id) > 0 or args.panel is not None:
         idents = args.id
         if args.panel:
-            if args.panel == 'alpha':
-                idents.extend(microhapdb.panel.panel_alpha())
-            elif args.panel == 'beta':
-                idents.extend(microhapdb.panel.panel_beta())
+            if hasattr(microhapdb.panel, args.panel):
+                func = getattr(microhapdb.panel, args.panel)
+                idents.extend(func())
             else:
                 with open(args.panel, 'r') as fh:
                     for line in fh:

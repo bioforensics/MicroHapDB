@@ -7,13 +7,13 @@
 
 
 import microhapdb
-from microhapdb.panel import panel_alpha, panel_alpha_legacy, panel_beta, panel_beta_legacy
+from microhapdb.panel import alpha, alpha_legacy, beta, beta_legacy
 import pytest
 
 
 def test_alpha():
-    assert len(panel_alpha_legacy()) == 22
-    assert sorted(panel_alpha()) == [
+    assert len(alpha_legacy()) == 22
+    assert sorted(alpha()) == [
         'mh01KK-117', 'mh02KK-134', 'mh03CP-005', 'mh04CP-002', 'mh05KK-170', 'mh06KK-008',
         'mh07CP-004', 'mh08KK-039', 'mh09KK-157', 'mh10KK-163', 'mh11KK-180', 'mh12CP-008',
         'mh13KK-218', 'mh14CP-003', 'mh15CP-001', 'mh16KK-049', 'mh17CP-001', 'mh18CP-005',
@@ -22,8 +22,8 @@ def test_alpha():
 
 
 def test_beta():
-    assert len(panel_beta_legacy()) == 50
-    assert sorted(panel_beta()) == [
+    assert len(beta_legacy()) == 50
+    assert sorted(beta()) == [
         'mh01CP-016', 'mh01KK-117', 'mh01KK-205', 'mh02KK-136', 'mh02KK-138', 'mh03CP-005',
         'mh03KK-007', 'mh03KK-150', 'mh04KK-013', 'mh04KK-017', 'mh05KK-020', 'mh06CP-007',
         'mh06KK-008', 'mh07CP-004', 'mh07KK-030', 'mh07KK-031', 'mh08KK-032', 'mh08KK-039',
