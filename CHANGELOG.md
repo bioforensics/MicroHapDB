@@ -2,7 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [0.4.1] 2019-10-22
+
+### Fixed
+- Corrected a copy/paste error (see #33).
+
+## [0.4] 2019-10-22
 
 ### Added
 - Marker definitions and allele frequencies for a 40 microhap panel presented at ISFG 2019 (see #25).

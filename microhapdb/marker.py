@@ -218,7 +218,7 @@ class TargetAmplicon():
 
     def __str__(self):
         out = StringIO()
-        print('-' * 57, '[ MicroHapulator ]----', file=out)
+        print('-' * 62, '[ MicroHapDB ]----', sep='', file=out)
         print(self.data.Name, '   a.k.a', ', '.join(self.xrefs), end='\n\n', file=out)
         self.print_detail_definition(out)
         self.print_detail_markerseq(out)

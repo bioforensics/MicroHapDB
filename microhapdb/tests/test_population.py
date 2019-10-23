@@ -85,7 +85,7 @@ def test_pop_detail(capsys):
     hausa = microhapdb.populations[microhapdb.populations.Name == 'Hausa']
     microhapdb.population.print_detail(hausa)
     testout = '''
-----------------------------------------------------------[ MicroHapulator ]----
+--------------------------------------------------------------[ MicroHapDB ]----
 Hausa    (SA000100B; source=ALFRED)
 
 - 878 total allele frequencies available
@@ -117,7 +117,7 @@ def test_pop_detail_multi(capsys):
     japanese = microhapdb.populations[microhapdb.populations.Name == 'Japanese']
     microhapdb.population.print_detail(japanese)
     testout = '''
-----------------------------------------------------------[ MicroHapulator ]----
+--------------------------------------------------------------[ MicroHapDB ]----
 Japanese    (SA004060K; source=ALFRED)
 
 - 1070 total allele frequencies available
@@ -141,7 +141,7 @@ Japanese    (SA004060K; source=ALFRED)
          2|****
 --------------------------------------------------------------------------------
 
-----------------------------------------------------------[ MicroHapulator ]----
+--------------------------------------------------------------[ MicroHapDB ]----
 Japanese    (SA000010B; source=ALFRED)
 
 - 878 total allele frequencies available
@@ -165,7 +165,7 @@ Japanese    (SA000010B; source=ALFRED)
          2|****
 --------------------------------------------------------------------------------
 
-----------------------------------------------------------[ MicroHapulator ]----
+--------------------------------------------------------------[ MicroHapDB ]----
 Japanese    (MHDBP-63967b883e; source=10.1016/j.legalmed.2015.06.003)
 
 - 33 total allele frequencies available
