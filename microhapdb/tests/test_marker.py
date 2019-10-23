@@ -355,6 +355,39 @@ GTGACATTGGCGGTTGTGACGCTCAGCTCACCAGTCCTGCCTACTTGCCAGCAGGTATT----CTCAGAGGGACCACAG-
     assert terminal.out.strip() == testout.strip()
 
 
+def test_marker_fasta(capsys):
+    markers = microhapdb.markers[microhapdb.markers.Name == 'mh14PK-72639']
+    microhapdb.marker.print_fasta(markers, delta=10, minlen=70)
+    testout = '''
+>mh14PK-72639 PermID=MHDBM-5548fd05
+GAGCACGTTGAGAAGAAGTCACCCACAGGCCTTATAAGGCACGGGAGTCTTTCACCTATTCTACTTACGGT
+'''
+    terminal = capsys.readouterr()
+    print(terminal.out)
+    assert terminal.out.strip() == testout.strip()
+
+
+def test_marker_fasta_multi(capsys):
+    markerids = ['mh05CP-010', 'mh13KK-223', 'mh14PK-72639']
+    markers = microhapdb.markers[microhapdb.markers.Name.isin(markerids)]
+    microhapdb.marker.print_fasta(markers, delta=15, minlen=150)
+    testout = '''
+>mh05CP-010 PermID=MHDBM-df4e5f79 Xref=SI664883J
+CTGCTCAGAGTTTACATCAGAGTACTTGATGTAAATTACATCAGAGTACGCTGATGTAAATTACATCAGCGTACGCTGAT
+GTAAATTACATCAGCGTACTCTGATGTAAATTACATCAGCGTACTCTGATGTAATTTCAGTTTTCTTAAA
+>mh13KK-223 PermID=MHDBM-4088f2e4 Xref=SI664608E
+TTCAGTTGGCTTTTGTGGGAAAGGGAAGCCCTGGGGCTAGGAGAGCAGTCCTTGCCCTCTGGGAAGGGTCCCAGGCGGCA
+CTGCCCCAGGAGGGCCTTCGTGGAGGCCACGGCCAGCCCTCGGGTGTTCTCTCCCTAACTCAAGCTTCTGCTTTCAAGCT
+CGTGCATGTTGTAGTAGAATGTGT
+>mh14PK-72639 PermID=MHDBM-5548fd05
+CTCTGTATCGTTCCAATTTTAGTATATGTGCTGCCGAAGCGAGCACGTTGAGAAGAAGTCACCCACAGGCCTTATAAGGC
+ACGGGAGTCTTTCACCTATTCTACTTACGGTGACCGAACCGCGCCCTTTCCTGTCCATCTTGGAGCCTTTG
+'''
+    terminal = capsys.readouterr()
+    print(terminal.out)
+    assert terminal.out.strip() == testout.strip()
+
+
 def test_amplicon_object(capsys):
     amp = microhapdb.marker.TargetAmplicon('mh11KK-090', delta=10, minlen=60)
     print(amp)

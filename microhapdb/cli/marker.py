@@ -7,8 +7,9 @@
 
 from argparse import RawDescriptionHelpFormatter
 import microhapdb
-from microhapdb.marker import print_detail, print_table
+from microhapdb.marker import print_detail, print_table, print_fasta
 from textwrap import dedent
+import sys
 
 
 def subparser(subparsers):
@@ -17,6 +18,8 @@ def subparser(subparsers):
     Examples::
 
         microhapdb marker mh01NK-001
+        microhapdb marker --format=fasta mh13KK-218 mh04CP-002 mh02AT-05
+        microhapdb marker --format=fasta --panel mypanel.txt
         microhapdb marker --format=detail --min-length=125 MHDBM-dc55cd9e
         microhapdb marker --region=chr18:1-25000000
         microhapdb marker --query='Source == "ALFRED"'
@@ -26,14 +29,19 @@ def subparser(subparsers):
     subparser = subparsers.add_parser(
         'marker', description=desc, epilog=epilog, formatter_class=RawDescriptionHelpFormatter,
     )
-    subparser.add_argument('--format', choices=['table', 'detail'], default='table')
+    subparser.add_argument('--format', choices=['table', 'detail', 'fasta'], default='table')
     subparser.add_argument(
         '--delta', metavar='D', type=int, default=25, help='extend D nucleotides beyond the '
-        'marker extent when computing amplicon boundaries (detail format only); by default D=25'
+        'marker extent when computing amplicon boundaries (detail and fasta format only); by '
+        'default D=25'
     )
     subparser.add_argument(
         '--min-length', metavar='L', type=int, default=250, help='minimum amplicon length (detail '
-        'format only); by default L=250'
+        'and fasta format only); by default L=250'
+    )
+    subparser.add_argument(
+        '-p', '--panel', metavar='FILE', help='file containing a list of marker names/identifiers,'
+        ' one per line'
     )
     subparser.add_argument(
         '-r', '--region', metavar='RGN', help='restrict results to the '
@@ -47,13 +55,33 @@ def subparser(subparsers):
 
 def main(args):
     if args.query:
+        if len(args.id) > 0 or args.panel is not None:
+            warning = 'WARNING: ignoring user-supplied marker IDs in --query mode'
+            print('[MicroHapDB::marker]', warning, file=sys.stderr)
         result = microhapdb.markers.query(args.query)
     elif args.region:
+        if len(args.id) > 0 or args.panel is not None:
+            warning = 'WARNING: ignoring user-supplied marker IDs in --region mode'
+            print('[MicroHapDB::marker]', warning, file=sys.stderr)
         result = microhapdb.retrieve.by_region(args.region)
-    elif len(args.id) > 0:
-        idents = microhapdb.retrieve.standardize_marker_ids(args.id)
+    elif len(args.id) > 0 or args.panel is not None:
+        idents = args.id
+        if args.panel:
+            if hasattr(microhapdb.panel, args.panel):
+                func = getattr(microhapdb.panel, args.panel)
+                idents.extend(func())
+            else:
+                with open(args.panel, 'r') as fh:
+                    for line in fh:
+                        idents.append(line.strip())
+        idents = microhapdb.retrieve.standardize_marker_ids(idents)
         result = microhapdb.markers[microhapdb.markers.Name.isin(idents)]
     else:
         result = microhapdb.markers
-    view = print_table if args.format == 'table' else print_detail
+    viewfuncs = {
+        'table': print_table,
+        'detail': print_detail,
+        'fasta': print_fasta
+    }
+    view = viewfuncs[args.format]
     view(result, delta=args.delta, minlen=args.min_length)

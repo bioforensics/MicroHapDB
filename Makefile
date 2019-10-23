@@ -20,4 +20,4 @@ clean:
 
 ## style:     check code style against PEP8
 style:
-	pycodestyle --ignore=E501 microhapdb/*.py
+	pycodestyle --ignore=E501,W503 microhapdb/*.py
