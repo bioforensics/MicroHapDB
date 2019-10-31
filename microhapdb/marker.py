@@ -64,6 +64,12 @@ class TargetAmplicon():
         return lengths
 
     @property
+    def slug(self):
+        seqid = self.data.Chrom
+        offsets = self.offsets
+        return '{:s}:{:d}-{:d}'.format(seqid, offsets[0], offsets[-1])
+
+    @property
     def marker_extent(self):
         o = self.offsets
         vl = self.variant_lengths
@@ -119,7 +125,10 @@ class TargetAmplicon():
     @property
     def fasta(self):
         out = StringIO()
-        defline = '>{name:s} PermID={pid:s}'.format(name=self.data.Name, pid=self.data.PermID)
+        varstring = ','.join(map(str, self.amplicon_offsets))
+        defline = '>{name:s} PermID={pid:s} GRCh38:{slug:s} variants={var:s}'.format(
+            name=self.data.Name, pid=self.data.PermID, slug=self.slug, var=varstring
+        )
         result = microhapdb.idmap[microhapdb.idmap.ID == self.data.Name]
         if len(result) > 0:
             xrefstr = ','.join(result.Xref)
