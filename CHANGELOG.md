@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Unreleased
 
 ### Changed
-- Panel design/defintion module migrated from MicroHapulator to MicroHapDB (see #34).
+- Panel design/definition module migrated from MicroHapulator to MicroHapDB (see #34, #35).
 
 
 ## [0.4.1] 2019-10-22
