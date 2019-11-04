@@ -5,7 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Unreleased
 
 ### Changed
-- Panel design/definition module migrated from MicroHapulator to MicroHapDB (see #34, #35).
+- Some aspects of panel design and definition migrated from MicroHapulator to MicroHapDB (see #34, #35).
+- Minor changes to `TargetAmplicon` class to support MicroHapulator (see #36).
 
 
 ## [0.4.1] 2019-10-22

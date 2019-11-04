@@ -89,6 +89,17 @@ class TargetAmplicon():
         return start, end
 
     @property
+    def start(self):
+        return self.amplicon_interval[0]
+
+    @property
+    def end(self):
+        return self.amplicon_interval[1]
+
+    def __len__(self):
+        return self.end - self.start
+
+    @property
     def amplicon_offsets(self):
         start, end = self.amplicon_interval
         return [o - start for o in self.offsets]
@@ -114,6 +125,18 @@ class TargetAmplicon():
         return markerseq
 
     @property
+    def defline(self):
+        varstring = ','.join(map(str, self.amplicon_offsets))
+        line = '{name:s} PermID={pid:s} GRCh38:{slug:s} variants={var:s}'.format(
+            name=self.data.Name, pid=self.data.PermID, slug=self.slug, var=varstring
+        )
+        result = microhapdb.idmap[microhapdb.idmap.ID == self.data.Name]
+        if len(result) > 0:
+            xrefstr = ','.join(result.Xref)
+            line += ' Xref={x:s}'.format(x=xrefstr)
+        return line
+
+    @property
     def amplicon_seq(self):
         fullseq = self.flanking_sequence_data.Sequence
         astart, aend = self.amplicon_interval
@@ -125,16 +148,7 @@ class TargetAmplicon():
     @property
     def fasta(self):
         out = StringIO()
-        varstring = ','.join(map(str, self.amplicon_offsets))
-        defline = '>{name:s} PermID={pid:s} GRCh38:{slug:s} variants={var:s}'.format(
-            name=self.data.Name, pid=self.data.PermID, slug=self.slug, var=varstring
-        )
-        result = microhapdb.idmap[microhapdb.idmap.ID == self.data.Name]
-        if len(result) > 0:
-            xrefstr = ','.join(result.Xref)
-            defline += ' Xref={x:s}'.format(x=xrefstr)
-        print(defline, file=out)
-
+        print('>', self.defline, sep='', file=out)
         ampseq = self.amplicon_seq
         if len(ampseq) < 80:
             print(ampseq, file=out)
@@ -144,6 +158,16 @@ class TargetAmplicon():
                 print(ampseq[i:i + 80], file=out)
                 i += 80
         return out.getvalue().strip()
+
+    def global_to_local(self, coord):
+        if coord < self.start or coord > self.end:
+            return None
+        return coord - self.start
+
+    def local_to_global(self, coord):
+        if coord >= len(self):
+            return None
+        return coord + self.start
 
     def print_detail_definition(self, out):
         print('Marker Definition (GRCh38)', file=out)
