@@ -390,6 +390,10 @@ ACGGGAGTCTTTCACCTATTCTACTTACGGTGACCGAACCGCGCCCTTTCCTGTCCATCTTGGAGCCTTTG
 
 def test_amplicon_object(capsys):
     amp = microhapdb.marker.TargetAmplicon('mh11KK-090', delta=10, minlen=60)
+    assert amp.local_to_global(10) == 113425537
+    assert amp.global_to_local(113425559) == 32
+    assert amp.local_to_global(65) is None
+    assert amp.global_to_local(113425599) is None
     print(amp)
     testout = '''
 --------------------------------------------------------------[ MicroHapDB ]----
