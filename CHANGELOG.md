@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [0.4.2] 2019-11-05
 
 ### Changed
 - Some aspects of panel design and definition migrated from MicroHapulator to MicroHapDB (see #34, #35).
