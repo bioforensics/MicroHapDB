@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.3] 2019-11-05
+
+### Fixed
+- Squashed a bug with package data not being installed correctly.
+
+
 ## [0.4.2] 2019-11-05
 
 ### Changed
