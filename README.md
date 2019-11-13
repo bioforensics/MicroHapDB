@@ -1,6 +1,6 @@
 # MicroHapDB
 
-[![MicroHapDB build status][travisbadge]](https://travis-ci.org/bioforensics/MicroHapDB)
+[![MicroHapDB build status][cibadge]](https://github.com/bioforensics/MicroHapDB/actions)
 [![Install with bioconda][condabadge]](http://bioconda.github.io/recipes/microhapdb/README.html)
 [![BSD licensed][licensebadge]](https://github.com/bioforensics/MicroHapDB/blob/master/LICENSE.txt)
 
@@ -132,7 +132,7 @@ If you use this package, please cite our work.
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
 [Pandas]: https://pandas.pydata.org
-[travisbadge]: https://img.shields.io/travis/bioforensics/MicroHapDB.svg
+[cibadge]: https://github.com/bioforensics/MicroHapDB/workflows/.github/workflows/cibuild.yml/badge.svg
 [pypibadge]: https://img.shields.io/pypi/v/microhapdb.svg
 [condabadge]: https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg
 [licensebadge]: https://img.shields.io/badge/license-BSD-blue.svg
