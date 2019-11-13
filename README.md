@@ -132,7 +132,7 @@ If you use this package, please cite our work.
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
 [Pandas]: https://pandas.pydata.org
-[cibadge]: https://github.com/bioforensics/MicroHapDB/workflows/cibuild.yml/badge.svg
+[cibadge]: https://github.com/bioforensics/MicroHapDB/workflows/.github/workflows/cibuild.yml/badge.svg
 [pypibadge]: https://img.shields.io/pypi/v/microhapdb.svg
 [condabadge]: https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg
 [licensebadge]: https://img.shields.io/badge/license-BSD-blue.svg
