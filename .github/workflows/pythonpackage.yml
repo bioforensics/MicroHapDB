@@ -26,5 +26,3 @@ jobs:
       run: make style
     - name: Test with pytest
       run: make test
-    - name: Cache
-      uses: actions/cache@v1.0.0
