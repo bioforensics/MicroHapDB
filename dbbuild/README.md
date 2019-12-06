@@ -64,6 +64,8 @@ A description of each required file is given below.
 In addition to these 4-5 files, it is expected that raw original data files will be provided, along with code to transform the data into the required format and instructions for running the code.
 No constraints are imposed regarding how these supporting files are named, what programming language is used, etc.—only that the pre-processing procedure can be replicated without requiring an unreasonable amount of time or effort.
 
+If a particular data source provides only population data, or only marker data, etc, the other required files should simply contain an empty file except for the header line.
+
 ### `marker.tsv`
 
 The `marker.tsv` file contains the microhaplotype marker definition.
@@ -94,15 +96,20 @@ It includes the following fields.
 
 - `ID`: a unique identifier for this population across all sources
 - `Name`: a free-text description of the population, intended to be human readable
+- `Xref`: optional cross-reference
 
-For example, the first few lines of the `population.tsv` for ALFRED look like this.
+For example, some selected entries of the `population.tsv` for ALFRED look like this.
 
 ```
-ID	Name
+ID	Name	Xref
 SA000001B	Han
 SA000002C	Ami
 SA000003D	Hakka
 SA000005F	Biaka
+LWK	Luhya in Webuye, Kenya	SA004046O
+ASW	Americans of African Ancestry in SW USA	SA004047P
+YRI	Yoruba in Ibadan, Nigeria	SA004048Q
+FIN	Finnish in Finland	SA004049R
 ```
 
 **NOTE**: population names need not be unique, but `Xref` identifiers must be unique across all sources.

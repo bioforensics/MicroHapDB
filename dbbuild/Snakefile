@@ -6,6 +6,7 @@
 # -----------------------------------------------------------------------------
 
 from glob import glob
+from itertools import chain
 import os
 import pandas
 from pearhash.pearhash import PearsonHasher
@@ -37,17 +38,20 @@ def write_variant_map(data, output):
             print(variant, marker, sep='\t', file=output)
 
 
-def populate_idmap(data):
+def populate_idmap(markers, popfile):
+    popdata = pandas.read_csv(popfile, sep='\t')
     idmap = {
         'Xref': list(),
         'ID': list(),
     }
-    for n, row in data.iterrows():
+    rows = chain(markers.iterrows(), popdata.iterrows())
+    for n, row in rows:
         if row['Xref'] == '' or row['Xref'] is None or pandas.isnull(row['Xref']):
             continue
         for xref in row['Xref'].split(','):
             idmap['Xref'].append(xref)
-            idmap['ID'].append(row['Name'])
+            nameid = row['ID'] if 'ID' in row else row['Name']
+            idmap['ID'].append(nameid)
     data = pandas.DataFrame(idmap).sort_values('ID')
     return data
 
@@ -146,6 +150,11 @@ rule populations:
                 df = load_source_data(popfile, fh)
                 dfs.append(df)
         data = pandas.concat(dfs, axis=0, ignore_index=True)
+        # This next little bit of wizardry brought to you by
+        #     https://stackoverflow.com/a/33424287/459780
+        data = data.groupby(['ID', 'Name'])['Xref'].apply(
+            lambda x: ','.join([y for y in x if not pandas.isnull(y)])
+        ).reset_index()
         assert len(data.ID) == len(data.ID.unique())
         data.sort_values('Name').to_csv(output.table, sep='\t', index=False)
 
@@ -166,6 +175,7 @@ rule markers:
     input:
         config['refr'],
         'frequency.tsv',
+        'population.tsv',
         expand('sources/{source}/marker.tsv', source=SOURCES),
         expand('sources/{source}/source.txt', source=SOURCES),
     output:
@@ -174,7 +184,8 @@ rule markers:
         idmap='idmap.tsv'
     run:
         freqfile = input[1]
-        input = input[2:]
+        popfile = input[2]
+        input = input[3:]
         numsources = int(len(input) / 2)
         markerfiles = input[:numsources]
         sourcefiles = input[numsources:]
@@ -186,7 +197,7 @@ rule markers:
         freqs = pandas.read_csv(freqfile, sep='\t')
         data = compute_marker_ae(data, freqs)
 
-        idmap = populate_idmap(data)
+        idmap = populate_idmap(data, popfile)
         idmap.to_csv(output.idmap, sep='\t', index=False)
 
         data = sort_and_clean(data)

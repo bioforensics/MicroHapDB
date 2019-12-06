@@ -1,97 +1,97 @@
-ID	Name
-SA000001B	Han
-SA000002C	Ami
-SA000003D	Hakka
-SA000005F	Biaka
-SA000006G	Mbuti
-SA000007H	Danes
-SA000009J	Han
-SA000010B	Japanese
-SA000011C	Yakut
-SA000012D	Melanesian, Nasioi
-SA000013E	Maya, Yucatan
-SA000014F	Surui
-SA000015G	Jews, Ethiopian
-SA000016H	Jews, Yemenite
-SA000017I	Adygei
-SA000018J	Finns
-SA000019K	Russians
-SA000020C	Europeans, Mixed
-SA000021D	Atayal
-SA000022E	Cambodians, Khmer
-SA000023F	Cheyenne
-SA000025H	Pima, Arizona
-SA000026I	Pima, Mexico
-SA000027J	Ticuna
-SA000028K	Karitiana
-SA000036J	Yoruba
-SA000040E	Kachari
-SA000047L	Druze
-SA000055K	Guihiba
-SA000057M	Irish
-SA000063J	Micronesians
-SA000069P	Quechua
-SA000072J	Samoans
-SA000077O	Thoti
-SA000084M	Papuan New Guinean
-SA000096P	Jews, Sephardic
-SA000097Q	Malaysians
-SA000098R	Samaritans
-SA000099S	Ibo
-SA000100B	Hausa
-SA000101C	African Americans
-SA000487T	Chagga
-SA000488U	Khanty
-SA000489V	Komi-Zyrian
-SA000490N	Jews, Ashkenazi
-SA000491O	Chuvash
-SA000854R	Masai
-SA000936S	Koreans
-SA001530J	Russians
-SA001773S	Sandawe
-SA001853R	Lao Loum
-SA001854S	Keralite
-SA002023H	Hungarian
-SA002586V	Zaramo
-SA002765U	Kuwaiti
-SA002768X	Sardinian
-SA002770Q	Lisongo
-SA004046O	Luhya
-SA004047P	African Americans
-SA004048Q	Yoruba
-SA004049R	Finns
-SA004050J	British
-SA004057Q	Italians
-SA004058R	Han
-SA004059S	Han
-SA004060K	Japanese
-SA004108N	Iberian
-SA004109O	Colombian
-SA004110G	Mexicans
-SA004111H	Puerto Rican
-SA004238R	Dai
-SA004239S	Bengali
-SA004240K	Punjabi
-SA004241L	Tamil
-SA004242M	Afro-Caribbeans
-SA004243N	Malinke
-SA004244O	Mende
-SA004245P	Peruvian
-SA004246Q	Gujarati
-SA004247R	Telugu
-SA004248S	Esan
-SA004249T	Vietnamese
-SA004250L	European Americans
-SA002137N	Negroid Makrani
-SA002138O	Somali
-SA002139P	Mohanna
-SA002140H	Hazara
-SA002766V	Palestinian
-SA002767W	Greeks
-SA002873U	Pashtun
-SA004035M	Mongolian
-SA004036N	Tsaatan
-SA004309Q	Iranian
-SA004310I	Turks
-SA004333N	Cypriot, Turkish
-SA004393T	Saudi
+ID	Name	Xref
+SA000001B	Han	
+SA000002C	Ami	
+SA000003D	Hakka	
+SA000005F	Biaka	
+SA000006G	Mbuti	
+SA000007H	Danes	
+SA000009J	Han	
+SA000010B	Japanese	
+SA000011C	Yakut	
+SA000012D	Melanesian, Nasioi	
+SA000013E	Maya, Yucatan	
+SA000014F	Surui	
+SA000015G	Jews, Ethiopian	
+SA000016H	Jews, Yemenite	
+SA000017I	Adygei	
+SA000018J	Finns	
+SA000019K	Russians	
+SA000020C	Europeans, Mixed	
+SA000021D	Atayal	
+SA000022E	Cambodians, Khmer	
+SA000023F	Cheyenne	
+SA000025H	Pima, Arizona	
+SA000026I	Pima, Mexico	
+SA000027J	Ticuna	
+SA000028K	Karitiana	
+SA000036J	Yoruba	
+SA000040E	Kachari	
+SA000047L	Druze	
+SA000055K	Guihiba	
+SA000057M	Irish	
+SA000063J	Micronesians	
+SA000069P	Quechua	
+SA000072J	Samoans	
+SA000077O	Thoti	
+SA000084M	Papuan New Guinean	
+SA000096P	Jews, Sephardic	
+SA000097Q	Malaysians	
+SA000098R	Samaritans	
+SA000099S	Ibo	
+SA000100B	Hausa	
+SA000101C	African Americans	
+SA000487T	Chagga	
+SA000488U	Khanty	
+SA000489V	Komi-Zyrian	
+SA000490N	Jews, Ashkenazi	
+SA000491O	Chuvash	
+SA000854R	Masai	
+SA000936S	Koreans	
+SA001530J	Russians	
+SA001773S	Sandawe	
+SA001853R	Lao Loum	
+SA001854S	Keralite	
+SA002023H	Hungarian	
+SA002586V	Zaramo	
+SA002765U	Kuwaiti	
+SA002768X	Sardinian	
+SA002770Q	Lisongo	
+LWK	Luhya in Webuye, Kenya	SA004046O
+ASW	Americans of African Ancestry in SW USA	SA004047P
+YRI	Yoruba in Ibadan, Nigeria	SA004048Q
+FIN	Finnish in Finland	SA004049R
+GBR	British in England and Scotland	SA004050J
+TSI	Toscani in Italia	SA004057Q
+CHB	Han Chinese in Beijing, China	SA004058R
+CHS	Southern Han Chinese	SA004059S
+JPT	Japanese in Tokyo, Japan	SA004060K
+IBS	Iberian Population in Spain	SA004108N
+CLM	Colombians from Medellin, Colombia	SA004109O
+MXL	Mexican Ancestry from Los Angeles USA	SA004110G
+PUR	Puerto Ricans from Puerto Rico	SA004111H
+CDX	Chinese Dai in Xishuangbanna, China	SA004238R
+BEB	Bengali from Bangladesh	SA004239S
+PJL	Punjabi from Lahore, Pakistan	SA004240K
+STU	Sri Lankan Tamil from the UK	SA004241L
+ACB	African Caribbeans in Barbados	SA004242M
+GWD	Gambian in Western Divisions in the Gambia	SA004243N
+MSL	Mende in Sierra Leone	SA004244O
+PEL	Peruvians from Lima, Peru	SA004245P
+GIH	Gujarati Indian from Houston, Texas	SA004246Q
+ITU	Indian Telugu from the UK	SA004247R
+ESN	Esan in Nigeria	SA004248S
+KHV	Kinh in Ho Chi Minh City, Vietnam	SA004249T
+CEU	Utah Residents (CEPH) with Northern and Western European Ancestry	SA004250L
+SA002137N	Negroid Makrani	
+SA002138O	Somali	
+SA002139P	Mohanna	
+SA002140H	Hazara	
+SA002766V	Palestinian	
+SA002767W	Greeks	
+SA002873U	Pashtun	
+SA004035M	Mongolian	
+SA004036N	Tsaatan	
+SA004309Q	Iranian	
+SA004310I	Turks	
+SA004333N	Cypriot, Turkish	
+SA004393T	Saudi	

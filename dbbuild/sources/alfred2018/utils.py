@@ -88,7 +88,10 @@ def alfred_marker_coords(vcf, mapping):
         yield name, xref, chrom, offsets, rsids
 
 
-def alfred_pop_data(instream):
+def alfred_pop_data(instream, mapping):
+    mapping_1kgp = dict()
+    for n, row in mapping.iterrows():
+        mapping_1kgp[row.ALFRED] = (row.ID1KGP, row.Name)
     popdata = dict()
     for line in instream:
         if line.startswith(('----------', 'SI664', 'popName')):
@@ -103,16 +106,24 @@ def alfred_pop_data(instream):
             assert popname == popdata[label]
         else:
             popdata[label] = popname
-            yield label, popname
+            print('DEBUG', label, label in mapping_1kgp)
+            if label in mapping_1kgp:
+                code, name = mapping_1kgp[label]
+                yield code, name, label
+            else:
+                yield label, popname, ''
 
 
-def alfred_frequencies(instream):
+def alfred_frequencies(instream, mapping):
     indels = {
         'SI664579L': {'D': 'T', 'I': 'TA'},
         'SI664597L': {'D': 'T', 'I': 'TG'},
         'SI664640A': {'D': 'A', 'I': 'AATAATT'},
     }
 
+    mapping_1kgp = dict()
+    for n, row in mapping.iterrows():
+        mapping_1kgp[row.ALFRED] = row.ID1KGP
 
     def cleanup(allelestr, markerid, indels):
         allelestr = allelestr.replace('-', ',')
@@ -150,4 +161,6 @@ def alfred_frequencies(instream):
                 )
                 raise ValueError(message)
             for allele, freq in zip(alleles, freqs):
+                if popid in mapping_1kgp:
+                    popid = mapping_1kgp[popid]
                 yield markerid, popid, allele, '{:.4f}'.format(float(freq))
