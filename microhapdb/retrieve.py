@@ -87,17 +87,16 @@ def by_id(ident):
     >>> by_id('MHDBM-ea520d26')
                Name          PermID Reference  Chrom                              Offsets  AvgAe  Source
     251  mh18KK-285  MHDBM-ea520d26    GRCh38  chr18  24557354,24557431,24557447,24557489  2.658  ALFRED
+    >>> by_id('PJL')
+         ID                           Name Source
+    78  PJL  Punjabi from Lahore, Pakistan   1KGP
     >>> by_id('Asia')
                      ID  Name                        Source
     6  MHDBP-936bc36f79  Asia  10.1016/j.fsigen.2018.05.008
     >>> by_id('Japanese')
                       ID      Name                          Source
-    42         SA004060K  Japanese                          ALFRED
-    43         SA000010B  Japanese                          ALFRED
-    44  MHDBP-63967b883e  Japanese  10.1016/j.legalmed.2015.06.003
-    >>> by_id('SA004240K')
-               ID     Name  Source
-    79  SA004240K  Punjabi  ALFRED
+    41  MHDBP-63967b883e  Japanese  10.1016/j.legalmed.2015.06.003
+    42         SA000010B  Japanese                          ALFRED
     '''
     if id_in_series(ident, microhapdb.populations.ID) or id_in_series(ident, microhapdb.populations.Name):
         idlist = standardize_population_ids([ident])
