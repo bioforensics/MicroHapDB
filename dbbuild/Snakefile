@@ -148,18 +148,13 @@ rule populations:
                 df = load_source_data(popfile, fh)
                 dfs.append(df)
         data = pandas.concat(dfs, axis=0, ignore_index=True)
-        # This next little bit of wizardry brought to you by
-        #     https://stackoverflow.com/a/33424287/459780
-        data = data.groupby(['ID', 'Name', 'Source'])['Xref'].apply(
-            lambda x: ','.join([y for y in x if not pandas.isnull(y)])
-        ).reset_index()
         assert len(data.ID) == len(data.ID.unique())
 
         idmap = {
             'Xref': list(),
             'ID': list()
         }
-        subdata = data[data.Xref != '']
+        subdata = data[(data.Xref != '') & (data.Xref.notnull())]
         for n, row in subdata.iterrows():
             for xref in row['Xref'].split(','):
                 idmap['Xref'].append(xref)
@@ -168,7 +163,7 @@ rule populations:
         idmapdf.sort_values('ID').to_csv(output.idmap, sep='\t', index=False)
 
         data.drop(columns=['Xref'], inplace=True)
-        data.sort_values('Name').to_csv(output.table, sep='\t', index=False)
+        data.sort_values(['Name', 'ID']).to_csv(output.table, sep='\t', index=False)
 
 
 rule frequencies:

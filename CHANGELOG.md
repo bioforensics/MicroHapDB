@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Changed
+- 26 global populations from the 1000 Genomes Project migrated from ALFRED data source to a dedicated 1KGP data source (see #45).
+
+
 ## [0.4.3] 2019-11-05
 
 ### Fixed
