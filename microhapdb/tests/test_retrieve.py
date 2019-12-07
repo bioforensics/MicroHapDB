@@ -31,8 +31,9 @@ def test_all_ids():
     assert by_id('MHDBM-c2b1818c').Name.values == ['mh15CP-003']
     assert list(by_id('MHDBM-f4474b7c').Name.values) == ['mh17KK-054', 'mh17AT-35']
     assert by_id('rs58111155').Name.values == ['mh01KK-001']
-    assert by_id('Peruvian').ID.values == ['SA004245P']
-    assert list(by_id('Han').ID.values) == ['SA004058R', 'SA004059S', 'MHDBP-48c2cfb2aa', 'SA000009J', 'SA000001B']
+    assert by_id('PEL').ID.values == ['PEL']
+    print(list(by_id('Han').ID.values))
+    assert list(by_id('Han').ID.values) == ['MHDBP-48c2cfb2aa', 'SA000001B', 'SA000009J']
 
 
 def test_retrieve_by_region():

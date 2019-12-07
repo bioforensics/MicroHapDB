@@ -134,7 +134,8 @@ rule populations:
         expand('sources/{source}/population.tsv', source=SOURCES),
         expand('sources/{source}/source.txt', source=SOURCES),
     output:
-        table='population.tsv'
+        table='population.tsv',
+        idmap='pop-idmap.tsv'
     run:
         numsources = int(len(input) / 2)
         popfiles = input[:numsources]
@@ -147,7 +148,21 @@ rule populations:
                 dfs.append(df)
         data = pandas.concat(dfs, axis=0, ignore_index=True)
         assert len(data.ID) == len(data.ID.unique())
-        data.sort_values('Name').to_csv(output.table, sep='\t', index=False)
+
+        idmap = {
+            'Xref': list(),
+            'ID': list()
+        }
+        subdata = data[(data.Xref != '') & (data.Xref.notnull())]
+        for n, row in subdata.iterrows():
+            for xref in row['Xref'].split(','):
+                idmap['Xref'].append(xref)
+                idmap['ID'].append(row['ID'])
+        idmapdf = pandas.DataFrame(idmap)
+        idmapdf.sort_values('ID').to_csv(output.idmap, sep='\t', index=False)
+
+        data.drop(columns=['Xref'], inplace=True)
+        data.sort_values(['Name', 'ID']).to_csv(output.table, sep='\t', index=False)
 
 
 rule frequencies:
@@ -171,7 +186,7 @@ rule markers:
     output:
         table='marker.tsv',
         varmap='variantmap.tsv',
-        idmap='idmap.tsv'
+        idmap='marker-idmap.tsv'
     run:
         freqfile = input[1]
         input = input[2:]
@@ -191,6 +206,20 @@ rule markers:
 
         data = sort_and_clean(data)
         data.to_csv(output.table, sep='\t', index=False)
+
+
+rule idmap:
+    input:
+        'pop-idmap.tsv',
+        'marker-idmap.tsv'
+    output: 'idmap.tsv'
+    run:
+        dfs = list()
+        for mapfile in input:
+            df = pandas.read_csv(mapfile, sep='\t', index_col=None)
+            dfs.append(df)
+        data = pandas.concat(dfs, axis=0, ignore_index=True)
+        data.sort_values(['ID', 'Xref']).to_csv(output[0], sep='\t', index=False)
 
 
 rule sequences:

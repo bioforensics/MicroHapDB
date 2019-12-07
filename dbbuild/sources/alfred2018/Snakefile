@@ -5,6 +5,7 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
+import pandas
 from utils import smartopen, parse_markers_from_table
 from utils import alfred_marker_detail_scrape, alfred_marker_coords
 from utils import alfred_pop_data, alfred_frequencies
@@ -68,20 +69,26 @@ rule marker_coords:
 
 
 rule population:
-    input: 'downloads/Microhap_alleleF_198.txt'
+    input:
+        freqs='downloads/Microhap_alleleF_198.txt',
+        xrefs='1kgp-mapping.tsv'
     output: 'population.tsv'
     run:
-        with smartopen(input[0], 'r') as infh, smartopen(output[0], 'w') as outfh:
-            print('ID', 'Name', sep='\t', file=outfh)
-            for data in alfred_pop_data(infh):
+        mapping = pandas.read_csv(input.xrefs, sep='\t')
+        with smartopen(input.freqs, 'r') as infh, smartopen(output[0], 'w') as outfh:
+            print('ID', 'Name', 'Xref', sep='\t', file=outfh)
+            for data in alfred_pop_data(infh, mapping):
                 print(*data, sep='\t', file=outfh)
 
 
 rule frequency:
-    input: 'downloads/Microhap_alleleF_198.txt'
+    input:
+        freqs='downloads/Microhap_alleleF_198.txt',
+        xrefs='1kgp-mapping.tsv'
     output: 'frequency.tsv'
     run:
-        with smartopen(input[0], 'r') as infh, smartopen(output[0], 'w') as outfh:
+        mapping = pandas.read_csv(input.xrefs, sep='\t')
+        with smartopen(input.freqs, 'r') as infh, smartopen(output[0], 'w') as outfh:
             print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=outfh)
-            for data in alfred_frequencies(infh):
+            for data in alfred_frequencies(infh, mapping):
                 print(*data, sep='\t', file=outfh)

@@ -10,6 +10,8 @@ import microhapdb
 
 
 def standardize_ids(idents):
+    xrefidents = list(microhapdb.idmap[microhapdb.idmap.Xref.isin(idents)].ID)
+    idents = idents + xrefidents
     result = microhapdb.populations[
         (microhapdb.populations.ID.isin(idents)) | (microhapdb.populations.Name.isin(idents))
     ]
