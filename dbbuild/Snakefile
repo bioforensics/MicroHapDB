@@ -37,18 +37,17 @@ def write_variant_map(data, output):
             print(variant, marker, sep='\t', file=output)
 
 
-def populate_idmap(markers):
+def populate_idmap(data):
     idmap = {
         'Xref': list(),
         'ID': list(),
     }
-    for n, row in markers.iterrows():
+    for n, row in data.iterrows():
         if row['Xref'] == '' or row['Xref'] is None or pandas.isnull(row['Xref']):
             continue
         for xref in row['Xref'].split(','):
             idmap['Xref'].append(xref)
-            nameid = row['ID'] if 'ID' in row else row['Name']
-            idmap['ID'].append(nameid)
+            idmap['ID'].append(row['Name'])
     data = pandas.DataFrame(idmap).sort_values('ID')
     return data
 
