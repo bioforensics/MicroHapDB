@@ -33,7 +33,7 @@ def test_all_ids():
     assert by_id('rs58111155').Name.values == ['mh01KK-001']
     assert by_id('PEL').ID.values == ['PEL']
     print(list(by_id('Han').ID.values))
-    assert list(by_id('Han').ID.values) == ['SA000009J', 'MHDBP-48c2cfb2aa', 'SA000001B']
+    assert list(by_id('Han').ID.values) == ['MHDBP-48c2cfb2aa', 'SA000001B', 'SA000009J']
 
 
 def test_retrieve_by_region():

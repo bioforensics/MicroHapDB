@@ -16,7 +16,7 @@ def test_standardize_ids():
     assert list(standardize_ids(['MSL']).values) == ['MSL']
     assert list(standardize_ids(['Maya, Yucatan', 'SA000055K', 'Greeks']).values) == ['SA002767W', 'SA000055K', 'SA000013E']
     print(list(standardize_ids(['Han']).values))
-    assert list(standardize_ids(['Han']).values) == ['SA000009J', 'MHDBP-48c2cfb2aa', 'SA000001B']
+    assert list(standardize_ids(['Han']).values) == ['MHDBP-48c2cfb2aa', 'SA000001B', 'SA000009J']
 
 
 def test_assumptions():
@@ -39,9 +39,9 @@ def test_populations():
     42         SA000010B  Japanese                          ALFRED
     >>> p[p.Name.str.contains('Han')]
                       ID                           Name                        Source
-    29         SA000009J                            Han                        ALFRED
-    30  MHDBP-48c2cfb2aa                            Han  10.1016/j.fsigen.2019.02.018
-    31         SA000001B                            Han                        ALFRED
+    29  MHDBP-48c2cfb2aa                            Han  10.1016/j.fsigen.2019.02.018
+    30         SA000001B                            Han                        ALFRED
+    31         SA000009J                            Han                        ALFRED
     32               CHB  Han Chinese in Beijing, China                          1KGP
     88               CHS           Southern Han Chinese                          1KGP
     >>> p.query('Name.str.contains("Afr")')
@@ -75,9 +75,9 @@ def test_pop_table_multi(capsys):
     microhapdb.population.print_table(hanchinese)
     testout = '''
                ID Name                        Source
-        SA000009J  Han                        ALFRED
  MHDBP-48c2cfb2aa  Han  10.1016/j.fsigen.2019.02.018
         SA000001B  Han                        ALFRED
+        SA000009J  Han                        ALFRED
 '''
     terminal = capsys.readouterr()
     assert terminal.out.strip() == testout.strip()
