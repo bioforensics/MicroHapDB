@@ -63,6 +63,8 @@ rule marker_coords:
             with smartopen(output[0], 'w') as out:
                 print('Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef', sep='\t', file=out)
                 for name, xref, chrom, offsets, varids in alfred_marker_coords(vcf, mapping):
+                    if name == 'mh05KK-058':
+                        name = 'mh15KK-058'
                     offsetstr = ','.join(map(str, offsets))
                     variants = ','.join(varids)
                     print(name, xref, 'GRCh38', chrom, offsetstr, variants, sep='\t', file=out)
@@ -91,4 +93,7 @@ rule frequency:
         with smartopen(input.freqs, 'r') as infh, smartopen(output[0], 'w') as outfh:
             print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=outfh)
             for data in alfred_frequencies(infh, mapping):
+                data = list(data)
+                if data[0] == 'mh05KK-058':
+                    data[0] = 'mh15KK-058'
                 print(*data, sep='\t', file=outfh)
