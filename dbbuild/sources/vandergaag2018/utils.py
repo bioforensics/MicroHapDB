@@ -42,27 +42,15 @@ def parse_markers(instream):
         yield name, chrom, int(amplstart), int(amplend), offsets
 
 
-def marker_variants(markerstream, vcfstream):
-    rsids_by_pos = defaultdict(dict)
-    for line in vcfstream:
-        if line.startswith('#'):
-            continue
-        chrom, posstr, rsid, *values = line.split('\t')
-        if not chrom.startswith('chr'):
-            chrom = 'chr' + chrom
-        pos = int(posstr) - 1
-        rsids_by_pos[chrom][pos] = rsid
+def marker_variants(markerstream, rsids):
+    marker_rsids = dict()
+    rsids = rsids[rsids.RSID != '-']
+    rsdata = rsids.groupby(['Marker'])['RSID'].apply(lambda x: ','.join(x)).reset_index()
+    for n, row in rsdata.iterrows():
+        marker_rsids[row.Marker] = row.RSID.split(',')
 
     for name, chrom, astart, aend, offsets in parse_markers(markerstream):
-        rsids = list()
-        for o in offsets:
-            if o in rsids_by_pos[chrom]:
-                rsid = rsids_by_pos[chrom][o]
-                rsids.append(rsid)
-            else:
-                # Only variant not present in dbSNP
-                assert chrom == 'chr22'
-                assert o in (44857884, 44857930, 44857946)
+        rsids = marker_rsids[name]
         yield name, chrom, offsets, rsids
 
 
