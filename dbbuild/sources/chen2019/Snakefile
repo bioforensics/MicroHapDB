@@ -29,6 +29,9 @@ rule markers:
             print('Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef', sep='\t', file=fh)
             for name, varlist in sorted(marker_variants.items()):
                 standardname = 'mh' + name[2:6] + '-' + name[6:]
+                if standardname == 'mh11CP-004':
+                    # Included in ALFRED
+                    continue
                 chrom = varlist[0][0]
                 offsets = [p for c, p, r in varlist]
                 rsids = [r for c, p, r in varlist]
