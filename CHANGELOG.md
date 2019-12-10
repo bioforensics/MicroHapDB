@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+### Fixed
+- Removed duplicate entry for marker `mh11CP-004` (see #46).
+- Corrected marker name from `mh05KK-058` to `mh15KK-058` (see #46).
+- Corrected erroneous rsID assignments for van der Gaag 2018 markers (see #46).
+
 ### Changed
 - 26 global populations from the 1000 Genomes Project migrated from ALFRED data source to a dedicated 1KGP data source (see #45).
 

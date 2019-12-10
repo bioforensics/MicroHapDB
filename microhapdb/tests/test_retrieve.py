@@ -53,6 +53,6 @@ def test_retrieve_by_region():
 
 def test_marker_ids():
     assert len(standardize_marker_ids(['BoGUSid'])) == 0
-    assert list(standardize_marker_ids(['mh05KK-058'])) == ['mh05KK-058']
+    assert list(standardize_marker_ids(['mh15KK-058'])) == ['mh15KK-058']
     assert list(standardize_marker_ids(['SI664549I'])) == ['mh01KK-117']
     assert list(standardize_marker_ids(['MHDBM-3d69621c'])) == ['mh11KK-040', 'mh11AT-23']

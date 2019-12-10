@@ -23,7 +23,7 @@ def test_standardize_ids():
 
 
 def test_assumptions():
-    assert len(microhapdb.markers) == 198 + 15 + 40 + 26 + 11
+    assert len(microhapdb.markers) == 198 + 15 + 40 + 26 + (11 - 1)
 
 
 def test_markers():
@@ -32,20 +32,20 @@ def test_markers():
     >>> m = microhapdb.markers
     >>> m[m.Name == 'mh18CP-005']
                Name          PermID Reference  Chrom                          Offsets   AvgAe  Source
-    250  mh18CP-005  MHDBM-a85754d3    GRCh38  chr18  8892864,8892893,8892896,8892907  3.6635  ALFRED
+    249  mh18CP-005  MHDBM-a85754d3    GRCh38  chr18  8892864,8892893,8892896,8892907  3.6635  ALFRED
     >>> m[m.Name == 'mh01KK-117']
               Name          PermID Reference Chrom                                  Offsets  AvgAe  Source
     18  mh01KK-117  MHDBM-39dc025f    GRCh38  chr1  204664211,204664268,204664371,204664397  3.933  ALFRED
     >>> m[m.Name == 'mh11PK-63643']
                  Name          PermID Reference  Chrom                                            Offsets  AvgAe                        Source
-    157  mh11PK-63643  MHDBM-c5ce121f    GRCh38  chr11  34415814,34415816,34415818,34415835,34415836,3...  4.033  10.1016/j.fsigen.2018.05.008
+    156  mh11PK-63643  MHDBM-c5ce121f    GRCh38  chr11  34415814,34415816,34415818,34415835,34415836,3...  4.033  10.1016/j.fsigen.2018.05.008
     >>> m[m.Name == 'mh02AT-05']
              Name          PermID Reference Chrom                        Offsets   AvgAe         Source
     40  mh02AT-05  MHDBM-c3feaba8    GRCh38  chr2  160222899,160222923,160222938  5.1944  ISFG2019:P597
     """
     m = microhapdb.markers
     vm = microhapdb.variantmap
-    assert m.shape == (290, 7)
+    assert m.shape == (289, 7)
     result = m[m.Chrom == 'chr19']
     assert len(result) == 7
     varids = vm[vm.Marker.isin(result.Name)].Variant.unique()
@@ -237,7 +237,7 @@ Marker Definition (GRCh38)
         - chromosome offsets: 13861392,13861399,13861414,13861421,13861430,13861434,13861438,13861439,13861440,13861446
         - marker offsets: 0,7,22,29,38,42,46,47,48,54
         - amplicon offsets: 13,20,35,42,51,55,59,60,61,67
-        - cross-references: rs1204206, rs1287207523, rs1196416099, rs35198802, rs553417439, rs1204207, rs545720382, rs1427107855, rs546942508, rs1204208
+        - cross-references: rs1204206, rs376614501, rs1196416099, rs35198802, rs553417439, rs1204207, rs545720382, rs34901968, rs546942508, rs1204208
     Observed alleles
         - C,C,G,C,C,C,A,A,A,A
         - C,C,G,C,C,C,A,A,G,A
@@ -315,7 +315,7 @@ Marker Definition (GRCh38)
         - chromosome offsets: 44857882,44857883,44857884,44857891,44857892,44857893,44857907,44857930,44857946,44857949,44857950,44857954
         - marker offsets: 0,1,2,9,10,11,25,48,64,67,68,72
         - amplicon offsets: 10,11,12,19,20,21,35,58,74,77,78,82
-        - cross-references: rs117862404, rs62232223, rs7291353, rs71328677, rs62232224, rs938165705, rs113141650, rs62232225, rs62232226
+        - cross-references: rs117862404, rs62232223, rs7291353, rs71328677, rs62232224, rs10685889, rs10685890, rs113141650, rs62232225, rs62232226
     Observed alleles
         - C,A,G,C,G,C,CCTGCC,TTCTT,GTGAG,C,T,G
         - C,A,G,C,G,T,CCTGCC,TTCTT,GTGAG,C,C,T

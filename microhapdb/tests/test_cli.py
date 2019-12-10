@@ -107,7 +107,7 @@ def test_main_marker_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split('\n')
-    assert len(outlines) == 198 + 15 + 40 + 26 + 1 + 11
+    assert len(outlines) == 198 + 15 + 40 + 26 + 1 + (11 - 1)
 
 
 def test_main_marker_detail(capsys):
@@ -174,7 +174,7 @@ def test_main_marker_region_mode_failure(capsys):
 def test_main_marker_panel(capsys):
     with NamedTemporaryFile() as panelfile:
         with open(panelfile.name, 'w') as fh:
-            for marker in ['mh05KK-058', 'mh06KK-101', 'mh20KK-035']:
+            for marker in ['mh15KK-058', 'mh06KK-101', 'mh20KK-035']:
                 print(marker, file=fh)
         arglist = ['marker', '--panel', panelfile.name]
         args = get_parser().parse_args(arglist)
@@ -183,7 +183,7 @@ def test_main_marker_panel(capsys):
     testout = '''
        Name          PermID Reference  Chrom                     Offsets   AvgAe  Source
  mh06KK-101  MHDBM-8a2c760e    GRCh38   chr6         170280714,170280900  1.7068  ALFRED
- mh05KK-058  MHDBM-d6c594d2    GRCh38  chr15  28120284,28120471,28120586  2.1016  ALFRED
+ mh15KK-058  MHDBM-d6c594d2    GRCh38  chr15  28120284,28120471,28120586  2.1016  ALFRED
  mh20KK-035  MHDBM-92f3685a    GRCh38  chr20             2088698,2088728  2.0937  ALFRED
 '''
     print(terminal.out)
