@@ -6,10 +6,11 @@
 # -----------------------------------------------------------------------------
 
 from collections import defaultdict
+from io import StringIO
 from math import ceil
 import microhapdb
 from microhapdb.retrieve import id_in_series
-from io import StringIO
+import pandas
 
 
 class TargetAmplicon():
@@ -301,17 +302,24 @@ def standardize_ids(idents):
     return microhapdb.markers[microhapdb.markers.Name.isin(ids)].Name
 
 
-def print_table(table, **kwargs):
+def print_table(table, delta=None, minlen=None, trunc=True):
+    #pandas.set_option('display.width', 10000)
+    #pandas.set_option('display.max_columns', 10000)
+    if trunc is not True:
+        colwidth = pandas.get_option('display.max_colwidth')
+        pandas.set_option('display.max_colwidth', 100000)
     print(table.to_string(index=False))
+    if trunc is not True:
+        pandas.set_option('display.max_colwidth', colwidth)
 
 
-def print_fasta(table, delta=25, minlen=250):
+def print_fasta(table, delta=25, minlen=250, trunc=None):
     for n, row in table.iterrows():
         amplicon = TargetAmplicon(row, delta=delta, minlen=minlen)
         print(amplicon.fasta)
 
 
-def print_detail(table, delta=25, minlen=250):
+def print_detail(table, delta=25, minlen=250, trunc=None):
     for n, row in table.iterrows():
         amplicon = TargetAmplicon(row, delta=delta, minlen=minlen)
         print(amplicon)
