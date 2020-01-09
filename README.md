@@ -8,7 +8,7 @@ Daniel Standage, 2018-2019
 https://github.com/bioforensics/microhapdb
 
 **MicroHapDB** is a portable database intended for scientists and researchers interested in using microhaplotype markers for forensic analysis.
-The database includes a comprehensive collection of marker and allele frequency data from published sources, including the [Allele Frequency Database (ALFRED)][alfred]<sup>[1-3]</sup> as well as published papers and posters<sup>[4-7]</sup>.
+The database includes a comprehensive collection of marker and allele frequency data from published sources, including the [Allele Frequency Database (ALFRED)][alfred]<sup>[1-3]</sup> as well as published papers and posters<sup>[4-8]</sup>.
 The entire contents of the database are distributed with each copy of MicroHapDB, and instructions for adding private data to a local copy of the database are provided.
 MicroHapDB is designed to be user-friendly for both practitioners and researchers, supporting a range of access methods from browsing to simple text queries to complex queries to full programmatic access via a Python API.
 
@@ -125,9 +125,11 @@ If you use this package, please cite our work.
 
 <sup>[7]</sup>Chen P, Deng C, Li Z, Pu Y, Yang J, Yu Y, Li K, Li D, Liang W, Zhang L, Chen F (2019) A microhaplotypes panel for massively parallel sequencing analysis of DNA mixtures. *FSI: Genetics*, 40:140-149, [doi:10.1016/j.fsigen.2019.02.018](https://doi.org/10.1016/j.fsigen.2019.02.018).
 
+<sup>[8]</sup>Voskoboinik L, Motro U, Darvasi A (2018) Facilitating complex DNA mixture interpretation by sequencing highly polymorphic haplotypes. *FSI: Genetics*, 35:136-140, [doi:10.1016/j.fsigen.2018.05.001](https://doi.org/10.1016/j.fsigen.2018.05.001).
+
 ### Supporting Software
 
-<sup>[8]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
+<sup>[9]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
 
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
