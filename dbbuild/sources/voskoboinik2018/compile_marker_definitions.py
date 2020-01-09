@@ -95,7 +95,12 @@ def filter_variants(markername):
             else:
                 variants[var.af_slug] = var
         variants_to_keep = sorted(variants.values(), key=lambda v: v.location)
+        rsidmap = {
+            'rs113012024': 'rs10987426'
+        }
         for var in variants_to_keep:
+            if var.rsid in rsidmap:
+                var._fields[2] = rsidmap[var.rsid]
             print(var, file=outfh)
 
 
