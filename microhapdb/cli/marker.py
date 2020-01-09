@@ -31,7 +31,8 @@ def subparser(subparsers):
     )
     subparser.add_argument('--format', choices=['table', 'detail', 'fasta'], default='table')
     subparser.add_argument(
-        '--notrunc', action='store_true', help='disable truncation of tabular results'
+        '--notrunc', dest='trunc', action='store_false', default=True,
+        help='disable truncation of tabular results'
     )
     subparser.add_argument(
         '--delta', metavar='D', type=int, default=25, help='extend D nucleotides beyond the '
@@ -87,4 +88,4 @@ def main(args):
         'fasta': print_fasta
     }
     view = viewfuncs[args.format]
-    view(result, delta=args.delta, minlen=args.min_length, trunc=not args.notrunc)
+    view(result, delta=args.delta, minlen=args.min_length, trunc=args.trunc)

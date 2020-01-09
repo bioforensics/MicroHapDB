@@ -303,11 +303,9 @@ def standardize_ids(idents):
 
 
 def print_table(table, delta=None, minlen=None, trunc=True):
-    #pandas.set_option('display.width', 10000)
-    #pandas.set_option('display.max_columns', 10000)
     if trunc is not True:
         colwidth = pandas.get_option('display.max_colwidth')
-        pandas.set_option('display.max_colwidth', 100000)
+        pandas.set_option('display.max_colwidth', 1000000)
     print(table.to_string(index=False))
     if trunc is not True:
         pandas.set_option('display.max_colwidth', colwidth)
