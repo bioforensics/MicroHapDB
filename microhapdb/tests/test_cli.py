@@ -107,7 +107,7 @@ def test_main_marker_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split('\n')
-    assert len(outlines) == 198 + 15 + 40 + 26 + 1 + (11 - 1)
+    assert len(outlines) == 1 + 198 + 15 + 40 + 26 + (11 - 1) + 10
 
 
 def test_main_marker_detail(capsys):
