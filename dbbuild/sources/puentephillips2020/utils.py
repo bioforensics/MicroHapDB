@@ -50,6 +50,6 @@ def marker_coords(vcf, mapping):
         rsids = [rsid for pos, rsid in sorted(zip(positions, rsids))]
         positions = sorted(positions)
         chrom = rsidcoords[rsids[0]][0]
-        chromlabel = 'X' if chrom == 'chrX' else '{:02d}'.format(int(chrom[3:]))
+        chromlabel = '0X' if chrom == 'chrX' else '{:02d}'.format(int(chrom[3:]))
         mhname = 'mh{chr:s}PP-{n:s}'.format(chr=chromlabel, n=marker)
         yield mhname, chrom, positions, rsids
