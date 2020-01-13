@@ -4,11 +4,11 @@
 [![Install with bioconda][condabadge]](http://bioconda.github.io/recipes/microhapdb/README.html)
 [![BSD licensed][licensebadge]](https://github.com/bioforensics/MicroHapDB/blob/master/LICENSE.txt)
 
-Daniel Standage, 2018-2019  
+Daniel Standage, 2018-2019
 https://github.com/bioforensics/microhapdb
 
 **MicroHapDB** is a portable database intended for scientists and researchers interested in using microhaplotype markers for forensic analysis.
-The database includes a comprehensive collection of marker and allele frequency data from published sources, including the [Allele Frequency Database (ALFRED)][alfred]<sup>[1-3]</sup> as well as published papers and posters<sup>[4-8]</sup>.
+The database includes a comprehensive collection of marker and allele frequency data from published sources, including the [Allele Frequency Database (ALFRED)][alfred]<sup>[1-3]</sup> as well as published papers and posters<sup>[4-9]</sup>.
 The entire contents of the database are distributed with each copy of MicroHapDB, and instructions for adding private data to a local copy of the database are provided.
 MicroHapDB is designed to be user-friendly for both practitioners and researchers, supporting a range of access methods from browsing to simple text queries to complex queries to full programmatic access via a Python API.
 
@@ -127,9 +127,11 @@ If you use this package, please cite our work.
 
 <sup>[8]</sup>Voskoboinik L, Motro U, Darvasi A (2018) Facilitating complex DNA mixture interpretation by sequencing highly polymorphic haplotypes. *FSI: Genetics*, 35:136-140, [doi:10.1016/j.fsigen.2018.05.001](https://doi.org/10.1016/j.fsigen.2018.05.001).
 
+<sup>[9]</sup>de la Puente M, Phillips C, Xavier C, Amigo J, Carracedo A, Parson W, Lareu MV (2020) Building a custom large-scale panel of novel microhaplotypes for forensicidentification using MiSeq and Ion S5 massively parallel sequencing systems. *FSI: Genetics*, 45:102213, [doi:10.1016/j.fsigen.2019.102213](https://doi.org/10.1016/j.fsigen.2019.102213).
+
 ### Supporting Software
 
-<sup>[9]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
+<sup>[10]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
 
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
