@@ -112,7 +112,7 @@ def compute_marker_ae(data, freqs):
 
 
 def sort_and_clean(data):
-    data['ChromSort'] = data.Chrom.apply(lambda c: int(c[3:]))
+    data['ChromSort'] = data.Chrom.apply(lambda c: 'X' if c == 'chrX' else int(c[3:]))
     data['TempPos'] = data.Offsets.apply(lambda os: int(os.split(',')[0]))
     data = data.sort_values(['ChromSort', 'TempPos'])
     data.drop(columns=['Xref', 'VarRef', 'ChromSort', 'TempPos'], inplace=True)
