@@ -35,13 +35,13 @@ def subparser(subparsers):
         help='disable truncation of tabular results'
     )
     subparser.add_argument(
-        '--delta', metavar='D', type=int, default=25, help='extend D nucleotides beyond the '
+        '--delta', metavar='D', type=int, default=10, help='extend D nucleotides beyond the '
         'marker extent when computing amplicon boundaries (detail and fasta format only); by '
-        'default D=25'
+        'default D=10'
     )
     subparser.add_argument(
-        '--min-length', metavar='L', type=int, default=250, help='minimum amplicon length (detail '
-        'and fasta format only); by default L=250'
+        '--min-length', metavar='L', type=int, default=80, help='minimum amplicon length (detail '
+        'and fasta format only); by default L=80'
     )
     subparser.add_argument(
         '-p', '--panel', metavar='FILE', help='file containing a list of marker names/identifiers,'
