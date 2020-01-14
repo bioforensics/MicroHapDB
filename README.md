@@ -4,7 +4,7 @@
 [![Install with bioconda][condabadge]](http://bioconda.github.io/recipes/microhapdb/README.html)
 [![BSD licensed][licensebadge]](https://github.com/bioforensics/MicroHapDB/blob/master/LICENSE.txt)
 
-Daniel Standage, 2018-2019
+Daniel Standage, 2018-2020  
 https://github.com/bioforensics/microhapdb
 
 **MicroHapDB** is a portable database intended for scientists and researchers interested in microhaplotypes for forensic analysis.
