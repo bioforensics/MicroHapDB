@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - 26 global populations from the 1000 Genomes Project migrated from ALFRED data source to a dedicated 1KGP data source (see #45).
 - Dropped Travis CI configuration (see #47).
+- Changed default delta from 25 to 10 and default minlength from 250 to 80 (see #52).
 
 
 ## [0.4.3] 2019-11-05
