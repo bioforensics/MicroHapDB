@@ -1,0 +1,52 @@
+# -----------------------------------------------------------------------------
+# Copyright (c) 2020, Battelle National Biodefense Institute.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
+# and is licensed under the BSD license: see LICENSE.txt.
+# -----------------------------------------------------------------------------
+
+from utils import smartopen, marker_coords
+
+
+rule all:
+    input: 'marker.tsv'
+
+
+rule supp_file_s1:
+    input: 'original/mmc8.txt'
+    output: 'supp-file-s1.tsv'
+    shell: 'python text2table.py < {input} > {output}'
+
+
+rule dbsnp_subset:
+    input:
+        markers='supp-file-s1.tsv',
+        dbsnp=config['dbsnp'],
+        rsidx=config['rsidx'],
+    output: 'dbsnp-subset.vcf.gz'
+    run:
+        rsids = list()
+        with smartopen(input.markers, 'r') as fh:
+            next(fh)
+            for line in fh:
+                marker, pos, span, rsidlist, avggd = line.strip().split('\t')
+                rsids.extend(rsidlist.split(','))
+        command = 'rsidx search --header --out {out:s} {dbsnp:s} {rsidx:s} {ids:s}'.format(
+            out=output[0], dbsnp=input.dbsnp, rsidx=input.rsidx, ids=' '.join(rsids)
+        )
+        shell(command)
+
+
+rule marker_coords:
+    input:
+        dbsnp='dbsnp-subset.vcf.gz',
+        markers='supp-file-s1.tsv'
+    output: 'marker.tsv'
+    run:
+        with smartopen(input.dbsnp, 'r') as vcf, smartopen(input.markers, 'r') as markers:
+            with smartopen(output[0], 'w') as out:
+                print('Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef', sep='\t', file=out)
+                for name, chrom, offsets, variants in marker_coords(vcf, markers):
+                    offsetstr = ','.join(map(str, offsets))
+                    varstr = ','.join(variants)
+                    print(name, '', 'GRCh38', chrom, offsetstr, varstr, sep='\t', file=out)

@@ -40,7 +40,7 @@ def test_retrieve_by_region():
     with pytest.raises(ValueError, match='cannot parse region "chr7:123-456-789"'):
         list(by_region('chr7:123-456-789'))
 
-    assert len(by_region('chrX')) == 0
+    assert len(by_region('chrX')) == 11
     assert len(by_region('chrY')) == 0
 
     results = by_region('chr12:100000000-200000000')

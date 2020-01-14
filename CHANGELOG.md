@@ -5,7 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Unreleased
 
 ### Added
-- Added a new source of data, including 10 marker defintions from Voskoboinik 2018 (see #47).
+- Added 10 marker definitions from Voskoboinik et al 2018 (see #47).
+- Added 118 marker definitions from de la Puente, Phillips, et al 2020 (see #49).
 
 ### Fixed
 - Removed duplicate entry for marker `mh11CP-004` (see #46).
