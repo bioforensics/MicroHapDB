@@ -138,8 +138,26 @@ def test_main_marker_query(capsys):
     assert testout.strip() == out.strip()
 
 
-def test_main_marker_fasta(capsys):
-    args = get_parser().parse_args(['marker', '--format=fasta', 'mh13CP-010', 'mh08PK-46625'])
+def test_main_marker_fasta_default_delta(capsys):
+    args = get_parser().parse_args(['marker', '--format=fasta', 'mh01CP-016', 'mh06PK-24844'])
+    microhapdb.cli.main(args)
+    out, err = capsys.readouterr()
+    testout = '''
+>mh01CP-016 PermID=MHDBM-021e569a GRCh38:chr1:55559012-55559056 variants=18,56,62 Xref=SI664876L
+TGGCACACAACAAGTGCTTATAATGAAAGCATTAGTGAGTAAAAGAGTGATCCCTGGCTTTGAACTCCCTCTAAGTGTAC
+C
+>mh06PK-24844 PermID=MHDBM-aa39cbba GRCh38:chr6:13861392-13861446 variants=13,20,35,42,51,55,59,60,61,67
+AGGAAGAAAGTGATTACATCCAAACGTGAGCAGGAGGAAACTCGGAACATACTGTTTTTAAGAACTAGTATCACTAGAGT
+T
+'''
+    print(out)
+    assert testout.strip() == out.strip()
+
+
+def test_main_marker_fasta_long_delta(capsys):
+    args = get_parser().parse_args([
+        'marker', '--format=fasta', '--delta=25', '--min-length=250', 'mh13CP-010', 'mh08PK-46625'
+    ])
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     testout = '''
@@ -240,7 +258,7 @@ def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
     'beta',
 ])
 def test_main_panel(panel, capsys):
-    arglist = ['marker', '--panel', panel, '--format=fasta']
+    arglist = ['marker', '--panel', panel, '--format=fasta', '--delta=25', '--min-length=250']
     args = get_parser().parse_args(arglist)
     microhapdb.cli.main(args)
     terminal = capsys.readouterr()

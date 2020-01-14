@@ -14,7 +14,7 @@ import pandas
 
 
 class TargetAmplicon():
-    def __init__(self, marker, delta=25, minlen=250):
+    def __init__(self, marker, delta=10, minlen=80):
         if isinstance(marker, str):
             markerids = standardize_ids([marker])
             assert len(markerids) == 1
@@ -311,13 +311,13 @@ def print_table(table, delta=None, minlen=None, trunc=True):
         pandas.set_option('display.max_colwidth', colwidth)
 
 
-def print_fasta(table, delta=25, minlen=250, trunc=None):
+def print_fasta(table, delta=10, minlen=80, trunc=None):
     for n, row in table.iterrows():
         amplicon = TargetAmplicon(row, delta=delta, minlen=minlen)
         print(amplicon.fasta)
 
 
-def print_detail(table, delta=25, minlen=250, trunc=None):
+def print_detail(table, delta=10, minlen=80, trunc=None):
     for n, row in table.iterrows():
         amplicon = TargetAmplicon(row, delta=delta, minlen=minlen)
         print(amplicon)
