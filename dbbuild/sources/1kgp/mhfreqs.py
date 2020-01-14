@@ -2,16 +2,15 @@
 
 from argparse import ArgumentParser
 from collections import defaultdict
+import os
 import rsidx
 import sqlite3
 
 
 def cli():
     parser = ArgumentParser()
-    parser.add_argument('vcf')
-    parser.add_argument('rsidx')
     parser.add_argument('samplepops')
-    parser.add_argument('rsids', nargs='+')
+    parser.add_argument('markerrsids')
     return parser
 
 
@@ -29,6 +28,7 @@ def construct_haplotypes(rsids, vcf, rsidxfile):
     samples = list()
     haplo1 = defaultdict(list)
     haplo2 = defaultdict(list)
+    import sys
     with sqlite3.connect(rsidxfile) as dbconn:
         for line in rsidx.search.search(rsids, dbconn, vcf, header=True):
             if line.startswith('#'):
@@ -57,8 +57,7 @@ def compute_pop_counts(samples, haplo1, haplo2, samplepops):
     return popallelecounts
 
 
-def mhfreqs(rsids, vcffile, rsidxfile, samplepopsfile):
-    samplepops = load_population_data(samplepopsfile)
+def mhfreqs(rsids, vcffile, rsidxfile, samplepops):
     samples, haplo1, haplo2 = construct_haplotypes(rsids, vcffile, rsidxfile)
     popallelecounts = compute_pop_counts(samples, haplo1, haplo2, samplepops)
     for population, allelecounts in popallelecounts.items():
@@ -69,9 +68,29 @@ def mhfreqs(rsids, vcffile, rsidxfile, samplepopsfile):
 
 
 def main(args):
-    print('Population', 'Allele', 'Frequency', sep='\t')
-    for values in mhfreqs(args.rsids, args.vcf, args.rsidx, args.samplepops):
-        print(*values, sep='\t')
+    samplepops = load_population_data(args.samplepops)
+
+    marker_rsids = dict()
+    with open(args.markerrsids, 'r') as fh:
+        next(fh)
+        for line in fh:
+            marker, rsids = line.strip().split('\t')
+            marker_rsids[marker] = rsids.split(',')
+
+    print('Marker', 'Population', 'Allele', 'Frequency', sep='\t')
+    for marker, rsids in marker_rsids.items():
+        chrom = marker[2:4]
+        if chrom[0] == '0':
+            chrom = chrom[1]
+        if chrom == 'X':
+            continue
+        prefix = 'ALL.chr' + chrom + '.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes'
+        vcf = prefix + '.vcf.gz'
+        rsidx = prefix + '.rsidx'
+        if not os.path.exists(vcf) or not os.path.exists(rsidx):
+            raise RuntimeError('VCF and/or RSIDX files do not exist')
+        for values in mhfreqs(rsids, vcf, rsidx, samplepops):
+            print(marker, *values, sep='\t')
 
 
 if __name__ == '__main__':
