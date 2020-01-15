@@ -28,7 +28,6 @@ def construct_haplotypes(rsids, vcf, rsidxfile):
     samples = list()
     haplo1 = defaultdict(list)
     haplo2 = defaultdict(list)
-    import sys
     with sqlite3.connect(rsidxfile) as dbconn:
         for line in rsidx.search.search(rsids, dbconn, vcf, header=True):
             if line.startswith('#'):
