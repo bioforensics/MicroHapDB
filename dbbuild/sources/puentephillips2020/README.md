@@ -1,4 +1,4 @@
-# Large-scale Identification Panel
+# USC Large-scale Identification Panel
 
 ## Citations
 
