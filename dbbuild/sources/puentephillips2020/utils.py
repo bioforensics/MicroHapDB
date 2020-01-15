@@ -51,5 +51,5 @@ def marker_coords(vcf, mapping):
         positions = sorted(positions)
         chrom = rsidcoords[rsids[0]][0]
         chromlabel = '0X' if chrom == 'chrX' else '{:02d}'.format(int(chrom[3:]))
-        mhname = 'mh{chr:s}PP-{n:s}'.format(chr=chromlabel, n=marker)
+        mhname = 'mh{chr:s}USC-{n:s}'.format(chr=chromlabel, n=marker)
         yield mhname, chrom, positions, rsids
