@@ -2,6 +2,7 @@
 
 from argparse import ArgumentParser
 from collections import defaultdict
+from glob import glob
 import os
 import rsidx
 import sqlite3
@@ -61,7 +62,7 @@ def mhfreqs(rsids, vcffile, rsidxfile, samplepops):
     popallelecounts = compute_pop_counts(samples, haplo1, haplo2, samplepops)
     for population, allelecounts in popallelecounts.items():
         total = sum(allelecounts.values())
-        for allele, count in allelecounts.items():
+        for allele, count in sorted(allelecounts.items()):
             freq = '{:.3f}'.format(count / total)
             yield population, allele, freq
 
@@ -81,11 +82,9 @@ def main(args):
         chrom = marker[2:4]
         if chrom[0] == '0':
             chrom = chrom[1]
-        if chrom == 'X':
-            continue
-        prefix = 'ALL.chr' + chrom + '.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes'
-        vcf = prefix + '.vcf.gz'
-        rsidx = prefix + '.rsidx'
+        prefix = 'ALL.chr' + chrom + '.phase3_shapeit2_mvncall_integrated_v??.20130502.genotypes'
+        vcf = glob(prefix + '.vcf.gz')[0]
+        rsidx = glob(prefix + '.rsidx')[0]
         if not os.path.exists(vcf) or not os.path.exists(rsidx):
             raise RuntimeError('VCF and/or RSIDX files do not exist')
         for values in mhfreqs(rsids, vcf, rsidx, samplepops):
