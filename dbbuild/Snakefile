@@ -93,21 +93,23 @@ def add_marker_permids(data, refr):
 
 def compute_marker_ae(data, freqs):
     aes = list()
+    pops1kgp = set([
+        'CHB', 'JPT', 'CHS', 'CDX', 'KHV', 'CEU', 'TSI', 'FIN', 'GBR', 'IBS', 'YRI', 'LWK', 'GWD',
+        'MSL', 'ESN', 'ASW', 'ACB', 'MXL', 'PUR', 'CLM', 'PEL', 'GIH', 'PJL', 'BEB', 'STU', 'ITU'
+    ])
     for n, marker in enumerate(data['Name']):
-        if n > 0 and n % 20 == 0:
+        if n > 0 and n % 25 == 0:
             print('...calculated AvgAe for', n, 'markers')
         ae_per_pop = list()
-        for pop in freqs[freqs.Marker == marker].Population.unique():
+        for pop in pops1kgp:
             ae_recip = 0.0
             for freq in freqs[(freqs.Marker == marker) & (freqs.Population == pop)].Frequency:
                 ae_recip += freq ** 2
             ae = 1.0 / ae_recip
             ae_per_pop.append(ae)
-        if len(ae_per_pop) > 0:
-            avg_ae = sum(ae_per_pop) / len(ae_per_pop)
-            aes.append('{:.04f}'.format(avg_ae))
-        else:
-            aes.append(None)
+        assert len(ae_per_pop) == 26
+        avg_ae = sum(ae_per_pop) / len(ae_per_pop)
+        aes.append('{:.04f}'.format(avg_ae))
     return data.assign(AvgAe=pandas.Series(aes))
 
 
