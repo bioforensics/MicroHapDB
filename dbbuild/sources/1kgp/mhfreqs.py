@@ -37,17 +37,23 @@ def construct_haplotypes(rsids, vcf, rsidxfile):
                 continue
             fields = line.strip().split()
             ref = fields[3]
-            alt = fields[4]
+            alt = fields[4].split(',')
             samplegts = fields[9:]
             for sample, gt in zip(samples, samplegts):
+                def _getallele(allelelabel):
+                    if allelelabel == '0':
+                        return ref
+                    else:
+                        i = int(allelelabel) - 1
+                        return alt[i]
                 if '|' in gt:
                     # Diploid autosomes
                     for altpresent, haplotype in zip(gt.split('|'), (haplo1, haplo2)):
-                        allele = alt if altpresent == '1' else ref
+                        allele = _getallele(altpresent)
                         haplotype[sample].append(allele)
                 else:
                     # Haploid sex chromosome
-                    allele = alt if gt == '1' else ref
+                    allele = _getallele(gt)
                     haplo1[sample].append(allele)
     return samples, haplo1, haplo2
 
@@ -58,7 +64,7 @@ def compute_pop_counts(samples, haplo1, haplo2, samplepops):
         population = samplepops[sample]
         hap1gt = ','.join(haplo1[sample])
         popallelecounts[population][hap1gt] += 1
-        if sample in haplo2:  # exclude chr0X
+        if sample in haplo2:  # males don't have a second haplotype for chr0X
             hap2gt = ','.join(haplo2[sample])
             popallelecounts[population][hap2gt] += 1
     return popallelecounts

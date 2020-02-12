@@ -10,6 +10,7 @@ import os
 import pandas
 from pearhash.pearhash import PearsonHasher
 from pyfaidx import Fasta as FastaIdx
+import sys
 
 
 def load_source_data(table, source):
@@ -97,14 +98,32 @@ def compute_marker_ae(data, freqs):
         'CHB', 'JPT', 'CHS', 'CDX', 'KHV', 'CEU', 'TSI', 'FIN', 'GBR', 'IBS', 'YRI', 'LWK', 'GWD',
         'MSL', 'ESN', 'ASW', 'ACB', 'MXL', 'PUR', 'CLM', 'PEL', 'GIH', 'PJL', 'BEB', 'STU', 'ITU'
     ])
-    for n, marker in enumerate(data['Name']):
+    for n, row in data.iterrows():
         if n > 0 and n % 25 == 0:
             print('...calculated AvgAe for', n, 'markers')
+        marker = row.Name
+        freqs_1kgp = freqs[(freqs.Marker == marker) & (freqs.Population.isin(pops1kgp))]
+        if len(freqs_1kgp) == 0:
+            print(
+                '[WARNING] no frequency data for marker ', marker, ', not computing AvgAe',
+                sep='', file=sys.stderr
+            )
+            aes.append(None)
+            continue
         ae_per_pop = list()
         for pop in pops1kgp:
             ae_recip = 0.0
+            for haplotype in freqs[freqs.Marker == marker].Allele.unique():
+                nallelesfreq = haplotype.count(',')
+                nallelesmarker = row.Offsets.count(',')
+                if nallelesfreq != nallelesmarker:
+                    message = 'allele count disagreement for {marker:s}:'.format(marker=marker)
+                    message += ' {:d} vs {:d};'.format(nallelesmarker, nallelesfreq)
+                    message += ' ({:s})'.format(haplotype)
+                    raise ValueError(message)
             for freq in freqs[(freqs.Marker == marker) & (freqs.Population == pop)].Frequency:
                 ae_recip += freq ** 2
+            assert ae_recip > 0.0, marker
             ae = 1.0 / ae_recip
             ae_per_pop.append(ae)
         assert len(ae_per_pop) == 26
