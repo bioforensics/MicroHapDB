@@ -19,6 +19,7 @@ Run the following commands from the `dbbuild/sources/voskoboinik/` directory to 
 
 ```bash
 # Download 1000 Genomes Project Phase 3 data
+# Note: this script is also used to build the 1kgp source; this data only needs to be downloaded once
 ./download.sh
 
 # Build rsidx index if it doesn't yet exist; requires > 1 hour
@@ -33,7 +34,7 @@ rsidx index /path/to/dbSNP.vcf.gz /path/to/dbSNP.rsidx
 The file `table1-subset.tsv` was created manually from Table 1 of the manuscript.
 
 
-## Known issues
+## Known Issues
 
 Only a summary of the marker definitions is reported in the paper.
 Details about each marker are not provided, and despite extensive communication with the corresponding author I was unable to resolve discrepancies between the published summary and my replication of the marker selection.

@@ -11,4 +11,5 @@ for n, row in microhapdb.markers.iterrows():
             row.Name, nvariants, len(rsids)
         )
         print(msg, file=sys.stderr)
+        continue
     print(row.Name, ','.join(rsids.Variant), sep='\t')
