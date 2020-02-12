@@ -123,17 +123,17 @@ def test_main_marker_query(capsys):
     out, err = capsys.readouterr()
     testout = '''
          Name          PermID Reference  Chrom                                       Offsets   AvgAe                          Source
- mh19USC-19pA  MHDBM-2d713eab    GRCh38  chr19                          561778,561795,561815     NaN    10.1016/j.fsigen.2019.102213
-   mh19KK-056  MHDBM-d6ff8635    GRCh38  chr19                               4852124,4852324  2.4143                          ALFRED
+ mh19USC-19pA  MHDBM-2d713eab    GRCh38  chr19                          561778,561795,561815  2.7453    10.1016/j.fsigen.2019.102213
+   mh19KK-056  MHDBM-d6ff8635    GRCh38  chr19                               4852124,4852324  2.4391                          ALFRED
    mh19CP-007  MHDBM-49dbcc57    GRCh38  chr19                    14310739,14310772,14310780  3.0813                          ALFRED
- mh19USC-19pB  MHDBM-76427274    GRCh38  chr19  16040864,16040894,16040899,16040921,16040929     NaN    10.1016/j.fsigen.2019.102213
-    mh19NH-23  MHDBM-dd72537b    GRCh38  chr19                    22052723,22052774,22052817     NaN  10.1016/j.legalmed.2015.06.003
-   mh19KK-299  MHDBM-8cbeb11c    GRCh38  chr19  22546697,22546748,22546779,22546810,22546850  3.8989                          ALFRED
-    mh19AT-47  MHDBM-8f439540    GRCh38  chr19                    22546697,22546748,22546779  1.4537                   ISFG2019:P597
- mh19USC-19qA  MHDBM-f757e745    GRCh38  chr19           33273771,33273785,33273811,33273816     NaN    10.1016/j.fsigen.2019.102213
-   mh19KK-301  MHDBM-2069446a    GRCh38  chr19           50938487,50938502,50938526,50938550  1.8143                          ALFRED
-   mh19KK-057  MHDBM-eb558c37    GRCh38  chr19                    51654948,51655025,51655062  2.1923                          ALFRED
- mh19USC-19qB  MHDBM-7b40359b    GRCh38  chr19                    53714387,53714389,53714413     NaN    10.1016/j.fsigen.2019.102213
+ mh19USC-19pB  MHDBM-76427274    GRCh38  chr19  16040864,16040894,16040899,16040921,16040929  3.5107    10.1016/j.fsigen.2019.102213
+    mh19NH-23  MHDBM-dd72537b    GRCh38  chr19                    22052723,22052774,22052817  1.9380  10.1016/j.legalmed.2015.06.003
+   mh19KK-299  MHDBM-8cbeb11c    GRCh38  chr19  22546697,22546748,22546779,22546810,22546850  4.1592                          ALFRED
+    mh19AT-47  MHDBM-8f439540    GRCh38  chr19                    22546697,22546748,22546779  2.4025                   ISFG2019:P597
+ mh19USC-19qA  MHDBM-f757e745    GRCh38  chr19           33273771,33273785,33273811,33273816  3.3219    10.1016/j.fsigen.2019.102213
+   mh19KK-301  MHDBM-2069446a    GRCh38  chr19           50938487,50938502,50938526,50938550  1.9707                          ALFRED
+   mh19KK-057  MHDBM-eb558c37    GRCh38  chr19                    51654948,51655025,51655062  2.3266                          ALFRED
+ mh19USC-19qB  MHDBM-7b40359b    GRCh38  chr19                    53714387,53714389,53714413  4.0756    10.1016/j.fsigen.2019.102213
 '''
     assert testout.strip() == out.strip()
 
@@ -204,9 +204,9 @@ def test_main_marker_panel(capsys):
     terminal = capsys.readouterr()
     testout = '''
        Name          PermID Reference  Chrom                     Offsets   AvgAe  Source
- mh06KK-101  MHDBM-8a2c760e    GRCh38   chr6         170280714,170280900  1.7068  ALFRED
- mh15KK-058  MHDBM-d6c594d2    GRCh38  chr15  28120284,28120471,28120586  2.1016  ALFRED
- mh20KK-035  MHDBM-92f3685a    GRCh38  chr20             2088698,2088728  2.0937  ALFRED
+ mh06KK-101  MHDBM-8a2c760e    GRCh38   chr6         170280714,170280900  1.6705  ALFRED
+ mh15KK-058  MHDBM-d6c594d2    GRCh38  chr15  28120284,28120471,28120586  2.2110  ALFRED
+ mh20KK-035  MHDBM-92f3685a    GRCh38  chr20             2088698,2088728  2.1328  ALFRED
 '''
     print(terminal.out)
     assert testout.strip() == terminal.out.strip()
