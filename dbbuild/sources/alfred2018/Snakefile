@@ -15,7 +15,7 @@ MARKERS = parse_markers_from_table('downloads/Microhap_alleleF_198.txt')
 
 
 rule all:
-    input: 'marker.tsv', 'population.tsv', 'frequency.tsv'
+    input: 'marker.tsv', 'population.tsv', 'frequency.tsv', 'frequency-1kgp.tsv'
 
 
 rule marker_rsids:
@@ -87,13 +87,19 @@ rule frequency:
     input:
         freqs='downloads/Microhap_alleleF_198.txt',
         xrefs='1kgp-mapping.tsv'
-    output: 'frequency.tsv'
+    output:
+        keep='frequency.tsv',
+        discard='frequency-1kgp.tsv'
     run:
         mapping = pandas.read_csv(input.xrefs, sep='\t')
-        with smartopen(input.freqs, 'r') as infh, smartopen(output[0], 'w') as outfh:
-            print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=outfh)
-            for data in alfred_frequencies(infh, mapping):
-                data = list(data)
-                if data[0] == 'mh05KK-058':
-                    data[0] = 'mh15KK-058'
-                print(*data, sep='\t', file=outfh)
+        pops1kgp = set(mapping.ID1KGP)
+        with smartopen(input.freqs, 'r') as infh, smartopen(output.keep, 'w') as keepfh:
+            with smartopen(output.discard, 'w') as discardfh:
+                print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=keepfh)
+                print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=discardfh)
+                for data in alfred_frequencies(infh, mapping):
+                    data = list(data)
+                    if data[0] == 'mh05KK-058':
+                        data[0] = 'mh15KK-058'
+                    outfh = discardfh if data[1] in pops1kgp else keepfh
+                    print(*data, sep='\t', file=outfh)

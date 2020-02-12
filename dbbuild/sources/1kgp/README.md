@@ -45,7 +45,7 @@ The `sample-pops.tsv` file was created by downloading `original/20130606_sample_
 
 ## Known Issues
 
-The ALFRED database publishes 1GKP-derived frequencies for 196 markers.
+The ALFRED database publishes 1GKP-derived frequencies for some markers.
 For many markers there is perfect agreement between ALFRED and MicroHapDB, but in some cases there are slight or notable differences.
 After correspondence with the ALFRED curators, we suspect that these differences are due to their use of PHASE over all aggregated data sets to statistically infer haplotypes, while MicroHapDB relies entirely on haplotypes as published in the 1KGP data.
 
