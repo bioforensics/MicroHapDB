@@ -12,29 +12,16 @@ The following software is required to compile the published data into the table 
 - Python 3
 - wget
 - tabix (part of the [samtools/HTSlib project](https://github.com/samtools/htslib))
+- infocalc (included in this directory)
 - [pandas][]
 - [rsidx][]
+- [Snakemake][]
 
 Run the following commands from the `dbbuild/sources/1kgp/` directory to compile the data into the table format required by MicroHapDB.
 
 ```bash
-# Download 1000 Genomes Project Phase 3 data
-./download.sh
-
-# Build rsidx index for 1KGP VCFs
-for vcf in ALL.chr*.vcf.gz; do
-    prefix=$(basename $vcf .vcf.gz)
-    rsidx=${prefix}.rsidx
-    rsidx index $vcf $rsidx
-done
-
-# Get mapping of marker IDs to rsIDs
-./get-marker-rsids.py > marker-rsids-MicroHapDB-0.5.tsv
-
-# Compute allele frequency estimates
-./mhfreqs.py sample-pops.tsv marker-rsids-MicroHapDB-0.5.tsv > frequency.tsv
+snakemake -p all
 ```
-
 
 ## Manual Pre-processing
 
@@ -59,3 +46,4 @@ See `get-marker-rsids.py` for details.
 
 [pandas]: https://pandas.pydata.org
 [rsidx]: https://github.com/bioforensics/rsidx
+[Snakemake]: https://snakemake.readthedocs.io/en/stable/

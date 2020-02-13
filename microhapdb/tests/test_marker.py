@@ -31,21 +31,21 @@ def test_markers():
     >>> import microhapdb
     >>> m = microhapdb.markers
     >>> m[m.Name == 'mh18CP-005']
-               Name          PermID Reference  Chrom                          Offsets   AvgAe  Source
-    350  mh18CP-005  MHDBM-a85754d3    GRCh38  chr18  8892864,8892893,8892896,8892907  3.6722  ALFRED
+               Name          PermID Reference  Chrom                          Offsets   AvgAe      In  Source
+    350  mh18CP-005  MHDBM-a85754d3    GRCh38  chr18  8892864,8892893,8892896,8892907  3.6722  0.0904  ALFRED
     >>> m[m.Name == 'mh01KK-117']
-              Name          PermID Reference Chrom                                  Offsets   AvgAe  Source
-    25  mh01KK-117  MHDBM-39dc025f    GRCh38  chr1  204664211,204664268,204664371,204664397  4.4565  ALFRED
+              Name          PermID Reference Chrom                                  Offsets   AvgAe      In  Source
+    25  mh01KK-117  MHDBM-39dc025f    GRCh38  chr1  204664211,204664268,204664371,204664397  4.4565  0.1933  ALFRED
     >>> m[m.Name == 'mh11PK-63643']
-                 Name          PermID Reference  Chrom                                            Offsets  AvgAe                        Source
-    226  mh11PK-63643  MHDBM-c5ce121f    GRCh38  chr11  34415814,34415816,34415818,34415835,34415836,3...    NaN  10.1016/j.fsigen.2018.05.008
+                 Name          PermID Reference  Chrom                                            Offsets  AvgAe  In                        Source
+    226  mh11PK-63643  MHDBM-c5ce121f    GRCh38  chr11  34415814,34415816,34415818,34415835,34415836,3...    NaN NaN  10.1016/j.fsigen.2018.05.008
     >>> m[m.Name == 'mh02AT-05']
-             Name          PermID Reference Chrom                        Offsets   AvgAe         Source
-    54  mh02AT-05  MHDBM-c3feaba8    GRCh38  chr2  160222899,160222923,160222938  4.5544  ISFG2019:P597
+             Name          PermID Reference Chrom                        Offsets   AvgAe   In         Source
+    54  mh02AT-05  MHDBM-c3feaba8    GRCh38  chr2  160222899,160222923,160222938  4.5544  0.2  ISFG2019:P597
     """
     m = microhapdb.markers
     vm = microhapdb.variantmap
-    assert m.shape == (417, 7)
+    assert m.shape == (417, 8)
     result = m[m.Chrom == 'chr19']
     assert len(result) == 11
     varids = vm[vm.Marker.isin(result.Name)].Variant.unique()
@@ -56,8 +56,8 @@ def test_marker_table(capsys):
     marker = microhapdb.markers[microhapdb.markers.Name == 'mh04CP-003']
     microhapdb.marker.print_table(marker)
     testout = '''
-       Name          PermID Reference Chrom                  Offsets   AvgAe  Source
- mh04CP-003  MHDBM-2be52d8b    GRCh38  chr4  4324722,4324735,4324749  2.9151  ALFRED
+       Name          PermID Reference Chrom                  Offsets   AvgAe      In  Source
+ mh04CP-003  MHDBM-2be52d8b    GRCh38  chr4  4324722,4324735,4324749  2.9151  0.1668  ALFRED
 '''
     terminal = capsys.readouterr()
     assert terminal.out.strip() == testout.strip()
@@ -67,20 +67,20 @@ def test_marker_table_multi(capsys):
     markers = microhapdb.markers.query('Name.str.contains("PK")').head(n=5)
     microhapdb.marker.print_table(markers)
     testout = '''
-         Name          PermID Reference  Chrom                                            Offsets   AvgAe                        Source
- mh06PK-24844  MHDBM-aa39cbba    GRCh38   chr6  13861392,13861399,13861414,13861421,13861430,1...     NaN  10.1016/j.fsigen.2018.05.008
- mh06PK-25713  MHDBM-7d00efdc    GRCh38   chr6  31196949,31196961,31196972,31196985,31196992,3...  2.9544  10.1016/j.fsigen.2018.05.008
- mh07PK-38311  MHDBM-3ae6dc1b    GRCh38   chr7                52677450,52677456,52677462,52677508  3.2638  10.1016/j.fsigen.2018.05.008
- mh08PK-46625  MHDBM-840756f3    GRCh38   chr8                    1194352,1194356,1194364,1194371  2.3775  10.1016/j.fsigen.2018.05.008
- mh10PK-62104  MHDBM-5f9c6cab    GRCh38  chr10  127392565,127392577,127392596,127392610,127392...  2.0068  10.1016/j.fsigen.2018.05.008
+         Name          PermID Reference  Chrom                                            Offsets   AvgAe      In                        Source
+ mh06PK-24844  MHDBM-aa39cbba    GRCh38   chr6  13861392,13861399,13861414,13861421,13861430,1...     NaN     NaN  10.1016/j.fsigen.2018.05.008
+ mh06PK-25713  MHDBM-7d00efdc    GRCh38   chr6  31196949,31196961,31196972,31196985,31196992,3...  2.9544  0.0898  10.1016/j.fsigen.2018.05.008
+ mh07PK-38311  MHDBM-3ae6dc1b    GRCh38   chr7                52677450,52677456,52677462,52677508  3.2638  0.1000  10.1016/j.fsigen.2018.05.008
+ mh08PK-46625  MHDBM-840756f3    GRCh38   chr8                    1194352,1194356,1194364,1194371  2.3775  0.1132  10.1016/j.fsigen.2018.05.008
+ mh10PK-62104  MHDBM-5f9c6cab    GRCh38  chr10  127392565,127392577,127392596,127392610,127392...  2.0068  0.0482  10.1016/j.fsigen.2018.05.008
 '''
     testoutlong = '''
-         Name          PermID Reference  Chrom                                                                                    Offsets   AvgAe                        Source
- mh06PK-24844  MHDBM-aa39cbba    GRCh38   chr6  13861392,13861399,13861414,13861421,13861430,13861434,13861438,13861439,13861440,13861446     NaN  10.1016/j.fsigen.2018.05.008
- mh06PK-25713  MHDBM-7d00efdc    GRCh38   chr6                                      31196949,31196961,31196972,31196985,31196992,31197001  2.9544  10.1016/j.fsigen.2018.05.008
- mh07PK-38311  MHDBM-3ae6dc1b    GRCh38   chr7                                                        52677450,52677456,52677462,52677508  3.2638  10.1016/j.fsigen.2018.05.008
- mh08PK-46625  MHDBM-840756f3    GRCh38   chr8                                                            1194352,1194356,1194364,1194371  2.3775  10.1016/j.fsigen.2018.05.008
- mh10PK-62104  MHDBM-5f9c6cab    GRCh38  chr10                      127392565,127392577,127392596,127392610,127392611,127392620,127392632  2.0068  10.1016/j.fsigen.2018.05.008
+         Name          PermID Reference  Chrom                                                                                    Offsets   AvgAe      In                        Source
+ mh06PK-24844  MHDBM-aa39cbba    GRCh38   chr6  13861392,13861399,13861414,13861421,13861430,13861434,13861438,13861439,13861440,13861446     NaN     NaN  10.1016/j.fsigen.2018.05.008
+ mh06PK-25713  MHDBM-7d00efdc    GRCh38   chr6                                      31196949,31196961,31196972,31196985,31196992,31197001  2.9544  0.0898  10.1016/j.fsigen.2018.05.008
+ mh07PK-38311  MHDBM-3ae6dc1b    GRCh38   chr7                                                        52677450,52677456,52677462,52677508  3.2638  0.1000  10.1016/j.fsigen.2018.05.008
+ mh08PK-46625  MHDBM-840756f3    GRCh38   chr8                                                            1194352,1194356,1194364,1194371  2.3775  0.1132  10.1016/j.fsigen.2018.05.008
+ mh10PK-62104  MHDBM-5f9c6cab    GRCh38  chr10                      127392565,127392577,127392596,127392610,127392611,127392620,127392632  2.0068  0.0482  10.1016/j.fsigen.2018.05.008
 '''
     terminal = capsys.readouterr()
     print(terminal.out)
@@ -91,12 +91,12 @@ def test_marker_table_multi_notrunc(capsys):
     markers = microhapdb.markers.query('Name.str.contains("PK")').head(n=5)
     microhapdb.marker.print_table(markers, trunc=False)
     testoutlong = '''
-         Name          PermID Reference  Chrom                                                                                    Offsets   AvgAe                        Source
- mh06PK-24844  MHDBM-aa39cbba    GRCh38   chr6  13861392,13861399,13861414,13861421,13861430,13861434,13861438,13861439,13861440,13861446     NaN  10.1016/j.fsigen.2018.05.008
- mh06PK-25713  MHDBM-7d00efdc    GRCh38   chr6                                      31196949,31196961,31196972,31196985,31196992,31197001  2.9544  10.1016/j.fsigen.2018.05.008
- mh07PK-38311  MHDBM-3ae6dc1b    GRCh38   chr7                                                        52677450,52677456,52677462,52677508  3.2638  10.1016/j.fsigen.2018.05.008
- mh08PK-46625  MHDBM-840756f3    GRCh38   chr8                                                            1194352,1194356,1194364,1194371  2.3775  10.1016/j.fsigen.2018.05.008
- mh10PK-62104  MHDBM-5f9c6cab    GRCh38  chr10                      127392565,127392577,127392596,127392610,127392611,127392620,127392632  2.0068  10.1016/j.fsigen.2018.05.008
+         Name          PermID Reference  Chrom                                                                                    Offsets   AvgAe      In                        Source
+ mh06PK-24844  MHDBM-aa39cbba    GRCh38   chr6  13861392,13861399,13861414,13861421,13861430,13861434,13861438,13861439,13861440,13861446     NaN     NaN  10.1016/j.fsigen.2018.05.008
+ mh06PK-25713  MHDBM-7d00efdc    GRCh38   chr6                                      31196949,31196961,31196972,31196985,31196992,31197001  2.9544  0.0898  10.1016/j.fsigen.2018.05.008
+ mh07PK-38311  MHDBM-3ae6dc1b    GRCh38   chr7                                                        52677450,52677456,52677462,52677508  3.2638  0.1000  10.1016/j.fsigen.2018.05.008
+ mh08PK-46625  MHDBM-840756f3    GRCh38   chr8                                                            1194352,1194356,1194364,1194371  2.3775  0.1132  10.1016/j.fsigen.2018.05.008
+ mh10PK-62104  MHDBM-5f9c6cab    GRCh38  chr10                      127392565,127392577,127392596,127392610,127392611,127392620,127392632  2.0068  0.0482  10.1016/j.fsigen.2018.05.008
 '''
     terminal = capsys.readouterr()
     print(terminal.out)
@@ -483,13 +483,13 @@ AAGGGCAGCAGGAACCACATGATCAGATTCGCCTTTCGAATAGGTGATTCTGACAGCACTG
 
 
 @pytest.mark.parametrize('name,data', [
-    ('mh04KK-010', 'mh04KK-010  MHDBM-07c8d144    GRCh38  chr4  1985210,1985244  2.9226  ALFRED'),
-    ('mh08PK-46625', 'mh08PK-46625  MHDBM-840756f3    GRCh38  chr8  1194352,1194356,1194364,1194371  2.3775  10.1016/j.fsigen.2018.05.008'),
-    ('mh04AT-10', 'mh04AT-10  MHDBM-07c8d144    GRCh38  chr4  1985210,1985244  2.9226  ISFG2019:P597'),
-    ('mh01NH-03', 'mh01NH-03  MHDBM-e7a95c5e    GRCh38  chr1  184807944,184807966,184808042  1.9086  10.1016/j.legalmed.2015.06.003'),
-    ('mh04CP-004', 'mh04CP-004  MHDBM-8408d717    GRCh38  chr4  7402842,7402854,7402870  2.6744  10.1016/j.fsigen.2019.02.018'),
-    ('mh03LV-07', ' mh03LV-07  MHDBM-5f7e29b6    GRCh38  chr3  5783508,5783509,5783518,5783523,5783525,5783531,5783541,5783542,5783543,5783544,5783552,5783562,5783564,5783571,5783577,5783607,5783608,5783611,5783612,5783617,5783618,5783619,5783623,5783626,5783635,5783648,5783652,5783653,5783663,5783664,5783671,5783672,5783673,5783676,5783677,5783678,5783681,5783684,5783687,5783695,5783704,5783705  14.0275  10.1016/j.fsigen.2018.05.001'),
-    ('mh09USC-9pB', 'mh09USC-9pB  MHDBM-7da7af40    GRCh38  chr9  31196676,31196714,31196731,31196744  3.0919  10.1016/j.fsigen.2019.102213'),
+    ('mh04KK-010', 'mh04KK-010  MHDBM-07c8d144    GRCh38  chr4  1985210,1985244  2.9226  0.1306  ALFRED'),
+    ('mh08PK-46625', 'mh08PK-46625  MHDBM-840756f3    GRCh38  chr8  1194352,1194356,1194364,1194371  2.3775  0.1132  10.1016/j.fsigen.2018.05.008'),
+    ('mh04AT-10', 'mh04AT-10  MHDBM-07c8d144    GRCh38  chr4  1985210,1985244  2.9226  0.1306  ISFG2019:P597'),
+    ('mh01NH-03', 'mh01NH-03  MHDBM-e7a95c5e    GRCh38  chr1  184807944,184807966,184808042  1.9086  0.1987  10.1016/j.legalmed.2015.06.003'),
+    ('mh04CP-004', 'mh04CP-004  MHDBM-8408d717    GRCh38  chr4  7402842,7402854,7402870  2.6744  0.0477  10.1016/j.fsigen.2019.02.018'),
+    ('mh03LV-07', 'mh03LV-07  MHDBM-5f7e29b6    GRCh38  chr3  5783508,5783509,5783518,5783523,5783525,5783531,5783541,5783542,5783543,5783544,5783552,5783562,5783564,5783571,5783577,5783607,5783608,5783611,5783612,5783617,5783618,5783619,5783623,5783626,5783635,5783648,5783652,5783653,5783663,5783664,5783671,5783672,5783673,5783676,5783677,5783678,5783681,5783684,5783687,5783695,5783704,5783705  14.0275  1.081  10.1016/j.fsigen.2018.05.001'),
+    ('mh09USC-9pB', 'mh09USC-9pB  MHDBM-7da7af40    GRCh38  chr9  31196676,31196714,31196731,31196744  3.0919  0.1616  10.1016/j.fsigen.2019.102213'),
 ])
 def test_all_sources(name, data, capsys):
     marker = microhapdb.markers[microhapdb.markers.Name == name]

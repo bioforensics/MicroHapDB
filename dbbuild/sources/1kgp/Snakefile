@@ -1,0 +1,54 @@
+# -----------------------------------------------------------------------------
+# Copyright (c) 2019, Battelle National Biodefense Institute.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
+# and is licensed under the BSD license: see LICENSE.txt.
+# -----------------------------------------------------------------------------
+
+import pandas
+
+rule all:
+    input: 'frequency.tsv', 'marker-informativeness.tsv'
+
+
+rule download:
+    output: expand('ALL.chr{chrom}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz', chrom=[n + 1 for n in range(22)])
+    shell: './download.sh'
+
+
+rule index:
+    output: expand('ALL.chr{chrom}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.rsidx', chrom=[n + 1 for n in range(22)])
+    shell: './index.sh'
+
+
+rule markerrsids:
+    input: 'get-marker-rsids.py'
+    output: 'marker-rsids-MicroHapDB-0.5.tsv'
+    shell: './get-marker-rsids.py > marker-rsids-MicroHapDB-0.5.tsv'
+
+
+rule freqs:
+    input:
+        'mhfreqs.py',
+        'sample-pops.tsv',
+        'marker-rsids-MicroHapDB-0.5.tsv'
+    output:
+        'frequency.tsv'
+    shell: './mhfreqs.py sample-pops.tsv marker-rsids-MicroHapDB-0.5.tsv > frequency.tsv'
+
+
+rule informativeness:
+    input:
+        'prepinfocalc.py',
+        'infocalc',
+        'cleanup-in.py',
+        'sample-pops.tsv',
+        'marker-rsids-MicroHapDB-0.5.tsv'
+    output:
+        'marker-informativeness.tsv'
+    shell:
+        '''
+        ./prepinfocalc.py sample-pops.tsv marker-rsids-MicroHapDB-0.5.tsv > individual-haplotypes.txt
+        ./infocalc -column 2 -numpops 26 -input individual-haplotypes.txt -output marker-informativeness.txt
+        ./cleanup-in.py < marker-informativeness.txt > marker-informativeness.tsv
+        '''

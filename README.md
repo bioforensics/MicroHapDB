@@ -68,7 +68,7 @@ To access MicroHapDB from Python, simply invoke `import microhapdb` and query th
 - `microhapdb.populations`
 - `microhapdb.frequencies`
 
-Each is a [Pandas][]<sup>[11]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
+Each is a [Pandas][]<sup>[13]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
 
 <img alt="MicroHapDB Python API" src="img/microhapdb-python-api.gif" width="600px" />
 
@@ -80,6 +80,17 @@ MicroHapDB also includes 4 auxiliary tables, which may be useful in a variety of
 - `microhapdb.idmap`: cross-references external names and identifiers with internal MicroHapDB identifiers
 - `microhapdb.sequences`: contains the sequence spanning and flanking each microhap locus
 - `microhapdb.indels`: contains variant information for markers that include insertion/deletion variants
+
+
+## Ranking Markers
+
+MicroHapDB provides two criteria for ranking markers.
+
+- `AvgAe`: the marker's effective number of alleles (*A<sub>e</sub>*) computed individually for 26 populations and then averaged<sup>[11]</sup>
+- `In`: Rosenberg's informativeness for assignment (*I<sub>n</sub>*) computed on 26 populations<sup>[12]</sup>
+
+The `AvgAe` statistic is a measure of the *within-population* allelic variation at a locus, which corresponds to the marker's diagnostic power for identification purposes.
+The `In` statistic is a measure of *between-population* allelec variation at a locus, which corresponds to the marker's utility for predicting population of origin.
 
 
 ## Adding Markers to MicroHapDB
@@ -131,9 +142,15 @@ If you use this package, please cite our work.
 
 <sup>[10]</sup>Auton A, Abecasis G, Altshuler D, et al. (2015) A global reference for human genetic variation. *Nature* 526:68–74, [doi:10.1038/nature15393](https://doi.org/10.1038/nature15393).
 
+### Ranking Statistics
+
+<sup>[11]</sup>Crow JF, Kimura M (1970) <u>An Introduction to Population Genetics Theory</u>. New York, Harper & Row.
+
+<sup>[12]</sup>Rosenberg NA, Li LM, Ward R, Pritchard JK (2003) Informativeness of genetic markers for inference of ancestry. *American Journal of Human Genetics*, 73(6):1402–1422, [doi:10.1086/380416](https://doi.org/10.1086/380416).
+
 ### Supporting Software
 
-<sup>[11]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
+<sup>[13]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
 
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp

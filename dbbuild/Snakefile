@@ -142,6 +142,14 @@ def sort_and_clean(data):
     return data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'AvgAe', 'Source']]
 
 
+def add_informativeness(data, informfile):
+    info = pandas.read_csv(informfile, sep='\t')
+    data['In'] = None
+    for n, row in info.iterrows():
+        data.loc[data.Name == row.Marker, 'In'] = row.Informativeness
+    return data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'AvgAe', 'In', 'Source']]
+
+
 SOURCES = [os.path.basename(file) for file in glob('sources/*') if os.path.isdir(file)]
 
 
@@ -202,6 +210,7 @@ rule markers:
     input:
         config['refr'],
         'frequency.tsv',
+        'sources/1kgp/marker-informativeness.tsv',
         expand('sources/{source}/marker.tsv', source=SOURCES),
         expand('sources/{source}/source.txt', source=SOURCES),
     output:
@@ -210,7 +219,8 @@ rule markers:
         idmap='marker-idmap.tsv'
     run:
         freqfile = input[1]
-        input = input[2:]
+        informfile = input[2]
+        input = input[3:]
         numsources = int(len(input) / 2)
         markerfiles = input[:numsources]
         sourcefiles = input[numsources:]
@@ -226,6 +236,7 @@ rule markers:
         idmap.to_csv(output.idmap, sep='\t', index=False)
 
         data = sort_and_clean(data)
+        data = add_informativeness(data, informfile)
         data.to_csv(output.table, sep='\t', index=False)
 
 
