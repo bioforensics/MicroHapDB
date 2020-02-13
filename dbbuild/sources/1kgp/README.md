@@ -12,6 +12,7 @@ The following software is required to compile the published data into the table 
 - Python 3
 - wget
 - tabix (part of the [samtools/HTSlib project](https://github.com/samtools/htslib))
+- infocalc (included in this directory)
 - [pandas][]
 - [rsidx][]
 - [Snakemake][]
@@ -21,7 +22,6 @@ Run the following commands from the `dbbuild/sources/1kgp/` directory to compile
 ```bash
 snakemake -p all
 ```
-
 
 ## Manual Pre-processing
 
