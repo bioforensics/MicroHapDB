@@ -92,6 +92,16 @@ def mhfreqs(rsids, vcffile, rsidxfile, samplepops):
             yield population, allele, freq
 
 
+def get_indexes_for_marker(marker):
+    chrom = marker[2:4]
+    if chrom[0] == '0':
+        chrom = chrom[1]
+    prefix = 'ALL.chr' + chrom + '.phase3_shapeit2_mvncall_integrated_v??.20130502.genotypes'
+    vcf = glob(prefix + '.vcf.gz')[0]
+    rsidx = glob(prefix + '.rsidx')[0]
+    return vcf, rsidx
+
+
 def main(args):
     '''Driver function'''
     samplepops = load_population_data(args.samplepops)
@@ -105,12 +115,7 @@ def main(args):
 
     print('Marker', 'Population', 'Allele', 'Frequency', sep='\t')
     for marker, rsids in marker_rsids.items():
-        chrom = marker[2:4]
-        if chrom[0] == '0':
-            chrom = chrom[1]
-        prefix = 'ALL.chr' + chrom + '.phase3_shapeit2_mvncall_integrated_v??.20130502.genotypes'
-        vcf = glob(prefix + '.vcf.gz')[0]
-        rsidx = glob(prefix + '.rsidx')[0]
+        vcf, rsidx = get_indexes_for_marker(marker)
         if not os.path.exists(vcf) or not os.path.exists(rsidx):
             raise RuntimeError('VCF and/or RSIDX files do not exist')
         for values in mhfreqs(rsids, vcf, rsidx, samplepops):
