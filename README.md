@@ -68,7 +68,7 @@ To access MicroHapDB from Python, simply invoke `import microhapdb` and query th
 - `microhapdb.populations`
 - `microhapdb.frequencies`
 
-Each is a [Pandas][]<sup>[11]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
+Each is a [Pandas][]<sup>[13]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
 
 <img alt="MicroHapDB Python API" src="img/microhapdb-python-api.gif" width="600px" />
 
