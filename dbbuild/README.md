@@ -44,7 +44,7 @@ cp *.tsv ../microhapdb/data/
 ## The Long Version: Sources
 
 Each source of microhap data has a dedicated directory located in `dbbuild/sources/`.
-As of this writing, this includes `dbbuild/sources/alfred2018/`, `dbbuild/sources/vandergaag2018/`, and `dbbuild/sources/staadig2019/`.
+As of this writing, this includes `dbbuild/sources/alfred2018/`, `dbbuild/sources/vandergaag2018/`, `dbbuild/sources/staadig2019/`. `dbbuild/sources/chen2019/`, `dbbuild/sources/hiroaki2015/`, `dbbuild/sources/voskoboinik2018/`, `dbbuild/sources/puentephillips2020/`, and `dbbuild/sources/1kgp/`.
 Re-compiling the database to include additional data sources is a matter of creating a new directory<sup>1</sup> in `dbbuild/sources/`, populating it with appropriately formatted files (described in section "**Data Required for Each Source**"), and executing the database build workflow (the `snakemake` command described above).
 
 <sup>1</sup>Directories should have descriptive names, corresponding to a database name or the first author of a corresponding publication, followed by the year of access or publication.
@@ -64,7 +64,7 @@ A description of each required file is given below.
 In addition to these 4-5 files, it is expected that raw original data files will be provided, along with code to transform the data into the required format and instructions for running the code.
 No constraints are imposed regarding how these supporting files are named, what programming language is used, etc.—only that the pre-processing procedure can be replicated without requiring an unreasonable amount of time or effort.
 
-If a particular data source provides only population data, or only marker data, etc, the other required files should simply contain an empty file except for the header line.
+If a particular data source provides only population data, or only marker data, etc., the other required files should simply contain an empty file except for the header line.
 
 ### `marker.tsv`
 
@@ -98,18 +98,14 @@ It includes the following fields.
 - `Name`: a free-text description of the population, intended to be human readable
 - `Xref`: optional cross-reference
 
-For example, some selected entries of the `population.tsv` for ALFRED look like this.
+For example, the first few lines of the `population.tsv` for the 1000 Genomes Project data look like this.
 
 ```
-ID	Name	Xref
-SA000001B	Han
-SA000002C	Ami
-SA000003D	Hakka
-SA000005F	Biaka
-LWK	Luhya in Webuye, Kenya	SA004046O
-ASW	Americans of African Ancestry in SW USA	SA004047P
-YRI	Yoruba in Ibadan, Nigeria	SA004048Q
-FIN	Finnish in Finland	SA004049R
+ID      Name    Xref
+CHB     Han Chinese in Beijing, China   SA004058R
+JPT     Japanese in Tokyo, Japan        SA004060K
+CHS     Southern Han Chinese    SA004059S
+CDX     Chinese Dai in Xishuangbanna, China     SA004238R
 ```
 
 **NOTE**: population names need not be unique, but `Xref` identifiers must be unique across all sources.
@@ -124,17 +120,18 @@ It includes the following fields.
 - `Allele`: the allele of each variant in the microhap, separated by dashes
 - `Frequency`: the frequency of the allele in the specified population (a real number between 0.0 and 1.0)
 
-For example, the first few lines of the `frequency.tsv` for ALFRED look like this.
+For example, the first few lines of the `frequency.tsv` for van der Gaag (2018) look like this.
 
 ```
-Marker	Population	Allele	Frequency
-SI664726F	SA000001B	G,C,T	0.01
-SI664726F	SA000001B	G,C,C	0.0
-SI664726F	SA000001B	G,A,C	0.0
-SI664726F	SA000001B	C,C,T	0.0
-SI664726F	SA000001B	C,C,C	0.99
-SI664726F	SA000001B	C,A,C	0.0
-SI664726F	SA000002C	G,C,T	0.0
+Marker  Population      Allele  Frequency
+mh06PK-24844    MHDBP-383d86606a        T,C,G,C,C,C,A,A,G,A     0.0000
+mh06PK-24844    MHDBP-936bc36f79        T,C,G,C,C,C,A,A,G,A     0.0000
+mh06PK-24844    MHDBP-3dab7bdd14        T,C,G,C,C,C,A,A,G,A     0.1230
+mh06PK-24844    MHDBP-383d86606a        T,C,G,C,C,T,A,A,G,G     0.5660
+mh06PK-24844    MHDBP-936bc36f79        T,C,G,C,C,T,A,A,G,G     0.5860
+mh06PK-24844    MHDBP-3dab7bdd14        T,C,G,C,C,T,A,A,G,G     0.4250
+mh06PK-24844    MHDBP-383d86606a        C,C,G,C,C,C,A,A,G,A     0.0710
+mh06PK-24844    MHDBP-936bc36f79        C,C,G,C,C,C,A,A,G,A     0.0000
 ```
 
 ### `source.txt`
@@ -162,7 +159,7 @@ It includes the following fields.
 - `Refr`: the allele represented in the reference genome
 - `Alt`: the alternate allele (or comma-separated list of alternate alleles) present in the marker definition
 
-For example, the `indel.tsv` file for ALFRED looks like this.
+For example, the entire `indel.tsv` file for ALFRED looks like this.
 
 ```
 Marker	VariantIndex	Refr	Alt
@@ -192,7 +189,6 @@ So for example, for marker `mh07PK-38311`:
 ...and therefore the PermID is `MHDBM-3ae6dc1b`.
 
 MicroHapDB uses the [pearhash](https://github.com/ze-phyr-us/pearhash) library under the MIT license to compute Pearson hashes.
-
 
 
 [Pandas]: https://pandas.pydata.org

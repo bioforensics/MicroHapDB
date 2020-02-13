@@ -50,6 +50,13 @@ The ALFRED database publishes 1GKP-derived frequencies for some markers.
 For many markers there is perfect agreement between ALFRED and MicroHapDB, but in some cases there are slight or notable differences.
 After correspondence with the ALFRED curators, we suspect that these differences are due to their use of PHASE over all aggregated data sets to statistically infer haplotypes, while MicroHapDB relies entirely on haplotypes as published in the 1KGP data.
 
+Some markers are defined by rsIDs that are present in recent versions of dbSNP, but have no corresponding entries in the 1KGP VCFs.
+These markers are excluded from MicroHapDB's 1KGP frequency estimates. 
+
+Some markers are defined by rsIDs that have been updated since the 1KGP Phase 3 VCFs were published.
+For the purposes of estimating microhap frequencies, these variants are reverted to their old rsID.
+See `get-marker-rsids.py` for details.
+
 
 [pandas]: https://pandas.pydata.org
 [rsidx]: https://github.com/bioforensics/rsidx
