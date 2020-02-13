@@ -47,8 +47,8 @@ def standardize_population_ids(idents):
 def by_region(regionstr):
     '''Retrieve data from the specied genomic region
 
-    >>> by_region('chr19')by_region('chr19')
-             Name          PermID Reference  Chrom                                       Offsets   AvgAe                          Source
+    >>> by_region('chr19')
+                 Name          PermID Reference  Chrom                                       Offsets   AvgAe                          Source
     359  mh19USC-19pA  MHDBM-2d713eab    GRCh38  chr19                          561778,561795,561815  2.7453    10.1016/j.fsigen.2019.102213
     360    mh19KK-056  MHDBM-d6ff8635    GRCh38  chr19                               4852124,4852324  2.4391                          ALFRED
     361    mh19CP-007  MHDBM-49dbcc57    GRCh38  chr19                    14310739,14310772,14310780  3.0813                          ALFRED

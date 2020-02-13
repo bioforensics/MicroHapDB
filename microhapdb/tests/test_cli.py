@@ -240,8 +240,8 @@ def test_main_marker_panel_region_conflict(capsys):
     ('--population=Swedish', None, None, 138),
     ('--population=SA000009J', '--marker=mh13KK-218', None, 15),
     (None, '--marker=mh13KK-218', '--allele=C,T,C,T', 97),
-    (None, '--marker=mh14PK-72639', None, 46),
-    (None, None, None, 82807)
+    (None, '--marker=mh14PK-72639', None, 217),
+    (None, None, None, 113477)
 ])
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
     testargs = (pop, marker, allele)
@@ -258,7 +258,9 @@ def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
     'beta',
 ])
 def test_main_panel(panel, capsys):
-    arglist = ['marker', '--panel', panel, '--format=fasta', '--delta=25', '--min-length=250']
+    arglist = [
+        'marker', '--panel', panel + '_legacy', '--format=fasta', '--delta=25', '--min-length=250'
+    ]
     args = get_parser().parse_args(arglist)
     microhapdb.cli.main(args)
     terminal = capsys.readouterr()
@@ -273,5 +275,5 @@ def test_lookup(capsys):
     args = get_parser().parse_args(arglist)
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
-    assert 'mh09KK-033  MHDBM-8458b727    GRCh38  chr9         680713,680762,680790  2.8101         ALFRED' in out
-    assert ' mh09AT-15  MHDBM-b46abf2e    GRCh38  chr9  680713,680762,680767,680790  2.8991  ISFG2019:P597' in out
+    assert 'mh09KK-033  MHDBM-8458b727    GRCh38  chr9         680713,680762,680790  2.9343         ALFRED' in out
+    assert ' mh09AT-15  MHDBM-b46abf2e    GRCh38  chr9  680713,680762,680767,680790  2.9471  ISFG2019:P597' in out

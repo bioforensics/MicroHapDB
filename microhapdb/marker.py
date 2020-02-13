@@ -264,8 +264,6 @@ class TargetAmplicon():
                     print('.' * blocklength, end='', file=out)
                 else:
                     n += 1
-                    import sys
-                    print('DEBUG', n, len(allelevars), len(self.variant_lengths), file=sys.stderr)
                     allelestr = '{allele:-<{length:d}s}'.format(
                         allele=allelevars[n], length=self.variant_lengths[n]
                     )
