@@ -33,7 +33,7 @@ rsidx index /path/to/dbSNP.vcf.gz /path/to/dbSNP.rsidx
 The file `table1-subset.tsv` was created manually from Table 1 of the manuscript.
 
 
-## Known issues
+## Known Issues
 
 Only a summary of the marker definitions is reported in the paper.
 Details about each marker are not provided, and despite extensive communication with the corresponding author I was unable to resolve discrepancies between the published summary and my replication of the marker selection.

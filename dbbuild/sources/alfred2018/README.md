@@ -47,5 +47,14 @@ Run the following command from the `dbbuild/sources/alfred2018/` directory to co
 snakemake --config dbsnp=/path/to/dbSNP.vcf.gz rsidx=/path/to/dbSNP.rsidx -p all
 ```
 
+
+### Known Issues
+
+The ALFRED database publishes 1GKP-derived frequencies for some markers.
+For many markers there is perfect agreement between ALFRED and MicroHapDB, but in some cases there are slight or notable differences.
+After correspondence with the ALFRED curators, we suspect that these differences are due to their use of PHASE over all aggregated data sets to statistically infer haplotypes, while MicroHapDB relies entirely on haplotypes as published in the 1KGP data.
+
+1KGP-derived frequencies published by ALFRED are stored here in `frequency-1kgp.tsv` but are not integrated into the final MicroHapDB database.
+
 [Snakemake]: https://snakemake.readthedocs.io/en/stable/
 [rsidx]: https://github.com/bioforensics/rsidx
