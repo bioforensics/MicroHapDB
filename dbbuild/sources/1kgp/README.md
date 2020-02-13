@@ -19,7 +19,6 @@ Run the following commands from the `dbbuild/sources/1kgp/` directory to compile
 
 ```bash
 # Download 1000 Genomes Project Phase 3 data
-# Note: this script is also used to build the voskoboinik2018 source; theis data only needs to be downloaded once
 ./download.sh
 
 # Build rsidx index for 1KGP VCFs

@@ -8,3 +8,7 @@ for i in {1..22}; do
     wget ${filename}.tbi
     wget ${filename}
 done
+
+filename="${root}/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1b.20130502.genotypes.vcf.gz"
+wget ${filename}.tbi
+wget ${filename}
