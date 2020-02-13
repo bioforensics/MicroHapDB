@@ -4,28 +4,33 @@ from argparse import ArgumentParser
 from collections import defaultdict
 from glob import glob
 import os
+import pandas
 import rsidx
 import sqlite3
 
 
 def cli():
+    '''Command line interface'''
     parser = ArgumentParser()
-    parser.add_argument('samplepops')
-    parser.add_argument('markerrsids')
+    parser.add_argument(
+        'samplepops', help='two-column table with 1KGP sample in the first column and the '
+        'corresponding 1KGP 3-character population code in the second column'
+    )
+    parser.add_argument(
+        'markerrsids', help='two-column table with marker identifier in the first column and a '
+        'comma-separated list of corresponding rsIDs in the second column'
+    )
     return parser
 
 
 def load_population_data(filename):
-    samplepops = dict()
-    with open(filename, 'r') as fh:
-        next(fh)
-        for line in fh:
-            sample, population = line.strip().split('\t')
-            samplepops[sample] = population
-    return samplepops
+    '''Load the population code for each 1KGP sample'''
+    popsdf = pandas.read_csv(filename, sep='\t')
+    return pandas.Series(popsdf.Population.values, index=popsdf.Sample).to_dict()
 
 
 def construct_haplotypes(rsids, vcf, rsidxfile):
+    '''Construct haplotypes from each marker's list of rsIDS'''
     samples = list()
     haplo1 = defaultdict(list)
     haplo2 = defaultdict(list)
@@ -59,6 +64,7 @@ def construct_haplotypes(rsids, vcf, rsidxfile):
 
 
 def compute_pop_counts(samples, haplo1, haplo2, samplepops):
+    '''Tally up observed haplotypes by population'''
     popallelecounts = defaultdict(lambda: defaultdict(int))
     for sample in samples:
         population = samplepops[sample]
@@ -71,6 +77,12 @@ def compute_pop_counts(samples, haplo1, haplo2, samplepops):
 
 
 def mhfreqs(rsids, vcffile, rsidxfile, samplepops):
+    '''Estimate microhaplotype frequences from the 1KGP data
+
+    Construct haplotypes for each marker, compute a tally of allelic
+    combinations observed in each population, and then compute the frequency
+    for each.
+    '''
     samples, haplo1, haplo2 = construct_haplotypes(rsids, vcffile, rsidxfile)
     popallelecounts = compute_pop_counts(samples, haplo1, haplo2, samplepops)
     for population, allelecounts in popallelecounts.items():
@@ -81,6 +93,7 @@ def mhfreqs(rsids, vcffile, rsidxfile, samplepops):
 
 
 def main(args):
+    '''Driver function'''
     samplepops = load_population_data(args.samplepops)
 
     marker_rsids = dict()

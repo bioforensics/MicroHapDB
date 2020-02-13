@@ -12,6 +12,7 @@ The following software is required to compile the published data into the table 
 - Python 3
 - wget
 - tabix (part of the [samtools/HTSlib project](https://github.com/samtools/htslib))
+- [pandas][]
 - [rsidx][]
 
 Run the following commands from the `dbbuild/sources/1kgp/` directory to compile the data into the table format required by MicroHapDB.
@@ -50,4 +51,5 @@ For many markers there is perfect agreement between ALFRED and MicroHapDB, but i
 After correspondence with the ALFRED curators, we suspect that these differences are due to their use of PHASE over all aggregated data sets to statistically infer haplotypes, while MicroHapDB relies entirely on haplotypes as published in the 1KGP data.
 
 
+[pandas]: https://pandas.pydata.org
 [rsidx]: https://github.com/bioforensics/rsidx
