@@ -60,7 +60,7 @@ def test_marker_table(capsys):
  mh04CP-003  MHDBM-2be52d8b    GRCh38  chr4  4324722,4324735,4324749  2.9151  ALFRED
 '''
     terminal = capsys.readouterr()
-    assert terminal.out.strip() == testout.strip() or terminal.out.strip() == testoutlong.strip()
+    assert terminal.out.strip() == testout.strip()
 
 
 def test_marker_table_multi(capsys):
@@ -84,7 +84,7 @@ def test_marker_table_multi(capsys):
 '''
     terminal = capsys.readouterr()
     print(terminal.out)
-    assert terminal.out.strip() == testout.strip()
+    assert terminal.out.strip() == testout.strip() or terminal.out.strip() == testoutlong.strip()
 
 
 def test_marker_table_multi_notrunc(capsys):
