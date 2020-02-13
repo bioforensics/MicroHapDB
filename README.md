@@ -8,7 +8,8 @@ Daniel Standage, 2018-2020
 https://github.com/bioforensics/microhapdb
 
 **MicroHapDB** is a portable database intended for scientists and researchers interested in microhaplotypes for forensic analysis.
-The database includes a comprehensive collection of marker and allele frequency data from numerous databases and published research articles<sup>[1-10]</sup>.
+The database includes a comprehensive collection of marker and allele frequency data from numerous databases and published research articles.<sup>[1-10]</sup>
+Effective number of allele (*A<sub>e</sub>*)<sup>[11]</sup> and informativeness for assignment (*I<sub>n</sub>*)<sup>[12]</sup> statistics are included so that markers can be ranked for different forensic applications.
 The entire contents of the database are distributed with each copy of MicroHapDB, and instructions for adding private data to a local copy of the database are provided.
 MicroHapDB is designed to be user-friendly for both practitioners and researchers, supporting a range of access methods from browsing to simple text queries to complex queries to full programmatic access via a Python API.
 
@@ -90,7 +91,8 @@ MicroHapDB provides two criteria for ranking markers.
 - `In`: Rosenberg's informativeness for assignment (*I<sub>n</sub>*) computed on 26 populations<sup>[12]</sup>
 
 The `AvgAe` statistic is a measure of the *within-population* allelic variation at a locus, which corresponds to the marker's diagnostic power for identification purposes.
-The `In` statistic is a measure of *between-population* allelec variation at a locus, which corresponds to the marker's utility for predicting population of origin.
+The `In` statistic is a measure of *between-population* allelic variation at a locus, which corresponds to the marker's utility for predicting population of origin.
+Phased genotypes for 2,504 individuals from Phase 3 of the 1000 Genomes Project<sup>[10]</sup> are used to calculate both statistics.
 
 
 ## Adding Markers to MicroHapDB
