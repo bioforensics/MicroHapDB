@@ -2,7 +2,7 @@
 
 ## Citations
 
-Auton A, Abecasis G, Altshuler D, et al. (2015) A global reference for human genetic variation. *Nature* **526**:68–74,  [doi:10.1038/nature15393](https://doi.org/10.1038/nature15393).
+Auton A, Abecasis G, Altshuler D, et al. (2015) A global reference for human genetic variation. *Nature* **526**:68–74, [doi:10.1038/nature15393](https://doi.org/10.1038/nature15393).
 
 
 ## Build Process

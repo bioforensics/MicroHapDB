@@ -60,7 +60,7 @@ def test_marker_table(capsys):
  mh04CP-003  MHDBM-2be52d8b    GRCh38  chr4  4324722,4324735,4324749  2.9151  ALFRED
 '''
     terminal = capsys.readouterr()
-    assert terminal.out.strip() == testout.strip()
+    assert terminal.out.strip() == testout.strip() or terminal.out.strip() == testoutlong.strip()
 
 
 def test_marker_table_multi(capsys):
@@ -74,15 +74,7 @@ def test_marker_table_multi(capsys):
  mh08PK-46625  MHDBM-840756f3    GRCh38   chr8                    1194352,1194356,1194364,1194371  2.3775  10.1016/j.fsigen.2018.05.008
  mh10PK-62104  MHDBM-5f9c6cab    GRCh38  chr10  127392565,127392577,127392596,127392610,127392...  2.0068  10.1016/j.fsigen.2018.05.008
 '''
-    terminal = capsys.readouterr()
-    print(terminal.out)
-    assert terminal.out.strip() == testout.strip()
-
-
-def test_marker_table_multi_notrunc(capsys):
-    markers = microhapdb.markers.query('Name.str.contains("PK")').head(n=5)
-    microhapdb.marker.print_table(markers, trunc=False)
-    testout = '''
+    testoutlong = '''
          Name          PermID Reference  Chrom                                                                                    Offsets   AvgAe                        Source
  mh06PK-24844  MHDBM-aa39cbba    GRCh38   chr6  13861392,13861399,13861414,13861421,13861430,13861434,13861438,13861439,13861440,13861446     NaN  10.1016/j.fsigen.2018.05.008
  mh06PK-25713  MHDBM-7d00efdc    GRCh38   chr6                                      31196949,31196961,31196972,31196985,31196992,31197001  2.9544  10.1016/j.fsigen.2018.05.008
@@ -93,6 +85,22 @@ def test_marker_table_multi_notrunc(capsys):
     terminal = capsys.readouterr()
     print(terminal.out)
     assert terminal.out.strip() == testout.strip()
+
+
+def test_marker_table_multi_notrunc(capsys):
+    markers = microhapdb.markers.query('Name.str.contains("PK")').head(n=5)
+    microhapdb.marker.print_table(markers, trunc=False)
+    testoutlong = '''
+         Name          PermID Reference  Chrom                                                                                    Offsets   AvgAe                        Source
+ mh06PK-24844  MHDBM-aa39cbba    GRCh38   chr6  13861392,13861399,13861414,13861421,13861430,13861434,13861438,13861439,13861440,13861446     NaN  10.1016/j.fsigen.2018.05.008
+ mh06PK-25713  MHDBM-7d00efdc    GRCh38   chr6                                      31196949,31196961,31196972,31196985,31196992,31197001  2.9544  10.1016/j.fsigen.2018.05.008
+ mh07PK-38311  MHDBM-3ae6dc1b    GRCh38   chr7                                                        52677450,52677456,52677462,52677508  3.2638  10.1016/j.fsigen.2018.05.008
+ mh08PK-46625  MHDBM-840756f3    GRCh38   chr8                                                            1194352,1194356,1194364,1194371  2.3775  10.1016/j.fsigen.2018.05.008
+ mh10PK-62104  MHDBM-5f9c6cab    GRCh38  chr10                      127392565,127392577,127392596,127392610,127392611,127392620,127392632  2.0068  10.1016/j.fsigen.2018.05.008
+'''
+    terminal = capsys.readouterr()
+    print(terminal.out)
+    assert terminal.out.strip() == testoutlong.strip()
 
 
 def test_marker_detail(capsys):

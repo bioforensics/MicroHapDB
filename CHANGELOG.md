@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Added 10 marker definitions from Voskoboinik et al 2018 (see #47).
 - Added 118 marker definitions from de la Puente, Phillips, et al 2020 (see #49, #54).
+- Added microhap frequency estimates for 26 global populations to all markers from the 1000 Genomes Project Phase 3 data (see (see #55).
 
 ### Fixed
 - Removed duplicate entry for marker `mh11CP-004` (see #46).
