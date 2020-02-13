@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [0.5] 2020-02-13
 
 ### Added
 - Added 10 marker definitions from Voskoboinik et al 2018 (see #47).
