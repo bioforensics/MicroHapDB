@@ -44,7 +44,17 @@ cp *.tsv ../microhapdb/data/
 ## The Long Version: Sources
 
 Each source of microhap data has a dedicated directory located in `dbbuild/sources/`.
-As of this writing, this includes `dbbuild/sources/alfred2018/`, `dbbuild/sources/vandergaag2018/`, `dbbuild/sources/staadig2019/`. `dbbuild/sources/chen2019/`, `dbbuild/sources/hiroaki2015/`, `dbbuild/sources/voskoboinik2018/`, `dbbuild/sources/puentephillips2020/`, and `dbbuild/sources/1kgp/`.
+As of this writing, this includes the following.
+
+- `dbbuild/sources/alfred2018/`
+- `dbbuild/sources/vandergaag2018/`
+- `dbbuild/sources/staadig2019/`
+- `dbbuild/sources/chen2019/`
+- `dbbuild/sources/hiroaki2015/`
+- `dbbuild/sources/voskoboinik2018/`
+- `dbbuild/sources/puentephillips2020/`
+- `dbbuild/sources/1kgp/`
+
 Re-compiling the database to include additional data sources is a matter of creating a new directory<sup>1</sup> in `dbbuild/sources/`, populating it with appropriately formatted files (described in section "**Data Required for Each Source**"), and executing the database build workflow (the `snakemake` command described above).
 
 <sup>1</sup>Directories should have descriptive names, corresponding to a database name or the first author of a corresponding publication, followed by the year of access or publication.
