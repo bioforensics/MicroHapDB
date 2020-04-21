@@ -33,8 +33,15 @@ def merge_markers(markerfiles, sourcefiles):
 def write_variant_map(data, output):
     print('Variant', 'Marker', sep='\t', file=output)
     for n, row in data.iterrows():
-        marker = row['Name']
-        for variant in row['VarRef'].split(','):
+        marker = row.Name
+        numoffsets = row.Offsets.count(',') + 1
+        numrsids = row.VarRef.count(',') + 1
+        if numoffsets != numrsids:
+            message = 'marker "{name:s}" has {no:d} variants but only {nv:d} rsids'.format(
+                name=marker, no=numoffsets, nv=numrsids
+            )
+            print('WARNING:', message, file=sys.stderr)
+        for variant in row.VarRef.split(','):
             print(variant, marker, sep='\t', file=output)
 
 
