@@ -6,17 +6,13 @@ de la Puente M, Phillips C, Xavier C, Amigo J, Carracedo A, Parson W, Lareu MV (
 
 ## Build Process
 
-The following software is required to compile the published data into the table format required by MicroHapDB.
-
-- Python 3
-- [Snakemake][]
-- [rsidx][]
-
-To build the TSV files required by MicroHapDB, run the following command from the `dbbuild/sources/puentephillips2020/` directory.
+Run the following command from the `dbbuild/sources/puentephillips2020/` directory to compile the data into the table format required by MicroHapDB.
 
 ```
-snakemake --config dbsnp=/path/to/dbSNP.vcf.gz rsidx=/path/to/dbSNP.rsidx -p all
+snakemake --configfile ../../config.json -p all
 ```
+
+## Appendix
 
 ## Manual Pre-processing
 
