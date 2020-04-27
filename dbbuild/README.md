@@ -23,16 +23,15 @@ conda activate microhapdb
 ```
 
 Next, building MicroHapDB from scratch also requires the human reference genome, dbSNP, and the 1000 Genomes Project Phase 3 data.
-These can be downloaded and indexed using with the `prep-dbs.sh` script.
+These can be downloaded and indexed using the `prep-dbs.sh` script.
+In the command below, replace `8` with the number of processors available on your system.
+**Note**: this can take several hours, depending on the speed of the Internet connection, number and speed of processors, and other factors.
 
 ```
 git clone https://github.com/bioforensics/MicroHapDB.git  # If you haven't already done so
 cd MicroHapDB/dbbuild/
 ./prep-dbs.sh databases/ 8
 ```
-
-Replace `8` with the number of processors available on your system.
-You can also replace `databases/` with the path to a different directory for storing the data sets—if you do so, make sure to update `config.json` accordingly.
 
 Finally, with these data sets in place, MicroHapDB can be built using `Snakemake`.
 
