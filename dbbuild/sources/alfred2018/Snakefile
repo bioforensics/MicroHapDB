@@ -39,8 +39,8 @@ rule marker_rsids:
 rule dbsnp_subset:
     input:
         rsidlist='all-rsids.txt',
-        dbsnp=config['dbsnp'],
-        rsidx=config['rsidx'],
+        dbsnp=config['dbsnp38'],
+        rsidx=config['dbsnp38'].replace('.vcf.gz', '.rsidx'),
     output: 'dbsnp-subset.vcf.gz'
     run:
         rsids = list()
