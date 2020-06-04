@@ -15,6 +15,7 @@ The following software is required to compile the published data into the table 
 - infocalc (included in this directory)
 - [pandas][]
 - [rsidx][]
+- [scikit-allel][]
 - [Snakemake][]
 
 Run the following commands from the `dbbuild/sources/1kgp/` directory to compile the data into the table format required by MicroHapDB.
@@ -46,4 +47,5 @@ See `get-marker-rsids.py` for details.
 
 [pandas]: https://pandas.pydata.org
 [rsidx]: https://github.com/bioforensics/rsidx
+[scikit-allel]: https://scikit-allel.readthedocs.io
 [Snakemake]: https://snakemake.readthedocs.io/en/stable/
