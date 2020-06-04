@@ -26,7 +26,7 @@ def build_genotype_array(genotypes, pop_samples, markers):
     for marker in markers:
         mgt = list()
         for population, sample_list in pop_samples.items():
-            for sample in sample_list:
+            for sample in sorted(sample_list):
                 mgt.append(genotypes[sample][marker])
         g.append(mgt)
     gt = GenotypeArray(g)
