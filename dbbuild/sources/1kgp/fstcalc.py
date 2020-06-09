@@ -68,9 +68,9 @@ def main():
     fst = calculate_per_marker_fst(gt, subpops)
     data = pandas.DataFrame({
         'Marker': markers,
-        'AvgFst': fst,
+        'Fst': fst,
     })
-    data.round({'AvgFst': 4}).to_csv(sys.stdout, sep='\t', index=False)
+    data.round({'Fst': 4}).to_csv(sys.stdout, sep='\t', index=False)
 
 
 if __name__ == '__main__':
