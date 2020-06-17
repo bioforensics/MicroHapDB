@@ -111,12 +111,12 @@ Certainly!
 The instructions in the [dbbuild](dbbuild/) directory describe what data files are required.
 We would be happy to assist getting data into the correct format if that would help—just let us know by opening a thread on [MicroHapDB's issue tracker](https://github.com/bioforensics/MicroHapDB/issues/new).
 
-> *My favorite population genome survey data set is not available in MicroHapDB.
+> *My favorite data set of population-level genomic variation is not available in MicroHapDB.
 > Could you add it?*
 
 We would be happy to consider including any data set with compatible licensing or user agreements.
 The [dbbuild](dbbuild/) directory describes the information required for marker and population definitions.
-Computing allele frequencies from population genome survey data typically requires variant calls (VCFs) with phased individual-level genotypes.
+Computing allele frequencies from population data typically requires variant calls (VCFs) with phased genotypes for individuals.
 Use [MicroHapDB's issue tracker](https://github.com/bioforensics/MicroHapDB/issues/new) to contact us with any questions about including new public data sets.
 
 
