@@ -12,6 +12,7 @@ The database includes a comprehensive collection of marker and allele frequency 
 Effective number of allele (*A<sub>e</sub>*)<sup>[11]</sup> and informativeness for assignment (*I<sub>n</sub>*)<sup>[12]</sup> statistics are included so that markers can be ranked for different forensic applications.
 The entire contents of the database are distributed with each copy of MicroHapDB, and instructions for adding private data to a local copy of the database are provided.
 MicroHapDB is designed to be user-friendly for both practitioners and researchers, supporting a range of access methods from browsing to simple text queries to complex queries to full programmatic access via a Python API.
+MicroHapDB is also designed as a community resource requiring minimal infrastructure to use and maintain.
 
 
 ## Installation
@@ -98,10 +99,10 @@ Phased genotypes for 2,504 individuals from Phase 3 of the 1000 Genomes Project<
 ## Adding Markers to MicroHapDB
 
 > *I have some private microhap markers.
-> Is it possible to include these in my MicroHapDB queries?*
+> Is it possible to include these in my MicroHapDB queries without making them public?*
 
 Certainly!
-See the [dbbuild](dbbuild/) directory for instructions on rebuilding the database with additional sources of data.
+See the [dbbuild](dbbuild/) directory for instructions on updating a private copy the database with additional sources of data.
 
 > *I have published (or am getting ready to publish) a new panel of microhap markers and allele frequencies.
 > Could you add these to MicroHapDB?*
@@ -109,6 +110,14 @@ See the [dbbuild](dbbuild/) directory for instructions on rebuilding the databas
 Certainly!
 The instructions in the [dbbuild](dbbuild/) directory describe what data files are required.
 We would be happy to assist getting data into the correct format if that would help—just let us know by opening a thread on [MicroHapDB's issue tracker](https://github.com/bioforensics/MicroHapDB/issues/new).
+
+> *My favorite population genome survey data set is not available in MicroHapDB.
+> Could you add it?*
+
+We would be happy to consider including any data set with compatible licensing or user agreements.
+The [dbbuild](dbbuild/) directory describes the information required for marker and population definitions.
+Computing allele frequencies from population genome survey data typically requires variant calls (VCFs) with phased individual-level genotypes.
+Use [MicroHapDB's issue tracker](https://github.com/bioforensics/MicroHapDB/issues/new) to contact us with any questions about including new public data sets.
 
 
 ## Citation
