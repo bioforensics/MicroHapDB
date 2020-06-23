@@ -18,12 +18,13 @@ Building MicroHapDB from scratch requires installing several software packages.
 Conda provides the most convenient way to install these.
 
 ```
-conda create -c bioconda --name microhapdb -y python=3.7 pandas snakemake pyfaidx rsidx
+conda create -c bioconda --name microhapdb -y python=3.7 pandas snakemake pyfaidx rsidx parallel
 conda activate microhapdb
 ```
 
 Next, building MicroHapDB from scratch also requires the human reference genome, dbSNP, and the 1000 Genomes Project Phase 3 data.
 These can be downloaded and indexed using with the `prep-dbs.sh` script.
+This step typically requires a couple hours or more, depending on the speed of your internet connection and computer processor.
 
 ```
 git clone https://github.com/bioforensics/MicroHapDB.git  # If you haven't already done so

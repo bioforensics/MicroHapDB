@@ -12,7 +12,7 @@ download_1kgp()
         wget -O ${filename} ${url}
         wget -O ${filename}.tbi ${url}.tbi
     done
-    url="${root}/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1b.20130502.genotypes.vcf.gz"
+    url="${rooturl}/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1b.20130502.genotypes.vcf.gz"
     filename="${rootdir}/1000Genomes/chrX.vcf.gz"
     wget -O ${filename} ${url}
     wget -O ${filename}.tbi ${url}.tbi
@@ -21,8 +21,10 @@ download_1kgp()
 index_1kgp()
 {
     local rootdir=$1
-    local numjobs=$2
-    parallel --gnu --jobs $2 rsidx index ${rootdir}/1000Genomes/chr{}.vcf.gz ${rootdir}/1000Genomes/chr{}.rsidx ::: {1..22} X
+    for i in {1..22} X; do
+        prefix=${rootdir}/1000Genomes/chr${i}
+        rsidx index ${prefix}.vcf.gz ${prefix}.rsidx
+    done
 }
 
 download_grch38()
@@ -50,21 +52,19 @@ download_dbsnp()
 index_dbsnp()
 {
     local rootdir=$1
-    local numjobs=$2
-    parallel --gnu --jobs $numjobs rsidx index ${rootdir}/dbSNP/dbSNP_{}.vcf.gz ${rootdir}/dbSNP/dbSNP_{}.rsidx ::: GRCh37 GRCh38
+    for version in GRCh37 GRCh38; do
+        prefix=${rootdir}/dbSNP/dbSNP_${version}
+        rsidx index --cache-size 100000 ${prefix}.vcf.gz ${prefix}.rsidx
+    done
 }
 
 dbdir=${1:-databases}
-cores=${2:-1}
+
+mkdir -p $dbdir
 
 download_grch38 $dbdir
 download_1kgp $dbdir
 download_dbsnp $dbdir
 
-if [ $cores -le 4 ]; then
-    index_dbsnp $dbdir $cores
-    index_1kgp $dbdir $cores
-else
-    index_dbsnp $dbdir 2 &
-    index_1kgp $dbdir $((cores - 2))
-fi
+index_dbsnp $dbdir
+index_1kgp $dbdir
