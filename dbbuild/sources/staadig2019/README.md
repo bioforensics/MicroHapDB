@@ -9,7 +9,7 @@ Staadig A, Tillmar A (2019) Evaluation of microhaplotypes—A promising new type
 Run the following command from the `dbbuild/sources/alfred2018/` directory to compile the data into the table format required by MicroHapDB.
 
 ```
-snakemake --configfile ../../config.json -p all
+snakemake --configfile ../../config.json --cores 1 -p all
 ```
 
 

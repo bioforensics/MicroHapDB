@@ -6,7 +6,7 @@ Chen P, Deng C, Li Z, Pu Y, Yang J, Yu Y, Li K, Li D, Liang W, Zhang L, Chen F (
 
 ## Build Process
 
-To compile the data into the table format required by MicroHapDB, run the `snakemake` command from the `dbbuild/sources/chen2019/` directory.
+To compile the data into the table format required by MicroHapDB, run the `snakemake --cores 1` command from the `dbbuild/sources/chen2019/` directory.
 
 
 ## Appendix

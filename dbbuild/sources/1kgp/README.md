@@ -7,7 +7,7 @@ Auton A, Abecasis G, Altshuler D, et al. (2015) A global reference for human gen
 
 ## Build Process
 
-Run `snakemake -p all` from the `dbbuild/sources/1kgp/` directory to compile the data into the table format required by MicroHapDB.
+Run `snakemake --cores 1 -p all` from the `dbbuild/sources/1kgp/` directory to compile the data into the table format required by MicroHapDB.
 
 
 ## Appendix

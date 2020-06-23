@@ -6,7 +6,12 @@ van der Gaag KJ, de Leeuw RH, Laros JFJ, den Dunnen JT, de Knijff P (2018) Short
 
 ## Build Process
 
-To compile the data into the table format required by MicroHapDB, run the `snakemake` command from the `dbbuild/sources/vandergaag2018/` directory.
+Run the following command from the `dbbuild/sources/vandergaag2018/` directory to compile the data into the table format required by MicroHapDB.
+
+```bash
+snakemake --cores 1 -p all
+```
+
 
 ## Appendix
 

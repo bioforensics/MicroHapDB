@@ -26,7 +26,7 @@ snakemake -s download.Snakefile frequencies markers
 Run the following command from the `dbbuild/sources/alfred2018/` directory to compile the data into the table format required by MicroHapDB.
 
 ```
-snakemake --configfile ../../config.json -p all
+snakemake --configfile ../../config.json --cores 1 -p all
 ```
 
 
