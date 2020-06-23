@@ -196,13 +196,13 @@ class TargetAmplicon():
             file=out
         )
         print('        - cross-references:', ', '.join(self.varrefs), file=out)
-        print('    Observed alleles', file=out)
+        print('    Observed haplotypes', file=out)
         for allele in self.alleles:
             print('        -', allele, file=out)
         print('\n', file=out)
 
     def print_detail_markerseq(self, out):
-        print('--[ Marker Sequence ]--\n>', self.data.Name, sep='', file=out)
+        print('--[ Core Marker Sequence ]--\n>', self.data.Name, sep='', file=out)
         markerseq = self.marker_seq
         if len(markerseq) < 80:
             print(markerseq, file=out)
@@ -214,7 +214,7 @@ class TargetAmplicon():
         print('\n', file=out)
 
     def print_detail_ampliconseq(self, out):
-        print('--[ Target Amplicon Sequence with Alleles ]--', file=out)
+        print('--[ Target Amplicon Sequence with Haplotypes ]--', file=out)
         blocks = list()
         prev = 0
         zipper = zip(self.amplicon_offsets, self.variant_lengths, self.reference_lengths)
