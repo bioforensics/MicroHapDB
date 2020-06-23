@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 import argparse
+import json
+import os
 import pandas
 import re
 import subprocess
@@ -68,9 +70,9 @@ def get_marker_names(table1file):
         yield 'mh{chr:02d}LV-{sn:02d}'.format(chr=row.Chrom, sn=n+1)
 
 
-def get_variants(markername, region):
+def get_variants(markername, region, path):
     chrom = int(markername[2:4])
-    infile = 'ALL.chr{chrom:d}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz'.format(chrom=chrom)
+    infile = os.path.join(path, f'chr{chrom:d}.vcf.gz')
     outfile = '{mn:s}-unfiltered.vcf'.format(mn=markername)
     command = ['tabix', infile, region]
     with open(outfile, 'w') as fh:
@@ -153,19 +155,22 @@ def finalize_marker_definitions(markernames):
 
 def cli():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--configfile', default='../../config.json')
     parser.add_argument('data', help='Table 1 from Voskoboinik et al 2018')
-    parser.add_argument('vcf', help='dbSNP VCF for GRCh38')
-    parser.add_argument('rsidx', help='rsidx index for GRCh38')
     return parser
 
 
 def main(args):
+    with open(args.configfile, 'r') as fh:
+        config = json.load(fh)
+        vcf = config['dbsnp38']
+        rsidx = config['dbsnp38'].replace('.vcf.gz', '.rsidx')
     markernames = list(get_marker_names(args.data))
     regions = list(get_regions(args.data))
     for name, region in zip(markernames, regions):
-        get_variants(name, region)
+        get_variants(name, region, config['1kgp_dir'])
         filter_variants(name)
-        transfer_variants(name, args.vcf, args.rsidx)
+        transfer_variants(name, vcf, rsidx)
     finalize_marker_definitions(markernames)
 
 

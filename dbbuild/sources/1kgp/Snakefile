@@ -11,16 +11,6 @@ rule all:
     input: 'frequency.tsv', 'marker-informativeness.tsv', 'marker-fst.tsv'
 
 
-rule download:
-    output: expand('ALL.chr{chrom}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz', chrom=[n + 1 for n in range(22)])
-    shell: './download.sh'
-
-
-rule index:
-    output: expand('ALL.chr{chrom}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.rsidx', chrom=[n + 1 for n in range(22)])
-    shell: './index.sh'
-
-
 rule markerrsids:
     input: 'get-marker-rsids.py'
     output: 'marker-rsids-MicroHapDB-0.5.tsv'
