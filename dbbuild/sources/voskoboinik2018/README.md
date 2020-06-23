@@ -9,7 +9,7 @@ Voskoboinik L, Motro U, Darvasi A (2018) Facilitating complex DNA mixture interp
 Run the following command from the `dbbuild/sources/voskoboinik/` directory to compile the data into the table format required by MicroHapDB.
 
 ```bash
-./compile_marker_definitions.py --configfile ../../config.json table1-subset.tsv
+snakemake --configfile ../../config.json --cores 1 -p all
 ```
 
 ## Appendix
