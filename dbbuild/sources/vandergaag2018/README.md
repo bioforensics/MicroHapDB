@@ -6,18 +6,11 @@ van der Gaag KJ, de Leeuw RH, Laros JFJ, den Dunnen JT, de Knijff P (2018) Short
 
 ## Build Process
 
-The following software is required to compile the published data into the table format required by MicroHapDB.
+To compile the data into the table format required by MicroHapDB, run the `snakemake` command from the `dbbuild/sources/vandergaag2018/` directory.
 
-- Python 3
-- [Snakemake][]
+## Appendix
 
-To build the TSV files required by MicroHapDB, run the following command from the `dbbuild/sources/vandergaag2018/` directory.
-
-```
-snakemake -p all
-```
-
-## Manual Pre-processing
+### Manual Pre-processing
 
 The file `figure-S1.txt` was manually created using the supplementary PDF file from the paper (`original/mmc1.pdf`).
 Genomic coordinates of each marker were determined by copying the sequence from the PDF, editing in some cases, and pasting into a UCSC BLAT search.
@@ -40,7 +33,3 @@ $ echo $'10.1016/j.fsigen.2018.05.008\tAsia' | md5 | cut -c 1-10
 $ echo $'10.1016/j.fsigen.2018.05.008\tNL' | md5 | cut -c 1-10
 383d86606a
 ```
-
-
-[Snakemake]: https://snakemake.readthedocs.io/en/stable/
-[htslib]: https://github.com/samtools/htslib

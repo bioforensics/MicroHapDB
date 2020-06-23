@@ -10,23 +10,6 @@ Kidd KK, Rajeevan H (2018) ALFRED data download. *The Allele Frequency Database*
 
 ## Build Process
 
-The following software is required to compile the published data into the table format required by MicroHapDB.
-
-- Python 3
-- [Snakemake][]
-- [rsidx][]
-
-A recent version of the dbSNP database is also required, both the VCF file and the corresponding tabix index.
-
-### Step 0: index dbSNP for rsid searches
-
-Run the following command to index the dbSNP VCF file for rsid searches.
-This usually requires more than an hour.
-
-```
-rsidx index /path/to/dbSNP.vcf.gz /path/to/dbSNP.rsidx
-```
-
 ### Step 1: download ALFRED marker and frequency data (OPTIONAL)
 
 Microhap allele frequencies are available from ALFRED in a single text file.
@@ -35,8 +18,7 @@ These HTML files have been downloaded to `dbbuild/sources/alfred2018/marker-deta
 **Downloading them again shouldn't be necessary**, but for the sake of the curious the download process can be repeated by running the following command from the `dbbuild/sources/alfred2018/` directory.
 
 ```
-snakemake -s download.Snakefile frequencies
-snakemake -s download.Snakefile markers
+snakemake -s download.Snakefile frequencies markers
 ```
 
 ### Step 2: compile data tables
@@ -44,9 +26,11 @@ snakemake -s download.Snakefile markers
 Run the following command from the `dbbuild/sources/alfred2018/` directory to compile the data into the table format required by MicroHapDB.
 
 ```
-snakemake --config dbsnp=/path/to/dbSNP.vcf.gz rsidx=/path/to/dbSNP.rsidx -p all
+snakemake --configfile ../../config.json -p all
 ```
 
+
+## Appendix
 
 ### Known Issues
 
@@ -55,6 +39,3 @@ For many markers there is perfect agreement between ALFRED and MicroHapDB, but i
 After correspondence with the ALFRED curators, we suspect that these differences are due to their use of PHASE over all aggregated data sets to statistically infer haplotypes, while MicroHapDB relies entirely on haplotypes as published in the 1KGP data.
 
 1KGP-derived frequencies published by ALFRED are stored here in `frequency-1kgp.tsv` but are not integrated into the final MicroHapDB database.
-
-[Snakemake]: https://snakemake.readthedocs.io/en/stable/
-[rsidx]: https://github.com/bioforensics/rsidx

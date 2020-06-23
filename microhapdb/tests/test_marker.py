@@ -120,7 +120,7 @@ Marker Definition (GRCh38)
         - marker offsets: 0,29,69
         - amplicon offsets: 10,39,79
         - cross-references: rs56256724, rs2073578, rs633153
-    Observed alleles
+    Observed haplotypes
         - C,A,C
         - C,A,T
         - C,C,C
@@ -130,12 +130,12 @@ Marker Definition (GRCh38)
         - T,C,T
 
 
---[ Marker Sequence ]--
+--[ Core Marker Sequence ]--
 >mh09AT-17
 CTGTCTCTCTGGGCCTCCTCCTCCTAGGAAGGGCGTGCCCTCCTTGCTCCCTCTGGGCTTCCCAGAAACC
 
 
---[ Target Amplicon Sequence with Alleles ]--
+--[ Target Amplicon Sequence with Haplotypes ]--
           *                            *                                       *
 CGGCACGTGGCTGTCTCTCTGGGCCTCCTCCTCCTAGGAAGGGCGTGCCCTCCTTGCTCCCTCTGGGCTTCCCAGAAACCGTGGCTATTG
 ..........C............................A.......................................C..........
@@ -168,7 +168,7 @@ Marker Definition (GRCh38)
         - marker offsets: 0,28,122,136
         - amplicon offsets: 20,48,142,156
         - cross-references: rs74865590, rs438055, rs370672, rs6555108
-    Observed alleles
+    Observed haplotypes
         - C,A,A,A
         - C,A,A,G
         - C,A,G,A
@@ -186,13 +186,13 @@ Marker Definition (GRCh38)
         - T,G,G,G
 
 
---[ Marker Sequence ]--
+--[ Core Marker Sequence ]--
 >mh05KK-170
 CCACAGTTGAAGAGAGAGAGCATGAGACAGCTTGATCGAAATGGTGAAGCTTTGGAGAGATTTTGCGGGGAATGCACTGG
 AGAACCATGAAGATGTGGAAACAAACAAACAAACAAAAAACCGCTTTTGCATCTTCA
 
 
---[ Target Amplicon Sequence with Alleles ]--
+--[ Target Amplicon Sequence with Haplotypes ]--
                     *                           *                                                                                             *             *
 TTTCTTAACAAAACTGAAGGCCACAGTTGAAGAGAGAGAGCATGAGACAGCTTGATCGAAATGGTGAAGCTTTGGAGAGATTTTGCGGGGAATGCACTGGAGAACCATGAAGATGTGGAAACAAACAAACAAACAAAAAACCGCTTTTGCATCTTCAGACATCTCACTTGTCATCAC
 ....................C...........................A.............................................................................................A.............A....................
@@ -233,7 +233,7 @@ Marker Definition (GRCh38)
         - marker offsets: 0,8,31,41,54,63
         - amplicon offsets: 0,8,31,41,54,63
         - cross-references: rs66509440, rs66804793, rs528179479, rs9925859, rs9929895, rs74032085
-    Observed alleles
+    Observed haplotypes
         - C,G,G,C,A,T
         - C,G,G,G,A,T
         - C,G,G,G,G,T
@@ -242,12 +242,12 @@ Marker Definition (GRCh38)
         - T,A,G,G,T,C
 
 
---[ Marker Sequence ]--
+--[ Core Marker Sequence ]--
 >mh16PK-83544
 CGGGCGGTGTGTGGCTGAAGGGCAAGAGAAAGGAGAGACTGCGGCTGGGAACCCATATGGGAAT
 
 
---[ Target Amplicon Sequence with Alleles ]--
+--[ Target Amplicon Sequence with Haplotypes ]--
 *       *                      *         *            *        *
 CGGGCGGTGTGTGGCTGAAGGGCAAGAGAAAGGAGAGACTGCGGCTGGGAACCCATATGGGAAT
 C.......G......................G.........C............A........T
@@ -280,7 +280,7 @@ Marker Definition (GRCh38)
         - marker offsets: 0,7,22,29,38,42,46,47,48,54
         - amplicon offsets: 13,20,35,42,51,55,59,60,61,67
         - cross-references: rs1204206, rs376614501, rs1196416099, rs35198802, rs553417439, rs1204207, rs545720382, rs34901968, rs546942508, rs1204208
-    Observed alleles
+    Observed haplotypes
         - C,C,G,C,C,C,A,A,A,A
         - C,C,G,C,C,C,A,A,G,A
         - G,C,G,T,C,C,A,G,G,A
@@ -292,12 +292,12 @@ Marker Definition (GRCh38)
         - T,C,GA,C,C,T,A,A,G,G
 
 
---[ Marker Sequence ]--
+--[ Core Marker Sequence ]--
 >mh06PK-24844
 TTACATCCAAACGTGAGCAGGAGGAAACTCGGAACATACTGTTTTTAAGAACTAG
 
 
---[ Target Amplicon Sequence with Alleles ]--
+--[ Target Amplicon Sequence with Haplotypes ]--
              *      **              **      *        *   *   ***     *
 AGGAAGAAAGTGATTACATCC-AAACGTGAGCAGGAG-GAAACTCGGAACATACTGTTTTTAAGAACTAGTATCACTAGAGTT
 .............C......C-..............G-......C........C...C...AAA.....A.............
@@ -324,7 +324,7 @@ Marker Definition (GRCh38)
         - marker offsets: 0,15,19,24,40,46
         - amplicon offsets: 17,32,36,41,57,63
         - cross-references: rs9962474, rs9947384, rs62081065, rs28612163, rs62081066, rs28695806
-    Observed alleles
+    Observed haplotypes
         - C,A,A,G,A,T
         - C,A,G,C,A,C
         - C,A,G,C,A,T
@@ -334,12 +334,12 @@ Marker Definition (GRCh38)
         - T,G,A,G,A,T
 
 
---[ Marker Sequence ]--
+--[ Core Marker Sequence ]--
 >mh18PK-87558
 TCAGGTGTTAGCAACGAGGATTTAGAAAAAACAGGTACAAATTATTT
 
 
---[ Target Amplicon Sequence with Alleles ]--
+--[ Target Amplicon Sequence with Haplotypes ]--
                  *              *   *    *               *     *
 AGCCTAGCCAAGAGCTGTCAGGTGTTAGCAACGAGGATTTAGAAAAAACAGGTACAAATTATTTCATCACCCAGGTAGTGA
 .................C..............A...A....G...............A.....T.................
@@ -364,7 +364,7 @@ Marker Definition (GRCh38)
         - marker offsets: 0,1,2,9,10,11,25,48,64,67,68,72
         - amplicon offsets: 10,11,12,19,20,21,35,58,74,77,78,82
         - cross-references: rs117862404, rs62232223, rs7291353, rs71328677, rs62232224, rs10685889, rs10685890, rs113141650, rs62232225, rs62232226
-    Observed alleles
+    Observed haplotypes
         - C,A,G,C,G,C,CCTGCC,TTCTT,GTGAG,C,T,G
         - C,A,G,C,G,T,CCTGCC,TTCTT,GTGAG,C,C,T
         - C,G,C,C,G,C,CCTGCC,T,GTGAG,C,T,G
@@ -378,12 +378,12 @@ Marker Definition (GRCh38)
         - T,G,G,C,G,C,CCTGCC,TTCTT,GTGAG,C,T,G
 
 
---[ Marker Sequence ]--
+--[ Core Marker Sequence ]--
 >mh22PK-104638
 CGGTTGTGACGCTCAGCTCACCAGTCCTGCCTACTTGCCAGCAGGTATTCTCAGAGGGACCACAGAGCTGAGG
 
 
---[ Target Amplicon Sequence with Alleles ]--
+--[ Target Amplicon Sequence with Haplotypes ]--
           ***      ***             ******                 *****               *****  **   *
 GTGACATTGGCGGTTGTGACGCTCAGCTCACCAGTCCTGCCTACTTGCCAGCAGGTATT----CTCAGAGGGACCACAG----AGCTGAGGGTGACCTGCA
 ..........CAG......CGC.............CCTGCC.................TTCTT...............GTGAG..CT...G..........
@@ -457,19 +457,19 @@ Marker Definition (GRCh38)
         - marker offsets: 0,12
         - amplicon offsets: 24,36
         - cross-references: rs1079598, rs1079597
-    Observed alleles
+    Observed haplotypes
         - A,C
         - A,T
         - G,C
         - G,T
 
 
---[ Marker Sequence ]--
+--[ Core Marker Sequence ]--
 >mh11KK-090
 AGATTCGCCTTTC
 
 
---[ Target Amplicon Sequence with Alleles ]--
+--[ Target Amplicon Sequence with Haplotypes ]--
                         *           *
 AAGGGCAGCAGGAACCACATGATCAGATTCGCCTTTCGAATAGGTGATTCTGACAGCACTG
 ........................A...........C........................

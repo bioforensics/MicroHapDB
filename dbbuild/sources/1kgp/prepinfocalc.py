@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 from argparse import ArgumentParser
 from collections import defaultdict
+import json
 from mhfreqs import cli, construct_haplotypes, get_indexes_for_marker, load_population_data
 
 
 def main(args):
+    with open(args.configfile, 'r') as fh:
+        config = json.load(fh)
     samplepops = load_population_data(args.samplepops)
     marker_rsids = dict()
     with open(args.markerrsids, 'r') as fh:
@@ -22,7 +25,7 @@ def main(args):
     marker_haplotype_codes = defaultdict(dict)
     code = 0
     for marker in markers:
-        vcf, rsidx = get_indexes_for_marker(marker)
+        vcf, rsidx = get_indexes_for_marker(marker, path=config['1kgp_dir'])
         rsids = marker_rsids[marker]
         samples, haplo1, haplo2 = construct_haplotypes(rsids, vcf, rsidx)
         def _get_hap_code(haplotype):

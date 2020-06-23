@@ -3,6 +3,7 @@
 from argparse import ArgumentParser
 from collections import defaultdict
 from glob import glob
+import json
 import os
 import pandas
 import rsidx
@@ -12,6 +13,9 @@ import sqlite3
 def cli():
     '''Command line interface'''
     parser = ArgumentParser()
+    parser.add_argument(
+        '--configfile', default='../../config.json', help='path to file containing database config'
+    )
     parser.add_argument(
         'samplepops', help='two-column table with 1KGP sample in the first column and the '
         'corresponding 1KGP 3-character population code in the second column'
@@ -92,18 +96,20 @@ def mhfreqs(rsids, vcffile, rsidxfile, samplepops):
             yield population, allele, freq
 
 
-def get_indexes_for_marker(marker):
+def get_indexes_for_marker(marker, path):
     chrom = marker[2:4]
     if chrom[0] == '0':
         chrom = chrom[1]
-    prefix = 'ALL.chr' + chrom + '.phase3_shapeit2_mvncall_integrated_v??.20130502.genotypes'
-    vcf = glob(prefix + '.vcf.gz')[0]
-    rsidx = glob(prefix + '.rsidx')[0]
+    prefix = os.path.join(path, f'chr{chrom}')
+    vcf = glob(f'{prefix}.vcf.gz')[0]
+    rsidx = glob(f'{prefix}.rsidx')[0]
     return vcf, rsidx
 
 
 def main(args):
     '''Driver function'''
+    with open(args.configfile, 'r') as fh:
+        config = json.load(fh)
     samplepops = load_population_data(args.samplepops)
 
     marker_rsids = dict()
@@ -115,7 +121,7 @@ def main(args):
 
     print('Marker', 'Population', 'Allele', 'Frequency', sep='\t')
     for marker, rsids in marker_rsids.items():
-        vcf, rsidx = get_indexes_for_marker(marker)
+        vcf, rsidx = get_indexes_for_marker(marker, path=config['1kgp_dir'])
         if not os.path.exists(vcf) or not os.path.exists(rsidx):
             raise RuntimeError('VCF and/or RSIDX files do not exist')
         for values in mhfreqs(rsids, vcf, rsidx, samplepops):
