@@ -8,7 +8,7 @@
 import pandas
 
 rule all:
-    input: 'frequency.tsv', 'marker-informativeness.tsv'
+    input: 'frequency.tsv', 'marker-informativeness.tsv', 'marker-fst.tsv'
 
 
 rule download:
@@ -45,10 +45,20 @@ rule informativeness:
         'sample-pops.tsv',
         'marker-rsids-MicroHapDB-0.5.tsv'
     output:
-        'marker-informativeness.tsv'
+        'marker-informativeness.tsv',
+        'individual-haplotypes.txt'
     shell:
         '''
         ./prepinfocalc.py sample-pops.tsv marker-rsids-MicroHapDB-0.5.tsv > individual-haplotypes.txt
         ./infocalc -column 2 -numpops 26 -input individual-haplotypes.txt -output marker-informativeness.txt
         ./cleanup-in.py < marker-informativeness.txt > marker-informativeness.tsv
         '''
+
+
+rule fst:
+    input:
+        'fstcalc.py',
+        'individual-haplotypes.txt'
+    output:
+        'marker-fst.tsv'
+    shell: './fstcalc.py individual-haplotypes.txt > marker-fst.tsv'
