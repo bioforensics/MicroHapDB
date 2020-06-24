@@ -122,18 +122,18 @@ def test_main_marker_query(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     testout = '''
-         Name          PermID Reference  Chrom                                       Offsets   AvgAe      In                          Source
- mh19USC-19pA  MHDBM-2d713eab    GRCh38  chr19                          561778,561795,561815  2.7453  0.0870    10.1016/j.fsigen.2019.102213
-   mh19KK-056  MHDBM-d6ff8635    GRCh38  chr19                               4852124,4852324  2.4391  0.0773                          ALFRED
-   mh19CP-007  MHDBM-49dbcc57    GRCh38  chr19                    14310739,14310772,14310780  3.0813  0.0466                          ALFRED
- mh19USC-19pB  MHDBM-76427274    GRCh38  chr19  16040864,16040894,16040899,16040921,16040929  3.5107  0.1647    10.1016/j.fsigen.2019.102213
-    mh19NH-23  MHDBM-dd72537b    GRCh38  chr19                    22052723,22052774,22052817  1.9380  0.0414  10.1016/j.legalmed.2015.06.003
-   mh19KK-299  MHDBM-8cbeb11c    GRCh38  chr19  22546697,22546748,22546779,22546810,22546850  4.1592  0.2335                          ALFRED
-    mh19AT-47  MHDBM-8f439540    GRCh38  chr19                    22546697,22546748,22546779  2.4025  0.1298                   ISFG2019:P597
- mh19USC-19qA  MHDBM-f757e745    GRCh38  chr19           33273771,33273785,33273811,33273816  3.3219  0.1127    10.1016/j.fsigen.2019.102213
-   mh19KK-301  MHDBM-2069446a    GRCh38  chr19           50938487,50938502,50938526,50938550  1.9707  0.2673                          ALFRED
-   mh19KK-057  MHDBM-eb558c37    GRCh38  chr19                    51654948,51655025,51655062  2.3266  0.0667                          ALFRED
- mh19USC-19qB  MHDBM-7b40359b    GRCh38  chr19                    53714387,53714389,53714413  4.0756  0.1368    10.1016/j.fsigen.2019.102213
+         Name          PermID Reference  Chrom                                       Offsets      Ae      In     Fst                          Source
+ mh19USC-19pA  MHDBM-2d713eab    GRCh38  chr19                          561778,561795,561815  2.7453  0.0870  0.0733    10.1016/j.fsigen.2019.102213
+   mh19KK-056  MHDBM-d6ff8635    GRCh38  chr19                               4852124,4852324  2.4391  0.0773  0.1760                          ALFRED
+   mh19CP-007  MHDBM-49dbcc57    GRCh38  chr19                    14310739,14310772,14310780  3.0813  0.0466  0.0776                          ALFRED
+ mh19USC-19pB  MHDBM-76427274    GRCh38  chr19  16040864,16040894,16040899,16040921,16040929  3.5107  0.1647  0.0731    10.1016/j.fsigen.2019.102213
+    mh19NH-23  MHDBM-dd72537b    GRCh38  chr19                    22052723,22052774,22052817  1.9380  0.0414 -0.0124  10.1016/j.legalmed.2015.06.003
+   mh19KK-299  MHDBM-8cbeb11c    GRCh38  chr19  22546697,22546748,22546779,22546810,22546850  4.1592  0.2335  0.1102                          ALFRED
+    mh19AT-47  MHDBM-8f439540    GRCh38  chr19                    22546697,22546748,22546779  2.4025  0.1298  0.1170                   ISFG2019:P597
+ mh19USC-19qA  MHDBM-f757e745    GRCh38  chr19           33273771,33273785,33273811,33273816  3.3219  0.1127  0.0880    10.1016/j.fsigen.2019.102213
+   mh19KK-301  MHDBM-2069446a    GRCh38  chr19           50938487,50938502,50938526,50938550  1.9707  0.2673  0.1698                          ALFRED
+   mh19KK-057  MHDBM-eb558c37    GRCh38  chr19                    51654948,51655025,51655062  2.3266  0.0667  0.0428                          ALFRED
+ mh19USC-19qB  MHDBM-7b40359b    GRCh38  chr19                    53714387,53714389,53714413  4.0756  0.1368  0.0163    10.1016/j.fsigen.2019.102213
 '''
     assert testout.strip() == out.strip()
 
@@ -203,10 +203,10 @@ def test_main_marker_panel(capsys):
         microhapdb.cli.main(args)
     terminal = capsys.readouterr()
     testout = '''
-       Name          PermID Reference  Chrom                     Offsets   AvgAe      In  Source
- mh06KK-101  MHDBM-8a2c760e    GRCh38   chr6         170280714,170280900  1.6705  0.2296  ALFRED
- mh15KK-058  MHDBM-d6c594d2    GRCh38  chr15  28120284,28120471,28120586  2.2110  0.3799  ALFRED
- mh20KK-035  MHDBM-92f3685a    GRCh38  chr20             2088698,2088728  2.1328  0.2104  ALFRED
+       Name          PermID Reference  Chrom                     Offsets      Ae      In     Fst  Source
+ mh06KK-101  MHDBM-8a2c760e    GRCh38   chr6         170280714,170280900  1.6705  0.2296  0.2590  ALFRED
+ mh15KK-058  MHDBM-d6c594d2    GRCh38  chr15  28120284,28120471,28120586  2.2110  0.3799  0.0862  ALFRED
+ mh20KK-035  MHDBM-92f3685a    GRCh38  chr20             2088698,2088728  2.1328  0.2104  0.2180  ALFRED
 '''
     print(terminal.out)
     assert testout.strip() == terminal.out.strip()
@@ -275,5 +275,29 @@ def test_lookup(capsys):
     args = get_parser().parse_args(arglist)
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
-    assert 'mh09KK-033  MHDBM-8458b727    GRCh38  chr9         680713,680762,680790  2.9343  0.1008         ALFRED' in out
-    assert ' mh09AT-15  MHDBM-b46abf2e    GRCh38  chr9  680713,680762,680767,680790  2.9471  0.1160  ISFG2019:P597' in out
+    assert 'mh09KK-033  MHDBM-8458b727    GRCh38  chr9         680713,680762,680790  2.9343  0.1008  0.0504         ALFRED' in out
+    assert ' mh09AT-15  MHDBM-b46abf2e    GRCh38  chr9  680713,680762,680767,680790  2.9471  0.1160  0.0602  ISFG2019:P597' in out
+
+
+def test_ae_pop(capsys):
+    arglist = ['marker', '--region=chr18:1-25000000', '--ae-pop=CDX']
+    args = get_parser().parse_args(arglist)
+    microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    exp_out = '''
+         Name          PermID Reference  Chrom                                          Offsets      Ae      In     Fst                        Source
+ mh18PK-87558  MHDBM-1e5374f1    GRCh38  chr18  1960542,1960557,1960561,1960566,1960582,1960588  1.9767  0.1325  0.0494  10.1016/j.fsigen.2018.05.008
+ mh18USC-18pA  MHDBM-56dfa93b    GRCh38  chr18          5280017,5280020,5280070,5280071,5280093  1.8402  0.2130  0.1818  10.1016/j.fsigen.2019.102213
+   mh18CP-005  MHDBM-a85754d3    GRCh38  chr18                  8892864,8892893,8892896,8892907  3.3873  0.0904  0.0059                        ALFRED
+   mh18KK-285  MHDBM-ea520d26    GRCh38  chr18              24557354,24557431,24557447,24557489  2.6188  0.1721  0.0836                        ALFRED
+    mh18AT-38  MHDBM-db09ec41    GRCh38  chr18                       24557431,24557447,24557489  2.6144  0.1419  0.0837                 ISFG2019:P597
+'''
+    obs_out = terminal.out
+    assert exp_out.strip() == obs_out.strip()
+
+
+def test_ae_pop_bad_pop():
+    arglist = ['marker', '--ae-pop=ABC', 'mh18USC-18pA']
+    args = get_parser().parse_args(arglist)
+    with pytest.raises(ValueError, match=r'no Ae data for population "ABC"'):
+        microhapdb.cli.main(args)
