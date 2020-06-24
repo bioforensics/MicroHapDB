@@ -45,7 +45,7 @@ def construct_variant_map(data):
             varlist.append(variant)
             markerlist.append(marker)
     outdata = pandas.DataFrame({'Variant': varlist, 'Marker': markerlist})
-    return outdata.sort_values('Variant')
+    return outdata.sort_values(['Variant', 'Marker'])
 
 
 def populate_idmap(data):
@@ -109,22 +109,27 @@ def sort_and_clean(data):
     data.drop(columns=['Xref', 'VarRef', 'ChromSort', 'TempPos'], inplace=True)
     nr = data.drop_duplicates(subset=('Name', 'Chrom', 'Offsets'))
     assert(len(nr.Name) == len(nr.Name.unique()))  # If markers are defined in more than one place, make sure the definitions are identical.
-    return data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'AvgAe', 'In', 'Source']]
+    return data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'Ae', 'In', 'Fst', 'Source']]
 
 
 def add_avgae(data, aefile):
     aes = pandas.read_csv(aefile, sep='\t')
-    avgae = {'Marker': list(), 'AvgAe': list()}
+    avgae = {'Marker': list(), 'Ae': list()}
     for marker, mdata in aes.groupby('Marker'):
         assert len(mdata) == 26
         meanae = mdata.Ae.mean()
         avgae['Marker'].append(marker)
-        avgae['AvgAe'].append(meanae)
+        avgae['Ae'].append(meanae)
     return data.join(pandas.DataFrame(avgae).set_index('Marker'), on='Name')
 
 
 def add_informativeness(data, informfile):
     info = pandas.read_csv(informfile, sep='\t').rename(columns={'Informativeness': 'In'})
+    return data.join(info.set_index('Marker'), on='Name')
+
+
+def add_fst(data, fstfile):
+    info = pandas.read_csv(fstfile, sep='\t')
     return data.join(info.set_index('Marker'), on='Name')
 
 
@@ -189,6 +194,7 @@ rule markers:
         config['refr'],
         'sources/1kgp/marker-aes.tsv',
         'sources/1kgp/marker-informativeness.tsv',
+        'sources/1kgp/marker-fst.tsv',
         expand('sources/{source}/marker.tsv', source=SOURCES),
         expand('sources/{source}/source.txt', source=SOURCES),
     output:
@@ -198,7 +204,8 @@ rule markers:
     run:
         aefile = input[1]
         informfile = input[2]
-        input = input[3:]
+        fstfile = input[3]
+        input = input[4:]
         numsources = int(len(input) / 2)
         markerfiles = input[:numsources]
         sourcefiles = input[numsources:]
@@ -213,6 +220,7 @@ rule markers:
 
         data = add_avgae(data, aefile)
         data = add_informativeness(data, informfile)
+        data = add_fst(data, fstfile)
         data = sort_and_clean(data)
         data.to_csv(output.table, sep='\t', index=False, float_format='%.4f')
 
