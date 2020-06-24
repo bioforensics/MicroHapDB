@@ -30,12 +30,22 @@ def merge_markers(markerfiles, sourcefiles):
     return data
 
 
-def write_variant_map(data, output):
-    print('Variant', 'Marker', sep='\t', file=output)
+def construct_variant_map(data):
+    varlist, markerlist = list(), list()
     for n, row in data.iterrows():
-        marker = row['Name']
-        for variant in row['VarRef'].split(','):
-            print(variant, marker, sep='\t', file=output)
+        marker = row.Name
+        numoffsets = row.Offsets.count(',') + 1
+        numrsids = row.VarRef.count(',') + 1
+        if numoffsets != numrsids:
+            message = 'marker "{name:s}" has {no:d} variants but only {nv:d} rsids'.format(
+                name=marker, no=numoffsets, nv=numrsids
+            )
+            print('WARNING:', message, file=sys.stderr)
+        for variant in row.VarRef.split(','):
+            varlist.append(variant)
+            markerlist.append(marker)
+    outdata = pandas.DataFrame({'Variant': varlist, 'Marker': markerlist})
+    return outdata.sort_values('Variant')
 
 
 def populate_idmap(data):
@@ -92,46 +102,6 @@ def add_marker_permids(data, refr):
     data['PermID'] = pandas.Series(permids)
 
 
-def compute_marker_ae(data, freqs):
-    aes = list()
-    pops1kgp = set([
-        'CHB', 'JPT', 'CHS', 'CDX', 'KHV', 'CEU', 'TSI', 'FIN', 'GBR', 'IBS', 'YRI', 'LWK', 'GWD',
-        'MSL', 'ESN', 'ASW', 'ACB', 'MXL', 'PUR', 'CLM', 'PEL', 'GIH', 'PJL', 'BEB', 'STU', 'ITU'
-    ])
-    for n, row in data.iterrows():
-        if n > 0 and n % 25 == 0:
-            print('...calculated AvgAe for', n, 'markers')
-        marker = row.Name
-        freqs_1kgp = freqs[(freqs.Marker == marker) & (freqs.Population.isin(pops1kgp))]
-        if len(freqs_1kgp) == 0:
-            print(
-                '[WARNING] no frequency data for marker ', marker, ', not computing AvgAe',
-                sep='', file=sys.stderr
-            )
-            aes.append(None)
-            continue
-        ae_per_pop = list()
-        for pop in pops1kgp:
-            ae_recip = 0.0
-            for haplotype in freqs[freqs.Marker == marker].Allele.unique():
-                nallelesfreq = haplotype.count(',')
-                nallelesmarker = row.Offsets.count(',')
-                if nallelesfreq != nallelesmarker:
-                    message = 'allele count disagreement for {marker:s}:'.format(marker=marker)
-                    message += ' {:d} vs {:d};'.format(nallelesmarker, nallelesfreq)
-                    message += ' ({:s})'.format(haplotype)
-                    raise ValueError(message)
-            for freq in freqs[(freqs.Marker == marker) & (freqs.Population == pop)].Frequency:
-                ae_recip += freq ** 2
-            assert ae_recip > 0.0, marker
-            ae = 1.0 / ae_recip
-            ae_per_pop.append(ae)
-        assert len(ae_per_pop) == 26
-        avg_ae = sum(ae_per_pop) / len(ae_per_pop)
-        aes.append('{:.04f}'.format(avg_ae))
-    return data.assign(AvgAe=pandas.Series(aes))
-
-
 def sort_and_clean(data):
     data['ChromSort'] = data.Chrom.apply(lambda c: '0X' if c == 'chrX' else int(c[3:]))
     data['TempPos'] = data.Offsets.apply(lambda os: int(os.split(',')[0]))
@@ -139,15 +109,23 @@ def sort_and_clean(data):
     data.drop(columns=['Xref', 'VarRef', 'ChromSort', 'TempPos'], inplace=True)
     nr = data.drop_duplicates(subset=('Name', 'Chrom', 'Offsets'))
     assert(len(nr.Name) == len(nr.Name.unique()))  # If markers are defined in more than one place, make sure the definitions are identical.
-    return data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'AvgAe', 'Source']]
+    return data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'AvgAe', 'In', 'Source']]
+
+
+def add_avgae(data, aefile):
+    aes = pandas.read_csv(aefile, sep='\t')
+    avgae = {'Marker': list(), 'AvgAe': list()}
+    for marker, mdata in aes.groupby('Marker'):
+        assert len(mdata) == 26
+        meanae = mdata.Ae.mean()
+        avgae['Marker'].append(marker)
+        avgae['AvgAe'].append(meanae)
+    return data.join(pandas.DataFrame(avgae).set_index('Marker'), on='Name')
 
 
 def add_informativeness(data, informfile):
-    info = pandas.read_csv(informfile, sep='\t')
-    data['In'] = None
-    for n, row in info.iterrows():
-        data.loc[data.Name == row.Marker, 'In'] = row.Informativeness
-    return data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'AvgAe', 'In', 'Source']]
+    info = pandas.read_csv(informfile, sep='\t').rename(columns={'Informativeness': 'In'})
+    return data.join(info.set_index('Marker'), on='Name')
 
 
 SOURCES = [os.path.basename(file) for file in glob('sources/*') if os.path.isdir(file)]
@@ -209,7 +187,7 @@ rule frequencies:
 rule markers:
     input:
         config['refr'],
-        'frequency.tsv',
+        'sources/1kgp/marker-aes.tsv',
         'sources/1kgp/marker-informativeness.tsv',
         expand('sources/{source}/marker.tsv', source=SOURCES),
         expand('sources/{source}/source.txt', source=SOURCES),
@@ -218,7 +196,7 @@ rule markers:
         varmap='variantmap.tsv',
         idmap='marker-idmap.tsv'
     run:
-        freqfile = input[1]
+        aefile = input[1]
         informfile = input[2]
         input = input[3:]
         numsources = int(len(input) / 2)
@@ -226,18 +204,17 @@ rule markers:
         sourcefiles = input[numsources:]
 
         data = merge_markers(markerfiles, sourcefiles)
-        with open(output.varmap, 'w') as fh:
-            write_variant_map(data, fh)
+        varmap = construct_variant_map(data)
+        varmap.to_csv(output.varmap, sep='\t', index=False)
         add_marker_permids(data, config['refr'])
-        freqs = pandas.read_csv(freqfile, sep='\t')
-        data = compute_marker_ae(data, freqs)
 
         idmap = populate_idmap(data)
         idmap.to_csv(output.idmap, sep='\t', index=False)
 
-        data = sort_and_clean(data)
+        data = add_avgae(data, aefile)
         data = add_informativeness(data, informfile)
-        data.to_csv(output.table, sep='\t', index=False)
+        data = sort_and_clean(data)
+        data.to_csv(output.table, sep='\t', index=False, float_format='%.4f')
 
 
 rule idmap:

@@ -10,12 +10,12 @@ from utils import smartopen, parse_markers, marker_variants, parse_frequencies
 
 
 rule all:
-    input: 'marker.tsv', 'population.tsv', 'frequency.tsv'
+    input: 'marker.tsv', 'frequency.tsv'
 
 
 rule markers:
     input:
-        markers='figure-s1.txt',
+        markers='figure-S1.txt',
         rsids='marker-rsids.tsv'
     output: 'marker.tsv'
     run:
@@ -30,7 +30,7 @@ rule markers:
 
 rule frequencies:
     input:
-        markers='figure-s1.txt',
+        markers='figure-S1.txt',
         freqs='table-S2.txt'
     output: 'frequency.tsv'
     run:

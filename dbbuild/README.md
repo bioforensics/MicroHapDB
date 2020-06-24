@@ -14,25 +14,28 @@ Alternatively, you can submit a pull request to the MicroHapDB Github repository
 
 ## Rebuilding the Database From Scratch: The Short Version
 
-You'll need the following software:
-
-- Python 3
-- [Pandas][]
-- [Snakemake][]
-- [pyfaidx][]
-
-And the following data:
-
-- Human reference genome (version GRCh38; http://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz)
-
-With these dependencies installed, clone the MicroHapDB git repository and use Snakemake to rebuild the database in the `dbbuild/` directory.
+Building MicroHapDB from scratch requires installing several software packages.
+Conda provides the most convenient way to install these.
 
 ```
-git clone https://github.com/bioforensics/MicroHapDB.git
+conda create -c bioconda --name microhapdb -y python=3.7 pandas snakemake pyfaidx rsidx scikit-allel
+conda activate microhapdb
+```
+
+Next, building MicroHapDB from scratch also requires the human reference genome, dbSNP, and the 1000 Genomes Project Phase 3 data.
+These can be downloaded and indexed using with the `prep-dbs.sh` script.
+**Note**: this can take several hours, depending on the speed of the Internet connection, computer processors, and other factors.
+
+```
+git clone https://github.com/bioforensics/MicroHapDB.git  # If you haven't already done so
 cd MicroHapDB/dbbuild/
-wget http://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz
-gunzip hg38.fa.gz
-snakemake --config refr=hg38.fa -p tables
+./prep-dbs.sh
+```
+
+Finally, with these data sets in place, MicroHapDB can be built using `Snakemake`.
+
+```
+snakemake --configfile config.json --cores 1 -p tables
 ```
 
 If the Snakemake build process completes successfully, copy the newly created database tables to MicroHapDB's main data directory to complete the update!
@@ -199,8 +202,3 @@ So for example, for marker `mh07PK-38311`:
 ...and therefore the PermID is `MHDBM-3ae6dc1b`.
 
 MicroHapDB uses the [pearhash](https://github.com/ze-phyr-us/pearhash) library under the MIT license to compute Pearson hashes.
-
-
-[Pandas]: https://pandas.pydata.org
-[Snakemake]: https://snakemake.readthedocs.io/en/stable/
-[pyfaidx]: https://github.com/mdshw5/pyfaidx

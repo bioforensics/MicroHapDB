@@ -6,25 +6,16 @@ Hiroaki N, Fujii K, Kitayama T, Sekiguchi K, Nakanishi H, Saito K (2015) Approac
 
 ## Build Process
 
-The following software is required to compile the published data into the table format required by MicroHapDB.
+Run the following command from the `dbbuild/sources/hiroaki2015/` directory to compile the data into the table format required by MicroHapDB.
 
-- Python 3
-- [Snakemake][]
-- [rsidx][]
-
-A recent version of the dbSNP database is also required, both the VCF file and the corresponding tabix index.
-
-Run the following commands from the `dbbuild/sources/hiroaki2015/` directory to compile the data into the table format required by MicroHapDB.
-
-```bash
-# Build rsidx index if it doesn't yet exist; requires > 1 hour
-rsidx index /path/to/dbSNP.vcf.gz /path/to/dbSNP.rsidx
-
-# Compile the data tables
-snakemake --config dbsnp=/path/to/dbSNP.vcf.gz rsidx=/path/to/dbSNP.rsidx -p all
+```
+snakemake --configfile ../../config.json --cores 1 -p all
 ```
 
-## Manual Pre-processing
+
+## Appendix
+
+### Manual Pre-processing
 
 The file `table1-subset.tsv` was created manually from Table 1 of the manuscript.
 The file `frequency.tsv` was created manually from Table 2 of the manuscript.
@@ -32,8 +23,7 @@ In both cases, marker numbers were converted into marker names using the `mh<chr
 
 The population ID was created by appending the output of `echo $'10.1016/j.legalmed.2015.06.003\tJapanese' | md5 | cut -c 1-10` to the prefix `MHDBP-`.
 
-
-## Problematic marker
+### Problematic marker
 
 The dbSNP IDs reported for marker #8 correspond to variants that span over 100kb in both GRCh37 and GRCh38.
 
@@ -49,7 +39,3 @@ Span	102541	102541
 ```
 
 This marker was therefore discarded during the data processing procedure.
-
-
-[Snakemake]: https://snakemake.readthedocs.io/en/stable/
-[rsidx]: https://github.com/bioforensics/rsidx

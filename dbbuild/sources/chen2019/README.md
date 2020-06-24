@@ -6,15 +6,12 @@ Chen P, Deng C, Li Z, Pu Y, Yang J, Yu Y, Li K, Li D, Liang W, Zhang L, Chen F (
 
 ## Build Process
 
-The following software is required to compile the published data into the table format required by MicroHapDB.
-
-- Python 3
-- [Snakemake][]
-
-To compile the data into the table format required by MicroHapDB, run the `snakemake` command from the `dbbuild/sources/chen2019/` directory.
+To compile the data into the table format required by MicroHapDB, run the `snakemake --cores 1` command from the `dbbuild/sources/chen2019/` directory.
 
 
-## Manual Pre-processing
+## Appendix
+
+### Manual Pre-processing
 
 The file  `prelim-marker-variants.xslx` is a manually reformatted version of Table 1 from the manuscript.
 The file `prelim-allele-freq.xlsx` is a manually reformatted version of the allele frequency table included in the supplementary data (`mmc6.xlsx`).
@@ -24,8 +21,7 @@ These files were manually exported to TSV format to facilitate subsequent proces
 
 The population ID was created by appending the output of `echo $'10.1016/j.fsigen.2019.02.018\tHan' | md5 | cut -c 1-10` to the prefix `MHDBP-`.
 
-
-## Problematic allele
+### Problematic allele
 
 The allele frequency table included in the supplement includes an allele designated simply as "6" for the marker MH06CP003.
 This marker is not one of the 11 markers described in the paper, and had been recorded previously in the ALFRED database—see https://alfred.med.yale.edu/alfred/recordinfo.asp?UNID=SI664884K.

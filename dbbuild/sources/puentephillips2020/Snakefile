@@ -21,8 +21,8 @@ rule supp_file_s1:
 rule dbsnp_subset:
     input:
         markers='supp-file-s1.tsv',
-        dbsnp=config['dbsnp'],
-        rsidx=config['rsidx'],
+        dbsnp=config['dbsnp38'],
+        rsidx=config['dbsnp38'].replace('.vcf.gz', '.rsidx'),
     output: 'dbsnp-subset.vcf.gz'
     run:
         rsids = list()
