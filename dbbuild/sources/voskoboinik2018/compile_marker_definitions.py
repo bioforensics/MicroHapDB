@@ -106,7 +106,7 @@ def filter_variants(markername):
             print(var, file=outfh)
 
 
-def transfer_variants(markername, vcf, rsidx):
+def transfer_variants(markername, vcf, rsidx, refr='GRCh38'):
     infile = '{mn:s}-filtered.vcf'.format(mn=markername)
     rsids = list()
     with open(infile, 'r') as fh:
@@ -116,39 +116,49 @@ def transfer_variants(markername, vcf, rsidx):
             values = line.split('\t')
             rsid = values[2]
             rsids.append(rsid)
-    outfile = '{mn:s}-GRCh38.vcf'.format(mn=markername)
+    outfile = f'{markername}-{refr}.vcf'
     command = ['rsidx', 'search', vcf, rsidx] + rsids
     with open(outfile, 'w') as fh:
         subprocess.check_call(command, universal_newlines=True, stdout=fh)
+
+
+def vcf_to_rsid_offsets(vcfstream):
+    offsets = list()
+    rsids = list()
+    for line in vcfstream:
+        chrom, pos, rsid, *values = line.strip().split('\t')
+        markerchrom = 'chr' + chrom
+        offsets.append(int(pos) - 1)
+        rsids.append(rsid)
+    return rsids, offsets
 
 
 def finalize_marker_definitions(markernames):
     data = {
         'Name': list(),
         'Xref': list(),
-        'Reference': list(),
+        'NumVars': list(),
         'Chrom': list(),
-        'Offsets': list(),
+        'OffsetsHg37': list(),
+        'OffsetsHg38': list(),
         'VarRef': list(),
     }
     for name in markernames:
         infile = '{mn:s}-GRCh38.vcf'.format(mn=name)
         offsets = list()
         rsids = list()
-        with open(infile, 'r') as fh:
-            for line in fh:
-                chrom, pos, rsid, *values = line.strip().split('\t')
-                markerchrom = 'chr' + chrom
-                offsets.append(int(pos) - 1)
-                rsids.append(rsid)
-        offsetstr = ','.join(map(str, offsets))
-        rsidstr = ','.join(rsids)
+        with open(f'{name}-GRCh37.vcf', 'r') as fh:
+            rsids37, offsets37 = vcf_to_rsid_offsets(fh)
+        with open(f'{name}-GRCh38.vcf', 'r') as fh:
+            rsids38, offsets38 = vcf_to_rsid_offsets(fh)
+        assert sorted(rsids37) == sorted(rsids38), (sorted(rsids37), sorted(rsids38))
         data['Name'].append(name)
         data['Xref'].append(None)
-        data['Reference'].append('GRCh38')
+        data['NumVars'].append(len(rsids38))
         data['Chrom'].append(markerchrom)
-        data['Offsets'].append(offsetstr)
-        data['VarRef'].append(rsidstr)
+        data['Offsets37'].append(','.join(offsets37))
+        data['Offsets38'].append(','.join(offsets38))
+        data['VarRef'].append(','.join(rsids38))
     df = pandas.DataFrame(data)
     df.to_csv('marker.tsv', sep='\t', index=False)
 
@@ -163,14 +173,17 @@ def cli():
 def main(args):
     with open(args.configfile, 'r') as fh:
         config = json.load(fh)
-        vcf = config['dbsnp38']
-        rsidx = config['dbsnp38'].replace('.vcf.gz', '.rsidx')
+        vcf37 = config['dbsnp37']
+        vcf38 = config['dbsnp38']
+    rsidx37 = config['dbsnp37'].replace('.vcf.gz', '.rsidx')
+    rsidx38 = config['dbsnp38'].replace('.vcf.gz', '.rsidx')
     markernames = list(get_marker_names(args.data))
     regions = list(get_regions(args.data))
     for name, region in zip(markernames, regions):
         get_variants(name, region, config['1kgp_dir'])
         filter_variants(name)
-        transfer_variants(name, vcf, rsidx)
+        transfer_variants(name, vcf37, rsidx37, refr='GRCh37')
+        transfer_variants(name, vcf38, rsidx38, refr='GRCh38')
     finalize_marker_definitions(markernames)
 
 

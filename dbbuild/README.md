@@ -86,10 +86,11 @@ This includes the following fields.
 
 - `Name`: a symbol following the `mh<chromosome><initials>-<identifier>` nomenclature proposed in [Kidd (2016)](https://dx.doi.org/10.1186/s40246-016-0078-y)
 - `Xref`: an identifier (or comma-separated list of identifiers) used to cross-reference the marker in other databases; this field can be empty, but if it includes one or more identifiers, each of these identifiers should be unique to this marker across all sources
-- `Reference`: the version of the human reference genome used as a variant coordinate system; at the moment, only `GRCh38` is supported
+- `NumVars`: the number of SNPs (or indels) that define this marker
 - `Chrom`: the chromosome on which the marker is found
-- `Offsets`: offsets (from the first nucleotide on the chromosome) of the variants that define the marker, separated by commas; note that the first nucleotide of the chromosome has an offset of `0`, the second nucleotide has an offset of `1`, and so on
-- `VarRef`: a list of variant identifiers (such as rsIDs) associated with this marker; optional
+- `OffsetsHg37`: offsets (from the first nucleotide on the chromosome in the hg19/GRCh37 reference assembly) of the variants that define the marker, separated by commas; note that the first nucleotide of the chromosome has an offset of `0`, the second nucleotide has an offset of `1`, and so on
+- `OffsetsHg38`: same as `OffsetsHg37`, but for the `GRCh38` reference assembly
+- `VarRef`: comma-separated list of variant identifiers (rsIDs) associated with this marker
 
 For example, the first few lines of the `marker.tsv` for ALFRED looks like this.
 
@@ -100,6 +101,11 @@ mh03KK-150	SI664563E	GRCh38	chr3	131927127,131927156,131927242,131927311	rs12250
 mh04KK-010	SI664564F	GRCh38	chr4	1985210,1985244	rs3135123,rs495367
 mh04KK-011	SI664565G	GRCh38	chr4	37857268,37857332	rs6855439,rs6531591
 ```
+
+> **NOTE**: We strongly recommend and prefer that a complete list of rsIDs is provided for each marker in the `VarRef` field.
+> For any particular marker, if the number of rsIDs provided matches the value in `NumVars`, the database build procedure is capable of computing GRCh37 and GRCh38 offsets automatically.
+> In that case, the `OffsetsHg37` and `OffsetsHg38` fields can be left blank; if they are *not* left blank, they will only be used to double-check the automatically computed offsets.
+> If one or more of the SNPs defining a marker has no rsID (i.e. if the number of rsIDs is less than `NumVars`), then the `OffsetsHg37` and `OffsetsHg38` fields must be filled in and accurate: no automatic check is possible.
 
 
 ### `population.tsv`
