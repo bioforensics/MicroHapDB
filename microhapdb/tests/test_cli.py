@@ -277,3 +277,27 @@ def test_lookup(capsys):
     out, err = capsys.readouterr()
     assert 'mh09KK-033  MHDBM-8458b727    GRCh38  chr9         680713,680762,680790  2.9343  0.1008  0.0504         ALFRED' in out
     assert ' mh09AT-15  MHDBM-b46abf2e    GRCh38  chr9  680713,680762,680767,680790  2.9471  0.1160  0.0602  ISFG2019:P597' in out
+
+
+def test_ae_pop(capsys):
+    arglist = ['marker', '--region=chr18:1-25000000', '--ae-pop=CDX']
+    args = get_parser().parse_args(arglist)
+    microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    exp_out = '''
+         Name          PermID Reference  Chrom                                          Offsets      Ae      In     Fst                        Source
+ mh18PK-87558  MHDBM-1e5374f1    GRCh38  chr18  1960542,1960557,1960561,1960566,1960582,1960588  1.9767  0.1325  0.0494  10.1016/j.fsigen.2018.05.008
+ mh18USC-18pA  MHDBM-56dfa93b    GRCh38  chr18          5280017,5280020,5280070,5280071,5280093  1.8402  0.2130  0.1818  10.1016/j.fsigen.2019.102213
+   mh18CP-005  MHDBM-a85754d3    GRCh38  chr18                  8892864,8892893,8892896,8892907  3.3873  0.0904  0.0059                        ALFRED
+   mh18KK-285  MHDBM-ea520d26    GRCh38  chr18              24557354,24557431,24557447,24557489  2.6188  0.1721  0.0836                        ALFRED
+    mh18AT-38  MHDBM-db09ec41    GRCh38  chr18                       24557431,24557447,24557489  2.6144  0.1419  0.0837                 ISFG2019:P597
+'''
+    obs_out = terminal.out
+    assert exp_out.strip() == obs_out.strip()
+
+
+def test_ae_pop_bad_pop():
+    arglist = ['marker', '--ae-pop=ABC', 'mh18USC-18pA']
+    args = get_parser().parse_args(arglist)
+    with pytest.raises(ValueError, match=r'no Ae data for population "ABC"'):
+        microhapdb.cli.main(args)

@@ -22,6 +22,20 @@ __version__ = get_versions()['version']
 del get_versions
 
 
+def set_ae_population(popid=None):
+    global markers
+    markers = pandas.read_csv(data_file('marker.tsv'), sep='\t')
+    if popid is None:
+        return
+    else:
+        aes = pandas.read_csv(data_file('marker-aes.tsv'), sep='\t')
+        if popid not in aes.Population.unique():
+            raise ValueError(f'no Ae data for population "{popid}"')
+        popaes = aes[aes.Population == popid].drop(columns=['Population'])
+        columns = ['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'Ae', 'In', 'Fst', 'Source']
+        markers = markers.drop(columns=['Ae']).join(popaes.set_index('Marker'), on='Name')[columns]
+
+
 markers = pandas.read_csv(data_file('marker.tsv'), sep='\t')
 populations = pandas.read_csv(data_file('population.tsv'), sep='\t')
 frequencies = pandas.read_csv(data_file('frequency.tsv'), sep='\t')
