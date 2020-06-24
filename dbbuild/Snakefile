@@ -102,41 +102,6 @@ def add_marker_permids(data, refr):
     data['PermID'] = pandas.Series(permids)
 
 
-def compute_marker_ae(data, freqs):
-    marker_nvars = dict()
-    for n, row in data.iterrows():
-        nvars = row.Offsets.count(',') + 1
-        marker = row.Name
-        marker_nvars[marker] = nvars
-
-    aedata = {'Marker': list(), 'Population': list(), 'Ae': list()}
-    pops1kgp = set([
-        'CHB', 'JPT', 'CHS', 'CDX', 'KHV', 'CEU', 'TSI', 'FIN', 'GBR', 'IBS', 'YRI', 'LWK', 'GWD',
-        'MSL', 'ESN', 'ASW', 'ACB', 'MXL', 'PUR', 'CLM', 'PEL', 'GIH', 'PJL', 'BEB', 'STU', 'ITU'
-    ])
-    for marker, mdata in freqs[freqs.Population.isin(pops1kgp)].groupby('Marker'):
-        for population, pdata in mdata.groupby('Population'):
-            for haplotype in pdata.Allele.unique():
-                nvars = haplotype.count(',') + 1
-                if nvars != marker_nvars[marker]:
-                    message = f'allele count disagreement for {marker}:'
-                    message += f' {nvars} vs {marker_nvars[marker]} ({haplotype})'
-                    raise ValueError(message)
-            ae = 1.0 / sum([f ** 2 for f in pdata.Frequency])
-            aedata['Marker'].append(marker)
-            aedata['Population'].append(population)
-            aedata['Ae'].append(ae)
-    aes = pandas.DataFrame(aedata).sort_values(['Marker', 'Population'])
-
-    avgae = {'Marker': list(), 'AvgAe': list()}
-    for marker, mdata in aes.groupby('Marker'):
-        assert len(mdata) == len(pops1kgp)
-        meanae = mdata.Ae.mean()
-        avgae['Marker'].append(marker)
-        avgae['AvgAe'].append(meanae)
-    return data.join(pandas.DataFrame(avgae).set_index('Marker'), on='Name'), aes
-
-
 def sort_and_clean(data):
     data['ChromSort'] = data.Chrom.apply(lambda c: '0X' if c == 'chrX' else int(c[3:]))
     data['TempPos'] = data.Offsets.apply(lambda os: int(os.split(',')[0]))
@@ -144,15 +109,23 @@ def sort_and_clean(data):
     data.drop(columns=['Xref', 'VarRef', 'ChromSort', 'TempPos'], inplace=True)
     nr = data.drop_duplicates(subset=('Name', 'Chrom', 'Offsets'))
     assert(len(nr.Name) == len(nr.Name.unique()))  # If markers are defined in more than one place, make sure the definitions are identical.
-    return data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'AvgAe', 'Source']]
+    return data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'AvgAe', 'In', 'Source']]
+
+
+def add_avgae(data, aefile):
+    aes = pandas.read_csv(aefile, sep='\t')
+    avgae = {'Marker': list(), 'AvgAe': list()}
+    for marker, mdata in aes.groupby('Marker'):
+        assert len(mdata) == 26
+        meanae = mdata.Ae.mean()
+        avgae['Marker'].append(marker)
+        avgae['AvgAe'].append(meanae)
+    return data.join(pandas.DataFrame(avgae).set_index('Marker'), on='Name')
 
 
 def add_informativeness(data, informfile):
-    info = pandas.read_csv(informfile, sep='\t')
-    data['In'] = None
-    for n, row in info.iterrows():
-        data.loc[data.Name == row.Marker, 'In'] = row.Informativeness
-    return data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'AvgAe', 'In', 'Source']]
+    info = pandas.read_csv(informfile, sep='\t').rename(columns={'Informativeness': 'In'})
+    return data.join(info.set_index('Marker'), on='Name')
 
 
 SOURCES = [os.path.basename(file) for file in glob('sources/*') if os.path.isdir(file)]
@@ -214,17 +187,16 @@ rule frequencies:
 rule markers:
     input:
         config['refr'],
-        'frequency.tsv',
+        'sources/1kgp/marker-aes.tsv',
         'sources/1kgp/marker-informativeness.tsv',
         expand('sources/{source}/marker.tsv', source=SOURCES),
         expand('sources/{source}/source.txt', source=SOURCES),
     output:
         table='marker.tsv',
         varmap='variantmap.tsv',
-        aes='aes.tsv',
         idmap='marker-idmap.tsv'
     run:
-        freqfile = input[1]
+        aefile = input[1]
         informfile = input[2]
         input = input[3:]
         numsources = int(len(input) / 2)
@@ -235,15 +207,13 @@ rule markers:
         varmap = construct_variant_map(data)
         varmap.to_csv(output.varmap, sep='\t', index=False)
         add_marker_permids(data, config['refr'])
-        freqs = pandas.read_csv(freqfile, sep='\t')
-        data, aes = compute_marker_ae(data, freqs)
-        aes.to_csv(output.aes, sep='\t', index=False, float_format='%.4f')
 
         idmap = populate_idmap(data)
         idmap.to_csv(output.idmap, sep='\t', index=False)
 
-        data = sort_and_clean(data)
+        data = add_avgae(data, aefile)
         data = add_informativeness(data, informfile)
+        data = sort_and_clean(data)
         data.to_csv(output.table, sep='\t', index=False, float_format='%.4f')
 
 
