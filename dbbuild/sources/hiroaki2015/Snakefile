@@ -39,11 +39,11 @@ rule marker_coords:
     run:
         with smartopen(input.dbsnp, 'r') as vcf, smartopen(input.markers, 'r') as markers:
             with smartopen(output[0], 'w') as out:
-                print('Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef', sep='\t', file=out)
+                print('Name', 'Xref', 'NumVars', 'Chrom', 'OffsetsHg37', 'OffsetsHg38', 'VarRef', sep='\t', file=out)
                 for name, chrom, offsets, variants in marker_coords(vcf, markers):
                     if name == 'mh04NH-08':
                         # Problematic marker definition; see README.md
                         continue
                     offsetstr = ','.join(map(str, offsets))
                     varstr = ','.join(variants)
-                    print(name, '', 'GRCh38', chrom, offsetstr, varstr, sep='\t', file=out)
+                    print(name, '', len(offsets), chrom, '',offsetstr, varstr, sep='\t', file=out)

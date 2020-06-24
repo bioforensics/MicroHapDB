@@ -26,7 +26,7 @@ rule markers:
                 marker_variants[name].append((chrom, pos, rsid))
 
         with open(output[0], 'w') as fh:
-            print('Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef', sep='\t', file=fh)
+            print('Name', 'Xref', 'NumVars', 'Chrom', 'OffsetsHg37', 'OffsetsHg38', 'VarRef', sep='\t', file=fh)
             for name, varlist in sorted(marker_variants.items()):
                 standardname = 'mh' + name[2:6] + '-' + name[6:]
                 if standardname == 'mh11CP-004':
@@ -38,7 +38,7 @@ rule markers:
                 assert offsets == sorted(offsets)
                 offsetstr = ','.join(map(str, offsets))
                 rsidstr = ','.join(rsids)
-                print(standardname, '', 'GRCh38', chrom, offsetstr, rsidstr, sep='\t', file=fh)
+                print(standardname, '', len(offsets), chrom, '', offsetstr, rsidstr, sep='\t', file=fh)
 
 
 rule frequencies:
