@@ -35,7 +35,7 @@ cd MicroHapDB/dbbuild/
 Finally, with these data sets in place, MicroHapDB can be built using `Snakemake`.
 
 ```
-snakemake --configfile config.json -p tables
+snakemake --configfile config.json --cores 1 -p tables
 ```
 
 If the Snakemake build process completes successfully, copy the newly created database tables to MicroHapDB's main data directory to complete the update!

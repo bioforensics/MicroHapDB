@@ -103,43 +103,38 @@ def add_marker_permids(data, refr):
 
 
 def compute_marker_ae(data, freqs):
-    aes = list()
+    marker_nvars = dict()
+    for n, row in data.iterrows():
+        nvars = row.Offsets.count(',') + 1
+        marker = row.Name
+        marker_nvars[marker] = nvars
+
+    aedata = {'Marker': list(), 'Population': list(), 'Ae': list()}
     pops1kgp = set([
         'CHB', 'JPT', 'CHS', 'CDX', 'KHV', 'CEU', 'TSI', 'FIN', 'GBR', 'IBS', 'YRI', 'LWK', 'GWD',
         'MSL', 'ESN', 'ASW', 'ACB', 'MXL', 'PUR', 'CLM', 'PEL', 'GIH', 'PJL', 'BEB', 'STU', 'ITU'
     ])
-    for n, row in data.iterrows():
-        if n > 0 and n % 25 == 0:
-            print('...calculated AvgAe for', n, 'markers')
-        marker = row.Name
-        freqs_1kgp = freqs[(freqs.Marker == marker) & (freqs.Population.isin(pops1kgp))]
-        if len(freqs_1kgp) == 0:
-            print(
-                '[WARNING] no frequency data for marker ', marker, ', not computing AvgAe',
-                sep='', file=sys.stderr
-            )
-            aes.append(None)
-            continue
-        ae_per_pop = list()
-        for pop in pops1kgp:
-            ae_recip = 0.0
-            for haplotype in freqs[freqs.Marker == marker].Allele.unique():
-                nallelesfreq = haplotype.count(',')
-                nallelesmarker = row.Offsets.count(',')
-                if nallelesfreq != nallelesmarker:
-                    message = 'allele count disagreement for {marker:s}:'.format(marker=marker)
-                    message += ' {:d} vs {:d};'.format(nallelesmarker, nallelesfreq)
-                    message += ' ({:s})'.format(haplotype)
+    for marker, mdata in freqs[freqs.Population.isin(pops1kgp)].groupby('Marker'):
+        for population, pdata in mdata.groupby('Population'):
+            for haplotype in pdata.Allele.unique():
+                nvars = haplotype.count(',') + 1
+                if nvars != marker_nvars[marker]:
+                    message = f'allele count disagreement for {marker}:'
+                    message += f' {nvars} vs {marker_nvars[marker]} ({haplotype})'
                     raise ValueError(message)
-            for freq in freqs[(freqs.Marker == marker) & (freqs.Population == pop)].Frequency:
-                ae_recip += freq ** 2
-            assert ae_recip > 0.0, marker
-            ae = 1.0 / ae_recip
-            ae_per_pop.append(ae)
-        assert len(ae_per_pop) == 26
-        avg_ae = sum(ae_per_pop) / len(ae_per_pop)
-        aes.append('{:.04f}'.format(avg_ae))
-    return data.assign(AvgAe=pandas.Series(aes))
+            ae = 1.0 / sum([f ** 2 for f in pdata.Frequency])
+            aedata['Marker'].append(marker)
+            aedata['Population'].append(population)
+            aedata['Ae'].append(ae)
+    aes = pandas.DataFrame(aedata).sort_values(['Marker', 'Population'])
+
+    avgae = {'Marker': list(), 'AvgAe': list()}
+    for marker, mdata in aes.groupby('Marker'):
+        assert len(mdata) == len(pops1kgp)
+        meanae = mdata.Ae.mean()
+        avgae['Marker'].append(marker)
+        avgae['AvgAe'].append(meanae)
+    return data.join(pandas.DataFrame(avgae).set_index('Marker'), on='Name'), aes
 
 
 def sort_and_clean(data):
@@ -226,6 +221,7 @@ rule markers:
     output:
         table='marker.tsv',
         varmap='variantmap.tsv',
+        aes='aes.tsv',
         idmap='marker-idmap.tsv'
     run:
         freqfile = input[1]
@@ -240,14 +236,15 @@ rule markers:
         varmap.to_csv(output.varmap, sep='\t', index=False)
         add_marker_permids(data, config['refr'])
         freqs = pandas.read_csv(freqfile, sep='\t')
-        data = compute_marker_ae(data, freqs)
+        data, aes = compute_marker_ae(data, freqs)
+        aes.to_csv(output.aes, sep='\t', index=False, float_format='%.4f')
 
         idmap = populate_idmap(data)
         idmap.to_csv(output.idmap, sep='\t', index=False)
 
         data = sort_and_clean(data)
         data = add_informativeness(data, informfile)
-        data.to_csv(output.table, sep='\t', index=False)
+        data.to_csv(output.table, sep='\t', index=False, float_format='%.4f')
 
 
 rule idmap:
@@ -293,3 +290,4 @@ rule indels:
             dfs.append(df)
         data = pandas.concat(dfs, axis=0, ignore_index=True)
         data.sort_values('Marker').to_csv(output[0], sep='\t', index=False)
+
