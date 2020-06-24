@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Added
+- Added F_ST (fixation index) to the markers table (see #59, #62, #63).
+- Added the ability to swap out population-specific Ae values for the default 26-population average (see #63).
+
+### Changed
+- Various updates to documentation (see #60).
+- Cosmetic updates to "marker --detail" (see #61).
+- Refactoring of database build code (see #62).
+
+
 ## [0.5] 2020-02-13
 
 ### Added

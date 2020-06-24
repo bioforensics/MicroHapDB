@@ -124,7 +124,7 @@ Use [MicroHapDB's issue tracker](https://github.com/bioforensics/MicroHapDB/issu
 
 If you use this package, please cite our work.
 
-> **Standage DS** (2018) MicroHapDB: programmatic access to published microhaplotype data. GitHub repository, https://github.com/bioforensics/microhapdb.
+> **Standage DS, Mitchell RN** (2020) MicroHapDB: a portable and extensible database of all published microhaplotype marker and frequency data. *bioRxiv*, [doi:10.1101/2020.04.08.032052](https://doi.org/10.1101/2020.04.08.032052).
 
 ----------
 
