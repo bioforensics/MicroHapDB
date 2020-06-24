@@ -9,6 +9,7 @@
 import builtins
 from collections import defaultdict
 from gzip import open as gzopen
+import pandas
 import sys
 
 
@@ -43,15 +44,28 @@ def parse_markers(instream):
 
 
 def marker_variants(markerstream, rsids):
-    marker_rsids = dict()
-    rsids = rsids[rsids.RSID != '-']
-    rsdata = rsids.groupby(['Marker'])['RSID'].apply(lambda x: ','.join(x)).reset_index()
-    for n, row in rsdata.iterrows():
-        marker_rsids[row.Marker] = row.RSID.split(',')
+    data = {
+        'Marker': list(),
+        'Offsets37': list(),
+        'Offsets38': list(),
+        'RSIDs': list(),
+    }
+    for marker, mdata in rsids.groupby('Marker'):
+        o37 = [int(v.split(':')[1]) - 1 for v in mdata.Position37 if not pandas.isna(v)]
+        o38 = [int(v.split(':')[1]) - 1 for v in mdata.Position38]
+        rs = mdata[mdata.RSID != '-'].RSID.tolist()
+        data['Marker'].append(marker)
+        data['Offsets37'].append(o37)
+        data['Offsets38'].append(o38)
+        data['RSIDs'].append(rs)
+    data = pandas.DataFrame(data)
 
     for name, chrom, astart, aend, offsets in parse_markers(markerstream):
-        rsids = marker_rsids[name]
-        yield name, chrom, offsets, rsids
+        mdata = data[data.Marker == name].iloc[0]
+        o37 = mdata.Offsets37
+        o38 = mdata.Offsets38
+        assert offsets == o38, mdata
+        yield name, len(offsets), chrom, o37, o38, mdata.RSIDs
 
 
 def parse_frequencies(markerstream, freqstream):

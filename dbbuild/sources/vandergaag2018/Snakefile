@@ -21,11 +21,12 @@ rule markers:
     run:
         rsids = pandas.read_csv(input.rsids, sep='\t')
         with smartopen(input.markers, 'r') as mstream, smartopen(output[0], 'w') as out:
-            print('Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef', sep='\t', file=out)
-            for name, chrom, offsets, rsids in marker_variants(mstream, rsids):
-                offsetstr = ','.join(map(str, offsets))
+            print('Name', 'Xref', 'NumVars', 'Chrom', 'OffsetsHg37', 'OffsetsHg38', 'VarRef', sep='\t', file=out)
+            for name, chrom, nvar, offsets37, offsets38, rsids in marker_variants(mstream, rsids):
+                offsets37 = ','.join(map(str, offsets37))
+                offsets38 = ','.join(map(str, offsets38))
                 rsidstr = ','.join(rsids)
-                print(name, '', 'GRCh38', chrom, offsetstr, rsidstr, sep='\t', file=out)
+                print(name, '', nvar, chrom, offsets37, offsets38, rsidstr, sep='\t', file=out)
 
 
 rule frequencies:
