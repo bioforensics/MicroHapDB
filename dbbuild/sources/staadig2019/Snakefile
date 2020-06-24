@@ -39,11 +39,11 @@ rule marker_coords:
     run:
         with smartopen(input.dbsnp, 'r') as vcf, smartopen(input.markers, 'r') as mapping:
             with smartopen(output[0], 'w') as out:
-                print('Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef', sep='\t', file=out)
+                print('Name', 'Xref', 'NumVars', 'Chrom', 'OffsetsHg37', 'OffsetsHg38', 'VarRef', sep='\t', file=out)
                 for name, chrom, offsets, variants in linköping_marker_coords(vcf, mapping):
                     offsetstr = ','.join(map(str, offsets))
                     varstr = ','.join(variants)
-                    print(name, '', 'GRCh38', chrom, offsetstr, varstr, sep='\t', file=out)
+                    print(name, '', len(offsets), chrom, '', offsetstr, varstr, sep='\t', file=out)
 
 
 rule frequency:
