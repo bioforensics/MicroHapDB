@@ -290,4 +290,3 @@ rule indels:
             dfs.append(df)
         data = pandas.concat(dfs, axis=0, ignore_index=True)
         data.sort_values('Marker').to_csv(output[0], sep='\t', index=False)
-
