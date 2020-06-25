@@ -13,43 +13,16 @@ rule all:
 
 
 rule markers:
-    input: 'prelim-marker-variants.tsv'
+    input:
+        script='./compile_marker_definitions.py',
+        markers='prelim-marker-variants.tsv',
     output: 'marker.tsv'
-    run:
-        marker_variants = defaultdict(list)
-        with open(input[0], 'r') as fh:
-            next(fh)
-            for line in fh:
-                name, rsid, chromnum, posstr = line.strip().split('\t')
-                chrom = 'chr' + chromnum
-                pos = int(posstr) - 1
-                marker_variants[name].append((chrom, pos, rsid))
-
-        with open(output[0], 'w') as fh:
-            print('Name', 'Xref', 'NumVars', 'Chrom', 'OffsetsHg37', 'OffsetsHg38', 'VarRef', sep='\t', file=fh)
-            for name, varlist in sorted(marker_variants.items()):
-                standardname = 'mh' + name[2:6] + '-' + name[6:]
-                if standardname == 'mh11CP-004':
-                    # Included in ALFRED
-                    continue
-                chrom = varlist[0][0]
-                offsets = [p for c, p, r in varlist]
-                rsids = [r for c, p, r in varlist]
-                assert offsets == sorted(offsets)
-                offsetstr = ','.join(map(str, offsets))
-                rsidstr = ','.join(rsids)
-                print(standardname, '', len(offsets), chrom, '', offsetstr, rsidstr, sep='\t', file=fh)
+    shell: '{input} {output}'
 
 
 rule frequencies:
-    input: 'prelim-allele-freqs.tsv'
+    input:
+        script='./compile_frequencies.py',
+        freqs='prelim-allele-freqs.tsv',
     output: 'frequency.tsv'
-    run:
-        with open(input[0], 'r') as infh, open(output[0], 'w') as outfh:
-            print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=outfh)
-            next(infh)
-            for line in infh:
-                name, allele, freq = line.strip().split('\t')
-                standardname = 'mh' + name[2:6] + '-' + name[6:]
-                allelestr = ','.join(allele)
-                print(standardname, 'MHDBP-48c2cfb2aa', allelestr, freq, sep='\t', file=outfh)
+    shell: '{input} {output}'
