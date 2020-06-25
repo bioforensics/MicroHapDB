@@ -57,17 +57,13 @@ def parse_vcf(infile):
         yield Variant(line)
 
 
-def get_regions(table1file):
+def parse_marker_definitions(table1file):
     data = pandas.read_csv(table1file, sep='\t')
     data['End'] = data['GRCh37Pos'] + data['Length']
     for n, row in data.iterrows():
-        yield '{chr:d}:{start:d}-{end:d}'.format(chr=row.Chrom, start=row.GRCh37Pos, end=row.End)
-
-
-def get_marker_names(table1file):
-    data = pandas.read_csv(table1file, sep='\t')
-    for n, row in data.iterrows():
-        yield 'mh{chr:02d}LV-{sn:02d}'.format(chr=row.Chrom, sn=n+1)
+        name = f'mh{row.Chrom:02d}LV-{n+1:02d}'
+        region = f'{row.Chrom}:{row.GRCh37Pos}-{row.End}'
+        yield name, region
 
 
 def get_variants(markername, region, path):
@@ -165,27 +161,26 @@ def finalize_marker_definitions(markernames):
 
 def cli():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--configfile', default='../../config.json')
-    parser.add_argument('data', help='Table 1 from Voskoboinik et al 2018')
+    parser.add_argument('dbsnp37', help='dbSNP VCF for GRCh37/hg19')
+    parser.add_argument('dbsnp38', help='dbSNP VCF for GRCh38')
+    parser.add_argument('rsidx37', help='rsidx index for GRCh37/hg19')
+    parser.add_argument('rsidx38', help='rsidx index for GRCh38')
+    parser.add_argument('dir1kgp', help='directory containing 1000 Genomes Project VCFs')
+    parser.add_argument('table1', help='Table 1 from Voskoboinik et al 2018')
     return parser
 
 
 def main(args):
-    with open(args.configfile, 'r') as fh:
-        config = json.load(fh)
-        vcf37 = config['dbsnp37']
-        vcf38 = config['dbsnp38']
-    rsidx37 = config['dbsnp37'].replace('.vcf.gz', '.rsidx')
-    rsidx38 = config['dbsnp38'].replace('.vcf.gz', '.rsidx')
-    markernames = list(get_marker_names(args.data))
-    regions = list(get_regions(args.data))
-    for name, region in zip(markernames, regions):
-        get_variants(name, region, config['1kgp_dir'])
+    markernames = list()
+    for name, region in parse_marker_definitions(args.table1):
+        markernames.append(name)
+        get_variants(name, region, args.dir1kgp)
         filter_variants(name)
-        transfer_variants(name, vcf37, rsidx37, refr='GRCh37')
-        transfer_variants(name, vcf38, rsidx38, refr='GRCh38')
+        transfer_variants(name, args.dbsnp37, args.rsidx37, refr='GRCh37')
+        transfer_variants(name, args.dbsnp38, args.rsidx38, refr='GRCh38')
     finalize_marker_definitions(markernames)
 
 
 if __name__ == '__main__':
     main(cli().parse_args())
+
