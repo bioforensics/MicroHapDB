@@ -321,6 +321,58 @@ def test_hg37(capsys):
     assert exp_out.strip() == obs_out.strip()
 
 
+def test_hg37_detail(capsys):
+    arglist = ['marker', '--format=detail', '--GRCh37', 'mh17USC-17pA']
+    args = get_parser().parse_args(arglist)
+    microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    exp_out = '''
+--------------------------------------------------------------[ MicroHapDB ]----
+mh17USC-17pA    a.k.a MHDBM-d5646523
+
+Marker Definition (GRCh37)
+    Marker extent
+        - chr17:3821918-3821988 (70 bp)
+    Target amplicon
+        - chr17:3918614-3918704 (90 bp)
+    Constituent variants
+        - chromosome offsets: 3821918,3821952,3821987
+        - marker offsets: 0,34,69
+        - amplicon offsets: 10,44,79
+        - cross-references: rs4995289, rs4995288, rs9904113
+    Observed haplotypes
+        - C,C,A
+        - C,C,C
+        - C,T,A
+        - C,T,C
+        - T,C,A
+        - T,C,C
+        - T,T,A
+        - T,T,C
+
+
+--[ Core Marker Sequence ]--
+>mh17USC-17pA
+CGTCTCATTTGGGGATCTTATCATATCCACAGTGTACCCCAGGGACCTACATTTATTTTCCTGCTGCTGA
+
+
+--[ Target Amplicon Sequence with Haplotypes ]--
+          *                                 *                                  *
+CCTGGAGCACCGTCTCATTTGGGGATCTTATCATATCCACAGTGTACCCCAGGGACCTACATTTATTTTCCTGCTGCTGATAACTCCACA
+..........C.................................C..................................A..........
+..........C.................................C..................................C..........
+..........C.................................T..................................A..........
+..........C.................................T..................................C..........
+..........T.................................C..................................A..........
+..........T.................................C..................................C..........
+..........T.................................T..................................A..........
+..........T.................................T..................................C..........
+--------------------------------------------------------------------------------
+'''
+    obs_out = terminal.out
+    assert exp_out.strip() == obs_out.strip()
+
+
 def test_h37_ae_pop(capsys):
     arglist = ['marker', '--region=chr18:50000000-80000000', '--GRCh37', '--ae-pop=PJL']
     args = get_parser().parse_args(arglist)

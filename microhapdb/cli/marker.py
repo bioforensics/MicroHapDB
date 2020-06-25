@@ -21,7 +21,7 @@ def subparser(subparsers):
         microhapdb marker --format=fasta mh13KK-218 mh04CP-002 mh02AT-05
         microhapdb marker --format=fasta --panel mypanel.txt
         microhapdb marker --format=detail --min-length=125 MHDBM-dc55cd9e
-        microhapdb marker --region=chr18:1-25000000
+        microhapdb marker --region=chr18:1-25000000 --GRCh37
         microhapdb marker --query='Source == "ALFRED"' --ae-pop CEU
         microhapdb marker --query='Name.str.contains("PK")'
     """

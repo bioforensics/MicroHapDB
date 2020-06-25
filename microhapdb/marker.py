@@ -22,9 +22,13 @@ class TargetAmplicon():
         self.data = marker
         self.delta = delta
         self.minlen = minlen
-        self.flanking_sequence_data = microhapdb.sequences[
-            microhapdb.sequences.Marker == self.data.Name
-        ].iloc[0]
+        self.flanking_sequence_data = microhapdb.sequences[microhapdb.sequences.Marker == self.data.Name].iloc[0]
+        self.data38 = marker
+        if marker.Reference != 'GRCh38':
+            # We need GRCh38 coordinates to work with marker sequences
+            assert marker.Reference == 'GRCh37'
+            markers38 = pandas.read_csv(microhapdb.util.data_file('marker.tsv'), sep='\t')
+            self.data38 = markers38[markers38.Name == marker.Name].iloc[0]
 
     @property
     def xrefs(self):
@@ -40,6 +44,10 @@ class TargetAmplicon():
     @property
     def offsets(self):
         return list(map(int, self.data.Offsets.split(',')))
+
+    @property
+    def offsets38(self):
+        return list(map(int, self.data38.Offsets.split(',')))
 
     @property
     def variant_lengths(self):
@@ -77,8 +85,14 @@ class TargetAmplicon():
         return min(o), max(o) + vl[-1]
 
     @property
+    def marker_extent38(self):
+        o = self.offsets38
+        vl = self.variant_lengths
+        return min(o), max(o) + vl[-1]
+
+    @property
     def amplicon_interval(self):
-        o = self.offsets
+        o = self.offsets38
         vl = self.variant_lengths
         start, end = min(o) - self.delta, max(o) + self.delta + vl[-1]
         length = end - start
@@ -103,7 +117,7 @@ class TargetAmplicon():
     @property
     def amplicon_offsets(self):
         start, end = self.amplicon_interval
-        return [o - start for o in self.offsets]
+        return [o - start for o in self.offsets38]
 
     @property
     def marker_offsets(self):
@@ -119,7 +133,7 @@ class TargetAmplicon():
     @property
     def marker_seq(self):
         fullseq = self.flanking_sequence_data.Sequence
-        mstart, mend = self.marker_extent
+        mstart, mend = self.marker_extent38
         seqstart = mstart - self.flanking_sequence_data.LeftFlank
         seqend = seqstart + (mend - mstart)
         markerseq = fullseq[seqstart:seqend]
@@ -171,7 +185,7 @@ class TargetAmplicon():
         return coord + self.start
 
     def print_detail_definition(self, out):
-        print('Marker Definition (GRCh38)', file=out)
+        print(f'Marker Definition ({self.data.Reference})', file=out)
         estart, eend = self.marker_extent
         extent = '{chr:s}:{start:d}-{end:d}'.format(chr=self.data.Chrom, start=estart, end=eend)
         extentstr = '    Marker extent\n        - {ext:s} ({length:d} bp)'.format(
