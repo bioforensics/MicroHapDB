@@ -70,7 +70,7 @@ To access MicroHapDB from Python, simply invoke `import microhapdb` and query th
 - `microhapdb.populations`
 - `microhapdb.frequencies`
 
-Each is a [Pandas][]<sup>[13]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
+Each is a [Pandas][]<sup>[14]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
 
 <img alt="MicroHapDB Python API" src="img/microhapdb-python-api.gif" width="600px" />
 
@@ -86,14 +86,15 @@ MicroHapDB also includes 4 auxiliary tables, which may be useful in a variety of
 
 ## Ranking Markers
 
-MicroHapDB provides two criteria for ranking markers.
+MicroHapDB provides three criteria for ranking markers.
 
-- `AvgAe`: the marker's effective number of alleles (*A<sub>e</sub>*) computed individually for 26 populations and then averaged<sup>[11]</sup>
+- `Ae`: the marker's effective number of alleles (*A<sub>e</sub>*) computed individually for 26 populations<sup>[11]</sup>; by default, the average of the 26 populations is shown, but the `--ae-pop` flag or the `microhapdb.set_ae_population` function can be used to specify a single population for with to display A<sub>e</sub> values
 - `In`: Rosenberg's informativeness for assignment (*I<sub>n</sub>*) computed on 26 populations<sup>[12]</sup>
+- `Fst`: fixation index (*F<sub>ST</sub>*) computed on 26 populations<sup>[13]</sup>
 
-The `AvgAe` statistic is a measure of the *within-population* allelic variation at a locus, which corresponds to the marker's diagnostic power for identification purposes.
-The `In` statistic is a measure of *between-population* allelic variation at a locus, which corresponds to the marker's utility for predicting population of origin.
-Phased genotypes for 2,504 individuals from Phase 3 of the 1000 Genomes Project<sup>[10]</sup> are used to calculate both statistics.
+The A<sub>e</sub> statistic is a measure of the *within-population* allelic variation at a locus, which corresponds to the marker's diagnostic power for identification purposes.
+The I<sub>n</sub> and F<sub>ST</sub> statistics measure *between-population* allelic variation at a locus, which corresponds to the marker's utility for predicting population of origin.
+Phased genotypes for 2,504 individuals from Phase 3 of the 1000 Genomes Project<sup>[10]</sup> are used to calculate these statistics.
 
 
 ## Adding Markers to MicroHapDB
@@ -159,9 +160,11 @@ If you use this package, please cite our work.
 
 <sup>[12]</sup>Rosenberg NA, Li LM, Ward R, Pritchard JK (2003) Informativeness of genetic markers for inference of ancestry. *American Journal of Human Genetics*, 73(6):1402–1422, [doi:10.1086/380416](https://doi.org/10.1086/380416).
 
+<sup>[13]</sup>Weir B, Cockerham, C (1984) Estimating F-Statistics for the Analysis of Population Structure. *Evolution* 38(6):1358-1370, [doi:10.2307/2408641](https://doi.org/10.2307/2408641).
+
 ### Supporting Software
 
-<sup>[13]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
+<sup>[14]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
 
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp

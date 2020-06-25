@@ -95,11 +95,16 @@ This includes the following fields.
 For example, the first few lines of the `marker.tsv` for ALFRED looks like this.
 
 ```
-Name	Xref	Reference	Chrom	Offsets	VarRef
-mh17KK-014	SI664726F	GRCh38	chr17	4497060,4497088,4497096	rs333113,rs8074965,rs11657785
-mh03KK-150	SI664563E	GRCh38	chr3	131927127,131927156,131927242,131927311	rs1225051,rs1225050,rs1225049,rs1225048
-mh04KK-010	SI664564F	GRCh38	chr4	1985210,1985244	rs3135123,rs495367
-mh04KK-011	SI664565G	GRCh38	chr4	37857268,37857332	rs6855439,rs6531591
+Name    Xref    NumVars Chrom   OffsetsHg37     OffsetsHg38     VarRef
+mh17KK-014      SI664726F       3       chr17           4497060,4497088,4497096 rs333113,rs8074965,rs11657785
+mh03KK-150      SI664563E       4       chr3            131927127,131927156,131927242,131927311 rs1225051,rs1225050,rs1225049,rs1225048
+mh04KK-010      SI664564F       2       chr4            1985210,1985244 rs3135123,rs495367
+mh04KK-011      SI664565G       2       chr4            37857268,37857332       rs6855439,rs6531591
+mh04KK-013      SI664566H       5       chr4            67578383,67578461,67578473,67578538,67578583    rs13131164,rs3775866,rs11725922,rs3775867,rs17088476
+mh10KK-086      SI664588L       2       chr10           95069672,95069771       rs7909236,rs17110453
+mh10KK-087      SI664589M       2       chr10           105121710,105121752     rs10884095,rs1452267
+mh10KK-088      SI664590E       2       chr10           133537759,133537857     rs55897648,rs2515641
+mh10KK-101      SI664591F       2       chr10           133533422,133533454     rs915907,rs915908
 ```
 
 > **NOTE**: We strongly recommend and prefer that a complete list of rsIDs is provided for each marker in the `VarRef` field.
