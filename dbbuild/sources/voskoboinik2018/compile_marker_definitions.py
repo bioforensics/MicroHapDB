@@ -1,6 +1,13 @@
 #!/usr/bin/env python
+#
+# -----------------------------------------------------------------------------
+# Copyright (c) 2020, Battelle National Biodefense Institute.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
+# and is licensed under the BSD license: see LICENSE.txt.
+# -----------------------------------------------------------------------------
+
 import argparse
-import json
 import os
 import pandas
 import re
@@ -183,4 +190,3 @@ def main(args):
 
 if __name__ == '__main__':
     main(cli().parse_args())
-
