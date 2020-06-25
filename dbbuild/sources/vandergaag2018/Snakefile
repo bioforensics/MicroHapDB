@@ -25,12 +25,9 @@ rule markers:
 
 rule frequencies:
     input:
+        script='./compile_frequencies.py',
         markers='figure-S1.txt',
-        freqs='table-S2.txt'
-    output: 'frequency.tsv'
-    run:
-        with smartopen(input.markers, 'r') as mstream, smartopen(input.freqs, 'r') as fstream:
-            with smartopen(output[0], 'w') as out:
-                print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=out)
-                for data in parse_frequencies(mstream, fstream):
-                    print(*data, sep='\t', file=out)
+        freqs='table-S2.txt',
+    output:
+        freqs='frequency.tsv'
+    shell: '{input} {output}'
