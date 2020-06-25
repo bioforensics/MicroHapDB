@@ -5,12 +5,33 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
+
+import builtins
 from glob import glob
+from gzip import open as gzopen
 import os
 import pandas
 from pearhash.pearhash import PearsonHasher
 from pyfaidx import Fasta as FastaIdx
 import sys
+
+
+def smartopen(filename, mode):
+    """Smart file handler
+
+    Determines whether to create a compressed or un-compressed file handle
+    based on filename extension.
+    """
+    if mode not in ('r', 'w'):
+        raise ValueError('invalid mode "{}"'.format(mode))
+    if filename in ['-', None]:
+        filehandle = sys.stdin if mode == 'r' else sys.stdout
+        return filehandle
+    openfunc = builtins.open
+    if filename.endswith('.gz'):
+        openfunc = gzopen
+        mode += 't'
+    return openfunc(filename, mode)
 
 
 def load_source_data(table, source):
@@ -115,9 +136,9 @@ def parse_rsid_coords(vcf):
 
 
 def resolve_offsets(data, vcf37, vcf38):
-    with open(vcf37, 'r') as fh:
+    with smartopen(vcf37, 'r') as fh:
         rsidcoords37 = parse_rsid_coords(fh)
-    with open(vcf38, 'r') as fh:
+    with smartopen(vcf38, 'r') as fh:
         rsidcoords38 = parse_rsid_coords(fh)
     o37data = {
         'Marker': list(),
@@ -134,22 +155,24 @@ def resolve_offsets(data, vcf37, vcf38):
         if len(rsids) == row.NumVars:
             offsets37 = [rsidcoords37[rsid][1] for rsid in rsids]
             offsetstr37 = ','.join(map(str, offsets37))
-            if row.OffsetsHg37:
-                assert offsetstr37 == row.OffsetsHg37
+            if not pandas.isna(row.OffsetsHg37):
+                assert offsetstr37 == row.OffsetsHg37, (offsetstr37, row)
             o37data['Offsets'].append(offsetstr37)
             offsets38 = [rsidcoords38[rsid][1] for rsid in rsids]
             offsetstr38 = ','.join(map(str, offsets38))
-            if row.OffsetsHg38:
-                assert offsetstr38 == row.OffsetsHg38
+            if not pandas.isna(row.OffsetsHg38):
+                assert offsetstr38 == row.OffsetsHg38, (offsetstr38, row)
             o38data['Offsets'].append(offsetstr38)
         else:
-            message = f'WARNING: {row.NumVars} variants defined for marker "{row.Name}"'
-            message += f' but only {len(rsids)}; depending on explicitly provided offsets'
+            message = f'WARNING: {row.NumVars:.0f} variants defined for marker "{row.Name}"'
+            message += f' but only {len(rsids)} rsIDS; depending on explicitly provided offsets'
             print(message, file=sys.stderr)
-            assert row.Offsets37.count(',') + 1 == row.NumVars
-            assert row.Offsets38.count(',') + 1 == row.NumVars
-            o37data['Offsets'].append(row.Offsets37)
-            o38data['Offsets'].append(row.Offsets38)
+            assert not pandas.isna(row.OffsetsHg37)
+            assert not pandas.isna(row.OffsetsHg38)
+            assert row.OffsetsHg37.count(',') + 1 == row.NumVars
+            assert row.OffsetsHg38.count(',') + 1 == row.NumVars
+            o37data['Offsets'].append(row.OffsetsHg37)
+            o38data['Offsets'].append(row.OffsetsHg38)
     o37data['Reference'] = 'GRCh37'
     o38data['Reference'] = 'GRCh38'
     o37 = pandas.DataFrame(o37data)
@@ -247,17 +270,17 @@ rule frequencies:
 
 rule dbsnp_subset:
     input:
+        expand('sources/{source}/marker.tsv', source=SOURCES),
         dbsnp37=config['dbsnp37'],
         dbsnp38=config['dbsnp38'],
         rsidx37=config['dbsnp37'].replace('.vcf.gz', '.rsidx'),
         rsidx38=config['dbsnp38'].replace('.vcf.gz', '.rsidx'),
-        expand('sources/{source}/marker.tsv', source=SOURCES),
     output:
-        sub37='dbsnp-subset-GRCh37.vcf.gz'
-        sub38='dbsnp-subset-GRCh38.vcf.gz'
+        sub37='dbsnp-subset-GRCh37.vcf.gz',
+        sub38='dbsnp-subset-GRCh38.vcf.gz',
     run:
         rsids = list()
-        for infile in input[4:]
+        for infile in input[:-4]:
             markers = pandas.read_csv(infile, sep='\t')
             for n, row in markers.iterrows():
                 rsids.extend(row.VarRef.split(','))
@@ -295,17 +318,16 @@ rule markers:
         sourcefiles = input[numsources:]
 
         data = merge_markers(markerfiles, sourcefiles)
-        varmap = construct_variant_map(data)
-        varmap.to_csv(output.varmap, sep='\t', index=False)
-        add_marker_permids(data, config['refr'])
-        idmap = populate_idmap(data)
-        idmap.to_csv(output.idmap, sep='\t', index=False)
-
         data, offsets37 = resolve_offsets(data, dbsnpsub37, dbsnpsub38)
+        add_marker_permids(data, config['refr'])
         data = add_avgae(data, aefile)
         data = add_informativeness(data, informfile)
         data = add_fst(data, fstfile)
+        idmap = populate_idmap(data)
+        varmap = construct_variant_map(data)
         data = sort_and_clean(data)
+        idmap.to_csv(output.idmap, sep='\t', index=False)
+        varmap.to_csv(output.varmap, sep='\t', index=False)
         data.to_csv(output.table, sep='\t', index=False, float_format='%.4f')
         offsets37.to_csv(output.offsets37, sep='\t', index=False)
 

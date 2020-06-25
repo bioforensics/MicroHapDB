@@ -6,7 +6,6 @@
 # -----------------------------------------------------------------------------
 
 import pandas
-from utils import smartopen, parse_markers, marker_variants, parse_frequencies
 
 
 rule all:

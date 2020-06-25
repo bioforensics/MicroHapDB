@@ -61,13 +61,14 @@ def check_definitions(markerfile, suppfile):
             if o37 == '':
                 o37 = None
             o38 = ','.join(map(str, mdata.Offsets38))
+            rsids = ','.join(mdata.RSIDs)
             finaldefs['Name'].append(name)
             finaldefs['Xref'].append(None)
             finaldefs['NumVars'].append(len(offsets))
             finaldefs['Chrom'].append(chrom)
             finaldefs['OffsetsHg37'].append(o37)
             finaldefs['OffsetsHg38'].append(o38)
-            finaldefs['VarRef'].append(mdata.RSIDs)
+            finaldefs['VarRef'].append(rsids)
     return pandas.DataFrame(finaldefs)
 
 
