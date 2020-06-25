@@ -24,28 +24,29 @@ del get_versions
 
 def set_ae_population(popid=None):
     global markers
-    markers = pandas.read_csv(data_file('marker.tsv'), sep='\t')
+    columns = ['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'Ae', 'In', 'Fst', 'Source']
     if popid is None:
-        return
+        defaults = pandas.read_csv(data_file('marker.tsv'), sep='\t')
+        defaults = defaults[['Name', 'Ae']]
+        markers = markers.drop(columns=['Ae']).join(defaults.set_index('Name'), on='Name')[columns]
     else:
         aes = pandas.read_csv(data_file('marker-aes.tsv'), sep='\t')
         if popid not in aes.Population.unique():
             raise ValueError(f'no Ae data for population "{popid}"')
         popaes = aes[aes.Population == popid].drop(columns=['Population'])
-        columns = ['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'Ae', 'In', 'Fst', 'Source']
         markers = markers.drop(columns=['Ae']).join(popaes.set_index('Marker'), on='Name')[columns]
 
 
 def set_reference(refr):
     global markers
     assert refr in (37, 38)
-    markers = pandas.read_csv(data_file('marker.tsv'), sep='\t')
-    if refr == 38:
-        return
-    o37 = pandas.read_csv(data_file('marker-offsets-GRCh37.tsv'), sep='\t')
     columns = ['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'Ae', 'In', 'Fst', 'Source']
-    markers = markers.drop(columns=['Reference', 'Offsets']).join(o37.set_index('Marker'), on='Name')[columns]
-
+    if refr == 38:
+        defaults = pandas.read_csv(data_file('marker.tsv'), sep='\t')
+        markers = markers.drop(columns=['Reference', 'Offsets']).join(o37.set_index('Name'), on='Name')[columns]
+    else:
+        o37 = pandas.read_csv(data_file('marker-offsets-GRCh37.tsv'), sep='\t')
+        markers = markers.drop(columns=['Reference', 'Offsets']).join(o37.set_index('Marker'), on='Name')[columns]
 
 
 markers = pandas.read_csv(data_file('marker.tsv'), sep='\t')
