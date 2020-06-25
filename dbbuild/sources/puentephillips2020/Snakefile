@@ -5,7 +5,7 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-from utils import smartopen, marker_coords
+import pandas
 
 
 rule all:
@@ -34,10 +34,9 @@ rule dbsnp_subset:
         shell(command)
 
 
-
 rule marker_coords:
     input:
-        script='./compile_marker_definitions.py'
+        script='./compile_marker_definitions.py',
         markers='supp-file-s1.tsv',
         dbsnp='dbsnp-subset.vcf.gz',
     output: 'marker.tsv'
