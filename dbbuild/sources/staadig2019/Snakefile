@@ -28,7 +28,7 @@ rule dbsnp_subset:
 
 rule marker_coords:
     input:
-        script: './compile_marker_definitions.py',
+        script='./compile_marker_definitions.py',
         markers='marker-variants.tsv',
         dbsnp='dbsnp-subset.vcf.gz',
     output: 'marker.tsv'
@@ -37,6 +37,7 @@ rule marker_coords:
 
 rule frequency:
     input:
+        script='./compile_frequencies.py',
         markers='marker.tsv',
         freqs='allele-frequencies.tsv',
     output: 'frequency.tsv'
