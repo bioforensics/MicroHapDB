@@ -42,8 +42,8 @@ def set_reference(refr):
     assert refr in (37, 38)
     columns = ['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'Ae', 'In', 'Fst', 'Source']
     if refr == 38:
-        defaults = pandas.read_csv(data_file('marker.tsv'), sep='\t')
-        markers = markers.drop(columns=['Reference', 'Offsets']).join(o37.set_index('Name'), on='Name')[columns]
+        defaults = pandas.read_csv(data_file('marker.tsv'), sep='\t')[['Name', 'Reference', 'Offsets']]
+        markers = markers.drop(columns=['Reference', 'Offsets']).join(defaults.set_index('Name'), on='Name')[columns]
     else:
         o37 = pandas.read_csv(data_file('marker-offsets-GRCh37.tsv'), sep='\t')
         markers = markers.drop(columns=['Reference', 'Offsets']).join(o37.set_index('Marker'), on='Name')[columns]

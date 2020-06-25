@@ -301,3 +301,37 @@ def test_ae_pop_bad_pop():
     args = get_parser().parse_args(arglist)
     with pytest.raises(ValueError, match=r'no Ae data for population "ABC"'):
         microhapdb.cli.main(args)
+
+
+def test_hg37(capsys):
+    arglist = ['marker', '--region=chr18:1-25000000', '--GRCh37']
+    args = get_parser().parse_args(arglist)
+    microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    exp_out = '''
+         Name          PermID Reference  Chrom                                          Offsets      Ae      In     Fst                        Source
+ mh18PK-87558  MHDBM-1e5374f1    GRCh37  chr18  1960543,1960558,1960562,1960567,1960583,1960589  2.3659  0.1325  0.0494  10.1016/j.fsigen.2018.05.008
+ mh18USC-18pA  MHDBM-56dfa93b    GRCh37  chr18          5280016,5280019,5280069,5280070,5280092  3.4330  0.2130  0.1818  10.1016/j.fsigen.2019.102213
+   mh18CP-005  MHDBM-a85754d3    GRCh37  chr18                  8892862,8892891,8892894,8892905  3.6722  0.0904  0.0059                        ALFRED
+   mh18KK-285  MHDBM-ea520d26    GRCh37  chr18              22137318,22137395,22137411,22137453  2.7524  0.1721  0.0836                        ALFRED
+    mh18AT-38  MHDBM-db09ec41    GRCh37  chr18                       22137395,22137411,22137453  2.7093  0.1419  0.0837                 ISFG2019:P597
+   mh18CP-003  MHDBM-6fdf83f9    GRCh37  chr18                       23068395,23068425,23068433  3.1124  0.1061  0.0183                        ALFRED
+'''
+    obs_out = terminal.out
+    assert exp_out.strip() == obs_out.strip()
+
+
+def test_h37_ae_pop(capsys):
+    arglist = ['marker', '--region=chr18:50000000-80000000', '--GRCh37', '--ae-pop=PJL']
+    args = get_parser().parse_args(arglist)
+    microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    exp_out = '''
+         Name          PermID Reference  Chrom                              Offsets      Ae      In     Fst                        Source
+ mh18USC-18qB  MHDBM-14fcada5    GRCh37  chr18           50547498,50547528,50547540  3.8565  0.1449  0.0500  10.1016/j.fsigen.2019.102213
+ mh18USC-18qC  MHDBM-6bf74efc    GRCh37  chr18  63842523,63842541,63842557,63842562  3.5570  0.1436 -0.0049  10.1016/j.fsigen.2019.102213
+   mh18KK-293  MHDBM-13ed6da8    GRCh37  chr18  76089885,76089906,76089944,76089967  2.6445  0.2495  0.0837                        ALFRED
+    mh18AT-39  MHDBM-13ed6da8    GRCh37  chr18  76089885,76089906,76089944,76089967  2.6445  0.2495  0.0837                 ISFG2019:P597
+'''
+    obs_out = terminal.out
+    assert exp_out.strip() == obs_out.strip()

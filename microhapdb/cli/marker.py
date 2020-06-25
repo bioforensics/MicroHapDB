@@ -104,3 +104,5 @@ def main(args):
     view(result, delta=args.delta, minlen=args.min_length, trunc=args.trunc)
     if args.ae_pop:
         microhapdb.set_ae_population(popid=None)  # Reset
+    if args.GRCh37:
+        microhapdb.set_reference(38)  # Reset
