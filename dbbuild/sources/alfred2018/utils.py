@@ -67,27 +67,6 @@ def alfred_marker_detail_scrape(instream):
     return name, dbsnpids
 
 
-def alfred_marker_coords(vcf, mapping):
-    rsidcoords = dict()
-    for line in vcf:
-        if line.startswith('#'):
-            continue
-        chrnum, posstr, rsid, *values = line.strip().split()
-        chrom = chrnum if chrnum.startswith('chr') else 'chr' + chrnum
-        pos = int(posstr) - 1
-        rsidcoords[rsid] = (chrom, pos)
-
-    for line in mapping:
-        if line.startswith('Name'):
-            continue
-        name, xref, rsidlist = line.strip().split('\t')
-        rsids = rsidlist.split(',')
-        offsets = [rsidcoords[rsid][1] for rsid in rsids]
-        assert offsets == sorted(offsets)
-        chrom = rsidcoords[rsids[0]][0]
-        yield name, xref, chrom, offsets, rsids
-
-
 def alfred_pop_data(instream, mapping):
     pops_1kgp = set(mapping.ALFRED)
     popdata = dict()
@@ -107,55 +86,3 @@ def alfred_pop_data(instream, mapping):
         else:
             popdata[label] = popname
             yield label, popname, ''
-
-
-def alfred_frequencies(instream, mapping):
-    indels = {
-        'SI664579L': {'D': 'T', 'I': 'TA'},
-        'SI664597L': {'D': 'T', 'I': 'TG'},
-        'SI664640A': {'D': 'A', 'I': 'AATAATT'},
-    }
-
-    mapping_1kgp = dict()
-    for n, row in mapping.iterrows():
-        mapping_1kgp[row.ALFRED] = row.ID1KGP
-
-    def cleanup(allelestr, markerid, indels):
-        allelestr = allelestr.replace('-', ',')
-        if 'D' in allelestr or 'I' in allelestr:
-            allelestr = allelestr.replace('D', indels[markerid]['D'])
-            allelestr = allelestr.replace('I', indels[markerid]['I'])
-        return allelestr
-
-    line = next(instream)
-    if line.startswith('Created on'):
-        next(instream)
-    chunks = instream.read().split('-----------------\n')
-
-    for chunk in chunks:
-        lines = iter(chunk.split('\n'))
-        header1 = next(lines)
-        xref, _, _, markerid = header1.split(' | ')
-        if '-' not in markerid:
-            markerid = markerid[:6] + '-' + markerid[6:]
-        header2 = next(lines)
-        alleles = header2.split()[2:]
-        alleles = [cleanup(a, xref, indels) for a in alleles]
-        for line in lines:
-            if line.strip() == '':
-                continue
-            values = line.split('\t')
-            popid = search(r'^([^\(]+)\((\S+)\)', values[0]).group(2)
-            freqs = values[2:]
-            if len(alleles) != len(freqs):
-                message = 'WARNING: allele/freq mismatch '
-                message += 'for locus ' + markerid
-                message += ' and population ' + popid
-                message += '; {nfreq} frequencies vs {nall} alleles'.format(
-                    nfreq=len(freqs), nall=len(alleles)
-                )
-                raise ValueError(message)
-            for allele, freq in zip(alleles, freqs):
-                if popid in mapping_1kgp:
-                    popid = mapping_1kgp[popid]
-                yield markerid, popid, allele, '{:.4f}'.format(float(freq))

@@ -6,9 +6,7 @@
 # -----------------------------------------------------------------------------
 
 import pandas
-from utils import smartopen, parse_markers_from_table
-from utils import alfred_marker_detail_scrape, alfred_marker_coords
-from utils import alfred_pop_data, alfred_frequencies
+from utils import smartopen, parse_markers_from_table, alfred_marker_detail_scrape, alfred_pop_data
 
 
 MARKERS = parse_markers_from_table('downloads/Microhap_alleleF_198.txt')
@@ -20,54 +18,47 @@ rule all:
 
 rule marker_rsids:
     input: expand('downloads/marker-detail/{marker}.html.gz', marker=MARKERS)
-    output:
-        mapping='marker-rsids.tsv',
-        rsidlist='all-rsids.txt'
+    output: 'marker-rsids.tsv'
     run:
-        allrsids = set()
-        with smartopen(output.mapping, 'w') as mapout, smartopen(output.rsidlist, 'w') as rsidout:
-            print('Name', 'Xref', 'rsIDs', sep='\t', file=mapout)
-            for filename in input:
-                with smartopen(filename, 'r') as fh:
-                    name, rsids = alfred_marker_detail_scrape(fh)
-                    xref = filename.split('/')[-1].split('.')[0]
-                    print(name, xref, ','.join(rsids), sep='\t', file=mapout)
-                    allrsids.update(rsids)
-            print(*sorted(allrsids), sep='\n', file=rsidout)
+        data = {
+            'Name': list(),
+            'Xref': list(),
+            'rsIDs': list(),
+        }
+        for filename in input:
+            with smartopen(filename, 'r') as fh:
+                name, rsids = alfred_marker_detail_scrape(fh)
+                xref = filename.split('/')[-1].split('.')[0]
+                rsidstr = ','.join(rsids)
+                data['Name'].append(name)
+                data['Xref'].append(xref)
+                data['rsIDs'].append(rsidstr)
+        pandas.DataFrame(data).to_csv(output[0], sep='\t', index=False)
 
 
 rule dbsnp_subset:
     input:
-        rsidlist='all-rsids.txt',
+        markers='marker-rsids.tsv',
         dbsnp=config['dbsnp38'],
         rsidx=config['dbsnp38'].replace('.vcf.gz', '.rsidx'),
     output: 'dbsnp-subset.vcf.gz'
     run:
+        markers = pandas.read_csv(input.markers, sep='\t')
         rsids = list()
-        with smartopen(input.rsidlist, 'r') as fh:
-            for line in fh:
-                rsids.append(line.strip())
-        command = 'rsidx search --header --out {out:s} {dbsnp:s} {rsidx:s} {ids:s}'.format(
-            out=output[0], dbsnp=input.dbsnp, rsidx=input.rsidx, ids=' '.join(rsids)
-        )
+        for n, row in markers.iterrows():
+            rsids.extend(row.rsIDs.split(','))
+        rsids = ' '.join(rsids)
+        command = f'rsidx search --header --out {output[0]} {input.dbsnp} {input.rsidx} {rsids}'
         shell(command)
 
 
 rule marker_coords:
     input:
+        script='./compile_marker_definitions.py',
+        markers='marker-rsids.tsv',
         dbsnp='dbsnp-subset.vcf.gz',
-        markers='marker-rsids.tsv'
     output: 'marker.tsv'
-    run:
-        with smartopen(input.dbsnp, 'r') as vcf, smartopen(input.markers, 'r') as mapping:
-            with smartopen(output[0], 'w') as out:
-                print('Name', 'Xref', 'NumVars', 'Chrom', 'OffsetsHg37', 'OffsetsHg38', 'VarRef', sep='\t', file=out)
-                for name, xref, chrom, offsets, varids in alfred_marker_coords(vcf, mapping):
-                    if name == 'mh05KK-058':
-                        name = 'mh15KK-058'
-                    offsetstr = ','.join(map(str, offsets))
-                    variants = ','.join(varids)
-                    print(name, xref, len(offsets), chrom, '', offsetstr, variants, sep='\t', file=out)
+    shell: '{input} {output}'
 
 
 rule population:
@@ -76,30 +67,26 @@ rule population:
         xrefs='1kgp-mapping.tsv'
     output: 'population.tsv'
     run:
+        pops = {
+            'ID': list(),
+            'Name': list(),
+            'Xref': list(),
+        }
         mapping = pandas.read_csv(input.xrefs, sep='\t')
-        with smartopen(input.freqs, 'r') as infh, smartopen(output[0], 'w') as outfh:
-            print('ID', 'Name', 'Xref', sep='\t', file=outfh)
-            for data in alfred_pop_data(infh, mapping):
-                print(*data, sep='\t', file=outfh)
+        with smartopen(input.freqs, 'r') as fh:
+            for popid, name, xref in alfred_pop_data(fh, mapping):
+                pops['ID'].append(popid)
+                pops['Name'].append(name)
+                pops['Xref'].append(xref)
+        pandas.DataFrame(pops).to_csv(output[0], sep='\t', index=False)
 
 
 rule frequency:
     input:
+        script='./compile_frequencies.py',
         freqs='downloads/Microhap_alleleF_198.txt',
-        xrefs='1kgp-mapping.tsv'
+        xrefs='1kgp-mapping.tsv',
     output:
         keep='frequency.tsv',
-        discard='frequency-1kgp.tsv'
-    run:
-        mapping = pandas.read_csv(input.xrefs, sep='\t')
-        pops1kgp = set(mapping.ID1KGP)
-        with smartopen(input.freqs, 'r') as infh, smartopen(output.keep, 'w') as keepfh:
-            with smartopen(output.discard, 'w') as discardfh:
-                print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=keepfh)
-                print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=discardfh)
-                for data in alfred_frequencies(infh, mapping):
-                    data = list(data)
-                    if data[0] == 'mh05KK-058':
-                        data[0] = 'mh15KK-058'
-                    outfh = discardfh if data[1] in pops1kgp else keepfh
-                    print(*data, sep='\t', file=outfh)
+        discard='frequency-1kgp.tsv',
+    shell: '{input} {output}'
