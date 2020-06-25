@@ -497,3 +497,23 @@ def test_all_sources(name, data, capsys):
     terminal = capsys.readouterr()
     print(terminal.out)
     assert data in terminal.out
+
+
+def test_set_reference():
+    coords37 = [
+        '22137318,22137395,22137411,22137453',
+        '22137395,22137411,22137453',
+        '23068395,23068425,23068433',
+    ]
+    coords38 = [
+        '24557354,24557431,24557447,24557489',
+        '24557431,24557447,24557489',
+    ]
+    # Make sure they can be swapped in & out multiple times without issues
+    for _ in range(4):
+        microhapdb.set_reference(37)
+        result = microhapdb.retrieve.by_region('chr18:20000000-25000000')
+        assert result.Offsets.tolist() == coords37
+        microhapdb.set_reference(38)
+        result = microhapdb.retrieve.by_region('chr18:20000000-25000000')
+        assert result.Offsets.tolist() == coords38

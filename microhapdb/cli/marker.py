@@ -21,7 +21,7 @@ def subparser(subparsers):
         microhapdb marker --format=fasta mh13KK-218 mh04CP-002 mh02AT-05
         microhapdb marker --format=fasta --panel mypanel.txt
         microhapdb marker --format=detail --min-length=125 MHDBM-dc55cd9e
-        microhapdb marker --region=chr18:1-25000000
+        microhapdb marker --region=chr18:1-25000000 --GRCh37
         microhapdb marker --query='Source == "ALFRED"' --ae-pop CEU
         microhapdb marker --query='Name.str.contains("PK")'
     """
@@ -34,6 +34,10 @@ def subparser(subparsers):
         '--ae-pop', metavar='POP', help='specify the 1000 Genomes population from which to report '
         'effective number of alleles in the "Ae" column; by default, the Ae value averaged over '
         'all 26 1KGP populations is reported'
+    )
+    subparser.add_argument(
+        '--GRCh37', action='store_true', help='use coordinates from the GRCh37 reference '
+        'assembly; by default, the GRCh38 reference is used'
     )
     subparser.add_argument(
         '--delta', metavar='D', type=int, default=10, help='extend D nucleotides beyond the '
@@ -65,6 +69,8 @@ def subparser(subparsers):
 def main(args):
     if args.ae_pop:
         microhapdb.set_ae_population(popid=args.ae_pop)
+    if args.GRCh37:
+        microhapdb.set_reference(37)
     if args.query:
         if len(args.id) > 0 or args.panel is not None:
             warning = 'WARNING: ignoring user-supplied marker IDs in --query mode'
@@ -98,3 +104,5 @@ def main(args):
     view(result, delta=args.delta, minlen=args.min_length, trunc=args.trunc)
     if args.ae_pop:
         microhapdb.set_ae_population(popid=None)  # Reset
+    if args.GRCh37:
+        microhapdb.set_reference(38)  # Reset

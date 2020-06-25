@@ -5,7 +5,7 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-from utils import smartopen, marker_coords
+import pandas
 
 
 rule all:
@@ -25,28 +25,19 @@ rule dbsnp_subset:
         rsidx=config['dbsnp38'].replace('.vcf.gz', '.rsidx'),
     output: 'dbsnp-subset.vcf.gz'
     run:
+        markers = pandas.read_csv(input.markers, sep='\t')
         rsids = list()
-        with smartopen(input.markers, 'r') as fh:
-            next(fh)
-            for line in fh:
-                marker, pos, span, rsidlist, avggd = line.strip().split('\t')
-                rsids.extend(rsidlist.split(','))
-        command = 'rsidx search --header --out {out:s} {dbsnp:s} {rsidx:s} {ids:s}'.format(
-            out=output[0], dbsnp=input.dbsnp, rsidx=input.rsidx, ids=' '.join(rsids)
-        )
+        for n, row in markers.iterrows():
+            rsids.extend(row.RSIDs.split(','))
+        rsids = ' '.join(rsids)
+        command = f'rsidx search --header --out {output[0]} {input.dbsnp} {input.rsidx} {rsids}'
         shell(command)
 
 
 rule marker_coords:
     input:
+        script='./compile_marker_definitions.py',
+        markers='supp-file-s1.tsv',
         dbsnp='dbsnp-subset.vcf.gz',
-        markers='supp-file-s1.tsv'
     output: 'marker.tsv'
-    run:
-        with smartopen(input.dbsnp, 'r') as vcf, smartopen(input.markers, 'r') as markers:
-            with smartopen(output[0], 'w') as out:
-                print('Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef', sep='\t', file=out)
-                for name, chrom, offsets, variants in marker_coords(vcf, markers):
-                    offsetstr = ','.join(map(str, offsets))
-                    varstr = ','.join(variants)
-                    print(name, '', 'GRCh38', chrom, offsetstr, varstr, sep='\t', file=out)
+    shell: '{input} {output}'

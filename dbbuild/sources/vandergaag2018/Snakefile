@@ -6,7 +6,6 @@
 # -----------------------------------------------------------------------------
 
 import pandas
-from utils import smartopen, parse_markers, marker_variants, parse_frequencies
 
 
 rule all:
@@ -15,27 +14,19 @@ rule all:
 
 rule markers:
     input:
+        script='./compile_marker_definitions.py',
+        rsids='marker-rsids.tsv',
         markers='figure-S1.txt',
-        rsids='marker-rsids.tsv'
-    output: 'marker.tsv'
-    run:
-        rsids = pandas.read_csv(input.rsids, sep='\t')
-        with smartopen(input.markers, 'r') as mstream, smartopen(output[0], 'w') as out:
-            print('Name', 'Xref', 'Reference', 'Chrom', 'Offsets', 'VarRef', sep='\t', file=out)
-            for name, chrom, offsets, rsids in marker_variants(mstream, rsids):
-                offsetstr = ','.join(map(str, offsets))
-                rsidstr = ','.join(rsids)
-                print(name, '', 'GRCh38', chrom, offsetstr, rsidstr, sep='\t', file=out)
+    output:
+        defs='marker.tsv'
+    shell: '{input} {output}'
 
 
 rule frequencies:
     input:
+        script='./compile_frequencies.py',
         markers='figure-S1.txt',
-        freqs='table-S2.txt'
-    output: 'frequency.tsv'
-    run:
-        with smartopen(input.markers, 'r') as mstream, smartopen(input.freqs, 'r') as fstream:
-            with smartopen(output[0], 'w') as out:
-                print('Marker', 'Population', 'Allele', 'Frequency', sep='\t', file=out)
-                for data in parse_frequencies(mstream, fstream):
-                    print(*data, sep='\t', file=out)
+        freqs='table-S2.txt',
+    output:
+        freqs='frequency.tsv'
+    shell: '{input} {output}'

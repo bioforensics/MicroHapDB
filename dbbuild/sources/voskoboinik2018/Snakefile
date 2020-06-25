@@ -1,5 +1,11 @@
 rule all:
     input: 'table1-subset.tsv'
     output: 'marker.tsv'
-    shell: './compile_marker_definitions.py {input}'
+    params:
+        dbsnp37=config['dbsnp37'],
+        dbsnp38=config['dbsnp38'],
+        rsidx37=config['dbsnp37'].replace('.vcf.gz', '.rsidx'),
+        rsidx38=config['dbsnp38'].replace('.vcf.gz', '.rsidx'),
+        dir1kgp=config['1kgp_dir'],
+    shell: './compile_marker_definitions.py {params} {input}'
 

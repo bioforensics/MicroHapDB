@@ -2,4 +2,4 @@ ALL.*.vcf.gz*
 *.rsidx
 *-unfiltered.vcf
 *-filtered.vcf
-*-GRCh38.vcf
+*-GRCh3?.vcf

@@ -7,11 +7,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Added F_ST (fixation index) to the markers table (see #59, #62, #63).
 - Added the ability to swap out population-specific Ae values for the default 26-population average (see #63).
+- Support for GRCh37 (see #64).
 
 ### Changed
 - Various updates to documentation (see #60).
 - Cosmetic updates to "marker --detail" (see #61).
-- Refactoring of database build code (see #62).
+- Refactoring of database build: cleanup using Pandas, reorganization for GRCh37 support (see #62, #64).
 
 
 ## [0.5] 2020-02-13
