@@ -5,7 +5,6 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-from utils import smartopen, linköping_marker_coords, linköping_allele_frequencies
 import pandas
 
 
