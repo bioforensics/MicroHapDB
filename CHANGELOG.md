@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.6] 2020-06-25
 
 ### Added
 - Added F_ST (fixation index) to the markers table (see #59, #62, #63).
