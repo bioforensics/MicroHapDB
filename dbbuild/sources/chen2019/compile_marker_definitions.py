@@ -23,10 +23,9 @@ def reformat_markers(markerfile):
         'VarRef': list(),
     }
     markers = pandas.read_csv(markerfile, sep='\t')
-    markers = markers[markers.MarkerName != 'mh11CP-004']  # Included in ALFRED
     for marker, mdata in markers.groupby('MarkerName'):
         name = 'mh' + marker[2:6] + '-' + marker[6:]
-        chrom = 'chr' + mdata.Chrom.iloc[0]
+        chrom = f'chr{mdata.Chrom.iloc[0]}'
         rsids = mdata.SNPID.tolist()
         offsets = [pos - 1 for pos in mdata.Position]
         rsidstr = ','.join(rsids)
@@ -38,7 +37,9 @@ def reformat_markers(markerfile):
         final_defs['OffsetsHg37'].append(None)
         final_defs['OffsetsHg38'].append(offsetstr)
         final_defs['VarRef'].append(rsidstr)
-    return pandas.DataFrame(final_defs)
+    defs = pandas.DataFrame(final_defs)
+    defs = defs[defs.Name != 'mh11CP-004']  # Included in ALFRED
+    return defs
 
 
 def cli():
