@@ -15,18 +15,12 @@ rule all:
 
 rule markers:
     input:
+        script='./compile_marker_definitions.py',
+        rsids='marker-rsids.tsv',
         markers='figure-S1.txt',
-        rsids='marker-rsids.tsv'
-    output: 'marker.tsv'
-    run:
-        rsids = pandas.read_csv(input.rsids, sep='\t')
-        with smartopen(input.markers, 'r') as mstream, smartopen(output[0], 'w') as out:
-            print('Name', 'Xref', 'NumVars', 'Chrom', 'OffsetsHg37', 'OffsetsHg38', 'VarRef', sep='\t', file=out)
-            for name, chrom, nvar, offsets37, offsets38, rsids in marker_variants(mstream, rsids):
-                offsets37 = ','.join(map(str, offsets37))
-                offsets38 = ','.join(map(str, offsets38))
-                rsidstr = ','.join(rsids)
-                print(name, '', nvar, chrom, offsets37, offsets38, rsidstr, sep='\t', file=out)
+    output:
+        defs='marker.tsv'
+    shell: '{input} {output}'
 
 
 rule frequencies:
