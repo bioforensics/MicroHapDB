@@ -102,11 +102,67 @@ def add_marker_permids(data, refr):
     data['PermID'] = pandas.Series(permids)
 
 
+def parse_rsid_coords(vcf):
+    rsidcoords = dict()
+    for line in vcf:
+        if line.startswith('#'):
+            continue
+        chrnum, posstr, rsid, *values = line.strip().split()
+        chrom = chrnum if chrnum.startswith('chr') else 'chr' + chrnum
+        pos = int(posstr) - 1
+        rsidcoords[rsid] = (chrom, pos)
+    return rsidcoords
+
+
+def resolve_offsets(data, vcf37, vcf38):
+    with open(vcf37, 'r') as fh:
+        rsidcoords37 = parse_rsid_coords(fh)
+    with open(vcf38, 'r') as fh:
+        rsidcoords38 = parse_rsid_coords(fh)
+    o37data = {
+        'Marker': list(),
+        'Offsets': list(),
+    }
+    o38data = {
+        'Marker': list(),
+        'Offsets': list(),
+    }
+    for n, row in data.iterrows():
+        rsids = row.VarRef.split(',')
+        o37data['Marker'].append(row.Name)
+        o38data['Marker'].append(row.Name)
+        if len(rsids) == row.NumVars:
+            offsets37 = [rsidcoords37[rsid][1] for rsid in rsids]
+            offsetstr37 = ','.join(map(str, offsets37))
+            if row.OffsetsHg37:
+                assert offsetstr37 == row.OffsetsHg37
+            o37data['Offsets'].append(offsetstr37)
+            offsets38 = [rsidcoords38[rsid][1] for rsid in rsids]
+            offsetstr38 = ','.join(map(str, offsets38))
+            if row.OffsetsHg38:
+                assert offsetstr38 == row.OffsetsHg38
+            o38data['Offsets'].append(offsetstr38)
+        else:
+            message = f'WARNING: {row.NumVars} variants defined for marker "{row.Name}"'
+            message += f' but only {len(rsids)}; depending on explicitly provided offsets'
+            print(message, file=sys.stderr)
+            assert row.Offsets37.count(',') + 1 == row.NumVars
+            assert row.Offsets38.count(',') + 1 == row.NumVars
+            o37data['Offsets'].append(row.Offsets37)
+            o38data['Offsets'].append(row.Offsets38)
+    o37data['Reference'] = 'GRCh37'
+    o38data['Reference'] = 'GRCh38'
+    o37 = pandas.DataFrame(o37data)
+    o38 = pandas.DataFrame(o38data)
+    data = data.join(o38.set_index('Marker'), on='Name')
+    return data, o37
+
+
 def sort_and_clean(data):
     data['ChromSort'] = data.Chrom.apply(lambda c: '0X' if c == 'chrX' else int(c[3:]))
     data['TempPos'] = data.Offsets.apply(lambda os: int(os.split(',')[0]))
     data = data.sort_values(['ChromSort', 'TempPos'])
-    data.drop(columns=['Xref', 'VarRef', 'ChromSort', 'TempPos'], inplace=True)
+    # FIXME!!! # data.drop(columns=['Xref', 'VarRef', 'ChromSort', 'TempPos'], inplace=True)
     nr = data.drop_duplicates(subset=('Name', 'Chrom', 'Offsets'))
     assert(len(nr.Name) == len(nr.Name.unique()))  # If markers are defined in more than one place, make sure the definitions are identical.
     return data[['Name', 'PermID', 'Reference', 'Chrom', 'Offsets', 'Ae', 'In', 'Fst', 'Source']]
@@ -189,9 +245,34 @@ rule frequencies:
         data.sort_values(['Marker', 'Population']).to_csv(output[0], sep='\t', index=False)
 
 
+rule dbsnp_subset:
+    input:
+        dbsnp37=config['dbsnp37'],
+        dbsnp38=config['dbsnp38'],
+        rsidx37=config['dbsnp37'].replace('.vcf.gz', '.rsidx'),
+        rsidx38=config['dbsnp38'].replace('.vcf.gz', '.rsidx'),
+        expand('sources/{source}/marker.tsv', source=SOURCES),
+    output:
+        sub37='dbsnp-subset-GRCh37.vcf.gz'
+        sub38='dbsnp-subset-GRCh38.vcf.gz'
+    run:
+        rsids = list()
+        for infile in input[4:]
+            markers = pandas.read_csv(infile, sep='\t')
+            for n, row in markers.iterrows():
+                rsids.extend(row.VarRef.split(','))
+        rsids = ' '.join(rsids)
+        command = f'rsidx search --header --out {output.sub37} {input.dbsnp37} {input.rsidx37} {rsids}'
+        shell(command)
+        command = f'rsidx search --header --out {output.sub38} {input.dbsnp38} {input.rsidx38} {rsids}'
+        shell(command)
+
+
 rule markers:
     input:
         config['refr'],
+        'dbsnp-subset-GRCh37.vcf.gz',
+        'dbsnp-subset-GRCh38.vcf.gz',
         'sources/1kgp/marker-aes.tsv',
         'sources/1kgp/marker-informativeness.tsv',
         'sources/1kgp/marker-fst.tsv',
@@ -200,12 +281,15 @@ rule markers:
     output:
         table='marker.tsv',
         varmap='variantmap.tsv',
-        idmap='marker-idmap.tsv'
+        idmap='marker-idmap.tsv',
+        offsets37='marker-offsets-GRCh37.tsv',
     run:
-        aefile = input[1]
-        informfile = input[2]
-        fstfile = input[3]
-        input = input[4:]
+        dbsnpsub37 = input[1]
+        dbsnpsub38 = input[2]
+        aefile = input[3]
+        informfile = input[4]
+        fstfile = input[5]
+        input = input[6:]
         numsources = int(len(input) / 2)
         markerfiles = input[:numsources]
         sourcefiles = input[numsources:]
@@ -214,15 +298,16 @@ rule markers:
         varmap = construct_variant_map(data)
         varmap.to_csv(output.varmap, sep='\t', index=False)
         add_marker_permids(data, config['refr'])
-
         idmap = populate_idmap(data)
         idmap.to_csv(output.idmap, sep='\t', index=False)
 
+        data, offsets37 = resolve_offsets(data, dbsnpsub37, dbsnpsub38)
         data = add_avgae(data, aefile)
         data = add_informativeness(data, informfile)
         data = add_fst(data, fstfile)
         data = sort_and_clean(data)
         data.to_csv(output.table, sep='\t', index=False, float_format='%.4f')
+        offsets37.to_csv(output.offsets37, sep='\t', index=False)
 
 
 rule idmap:
