@@ -130,7 +130,7 @@ def vcf_to_rsid_offsets(vcfstream):
         markerchrom = 'chr' + chrom
         offsets.append(int(pos) - 1)
         rsids.append(rsid)
-    return rsids, offsets
+    return markerchrom, rsids, offsets
 
 
 def finalize_marker_definitions(markernames):
@@ -148,16 +148,16 @@ def finalize_marker_definitions(markernames):
         offsets = list()
         rsids = list()
         with open(f'{name}-GRCh37.vcf', 'r') as fh:
-            rsids37, offsets37 = vcf_to_rsid_offsets(fh)
+            chrom, rsids37, offsets37 = vcf_to_rsid_offsets(fh)
         with open(f'{name}-GRCh38.vcf', 'r') as fh:
-            rsids38, offsets38 = vcf_to_rsid_offsets(fh)
+            chrom, rsids38, offsets38 = vcf_to_rsid_offsets(fh)
         assert sorted(rsids37) == sorted(rsids38), (sorted(rsids37), sorted(rsids38))
         data['Name'].append(name)
         data['Xref'].append(None)
         data['NumVars'].append(len(rsids38))
-        data['Chrom'].append(markerchrom)
-        data['Offsets37'].append(','.join(offsets37))
-        data['Offsets38'].append(','.join(offsets38))
+        data['Chrom'].append(chrom)
+        data['OffsetsHg37'].append(','.join(map(str, offsets37)))
+        data['OffsetsHg38'].append(','.join(map(str, offsets38)))
         data['VarRef'].append(','.join(rsids38))
     df = pandas.DataFrame(data)
     df.to_csv('marker.tsv', sep='\t', index=False)
