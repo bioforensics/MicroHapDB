@@ -36,6 +36,10 @@ def subparser(subparsers):
         'all 26 1KGP populations is reported'
     )
     subparser.add_argument(
+        '--GRCh37', action='store_true', help='use coordinates from the GRCh37 reference '
+        'assembly; by default, the GRCh38 reference is used'
+    )
+    subparser.add_argument(
         '--delta', metavar='D', type=int, default=10, help='extend D nucleotides beyond the '
         'marker extent when computing amplicon boundaries (detail and fasta format only); by '
         'default D=10'
@@ -65,6 +69,8 @@ def subparser(subparsers):
 def main(args):
     if args.ae_pop:
         microhapdb.set_ae_population(popid=args.ae_pop)
+    if args.GRCh37:
+        microhapdb.set_reference(37)
     if args.query:
         if len(args.id) > 0 or args.panel is not None:
             warning = 'WARNING: ignoring user-supplied marker IDs in --query mode'
