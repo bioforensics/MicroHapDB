@@ -123,9 +123,9 @@ Use [MicroHapDB's issue tracker](https://github.com/bioforensics/MicroHapDB/issu
 
 ## Citation
 
-If you use this package, please cite our work.
+If you use this database, please cite our work.
 
-> **Standage DS, Mitchell RN** (2020) MicroHapDB: a portable and extensible database of all published microhaplotype marker and frequency data. *bioRxiv*, [doi:10.1101/2020.04.08.032052](https://doi.org/10.1101/2020.04.08.032052).
+> Standage DS,  Mitchell RN (2020) MicroHapDB: A Portable and Extensible Database of All Published Microhaplotype Marker and Frequency Data. *Frontiers in Genetics* 11:781, [doi:10.3389/fgene.2020.00781](https://doi.org/10.3389/fgene.2020.00781).
 
 ----------
 

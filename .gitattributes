@@ -1,1 +1,2 @@
 microhapdb/_version.py export-subst
+notebooks/*.ipynb linguist-documentation
