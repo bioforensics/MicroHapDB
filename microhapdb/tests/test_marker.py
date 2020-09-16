@@ -18,12 +18,12 @@ def test_standardize_ids():
     assert list(standardize_ids(['MHDBM-19b49670']).values) == ['mh11KK-187']
     assert list(standardize_ids(['MHDBM-07c8d144']).values) == ['mh04KK-010', 'mh04AT-10']
     assert list(standardize_ids(['rs9925859']).values) == ['mh16PK-83544']
-    assert list(standardize_ids(['rs1533623']).values) == ['mh01KK-205', 'mh01AT-02']
+    assert list(standardize_ids(['rs1533623']).values) == ['mh01KKCS-205', 'mh01KK-205', 'mh01AT-02']
     assert list(standardize_ids(['rs4697751', 'SI664918I', 'MHDBM-22a6ab26']).values) == ['mh04CP-007', 'mh05KK-123', 'mh11KK-092']
 
 
 def test_assumptions():
-    assert len(microhapdb.markers) == 198 + 15 + 40 + 26 + (11 - 1) + 10 + 118
+    assert len(microhapdb.markers) == 198 + 15 + 40 + 26 + (11 - 1) + 10 + 118 + 90
 
 
 def test_markers():
@@ -32,24 +32,24 @@ def test_markers():
     >>> m = microhapdb.markers
     >>> m[m.Name == 'mh18CP-005']
                Name          PermID Reference  Chrom                          Offsets      Ae      In     Fst  Source
-    350  mh18CP-005  MHDBM-a85754d3    GRCh38  chr18  8892864,8892893,8892896,8892907  3.6722  0.0904  0.0059  ALFRED
+    425  mh18CP-005  MHDBM-a85754d3    GRCh38  chr18  8892864,8892893,8892896,8892907  3.6722  0.0904  0.0059  ALFRED
     >>> m[m.Name == 'mh01KK-117']
               Name          PermID Reference Chrom                                  Offsets      Ae      In     Fst  Source
-    25  mh01KK-117  MHDBM-39dc025f    GRCh38  chr1  204664211,204664268,204664371,204664397  4.4565  0.1933  0.0472  ALFRED
+    30  mh01KK-117  MHDBM-39dc025f    GRCh38  chr1  204664211,204664268,204664371,204664397  4.4565  0.1933  0.0472  ALFRED
     >>> m[m.Name == 'mh11PK-63643']
                  Name          PermID Reference  Chrom                                            Offsets  Ae  In  Fst                        Source
-    226  mh11PK-63643  MHDBM-c5ce121f    GRCh38  chr11  34415814,34415816,34415818,34415835,34415836,3... NaN NaN  NaN  10.1016/j.fsigen.2018.05.008
+    272  mh11PK-63643  MHDBM-c5ce121f    GRCh38  chr11  34415814,34415816,34415818,34415835,34415836,3... NaN NaN  NaN  10.1016/j.fsigen.2018.05.008
     >>> m[m.Name == 'mh02AT-05']
              Name          PermID Reference Chrom                        Offsets      Ae   In    Fst         Source
-    54  mh02AT-05  MHDBM-c3feaba8    GRCh38  chr2  160222899,160222923,160222938  4.5544  0.2  0.152  ISFG2019:P597
+    67  mh02AT-05  MHDBM-c3feaba8    GRCh38  chr2  160222899,160222923,160222938  4.5544  0.2  0.152  ISFG2019:P597
     """
     m = microhapdb.markers
     vm = microhapdb.variantmap
-    assert m.shape == (417, 9)
+    assert m.shape == (507, 9)
     result = m[m.Chrom == 'chr19']
-    assert len(result) == 11
+    assert len(result) == 13
     varids = vm[vm.Marker.isin(result.Name)].Variant.unique()
-    assert len(varids) == 35
+    assert len(varids) == 42
 
 
 def test_marker_table(capsys):
@@ -64,7 +64,7 @@ def test_marker_table(capsys):
 
 
 def test_marker_table_multi(capsys):
-    markers = microhapdb.markers.query('Name.str.contains("PK")').head(n=5)
+    markers = microhapdb.markers.query('Name.str.contains("PK")', engine='python').head(n=5)
     microhapdb.marker.print_table(markers)
     testout = '''
          Name          PermID Reference  Chrom                                            Offsets      Ae      In     Fst                        Source
@@ -88,7 +88,7 @@ def test_marker_table_multi(capsys):
 
 
 def test_marker_table_multi_notrunc(capsys):
-    markers = microhapdb.markers.query('Name.str.contains("PK")').head(n=5)
+    markers = microhapdb.markers.query('Name.str.contains("PK")', engine='python').head(n=5)
     microhapdb.marker.print_table(markers, trunc=False)
     testoutlong = '''
          Name          PermID Reference  Chrom                                                                                    Offsets      Ae      In     Fst                        Source
@@ -119,7 +119,7 @@ Marker Definition (GRCh38)
         - chromosome offsets: 132987175,132987204,132987244
         - marker offsets: 0,29,69
         - amplicon offsets: 10,39,79
-        - cross-references: rs56256724, rs2073578, rs633153
+        - cross-references: rs2073578, rs56256724, rs633153
     Observed haplotypes
         - C,A,C
         - C,A,T
@@ -167,7 +167,7 @@ Marker Definition (GRCh38)
         - chromosome offsets: 2447909,2447937,2448031,2448045
         - marker offsets: 0,28,122,136
         - amplicon offsets: 20,48,142,156
-        - cross-references: rs74865590, rs438055, rs370672, rs6555108
+        - cross-references: rs370672, rs438055, rs6555108, rs74865590
     Observed haplotypes
         - C,A,A,A
         - C,A,A,G
@@ -232,7 +232,7 @@ Marker Definition (GRCh38)
         - chromosome offsets: 85934074,85934082,85934105,85934115,85934128,85934137
         - marker offsets: 0,8,31,41,54,63
         - amplicon offsets: 0,8,31,41,54,63
-        - cross-references: rs66509440, rs66804793, rs528179479, rs9925859, rs9929895, rs74032085
+        - cross-references: rs528179479, rs66509440, rs66804793, rs74032085, rs9925859, rs9929895
     Observed haplotypes
         - C,G,G,C,A,T
         - C,G,G,G,A,T
@@ -257,6 +257,8 @@ T.......A......................C.........G............T........C
 T.......A......................G.........G............A........T
 T.......A......................G.........G............T........C
 --------------------------------------------------------------------------------
+
+
 '''
     terminal = capsys.readouterr()
     assert terminal.out.strip() == testout.strip()
@@ -279,7 +281,7 @@ Marker Definition (GRCh38)
         - chromosome offsets: 13861392,13861399,13861414,13861421,13861430,13861434,13861438,13861439,13861440,13861446
         - marker offsets: 0,7,22,29,38,42,46,47,48,54
         - amplicon offsets: 13,20,35,42,51,55,59,60,61,67
-        - cross-references: rs1204206, rs376614501, rs1196416099, rs35198802, rs553417439, rs1204207, rs545720382, rs34901968, rs546942508, rs1204208
+        - cross-references: rs1196416099, rs1204206, rs1204207, rs1204208, rs34901968, rs35198802, rs376614501, rs545720382, rs546942508, rs553417439
     Observed haplotypes
         - C,C,G,C,C,C,A,A,A,A
         - C,C,G,C,C,C,A,A,G,A
@@ -323,7 +325,7 @@ Marker Definition (GRCh38)
         - chromosome offsets: 1960542,1960557,1960561,1960566,1960582,1960588
         - marker offsets: 0,15,19,24,40,46
         - amplicon offsets: 17,32,36,41,57,63
-        - cross-references: rs9962474, rs9947384, rs62081065, rs28612163, rs62081066, rs28695806
+        - cross-references: rs28612163, rs28695806, rs62081065, rs62081066, rs9947384, rs9962474
     Observed haplotypes
         - C,A,A,G,A,T
         - C,A,G,C,A,C
@@ -363,7 +365,7 @@ Marker Definition (GRCh38)
         - chromosome offsets: 44857882,44857883,44857884,44857891,44857892,44857893,44857907,44857930,44857946,44857949,44857950,44857954
         - marker offsets: 0,1,2,9,10,11,25,48,64,67,68,72
         - amplicon offsets: 10,11,12,19,20,21,35,58,74,77,78,82
-        - cross-references: rs117862404, rs62232223, rs7291353, rs71328677, rs62232224, rs10685889, rs10685890, rs113141650, rs62232225, rs62232226
+        - cross-references: rs10685889, rs10685890, rs113141650, rs117862404, rs62232223, rs62232224, rs62232225, rs62232226, rs71328677, rs7291353
     Observed haplotypes
         - C,A,G,C,G,C,CCTGCC,TTCTT,GTGAG,C,T,G
         - C,A,G,C,G,T,CCTGCC,TTCTT,GTGAG,C,C,T
@@ -456,7 +458,7 @@ Marker Definition (GRCh38)
         - chromosome offsets: 113425551,113425563
         - marker offsets: 0,12
         - amplicon offsets: 24,36
-        - cross-references: rs1079598, rs1079597
+        - cross-references: rs1079597, rs1079598
     Observed haplotypes
         - A,C
         - A,T

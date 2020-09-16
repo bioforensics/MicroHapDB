@@ -34,7 +34,7 @@ def subparser(subparsers):
 
 def main(args):
     if args.query:
-        result = microhapdb.populations.query(args.query)
+        result = microhapdb.populations.query(args.query, engine='python')
     elif len(args.id) > 0:
         idents = microhapdb.retrieve.standardize_population_ids(args.id)
         result = microhapdb.populations[microhapdb.populations.ID.isin(idents)]

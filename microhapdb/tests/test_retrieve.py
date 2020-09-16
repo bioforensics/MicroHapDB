@@ -30,7 +30,7 @@ def test_all_ids():
     assert by_id('SI664623B').Name.values == ['mh17KK-077']
     assert by_id('MHDBM-c2b1818c').Name.values == ['mh15CP-003']
     assert list(by_id('MHDBM-f4474b7c').Name.values) == ['mh17KK-054', 'mh17AT-35']
-    assert by_id('rs58111155').Name.values == ['mh01KK-001']
+    assert list(by_id('rs58111155').Name.values) == ['mh01KKCS-001', 'mh01KK-001']
     assert by_id('PEL').ID.values == ['PEL']
     print(list(by_id('Han').ID.values))
     assert list(by_id('Han').ID.values) == ['MHDBP-48c2cfb2aa', 'SA000001B', 'SA000009J']
@@ -44,10 +44,11 @@ def test_retrieve_by_region():
     assert len(by_region('chrY')) == 0
 
     results = by_region('chr12:100000000-200000000')
-    assert len(results) == 6
+    assert len(results) == 8
     print(results.Name.values)
     assert sorted(results.Name.values) == sorted([
-        'mh12KK-093', 'mh12KK-045', 'mh12KK-042', 'mh12KK-046', 'mh12AT-25', 'mh12CP-003'
+        'mh12KK-093', 'mh12KK-045', 'mh12KK-042', 'mh12KKCS-046', 'mh12KK-046', 'mh12AT-25',
+         'mh12CP-003', 'mh12KKCS-209',
     ])
 
 
