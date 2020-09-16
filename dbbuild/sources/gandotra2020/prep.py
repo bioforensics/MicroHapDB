@@ -36,7 +36,7 @@ def main(args):
         offstrs37 = ','.join(map(str, offsets37))
         offstrs38 = ','.join(map(str, offsets38))
         rsids = ','.join([rsid for rsid in subdata.RSID if rsid != '.'])
-        newname = marker.replace('KK', 'KKCS').replace('NK', 'KKCS')
+        newname = marker.replace('KK', 'KKCS').replace('NK', 'NKCS')
         outdata['Name'].append(newname)
         outdata['Xref'].append(None)
         outdata['NumVars'].append(numsnps)
