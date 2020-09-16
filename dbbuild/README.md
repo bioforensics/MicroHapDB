@@ -18,7 +18,7 @@ Building MicroHapDB from scratch requires installing several software packages.
 Conda provides the most convenient way to install these.
 
 ```
-conda create -c bioconda --name microhapdb -y python=3.7 pandas snakemake pyfaidx rsidx scikit-allel
+conda create -c bioconda --name microhapdb -y python=3.7 pandas snakemake pyfaidx rsidx scikit-allel ucsc-liftover
 conda activate microhapdb
 ```
 
