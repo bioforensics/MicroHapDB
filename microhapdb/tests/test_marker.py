@@ -492,6 +492,7 @@ AAGGGCAGCAGGAACCACATGATCAGATTCGCCTTTCGAATAGGTGATTCTGACAGCACTG
     ('mh04CP-004', 'mh04CP-004  MHDBM-8408d717    GRCh38  chr4  7402842,7402854,7402870  2.6744  0.0477  0.061  10.1016/j.fsigen.2019.02.018'),
     ('mh03LV-07', 'mh03LV-07  MHDBM-5f7e29b6    GRCh38  chr3  5783508,5783509,5783518,5783523,5783525,5783531,5783541,5783542,5783543,5783544,5783552,5783562,5783564,5783571,5783577,5783607,5783608,5783611,5783612,5783617,5783618,5783619,5783623,5783626,5783635,5783648,5783652,5783653,5783663,5783664,5783671,5783672,5783673,5783676,5783677,5783678,5783681,5783684,5783687,5783695,5783704,5783705  14.0275  1.081  0.057  10.1016/j.fsigen.2018.05.001'),
     ('mh09USC-9pB', 'mh09USC-9pB  MHDBM-7da7af40    GRCh38  chr9  31196676,31196714,31196731,31196744  3.0919  0.1616  0.0574  10.1016/j.fsigen.2019.102213'),
+    ('mh13KKCS-223', 'mh13KKCS-223  MHDBM-3ca7e2fc    GRCh38  chr13  110154341,110154351,110154394,110154411,110154438,110154441,110154485,110154504 NaN NaN  NaN  10.1016/j.fsigen.2020.102275')
 ])
 def test_all_sources(name, data, capsys):
     marker = microhapdb.markers[microhapdb.markers.Name == name]
@@ -519,3 +520,22 @@ def test_set_reference():
         microhapdb.set_reference(38)
         result = microhapdb.retrieve.by_region('chr18:20000000-25000000')
         assert result.Offsets.tolist() == coords38
+
+
+@pytest.mark.parametrize('markername,refr,offsets', [
+    (
+        'mh11KKCS-180', 37,
+        '1690724,1690769,1690790,1690824,1690886,1690910,1690949,1690961,1690968,1690983'
+    ),
+    (
+        'mh11KKCS-180', 38,
+        '1669494,1669539,1669560,1669594,1669656,1669680,1669719,1669731,1669738,1669753'
+    ),
+])
+def test_gandotra_offsets(markername, refr, offsets, capsys):
+    microhapdb.set_reference(refr)
+    marker = microhapdb.markers[microhapdb.markers.Name == markername]
+    microhapdb.marker.print_detail(marker)
+    terminal = capsys.readouterr()
+    microhapdb.set_reference(38)
+    assert offsets in terminal.out
