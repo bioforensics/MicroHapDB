@@ -64,7 +64,7 @@ def test_marker_table(capsys):
 
 
 def test_marker_table_multi(capsys):
-    markers = microhapdb.markers.query('Name.str.contains("PK")').head(n=5)
+    markers = microhapdb.markers.query('Name.str.contains("PK")', engine='python').head(n=5)
     microhapdb.marker.print_table(markers)
     testout = '''
          Name          PermID Reference  Chrom                                            Offsets      Ae      In     Fst                        Source
@@ -88,7 +88,7 @@ def test_marker_table_multi(capsys):
 
 
 def test_marker_table_multi_notrunc(capsys):
-    markers = microhapdb.markers.query('Name.str.contains("PK")').head(n=5)
+    markers = microhapdb.markers.query('Name.str.contains("PK")', engine='python').head(n=5)
     microhapdb.marker.print_table(markers, trunc=False)
     testoutlong = '''
          Name          PermID Reference  Chrom                                                                                    Offsets      Ae      In     Fst                        Source
@@ -517,3 +517,12 @@ def test_set_reference():
         microhapdb.set_reference(38)
         result = microhapdb.retrieve.by_region('chr18:20000000-25000000')
         assert result.Offsets.tolist() == coords38
+
+
+@pytest.mark.parametrize('markername', ['mh0XUSC-XqD'])
+def test_marker_no_freq(markername, capsys):
+    marker = microhapdb.markers[microhapdb.markers.Name == markername]
+    microhapdb.marker.print_detail(marker)
+    terminal = capsys.readouterr()
+    message = 'Unable to display a full detail view for markers without frequency information'
+    assert message in terminal.err
