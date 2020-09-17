@@ -531,6 +531,14 @@ def test_set_reference():
         'mh11KKCS-180', 38,
         '1669494,1669539,1669560,1669594,1669656,1669680,1669719,1669731,1669738,1669753'
     ),
+    (
+        'mh12KKCS-199', 37,
+        '12229785,12229848,12229849,12229885,12229951'
+    ),
+    (
+        'mh12KKCS-199', 38,
+        '12076851,12076914,12076915,12076951,12077017'
+    ),
 ])
 def test_gandotra_offsets(markername, refr, offsets, capsys):
     microhapdb.set_reference(refr)
@@ -539,3 +547,12 @@ def test_gandotra_offsets(markername, refr, offsets, capsys):
     terminal = capsys.readouterr()
     microhapdb.set_reference(38)
     assert offsets in terminal.out
+
+
+@pytest.mark.parametrize('markername', ['mh0XUSC-XqD'])
+def test_marker_no_freq(markername, capsys):
+    marker = microhapdb.markers[microhapdb.markers.Name == markername]
+    microhapdb.marker.print_detail(marker)
+    terminal = capsys.readouterr()
+    message = 'Unable to display a full detail view for markers without frequency information'
+    assert message in terminal.err
