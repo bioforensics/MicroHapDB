@@ -44,7 +44,7 @@ def test_populations():
     31         SA000009J                            Han                        ALFRED
     32               CHB  Han Chinese in Beijing, China                          1KGP
     88               CHS           Southern Han Chinese                          1KGP
-    >>> p.query('Name.str.contains("Afr")')
+    >>> p.query('Name.str.contains("Afr")', engine='python')
                      ID                                     Name                        Source
     1  MHDBP-3dab7bdd14                                   Africa  10.1016/j.fsigen.2018.05.008
     2         SA000101C                        African Americans                        ALFRED

@@ -11,6 +11,7 @@ from math import ceil
 import microhapdb
 from microhapdb.retrieve import id_in_series
 import pandas
+import sys
 
 
 class TargetAmplicon():
@@ -334,4 +335,10 @@ def print_fasta(table, delta=10, minlen=80, trunc=None):
 def print_detail(table, delta=10, minlen=80, trunc=None):
     for n, row in table.iterrows():
         amplicon = TargetAmplicon(row, delta=delta, minlen=minlen)
+        if len(amplicon.alleles) == 0:
+            print(
+                '[MicroHapDB::marker] Unable to display a full detail view for markers without '
+                'frequency information', file=sys.stderr
+            )
+            return
         print(amplicon)
