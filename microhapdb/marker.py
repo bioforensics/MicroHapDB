@@ -52,7 +52,7 @@ class TargetAmplicon():
 
     @property
     def variant_lengths(self):
-        nvars = self.alleles[0].count(',') + 1
+        nvars = len(self.offsets)
         lengths = [1] * nvars
         for n, row in microhapdb.indels[microhapdb.indels.Marker == self.data.Name].iterrows():
             assert row.VariantIndex < nvars, (row.VariantIndex, nvars)
