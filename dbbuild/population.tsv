@@ -1,5 +1,6 @@
 ID	Name	Source
 SA000017I	Adygei	ALFRED
+mMHseq-Adygei	Adygei	10.1016/j.fsigen.2020.102275
 MHDBP-3dab7bdd14	Africa	10.1016/j.fsigen.2018.05.008
 SA000101C	African Americans	ALFRED
 ACB	African Caribbeans in Barbados	1KGP
@@ -9,9 +10,11 @@ MHDBP-936bc36f79	Asia	10.1016/j.fsigen.2018.05.008
 SA000021D	Atayal	ALFRED
 BEB	Bengali from Bangladesh	1KGP
 SA000005F	Biaka	ALFRED
+mMHseq-Biaka	Biaka	10.1016/j.fsigen.2020.102275
 GBR	British in England and Scotland	1KGP
 SA000022E	Cambodians, Khmer	ALFRED
 SA000487T	Chagga	ALFRED
+mMHseq-Chagga	Chagga	10.1016/j.fsigen.2020.102275
 SA000023F	Cheyenne	ALFRED
 CDX	Chinese Dai in Xishuangbanna, China	1KGP
 SA000491O	Chuvash	ALFRED
@@ -20,6 +23,7 @@ SA004333N	Cypriot, Turkish	ALFRED
 SA000007H	Danes	ALFRED
 SA000047L	Druze	ALFRED
 ESN	Esan in Nigeria	1KGP
+mMHseq-EuroAmer	EuroAmer	10.1016/j.fsigen.2020.102275
 SA000020C	Europeans, Mixed	ALFRED
 FIN	Finnish in Finland	1KGP
 SA000018J	Finns	ALFRED
@@ -84,6 +88,7 @@ SA001530J	Russians	ALFRED
 SA000098R	Samaritans	ALFRED
 SA000072J	Samoans	ALFRED
 SA001773S	Sandawe	ALFRED
+mMHseq-Sandawe	Sandawe	10.1016/j.fsigen.2020.102275
 SA002768X	Sardinian	ALFRED
 SA004393T	Saudi	ALFRED
 SA002138O	Somali	ALFRED
@@ -91,6 +96,7 @@ CHS	Southern Han Chinese	1KGP
 STU	Sri Lankan Tamil from the UK	1KGP
 SA000014F	Surui	ALFRED
 MHDBP-7c055e7ee8	Swedish	ISFG2019:P597
+mMHseq-TWChinese	TWChinese	10.1016/j.fsigen.2020.102275
 SA000077O	Thoti	ALFRED
 SA000027J	Ticuna	ALFRED
 TSI	Toscani in Italia	1KGP
@@ -101,3 +107,4 @@ SA000011C	Yakut	ALFRED
 SA000036J	Yoruba	ALFRED
 YRI	Yoruba in Ibadan, Nigeria	1KGP
 SA002586V	Zaramo	ALFRED
+mMHseq-Zaramo	Zaramo	10.1016/j.fsigen.2020.102275

@@ -1,0 +1,62 @@
+# -----------------------------------------------------------------------------
+# Copyright (c) 2020, Battelle National Biodefense Institute.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
+# and is licensed under the BSD license: see LICENSE.txt.
+# -----------------------------------------------------------------------------
+
+# rule all:
+#     input: 'marker.tsv'
+
+
+rule format:
+    input:
+        script='./prep.py',
+        table='complete.tsv'
+    output:
+        table='marker.tsv'
+    shell:
+        '{input} {output}'
+
+
+rule complete:
+    input:
+        script1='./novelcoords.py',
+        table='auto.tsv',
+        bed37='novel.grch37.bed',
+        bed38='novel.grch38.bed',
+        script2='crosschecks.py',
+        refr37=config['refr37'],
+        refr38=config['refr'],
+    output:
+        table='complete.tsv'
+    shell:
+        '''
+        ./novelcoords.py {input.table} {input.bed37} {input.bed38} {output.table}
+        ./crosschecks.py {output.table} {input.refr37} {input.refr38}
+        '''
+
+
+rule novel:
+    input:
+        bed37='novel.grch37.bed',
+        chain='hg19ToHg38.over.chain.gz',
+    output:
+        bed38='novel.grch38.bed'
+    shell:
+        'liftOver {input} {output} novel-unmapped.bed'
+
+
+rule vcf:
+    input:
+        script='./vcfadd.py',
+        table='manual.tsv',
+        dbsnp37=config['dbsnp37'],
+        rsidx37=config['dbsnp37'].replace('.vcf.gz', '.rsidx'),
+        dbsnp38=config['dbsnp38'],
+        rsidx38=config['dbsnp38'].replace('.vcf.gz', '.rsidx'),
+    output:
+        table='auto.tsv',
+        novel='novel.grch37.bed',
+    shell:
+        '{input} {output}'

@@ -78,7 +78,7 @@ def test_main_pop_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split('\n')
-    assert len(outlines) == 1 + 96 + 3 + 1 + 1 + 1  # 1 header line + 96 ALFRED + 3 LOVD + 1 Linköping + 1 NRIPS + 1 Chen2019
+    assert len(outlines) == 1 + 96 + 3 + 1 + 1 + 1 + 7  # 1 header line + 96 ALFRED + 3 LOVD + 1 Linköping + 1 NRIPS + 1 Chen2019 + 7 mMHseq
 
 
 def test_main_pop_detail(capsys):
@@ -107,7 +107,7 @@ def test_main_marker_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split('\n')
-    assert len(outlines) == 1 + 198 + 15 + 40 + 26 + (11 - 1) + 10 + 118
+    assert len(outlines) == 1 + 198 + 15 + 40 + 26 + (11 - 1) + 10 + 118 + 90
 
 
 def test_main_marker_detail(capsys):
@@ -122,18 +122,20 @@ def test_main_marker_query(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     testout = '''
-         Name          PermID Reference  Chrom                                       Offsets      Ae      In     Fst                          Source
- mh19USC-19pA  MHDBM-2d713eab    GRCh38  chr19                          561778,561795,561815  2.7453  0.0870  0.0733    10.1016/j.fsigen.2019.102213
-   mh19KK-056  MHDBM-d6ff8635    GRCh38  chr19                               4852124,4852324  2.4391  0.0773  0.1760                          ALFRED
-   mh19CP-007  MHDBM-49dbcc57    GRCh38  chr19                    14310739,14310772,14310780  3.0813  0.0466  0.0776                          ALFRED
- mh19USC-19pB  MHDBM-76427274    GRCh38  chr19  16040864,16040894,16040899,16040921,16040929  3.5107  0.1647  0.0731    10.1016/j.fsigen.2019.102213
-    mh19NH-23  MHDBM-dd72537b    GRCh38  chr19                    22052723,22052774,22052817  1.9380  0.0414 -0.0124  10.1016/j.legalmed.2015.06.003
-   mh19KK-299  MHDBM-8cbeb11c    GRCh38  chr19  22546697,22546748,22546779,22546810,22546850  4.1592  0.2335  0.1102                          ALFRED
-    mh19AT-47  MHDBM-8f439540    GRCh38  chr19                    22546697,22546748,22546779  2.4025  0.1298  0.1170                   ISFG2019:P597
- mh19USC-19qA  MHDBM-f757e745    GRCh38  chr19           33273771,33273785,33273811,33273816  3.3219  0.1127  0.0880    10.1016/j.fsigen.2019.102213
-   mh19KK-301  MHDBM-2069446a    GRCh38  chr19           50938487,50938502,50938526,50938550  1.9707  0.2673  0.1698                          ALFRED
-   mh19KK-057  MHDBM-eb558c37    GRCh38  chr19                    51654948,51655025,51655062  2.3266  0.0667  0.0428                          ALFRED
- mh19USC-19qB  MHDBM-7b40359b    GRCh38  chr19                    53714387,53714389,53714413  4.0756  0.1368  0.0163    10.1016/j.fsigen.2019.102213
+         Name          PermID Reference  Chrom                                                         Offsets      Ae      In     Fst                          Source
+ mh19USC-19pA  MHDBM-2d713eab    GRCh38  chr19                                            561778,561795,561815  2.7453  0.0870  0.0733    10.1016/j.fsigen.2019.102213
+   mh19KK-056  MHDBM-d6ff8635    GRCh38  chr19                                                 4852124,4852324  2.4391  0.0773  0.1760                          ALFRED
+   mh19CP-007  MHDBM-49dbcc57    GRCh38  chr19                                      14310739,14310772,14310780  3.0813  0.0466  0.0776                          ALFRED
+ mh19USC-19pB  MHDBM-76427274    GRCh38  chr19                    16040864,16040894,16040899,16040921,16040929  3.5107  0.1647  0.0731    10.1016/j.fsigen.2019.102213
+    mh19NH-23  MHDBM-dd72537b    GRCh38  chr19                                      22052723,22052774,22052817  1.9380  0.0414 -0.0124  10.1016/j.legalmed.2015.06.003
+ mh19KKCS-299  MHDBM-a70896aa    GRCh38  chr19  22546697,22546702,22546748,22546779,22546810,22546829,22546850     NaN     NaN     NaN    10.1016/j.fsigen.2020.102275
+   mh19KK-299  MHDBM-8cbeb11c    GRCh38  chr19                    22546697,22546748,22546779,22546810,22546850  4.1592  0.2335  0.1102                          ALFRED
+    mh19AT-47  MHDBM-8f439540    GRCh38  chr19                                      22546697,22546748,22546779  2.4025  0.1298  0.1170                   ISFG2019:P597
+ mh19USC-19qA  MHDBM-f757e745    GRCh38  chr19                             33273771,33273785,33273811,33273816  3.3219  0.1127  0.0880    10.1016/j.fsigen.2019.102213
+   mh19KK-301  MHDBM-2069446a    GRCh38  chr19                             50938487,50938502,50938526,50938550  1.9707  0.2673  0.1698                          ALFRED
+ mh19KKCS-300  MHDBM-bc8b7213    GRCh38  chr19  50947786,50947789,50947790,50947830,50947876,50947877,50947967     NaN     NaN     NaN    10.1016/j.fsigen.2020.102275
+   mh19KK-057  MHDBM-eb558c37    GRCh38  chr19                                      51654948,51655025,51655062  2.3266  0.0667  0.0428                          ALFRED
+ mh19USC-19qB  MHDBM-7b40359b    GRCh38  chr19                                      53714387,53714389,53714413  4.0756  0.1368  0.0163    10.1016/j.fsigen.2019.102213
 '''
     assert testout.strip() == out.strip()
 
@@ -183,7 +185,7 @@ def test_main_marker_region_mode(capsys):
     out, err = capsys.readouterr()
     outlines = out.strip().split('\n')
     print(out)
-    assert len(outlines) == 17 + 1  # 17 markers + 1 header line
+    assert len(outlines) == 19 + 1  # 17 markers + 1 header line
 
 
 def test_main_marker_region_mode_failure(capsys):
@@ -241,7 +243,7 @@ def test_main_marker_panel_region_conflict(capsys):
     ('--population=SA000009J', '--marker=mh13KK-218', None, 15),
     (None, '--marker=mh13KK-218', '--allele=C,T,C,T', 97),
     (None, '--marker=mh14PK-72639', None, 217),
-    (None, None, None, 113477)
+    (None, None, None, 127156)
 ])
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
     testargs = (pop, marker, allele)
@@ -339,7 +341,7 @@ Marker Definition (GRCh37)
         - chromosome offsets: 3821918,3821952,3821987
         - marker offsets: 0,34,69
         - amplicon offsets: 10,44,79
-        - cross-references: rs4995289, rs4995288, rs9904113
+        - cross-references: rs4995288, rs4995289, rs9904113
     Observed haplotypes
         - C,C,A
         - C,C,C
@@ -379,11 +381,13 @@ def test_h37_ae_pop(capsys):
     microhapdb.cli.main(args)
     terminal = capsys.readouterr()
     exp_out = '''
-         Name          PermID Reference  Chrom                              Offsets      Ae      In     Fst                        Source
- mh18USC-18qB  MHDBM-14fcada5    GRCh37  chr18           50547498,50547528,50547540  3.8565  0.1449  0.0500  10.1016/j.fsigen.2019.102213
- mh18USC-18qC  MHDBM-6bf74efc    GRCh37  chr18  63842523,63842541,63842557,63842562  3.5570  0.1436 -0.0049  10.1016/j.fsigen.2019.102213
-   mh18KK-293  MHDBM-13ed6da8    GRCh37  chr18  76089885,76089906,76089944,76089967  2.6445  0.2495  0.0837                        ALFRED
-    mh18AT-39  MHDBM-13ed6da8    GRCh37  chr18  76089885,76089906,76089944,76089967  2.6445  0.2495  0.0837                 ISFG2019:P597
+         Name          PermID Reference  Chrom                                                         Offsets      Ae      In     Fst                        Source
+ mh18USC-18qB  MHDBM-14fcada5    GRCh37  chr18                                      50547498,50547528,50547540  3.8565  0.1449  0.0500  10.1016/j.fsigen.2019.102213
+ mh18USC-18qC  MHDBM-6bf74efc    GRCh37  chr18                             63842523,63842541,63842557,63842562  3.5570  0.1436 -0.0049  10.1016/j.fsigen.2019.102213
+ mh18KKCS-293  MHDBM-350bd971    GRCh37  chr18  76089731,76089843,76089884,76089885,76089906,76089944,76089967     NaN     NaN     NaN  10.1016/j.fsigen.2020.102275
+   mh18KK-293  MHDBM-13ed6da8    GRCh37  chr18                             76089885,76089906,76089944,76089967  2.6445  0.2495  0.0837                        ALFRED
+    mh18AT-39  MHDBM-13ed6da8    GRCh37  chr18                             76089885,76089906,76089944,76089967  2.6445  0.2495  0.0837                 ISFG2019:P597
+
 '''
     obs_out = terminal.out
     assert exp_out.strip() == obs_out.strip()

@@ -48,18 +48,20 @@ def by_region(regionstr):
     '''Retrieve data from the specied genomic region
 
     >>> by_region('chr19')
-                 Name          PermID Reference  Chrom                                       Offsets      Ae      In     Fst                          Source
-    359  mh19USC-19pA  MHDBM-2d713eab    GRCh38  chr19                          561778,561795,561815  2.7453  0.0870  0.0733    10.1016/j.fsigen.2019.102213
-    360    mh19KK-056  MHDBM-d6ff8635    GRCh38  chr19                               4852124,4852324  2.4391  0.0773  0.1760                          ALFRED
-    361    mh19CP-007  MHDBM-49dbcc57    GRCh38  chr19                    14310739,14310772,14310780  3.0813  0.0466  0.0776                          ALFRED
-    362  mh19USC-19pB  MHDBM-76427274    GRCh38  chr19  16040864,16040894,16040899,16040921,16040929  3.5107  0.1647  0.0731    10.1016/j.fsigen.2019.102213
-    363     mh19NH-23  MHDBM-dd72537b    GRCh38  chr19                    22052723,22052774,22052817  1.9380  0.0414 -0.0124  10.1016/j.legalmed.2015.06.003
-    364    mh19KK-299  MHDBM-8cbeb11c    GRCh38  chr19  22546697,22546748,22546779,22546810,22546850  4.1592  0.2335  0.1102                          ALFRED
-    365     mh19AT-47  MHDBM-8f439540    GRCh38  chr19                    22546697,22546748,22546779  2.4025  0.1298  0.1170                   ISFG2019:P597
-    366  mh19USC-19qA  MHDBM-f757e745    GRCh38  chr19           33273771,33273785,33273811,33273816  3.3219  0.1127  0.0880    10.1016/j.fsigen.2019.102213
-    367    mh19KK-301  MHDBM-2069446a    GRCh38  chr19           50938487,50938502,50938526,50938550  1.9707  0.2673  0.1698                          ALFRED
-    368    mh19KK-057  MHDBM-eb558c37    GRCh38  chr19                    51654948,51655025,51655062  2.3266  0.0667  0.0428                          ALFRED
-    369  mh19USC-19qB  MHDBM-7b40359b    GRCh38  chr19                    53714387,53714389,53714413  4.0756  0.1368  0.0163    10.1016/j.fsigen.2019.102213
+                 Name          PermID Reference  Chrom                                            Offsets      Ae      In     Fst                          Source
+    435  mh19USC-19pA  MHDBM-2d713eab    GRCh38  chr19                               561778,561795,561815  2.7453  0.0870  0.0733    10.1016/j.fsigen.2019.102213
+    436    mh19KK-056  MHDBM-d6ff8635    GRCh38  chr19                                    4852124,4852324  2.4391  0.0773  0.1760                          ALFRED
+    437    mh19CP-007  MHDBM-49dbcc57    GRCh38  chr19                         14310739,14310772,14310780  3.0813  0.0466  0.0776                          ALFRED
+    438  mh19USC-19pB  MHDBM-76427274    GRCh38  chr19       16040864,16040894,16040899,16040921,16040929  3.5107  0.1647  0.0731    10.1016/j.fsigen.2019.102213
+    439     mh19NH-23  MHDBM-dd72537b    GRCh38  chr19                         22052723,22052774,22052817  1.9380  0.0414 -0.0124  10.1016/j.legalmed.2015.06.003
+    440  mh19KKCS-299  MHDBM-a70896aa    GRCh38  chr19  22546697,22546702,22546748,22546779,22546810,2...     NaN     NaN     NaN    10.1016/j.fsigen.2020.102275
+    441    mh19KK-299  MHDBM-8cbeb11c    GRCh38  chr19       22546697,22546748,22546779,22546810,22546850  4.1592  0.2335  0.1102                          ALFRED
+    442     mh19AT-47  MHDBM-8f439540    GRCh38  chr19                         22546697,22546748,22546779  2.4025  0.1298  0.1170                   ISFG2019:P597
+    443  mh19USC-19qA  MHDBM-f757e745    GRCh38  chr19                33273771,33273785,33273811,33273816  3.3219  0.1127  0.0880    10.1016/j.fsigen.2019.102213
+    444    mh19KK-301  MHDBM-2069446a    GRCh38  chr19                50938487,50938502,50938526,50938550  1.9707  0.2673  0.1698                          ALFRED
+    445  mh19KKCS-300  MHDBM-bc8b7213    GRCh38  chr19  50947786,50947789,50947790,50947830,50947876,5...     NaN     NaN     NaN    10.1016/j.fsigen.2020.102275
+    446    mh19KK-057  MHDBM-eb558c37    GRCh38  chr19                         51654948,51655025,51655062  2.3266  0.0667  0.0428                          ALFRED
+    447  mh19USC-19qB  MHDBM-7b40359b    GRCh38  chr19                         53714387,53714389,53714413  4.0756  0.1368  0.0163    10.1016/j.fsigen.2019.102213
     '''
     markers = microhapdb.markers.copy()
     markers['Start'] = markers.Offsets.apply(lambda o: min(map(int, o.split(','))))
@@ -78,23 +80,23 @@ def by_id(ident):
 
     >>> by_id('mh17KK-014')
                Name          PermID Reference  Chrom                  Offsets      Ae      In     Fst  Source
-    330  mh17KK-014  MHDBM-83a239de    GRCh38  chr17  4497060,4497088,4497096  2.0215  0.6423  0.3014  ALFRED
+    401  mh17KK-014  MHDBM-83a239de    GRCh38  chr17  4497060,4497088,4497096  2.0215  0.6423  0.3014  ALFRED
     >>> by_id('SI664726F')
                Name          PermID Reference  Chrom                  Offsets      Ae      In     Fst  Source
-    330  mh17KK-014  MHDBM-83a239de    GRCh38  chr17  4497060,4497088,4497096  2.0215  0.6423  0.3014  ALFRED
+    401  mh17KK-014  MHDBM-83a239de    GRCh38  chr17  4497060,4497088,4497096  2.0215  0.6423  0.3014  ALFRED
     >>> by_id('MHDBM-ea520d26')
                Name          PermID Reference  Chrom                              Offsets      Ae      In     Fst  Source
-    351  mh18KK-285  MHDBM-ea520d26    GRCh38  chr18  24557354,24557431,24557447,24557489  2.7524  0.1721  0.0836  ALFRED
+    426  mh18KK-285  MHDBM-ea520d26    GRCh38  chr18  24557354,24557431,24557447,24557489  2.7524  0.1721  0.0836  ALFRED
     >>> by_id('PJL')
          ID                           Name Source
-    78  PJL  Punjabi from Lahore, Pakistan   1KGP
+    82  PJL  Punjabi from Lahore, Pakistan   1KGP
     >>> by_id('Asia')
                      ID  Name                        Source
-    6  MHDBP-936bc36f79  Asia  10.1016/j.fsigen.2018.05.008
+    7  MHDBP-936bc36f79  Asia  10.1016/j.fsigen.2018.05.008
     >>> by_id('Japanese')
                       ID      Name                          Source
-    41  MHDBP-63967b883e  Japanese  10.1016/j.legalmed.2015.06.003
-    42         SA000010B  Japanese                          ALFRED
+    45  MHDBP-63967b883e  Japanese  10.1016/j.legalmed.2015.06.003
+    46         SA000010B  Japanese                          ALFRED
     '''
     if id_in_series(ident, microhapdb.populations.ID) or id_in_series(ident, microhapdb.populations.Name):
         idlist = standardize_population_ids([ident])

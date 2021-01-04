@@ -27,6 +27,13 @@ index_1kgp()
     done
 }
 
+download_grch37()
+{
+    local rootdir=$1
+    wget -O ${rootdir}/hg37.fa.gz http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz
+    gunzip ${rootdir}/hg37.fa.gz
+}
+
 download_grch38()
 {
     local rootdir=$1
@@ -62,6 +69,7 @@ dbdir=${1:-databases}
 
 mkdir -p $dbdir
 
+download_grch37 $dbdir
 download_grch38 $dbdir
 download_1kgp $dbdir
 download_dbsnp $dbdir

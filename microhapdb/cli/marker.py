@@ -75,7 +75,7 @@ def main(args):
         if len(args.id) > 0 or args.panel is not None:
             warning = 'WARNING: ignoring user-supplied marker IDs in --query mode'
             print('[MicroHapDB::marker]', warning, file=sys.stderr)
-        result = microhapdb.markers.query(args.query)
+        result = microhapdb.markers.query(args.query, engine='python')
     elif args.region:
         if len(args.id) > 0 or args.panel is not None:
             warning = 'WARNING: ignoring user-supplied marker IDs in --region mode'

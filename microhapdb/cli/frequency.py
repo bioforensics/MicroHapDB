@@ -44,7 +44,7 @@ def main(args):
         query_args.append(criterion)
     if len(query_args) > 0:
         query = ' and '.join(query_args)
-        result = microhapdb.frequencies.query(query)
+        result = microhapdb.frequencies.query(query, engine='python')
     else:
         result = microhapdb.frequencies
     print(result.to_string(index=False))
