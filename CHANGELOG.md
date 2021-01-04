@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Added
+- Markers and population frequency data (1000 Genomes and proprietary) for the mMHseq 90-plex panel (see #68).
+
+### Fixed
+- Error message when detail view is requested for a marker without frequency information (see #67).
+
+
 ## [0.6] 2020-06-25
 
 ### Added
