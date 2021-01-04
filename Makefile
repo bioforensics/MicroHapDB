@@ -12,7 +12,7 @@ test:
 devdeps:
 	pip install --upgrade pip setuptools
 	pip install wheel twine
-	pip install pycodestyle 'pytest==5.1.1' 'pandas==1.1.2' pytest-cov pytest-sugar
+	pip install pycodestyle 'pytest>=5.0' pytest-cov pytest-sugar
 
 ## clean:     remove development artifacts
 clean:

@@ -32,7 +32,7 @@ setup(
         'microhapdb': ['microhapdb/data/*', 'microhapdb/data/tests/*']
     },
     include_package_data=True,
-    install_requires=['pandas'],
+    install_requires=['pandas<1.2'],
     entry_points={
         'console_scripts': ['microhapdb = microhapdb.cli:main']
     },
