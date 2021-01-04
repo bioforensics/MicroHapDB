@@ -1,4 +1,4 @@
-# Short hypervariable microhaplotypes (van der Gaag **et al.** 2018)
+# Short hypervariable microhaplotypes (van der Gaag *et al.* 2018)
 
 ## Citations
 
