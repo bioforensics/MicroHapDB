@@ -78,7 +78,7 @@ def test_main_pop_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split('\n')
-    assert len(outlines) == 1 + 96 + 3 + 1 + 1 + 1  # 1 header line + 96 ALFRED + 3 LOVD + 1 Linköping + 1 NRIPS + 1 Chen2019
+    assert len(outlines) == 1 + 96 + 3 + 1 + 1 + 1 + 7  # 1 header line + 96 ALFRED + 3 LOVD + 1 Linköping + 1 NRIPS + 1 Chen2019 + 7 mMHseq
 
 
 def test_main_pop_detail(capsys):
@@ -243,7 +243,7 @@ def test_main_marker_panel_region_conflict(capsys):
     ('--population=SA000009J', '--marker=mh13KK-218', None, 15),
     (None, '--marker=mh13KK-218', '--allele=C,T,C,T', 97),
     (None, '--marker=mh14PK-72639', None, 217),
-    (None, None, None, 122419)
+    (None, None, None, 127156)
 ])
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
     testargs = (pop, marker, allele)

@@ -20,7 +20,7 @@ def test_standardize_ids():
 
 
 def test_assumptions():
-    assert len(microhapdb.populations) == 96 + 3 + 1 + 1 + 1
+    assert len(microhapdb.populations) == 96 + 3 + 1 + 1 + 1 + 7
 
 
 def test_populations():
@@ -29,30 +29,30 @@ def test_populations():
     >>> p = microhapdb.populations
     >>> p[p.ID == 'SA000040E']
                ID     Name  Source
-    48  SA000040E  Kachari  ALFRED
+    52  SA000040E  Kachari  ALFRED
     >>> p[p.ID == 'SA000936S']
                ID     Name  Source
-    54  SA000936S  Koreans  ALFRED
+    58  SA000936S  Koreans  ALFRED
     >>> p[p.Name == 'Japanese']
                       ID      Name                          Source
-    41  MHDBP-63967b883e  Japanese  10.1016/j.legalmed.2015.06.003
-    42         SA000010B  Japanese                          ALFRED
+    45  MHDBP-63967b883e  Japanese  10.1016/j.legalmed.2015.06.003
+    46         SA000010B  Japanese                          ALFRED
     >>> p[p.Name.str.contains('Han')]
                       ID                           Name                        Source
-    29  MHDBP-48c2cfb2aa                            Han  10.1016/j.fsigen.2019.02.018
-    30         SA000001B                            Han                        ALFRED
-    31         SA000009J                            Han                        ALFRED
-    32               CHB  Han Chinese in Beijing, China                          1KGP
-    88               CHS           Southern Han Chinese                          1KGP
+    33  MHDBP-48c2cfb2aa                            Han  10.1016/j.fsigen.2019.02.018
+    34         SA000001B                            Han                        ALFRED
+    35         SA000009J                            Han                        ALFRED
+    36               CHB  Han Chinese in Beijing, China                          1KGP
+    93               CHS           Southern Han Chinese                          1KGP
     >>> p.query('Name.str.contains("Afr")', engine='python')
                      ID                                     Name                        Source
-    1  MHDBP-3dab7bdd14                                   Africa  10.1016/j.fsigen.2018.05.008
-    2         SA000101C                        African Americans                        ALFRED
-    3               ACB           African Caribbeans in Barbados                          1KGP
-    4               ASW  Americans of African Ancestry in SW USA                          1KGP
+    2  MHDBP-3dab7bdd14                                   Africa  10.1016/j.fsigen.2018.05.008
+    3         SA000101C                        African Americans                        ALFRED
+    4               ACB           African Caribbeans in Barbados                          1KGP
+    5               ASW  Americans of African Ancestry in SW USA                          1KGP
     """
     pop = microhapdb.populations
-    assert pop.shape == (102, 3)
+    assert pop.shape == (109, 3)
     assert pop[pop.ID == 'FIN'].Name.values == ['Finnish in Finland']
     assert pop[pop.ID == 'SA000028K'].Name.values == ['Karitiana']
     result = pop[pop.Name.str.contains('Jews')].ID.values

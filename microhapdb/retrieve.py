@@ -89,14 +89,14 @@ def by_id(ident):
     426  mh18KK-285  MHDBM-ea520d26    GRCh38  chr18  24557354,24557431,24557447,24557489  2.7524  0.1721  0.0836  ALFRED
     >>> by_id('PJL')
          ID                           Name Source
-    78  PJL  Punjabi from Lahore, Pakistan   1KGP
+    82  PJL  Punjabi from Lahore, Pakistan   1KGP
     >>> by_id('Asia')
                      ID  Name                        Source
-    6  MHDBP-936bc36f79  Asia  10.1016/j.fsigen.2018.05.008
+    7  MHDBP-936bc36f79  Asia  10.1016/j.fsigen.2018.05.008
     >>> by_id('Japanese')
                       ID      Name                          Source
-    41  MHDBP-63967b883e  Japanese  10.1016/j.legalmed.2015.06.003
-    42         SA000010B  Japanese                          ALFRED
+    45  MHDBP-63967b883e  Japanese  10.1016/j.legalmed.2015.06.003
+    46         SA000010B  Japanese                          ALFRED
     '''
     if id_in_series(ident, microhapdb.populations.ID) or id_in_series(ident, microhapdb.populations.Name):
         idlist = standardize_population_ids([ident])
