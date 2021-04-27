@@ -12,6 +12,18 @@ from textwrap import dedent
 import sys
 
 
+def str_to_extend_mode(value):
+    value = str(value)
+    if value not in ('5', '3', 'symmetric'):
+        raise ValueError('extend mode must be `5`, `3`, or `symmetric`')
+    if value == '5':
+        return -1
+    elif value == '3':
+        return 1
+    else:
+        return 0
+
+
 def subparser(subparsers):
     desc = microhapdb.cli.bubbletext + '\nRetrieve marker records by identifier or query'
     epilog = """\
@@ -20,7 +32,7 @@ def subparser(subparsers):
         microhapdb marker mh01NK-001
         microhapdb marker --format=fasta mh13KK-218 mh04CP-002 mh02AT-05
         microhapdb marker --format=fasta --panel mypanel.txt
-        microhapdb marker --format=detail --min-length=125 MHDBM-dc55cd9e
+        microhapdb marker --format=detail --min-length=125 --extend-mode=3 MHDBM-dc55cd9e
         microhapdb marker --region=chr18:1-25000000 --GRCh37
         microhapdb marker --query='Source == "ALFRED"' --ae-pop CEU
         microhapdb marker --query='Name.str.contains("PK")'
@@ -47,6 +59,12 @@ def subparser(subparsers):
     subparser.add_argument(
         '--min-length', metavar='L', type=int, default=80, help='minimum amplicon length (detail '
         'and fasta format only); by default L=80'
+    )
+    subparser.add_argument(
+        '--extend-mode', metavar='E', type=str_to_extend_mode, default='symmetric',
+        help="specify how coordinates will be adjusted if extension is required to satisfy the "
+        "minimum amplicon length; use `5` to extend the 5' end, `3` to extend the 3' end, or "
+        "`symmetric` to extend both ends equally; by default, symmetric mode is used"
     )
     subparser.add_argument(
         '--notrunc', dest='trunc', action='store_false', default=True,
@@ -95,13 +113,14 @@ def main(args):
         result = microhapdb.markers[microhapdb.markers.Name.isin(idents)]
     else:
         result = microhapdb.markers
-    viewfuncs = {
-        'table': print_table,
-        'detail': print_detail,
-        'fasta': print_fasta
-    }
-    view = viewfuncs[args.format]
-    view(result, delta=args.delta, minlen=args.min_length, trunc=args.trunc)
+    if args.format == 'table':
+        print_table(result, trunc=args.trunc)
+    elif args.format == 'detail':
+        print_detail(result, delta=args.delta, minlen=args.min_length, extendmode=args.extend_mode)
+    elif args.format == 'fasta':
+        print_fasta(result, delta=args.delta, minlen=args.min_length, extendmode=args.extend_mode)
+    else:
+        raise ValueError(f'unsupported view format "{args.format}"')
     if args.ae_pop:
         microhapdb.set_ae_population(popid=None)  # Reset
     if args.GRCh37:

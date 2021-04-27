@@ -238,6 +238,47 @@ def test_main_marker_panel_region_conflict(capsys):
     assert 'ignoring user-supplied marker IDs in --region mode' in terminal.err
 
 
+@pytest.mark.parametrize('mode,offsets1,offsets2', [
+    ('symmetric', 'variants=70,92,104', 'variants=47,82,128'),
+    ('5', 'variants=120,142,154', 'variants=73,108,154'),
+    ('3', 'variants=20,42,54', 'variants=20,55,101'),
+])
+def test_main_marker_extendmode(mode, offsets1, offsets2, capsys):
+    arglist = [
+        'marker', '--format', 'fasta', '--extend-mode', mode, '--delta', '20',
+        '--min-length', '175', 'mh01USC-1pD', 'mh22NH-27'
+    ]
+    args = get_parser().parse_args(arglist)
+    microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    assert offsets1 in terminal.out
+    assert offsets2 in terminal.out
+
+
+@pytest.mark.parametrize('mode', ['4', '6', 'NotARealMode'])
+def test_main_marker_extendmode_bad(mode, capsys):
+    arglist = [
+        'marker', '--format', 'fasta', '--extend-mode', mode, '--delta', '20',
+        '--min-length', '175', 'mh01USC-1pD', 'mh22NH-27'
+    ]
+    with pytest.raises(SystemExit):
+        args = get_parser().parse_args(arglist)
+    terminal = capsys.readouterr()
+    assert 'invalid str_to_extend_mode value' in terminal.err
+
+
+def test_main_marker_view_bad():
+    arglist = [
+        'marker', '--format', 'fasta', '--extend-mode', '5', '--delta', '20',
+        '--min-length', '175', 'mh01USC-1pD', 'mh22NH-27'
+    ]
+    args = get_parser().parse_args(arglist)
+    args.format = 'html'
+    with pytest.raises(ValueError, match=r'unsupported view format "html"'):
+        microhapdb.cli.main(args)
+
+
+
 @pytest.mark.parametrize('pop,marker,allele,numrows', [
     ('--population=Swedish', None, None, 138),
     ('--population=SA000009J', '--marker=mh13KK-218', None, 15),

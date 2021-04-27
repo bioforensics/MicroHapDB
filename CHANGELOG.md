@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Markers and population frequency data (1000 Genomes and proprietary) for the mMHseq 90-plex panel (see #68).
+- New `--extend-mode` option when displaying markers in `fasta` or `detail` mode (see #72).
 
 ### Fixed
 - Error message when detail view is requested for a marker without frequency information (see #67).
