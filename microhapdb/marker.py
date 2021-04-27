@@ -15,11 +15,12 @@ import sys
 
 
 class TargetAmplicon():
-    def __init__(self, marker, delta=10, minlen=80):
+    def __init__(self, marker, delta=10, minlen=80, extendmode=0):
         if isinstance(marker, str):
             markerids = standardize_ids([marker])
             assert len(markerids) == 1
             marker = microhapdb.markers[microhapdb.markers.Name.isin(markerids)].iloc[0]
+        self.extendmode = int(extendmode)
         self.data = marker
         self.delta = delta
         self.minlen = minlen
@@ -99,9 +100,14 @@ class TargetAmplicon():
         length = end - start
         if length < self.minlen:
             diff = self.minlen - length
-            extension = ceil(diff / 2)
-            start -= extension
-            end += extension
+            if self.extendmode < 0:
+                start -= diff
+            elif self.extendmode > 0:
+                end += diff
+            else:
+                extension = ceil(diff / 2)
+                start -= extension
+                end += extension
         return start, end
 
     @property
@@ -317,7 +323,7 @@ def standardize_ids(idents):
     return microhapdb.markers[microhapdb.markers.Name.isin(ids)].Name
 
 
-def print_table(table, delta=None, minlen=None, trunc=True):
+def print_table(table, trunc=True):
     if trunc is not True:
         colwidth = pandas.get_option('display.max_colwidth')
         pandas.set_option('display.max_colwidth', 1000000)
@@ -326,15 +332,15 @@ def print_table(table, delta=None, minlen=None, trunc=True):
         pandas.set_option('display.max_colwidth', colwidth)
 
 
-def print_fasta(table, delta=10, minlen=80, trunc=None):
+def print_fasta(table, delta=10, minlen=80, extendmode=0):
     for n, row in table.iterrows():
-        amplicon = TargetAmplicon(row, delta=delta, minlen=minlen)
+        amplicon = TargetAmplicon(row, delta=delta, minlen=minlen, extendmode=extendmode)
         print(amplicon.fasta)
 
 
-def print_detail(table, delta=10, minlen=80, trunc=None):
+def print_detail(table, delta=10, minlen=80, extendmode=0):
     for n, row in table.iterrows():
-        amplicon = TargetAmplicon(row, delta=delta, minlen=minlen)
+        amplicon = TargetAmplicon(row, delta=delta, minlen=minlen, extendmode=extendmode)
         if len(amplicon.alleles) == 0:
             print(
                 '[MicroHapDB::marker] Unable to display a full detail view for markers without '

@@ -556,3 +556,24 @@ def test_marker_no_freq(markername, capsys):
     terminal = capsys.readouterr()
     message = 'Unable to display a full detail view for markers without frequency information'
     assert message in terminal.err
+
+
+@pytest.mark.parametrize('mode,offsets1,offsets2', [
+    (0, 'variants=70,92,104', 'variants=47,82,128'),
+    (-1, 'variants=120,142,154', 'variants=73,108,154'),
+    (1, 'variants=20,42,54', 'variants=20,55,101'),
+])
+def test_marker_extendmode(mode, offsets1, offsets2, capsys):
+    markers = microhapdb.markers[microhapdb.markers.Name.isin(['mh01USC-1pD', 'mh22NH-27'])]
+    microhapdb.marker.print_fasta(markers, delta=20, minlen=175, extendmode=mode)
+    terminal = capsys.readouterr()
+    assert offsets1 in terminal.out
+    assert offsets2 in terminal.out
+
+
+def test_marker_extendmode_bad():
+    markers = microhapdb.markers[microhapdb.markers.Name.isin(['mh01USC-1pD', 'mh22NH-27'])]
+    with pytest.raises(ValueError, match=r'invalid literal for int'):
+        microhapdb.marker.print_fasta(markers, delta=20, minlen=175, extendmode="NotAnInt")
+    with pytest.raises(TypeError, match=r'argument must be a string'):
+        microhapdb.marker.print_fasta(markers, delta=20, minlen=175, extendmode=None)
