@@ -67,11 +67,15 @@ def construct_haplotypes(rsids, vcf, rsidxfile):
     return samples, haplo1, haplo2
 
 
-def compute_pop_counts(samples, haplo1, haplo2, samplepops):
+def compute_pop_counts(samples, haplo1, haplo2, samplepops, marker, numvars):
     '''Tally up observed haplotypes by population'''
     popallelecounts = defaultdict(lambda: defaultdict(int))
     for sample in samples:
         population = samplepops[sample]
+        if len(haplo1[sample]) != numvars:
+            message = f'numvar mismatch for "{marker}": '
+            message += f'{numvars} RSIDs but only {len(haplo1[sample])} variants found'
+            raise ValueError(message)
         hap1gt = ','.join(haplo1[sample])
         popallelecounts[population][hap1gt] += 1
         if sample in haplo2:  # males don't have a second haplotype for chr0X
@@ -80,7 +84,7 @@ def compute_pop_counts(samples, haplo1, haplo2, samplepops):
     return popallelecounts
 
 
-def mhfreqs(rsids, vcffile, rsidxfile, samplepops):
+def mhfreqs(marker, rsids, vcffile, rsidxfile, samplepops):
     '''Estimate microhaplotype frequences from the 1KGP data
 
     Construct haplotypes for each marker, compute a tally of allelic
@@ -88,7 +92,7 @@ def mhfreqs(rsids, vcffile, rsidxfile, samplepops):
     for each.
     '''
     samples, haplo1, haplo2 = construct_haplotypes(rsids, vcffile, rsidxfile)
-    popallelecounts = compute_pop_counts(samples, haplo1, haplo2, samplepops)
+    popallelecounts = compute_pop_counts(samples, haplo1, haplo2, samplepops, marker, len(rsids))
     for population, allelecounts in popallelecounts.items():
         total = sum(allelecounts.values())
         for allele, count in sorted(allelecounts.items()):
@@ -124,7 +128,7 @@ def main(args):
         vcf, rsidx = get_indexes_for_marker(marker, path=config['1kgp_dir'])
         if not os.path.exists(vcf) or not os.path.exists(rsidx):
             raise RuntimeError('VCF and/or RSIDX files do not exist')
-        for values in mhfreqs(rsids, vcf, rsidx, samplepops):
+        for values in mhfreqs(marker, rsids, vcf, rsidx, samplepops):
             print(marker, *values, sep='\t')
 
 
