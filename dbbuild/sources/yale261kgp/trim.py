@@ -15,6 +15,7 @@ data = pandas.read_csv(args.table, sep="\t")
 data = data[data.Name.isin(idlist)]
 data["OffsetsHg37"] = None
 data["OffsetsHg38"] = None
+data["VarRef"] = data.VarRef.apply(lambda x: ",".join([y for y in x.split(",") if y not in ("rs35590538", "rs4270334")]))
 data["NumVars"] = data.VarRef.apply(lambda x: x.count(",") + 1)
 data["Name"] = data.Name.apply(lambda x: x.replace("KKCS", "KK") + ".db")
 data.to_csv(sys.stdout, sep="\t", index=False)
