@@ -1,0 +1,7 @@
+rule build:
+    input:
+        txt="marker-26-ids.txt",
+        tsv="marker-gandotra.tsv"
+    output:
+        tsv="marker.tsv"
+    shell: "./trim.py {input} > {output}"
