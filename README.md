@@ -8,8 +8,8 @@ Daniel Standage, 2018-2020
 https://github.com/bioforensics/microhapdb
 
 **MicroHapDB** is a portable database intended for scientists and researchers interested in microhaplotypes for forensic analysis.
-The database includes a comprehensive collection of marker and allele frequency data from numerous databases and published research articles.<sup>[1-10]</sup>
-Effective number of allele (*A<sub>e</sub>*)<sup>[11]</sup> and informativeness for assignment (*I<sub>n</sub>*)<sup>[12]</sup> statistics are included so that markers can be ranked for different forensic applications.
+The database includes a comprehensive collection of marker and allele frequency data from numerous databases and published research articles.<sup>[5-15]</sup>
+Effective number of allele (*A<sub>e</sub>*)<sup>[2]</sup> and informativeness for assignment (*I<sub>n</sub>*)<sup>[3]</sup> statistics are included so that markers can be ranked for different forensic applications.
 The entire contents of the database are distributed with each copy of MicroHapDB, and instructions for adding private data to a local copy of the database are provided.
 MicroHapDB is designed to be user-friendly for both practitioners and researchers, supporting a range of access methods from browsing to simple text queries to complex queries to full programmatic access via a Python API.
 MicroHapDB is also designed as a community resource requiring minimal infrastructure to use and maintain.
@@ -70,7 +70,7 @@ To access MicroHapDB from Python, simply invoke `import microhapdb` and query th
 - `microhapdb.populations`
 - `microhapdb.frequencies`
 
-Each is a [Pandas][]<sup>[14]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
+Each is a [Pandas][]<sup>[1]</sup> dataframe object, supporting convenient and efficient listing, subsetting, and query capabilities.
 
 <img alt="MicroHapDB Python API" src="img/microhapdb-python-api.gif" width="600px" />
 
@@ -88,13 +88,13 @@ MicroHapDB also includes 4 auxiliary tables, which may be useful in a variety of
 
 MicroHapDB provides three criteria for ranking markers.
 
-- `Ae`: the marker's effective number of alleles (*A<sub>e</sub>*) computed individually for 26 populations<sup>[11]</sup>; by default, the average of the 26 populations is shown, but the `--ae-pop` flag or the `microhapdb.set_ae_population` function can be used to specify a single population for with to display A<sub>e</sub> values
-- `In`: Rosenberg's informativeness for assignment (*I<sub>n</sub>*) computed on 26 populations<sup>[12]</sup>
-- `Fst`: fixation index (*F<sub>ST</sub>*) computed on 26 populations<sup>[13]</sup>
+- `Ae`: the marker's effective number of alleles (*A<sub>e</sub>*) computed individually for 26 populations<sup>[2]</sup>; by default, the average of the 26 populations is shown, but the `--ae-pop` flag or the `microhapdb.set_ae_population` function can be used to specify a single population for with to display A<sub>e</sub> values
+- `In`: Rosenberg's informativeness for assignment (*I<sub>n</sub>*) computed on 26 populations<sup>[3]</sup>
+- `Fst`: fixation index (*F<sub>ST</sub>*) computed on 26 populations<sup>[4]</sup>
 
 The A<sub>e</sub> statistic is a measure of the *within-population* allelic variation at a locus, which corresponds to the marker's diagnostic power for identification purposes.
 The I<sub>n</sub> and F<sub>ST</sub> statistics measure *between-population* allelic variation at a locus, which corresponds to the marker's utility for predicting population of origin.
-Phased genotypes for 2,504 individuals from Phase 3 of the 1000 Genomes Project<sup>[10]</sup> are used to calculate these statistics.
+Phased genotypes for 2,504 individuals from Phase 3 of the 1000 Genomes Project<sup>[14]</sup> are used to calculate these statistics.
 
 
 ## Adding Markers to MicroHapDB
@@ -132,40 +132,41 @@ If you use this database, please cite our work.
 
 ## References
 
-### Published Marker collections and Allele Frequency Data
+### Supporting Software
 
-<sup>[1]</sup>Rajeevan H, Soundararajan U, Kidd JR, Pakstis AJ, Kidd KK (2012) ALFRED: an allele frequency resource for research and teaching. *Nucleic Acids Research*, 40(D1): D1010-D1015, [doi:10.1093/nar/gkr924](https://doi.org/10.1093/nar/gkr924).
-
-<sup>[2]</sup>Kidd KK, Pakstis AJ, Speed WC, Lagace R, Wootton S, Chang J (2018) Selecting microhaplotypes optimized for different purposes. *Electrophoresis*, [doi:10.1002/elps.201800092](https://doi.org/10.1002/elps.201800092).
-
-<sup>[3]</sup>Kidd KK, Rajeevan H (2018) ALFRED data download. *The Allele Frequency Database*, https://alfred.med.yale.edu/alfred/selectDownload/Microhap_alleleF_198.txt. Accessed December 7, 2018.
-
-<sup>[4]</sup>van der Gaag KJ, de Leeuw RH, Laros JFJ, den Dunnen JT, de Knijff P (2018) Short hypervariable microhaplotypes: A novel set of very short high discriminating power loci without stutter artefacts. *Forensic Science International: Genetics*, 35:169-175, [doi:10.1016/j.fsigen.2018.05.008](https://doi.org/10.1016/j.fsigen.2018.05.008).
-
-<sup>[5]</sup>Staadig A, Tillmar A (2019) Evaluation of microhaplotypes—A promising new type of forensic marker. *The 28th Congress of the International Society for Forensic Genetics*, P597.
-
-<sup>[6]</sup>Hiroaki N, Fujii K, Kitayama T, Sekiguchi K, Nakanishi H, Saito K (2015) Approaches for identifying multiple-SNP haplotype blocks for use in human identification. *Legal Medicine*, 17(5):415-420, [doi:10.1016/j.legalmed.2015.06.003](https://doi.org/10.1016/j.legalmed.2015.06.003).
-
-<sup>[7]</sup>Chen P, Deng C, Li Z, Pu Y, Yang J, Yu Y, Li K, Li D, Liang W, Zhang L, Chen F (2019) A microhaplotypes panel for massively parallel sequencing analysis of DNA mixtures. *FSI: Genetics*, 40:140-149, [doi:10.1016/j.fsigen.2019.02.018](https://doi.org/10.1016/j.fsigen.2019.02.018).
-
-<sup>[8]</sup>Voskoboinik L, Motro U, Darvasi A (2018) Facilitating complex DNA mixture interpretation by sequencing highly polymorphic haplotypes. *FSI: Genetics*, 35:136-140, [doi:10.1016/j.fsigen.2018.05.001](https://doi.org/10.1016/j.fsigen.2018.05.001).
-
-<sup>[9]</sup>de la Puente M, Phillips C, Xavier C, Amigo J, Carracedo A, Parson W, Lareu MV (2020) Building a custom large-scale panel of novel microhaplotypes for forensic identification using MiSeq and Ion S5 massively parallel sequencing systems. *FSI: Genetics*, 45:102213, [doi:10.1016/j.fsigen.2019.102213](https://doi.org/10.1016/j.fsigen.2019.102213).
-
-<sup>[10]</sup>Auton A, Abecasis G, Altshuler D, et al. (2015) A global reference for human genetic variation. *Nature* 526:68–74, [doi:10.1038/nature15393](https://doi.org/10.1038/nature15393).
+<sup>[1]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
 
 ### Ranking Statistics
 
-<sup>[11]</sup>Crow JF, Kimura M (1970) <u>An Introduction to Population Genetics Theory</u>. New York, Harper & Row.
+<sup>[2]</sup>Crow JF, Kimura M (1970) <u>An Introduction to Population Genetics Theory</u>. New York, Harper & Row.
 
-<sup>[12]</sup>Rosenberg NA, Li LM, Ward R, Pritchard JK (2003) Informativeness of genetic markers for inference of ancestry. *American Journal of Human Genetics*, 73(6):1402–1422, [doi:10.1086/380416](https://doi.org/10.1086/380416).
+<sup>[3]</sup>Rosenberg NA, Li LM, Ward R, Pritchard JK (2003) Informativeness of genetic markers for inference of ancestry. *American Journal of Human Genetics*, 73(6):1402–1422, [doi:10.1086/380416](https://doi.org/10.1086/380416).
 
-<sup>[13]</sup>Weir B, Cockerham, C (1984) Estimating F-Statistics for the Analysis of Population Structure. *Evolution* 38(6):1358-1370, [doi:10.2307/2408641](https://doi.org/10.2307/2408641).
+<sup>[4]</sup>Weir B, Cockerham, C (1984) Estimating F-Statistics for the Analysis of Population Structure. *Evolution* 38(6):1358-1370, [doi:10.2307/2408641](https://doi.org/10.2307/2408641).
 
-### Supporting Software
+### Published Marker collections and Allele Frequency Data
 
-<sup>[14]</sup>McKinney W (2010) Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference, 51-56*.
+<sup>[5]</sup>Rajeevan H, Soundararajan U, Kidd JR, Pakstis AJ, Kidd KK (2012) ALFRED: an allele frequency resource for research and teaching. *Nucleic Acids Research*, 40(D1): D1010-D1015, [doi:10.1093/nar/gkr924](https://doi.org/10.1093/nar/gkr924).
 
+<sup>[6]</sup>Kidd KK, Pakstis AJ, Speed WC, Lagace R, Wootton S, Chang J (2018) Selecting microhaplotypes optimized for different purposes. *Electrophoresis*, [doi:10.1002/elps.201800092](https://doi.org/10.1002/elps.201800092).
+
+<sup>[7]</sup>Kidd KK, Rajeevan H (2018) ALFRED data download. *The Allele Frequency Database*, https://alfred.med.yale.edu/alfred/selectDownload/Microhap_alleleF_198.txt. Accessed December 7, 2018.
+
+<sup>[8]</sup>van der Gaag KJ, de Leeuw RH, Laros JFJ, den Dunnen JT, de Knijff P (2018) Short hypervariable microhaplotypes: A novel set of very short high discriminating power loci without stutter artefacts. *Forensic Science International: Genetics*, 35:169-175, [doi:10.1016/j.fsigen.2018.05.008](https://doi.org/10.1016/j.fsigen.2018.05.008).
+
+<sup>[9]</sup>Staadig A, Tillmar A (2019) Evaluation of microhaplotypes—A promising new type of forensic marker. *The 28th Congress of the International Society for Forensic Genetics*, P597.
+
+<sup>[10]</sup>Hiroaki N, Fujii K, Kitayama T, Sekiguchi K, Nakanishi H, Saito K (2015) Approaches for identifying multiple-SNP haplotype blocks for use in human identification. *Legal Medicine*, 17(5):415-420, [doi:10.1016/j.legalmed.2015.06.003](https://doi.org/10.1016/j.legalmed.2015.06.003).
+
+<sup>[11]</sup>Chen P, Deng C, Li Z, Pu Y, Yang J, Yu Y, Li K, Li D, Liang W, Zhang L, Chen F (2019) A microhaplotypes panel for massively parallel sequencing analysis of DNA mixtures. *FSI: Genetics*, 40:140-149, [doi:10.1016/j.fsigen.2019.02.018](https://doi.org/10.1016/j.fsigen.2019.02.018).
+
+<sup>[12]</sup>Voskoboinik L, Motro U, Darvasi A (2018) Facilitating complex DNA mixture interpretation by sequencing highly polymorphic haplotypes. *FSI: Genetics*, 35:136-140, [doi:10.1016/j.fsigen.2018.05.001](https://doi.org/10.1016/j.fsigen.2018.05.001).
+
+<sup>[13]</sup>de la Puente M, Phillips C, Xavier C, Amigo J, Carracedo A, Parson W, Lareu MV (2020) Building a custom large-scale panel of novel microhaplotypes for forensic identification using MiSeq and Ion S5 massively parallel sequencing systems. *FSI: Genetics*, 45:102213, [doi:10.1016/j.fsigen.2019.102213](https://doi.org/10.1016/j.fsigen.2019.102213).
+
+<sup>[14]</sup>Auton A, Abecasis G, Altshuler D, et al. (2015) A global reference for human genetic variation. *Nature* 526:68–74, [doi:10.1038/nature15393](https://doi.org/10.1038/nature15393).
+
+<sup>[15]</sup>Gandotra N, Speed WC, Qin W, Tang Y, Pakstis AJ, Kidd KK, Scharfe C (2020) Validation of novel forensic DNA markers using multiplex microhaplotype sequencing. *Forensic Science International: Genetics*, **47**:102275, [doi:10.1016/j.fsigen.2020.102275](https://doi.org/10.1016/j.fsigen.2020.102275).
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
 [Pandas]: https://pandas.pydata.org
