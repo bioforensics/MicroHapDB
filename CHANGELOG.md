@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Error message when detail view is requested for a marker without frequency information (see #67).
+- Problematic haplotype frequencies for 4 mMHseq markers including SNPs whose rsIDs are not present in the original 1KGP data (see #73).
 
 
 ## [0.6] 2020-06-25

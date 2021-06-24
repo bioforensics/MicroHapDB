@@ -12,7 +12,7 @@ import pytest
 
 
 def test_assumptions():
-    assert len(microhapdb.frequencies) == 54347 + 366 + 137 + 33 + 103 + 67432 + 4737
+    assert len(microhapdb.frequencies) == 54347 + 366 + 137 + 33 + 103 + 66565 + 4737
 
 
 def test_allele_frequencies():
@@ -23,38 +23,38 @@ def test_allele_frequencies():
     array(['A,A,C', 'A,G,A', 'A,G,C', 'C,G,C'], dtype=object)
     >>> f[(f.Marker == 'mh15CP-003') & (f.Allele == 'A,A,C')]
                Marker Population Allele  Frequency
-    94224  mh15CP-003        ACB  A,A,C      0.057
-    94228  mh15CP-003        ASW  A,A,C      0.033
-    94232  mh15CP-003        BEB  A,A,C      0.238
-    94235  mh15CP-003        CDX  A,A,C      0.280
-    94239  mh15CP-003        CEU  A,A,C      0.293
-    94242  mh15CP-003        CHB  A,A,C      0.243
-    94246  mh15CP-003        CHS  A,A,C      0.262
-    94250  mh15CP-003        CLM  A,A,C      0.213
-    94254  mh15CP-003        ESN  A,A,C      0.040
-    94257  mh15CP-003        FIN  A,A,C      0.318
-    94261  mh15CP-003        GBR  A,A,C      0.286
-    94264  mh15CP-003        GIH  A,A,C      0.272
-    94267  mh15CP-003        GWD  A,A,C      0.018
-    94270  mh15CP-003        IBS  A,A,C      0.215
-    94273  mh15CP-003        ITU  A,A,C      0.245
-    94276  mh15CP-003        JPT  A,A,C      0.226
-    94280  mh15CP-003        KHV  A,A,C      0.268
-    94284  mh15CP-003        LWK  A,A,C      0.056
-    94287  mh15CP-003        MSL  A,A,C      0.047
-    94290  mh15CP-003        MXL  A,A,C      0.328
-    94294  mh15CP-003        PEL  A,A,C      0.235
-    94298  mh15CP-003        PJL  A,A,C      0.344
-    94301  mh15CP-003        PUR  A,A,C      0.221
-    94305  mh15CP-003        STU  A,A,C      0.157
-    94309  mh15CP-003        TSI  A,A,C      0.196
-    94312  mh15CP-003        YRI  A,A,C      0.028
+    93520  mh15CP-003        ACB  A,A,C      0.057
+    93524  mh15CP-003        ASW  A,A,C      0.033
+    93528  mh15CP-003        BEB  A,A,C      0.238
+    93531  mh15CP-003        CDX  A,A,C      0.280
+    93535  mh15CP-003        CEU  A,A,C      0.293
+    93538  mh15CP-003        CHB  A,A,C      0.243
+    93542  mh15CP-003        CHS  A,A,C      0.262
+    93546  mh15CP-003        CLM  A,A,C      0.213
+    93550  mh15CP-003        ESN  A,A,C      0.040
+    93553  mh15CP-003        FIN  A,A,C      0.318
+    93557  mh15CP-003        GBR  A,A,C      0.286
+    93560  mh15CP-003        GIH  A,A,C      0.272
+    93563  mh15CP-003        GWD  A,A,C      0.018
+    93566  mh15CP-003        IBS  A,A,C      0.215
+    93569  mh15CP-003        ITU  A,A,C      0.245
+    93572  mh15CP-003        JPT  A,A,C      0.226
+    93576  mh15CP-003        KHV  A,A,C      0.268
+    93580  mh15CP-003        LWK  A,A,C      0.056
+    93583  mh15CP-003        MSL  A,A,C      0.047
+    93586  mh15CP-003        MXL  A,A,C      0.328
+    93590  mh15CP-003        PEL  A,A,C      0.235
+    93594  mh15CP-003        PJL  A,A,C      0.344
+    93597  mh15CP-003        PUR  A,A,C      0.221
+    93601  mh15CP-003        STU  A,A,C      0.157
+    93605  mh15CP-003        TSI  A,A,C      0.196
+    93608  mh15CP-003        YRI  A,A,C      0.028
     >>> f.query('Marker == "mh15CP-003" and Allele == "A,A,C" and Population == "FIN"')
                Marker Population Allele  Frequency
-    94257  mh15CP-003        FIN  A,A,C      0.318
+    93553  mh15CP-003        FIN  A,A,C      0.318
     """
     af = microhapdb.frequencies
-    assert af.shape == (127155, 4)
+    assert af.shape == (126288, 4)
     result = af[af.Marker == 'mh21KK-315'].Allele.unique()
     assert len(result) == 8
     result = af[(af.Marker == 'mh21KK-315') & (af.Allele == 'A,C,T')]

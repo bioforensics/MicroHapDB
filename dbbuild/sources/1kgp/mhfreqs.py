@@ -8,6 +8,7 @@ import os
 import pandas
 import rsidx
 import sqlite3
+import sys
 
 
 def cli():
@@ -80,7 +81,7 @@ def compute_pop_counts(samples, haplo1, haplo2, samplepops):
     return popallelecounts
 
 
-def mhfreqs(rsids, vcffile, rsidxfile, samplepops):
+def mhfreqs(marker, rsids, vcffile, rsidxfile, samplepops):
     '''Estimate microhaplotype frequences from the 1KGP data
 
     Construct haplotypes for each marker, compute a tally of allelic
@@ -89,11 +90,26 @@ def mhfreqs(rsids, vcffile, rsidxfile, samplepops):
     '''
     samples, haplo1, haplo2 = construct_haplotypes(rsids, vcffile, rsidxfile)
     popallelecounts = compute_pop_counts(samples, haplo1, haplo2, samplepops)
+    numvar_counts = defaultdict(int)
+    exp_numvars = len(rsids)
     for population, allelecounts in popallelecounts.items():
         total = sum(allelecounts.values())
         for allele, count in sorted(allelecounts.items()):
+            obs_numvars = allele.count(',') + 1
+            numvar_counts[obs_numvars] += 1
+            if obs_numvars != exp_numvars:
+                continue
             freq = '{:.3f}'.format(count / total)
             yield population, allele, freq
+    assert len(numvar_counts) == 1
+    obs_numvars, count = list(numvar_counts.items())[0]
+    if obs_numvars != exp_numvars:
+        print(
+            f'WARNING: unexpected number of variants found for marker {marker}:',
+            f'expected {exp_numvars}, found {count} haplotypes with {obs_numvars} variants;',
+            'WARNING: discarding haplotypes with unexpected number of variants',
+            file=sys.stderr
+        )
 
 
 def get_indexes_for_marker(marker, path):
@@ -124,7 +140,7 @@ def main(args):
         vcf, rsidx = get_indexes_for_marker(marker, path=config['1kgp_dir'])
         if not os.path.exists(vcf) or not os.path.exists(rsidx):
             raise RuntimeError('VCF and/or RSIDX files do not exist')
-        for values in mhfreqs(rsids, vcf, rsidx, samplepops):
+        for values in mhfreqs(marker, rsids, vcf, rsidx, samplepops):
             print(marker, *values, sep='\t')
 
 

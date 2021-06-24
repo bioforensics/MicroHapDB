@@ -284,7 +284,7 @@ def test_main_marker_view_bad():
     ('--population=SA000009J', '--marker=mh13KK-218', None, 15),
     (None, '--marker=mh13KK-218', '--allele=C,T,C,T', 97),
     (None, '--marker=mh14PK-72639', None, 217),
-    (None, None, None, 127156)
+    (None, None, None, 126289)
 ])
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
     testargs = (pop, marker, allele)
