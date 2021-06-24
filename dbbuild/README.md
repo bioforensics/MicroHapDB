@@ -175,9 +175,9 @@ For example:
   Since there is not yet any publication associated with the data, MicroHapDB uses the label `ISFG2019:P597` for this source of data, (poster 597 at ISFG 2019).
 
 
-### `indel.tsv`
+### `indels.tsv`
 
-The `indel.tsv` file contains insertion/deletion variant data for any markers that include indels.
+The `indels.tsv` file contains insertion/deletion variant data for any markers that include indels.
 It includes the following fields.
 
 - `Marker`: the `Name` of the marker
@@ -185,7 +185,7 @@ It includes the following fields.
 - `Refr`: the allele represented in the reference genome
 - `Alt`: the alternate allele (or comma-separated list of alternate alleles) present in the marker definition
 
-For example, the entire `indel.tsv` file for ALFRED looks like this.
+For example, the entire `indels.tsv` file for ALFRED looks like this.
 
 ```
 Marker	VariantIndex	Refr	Alt
