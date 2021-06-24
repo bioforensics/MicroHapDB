@@ -8,6 +8,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Markers and population frequency data (1000 Genomes and proprietary) for the mMHseq 90-plex panel (see #68).
 - New `--extend-mode` option when displaying markers in `fasta` or `detail` mode (see #72).
 
+### Changed
+- Support for pandas>=1.2 added, support for Python 3.6 dropped (see #74).
+
 ### Fixed
 - Error message when detail view is requested for a marker without frequency information (see #67).
 - Problematic haplotype frequencies for 4 mMHseq markers including SNPs whose rsIDs are not present in the original 1KGP data (see #73).

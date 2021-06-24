@@ -63,10 +63,11 @@ def test_pop_table(capsys):
     masai = microhapdb.populations[microhapdb.populations.Name == 'Masai']
     microhapdb.population.print_table(masai)
     testout = '''
-        ID   Name  Source
- SA000854R  Masai  ALFRED
+       ID  Name Source
+SA000854R Masai ALFRED
 '''
     terminal = capsys.readouterr()
+    print(terminal.out)
     assert terminal.out.strip() == testout.strip()
 
 
@@ -74,12 +75,13 @@ def test_pop_table_multi(capsys):
     hanchinese = microhapdb.populations[microhapdb.populations.Name == 'Han']
     microhapdb.population.print_table(hanchinese)
     testout = '''
-               ID Name                        Source
- MHDBP-48c2cfb2aa  Han  10.1016/j.fsigen.2019.02.018
-        SA000001B  Han                        ALFRED
-        SA000009J  Han                        ALFRED
+              ID Name                       Source
+MHDBP-48c2cfb2aa  Han 10.1016/j.fsigen.2019.02.018
+       SA000001B  Han                       ALFRED
+       SA000009J  Han                       ALFRED
 '''
     terminal = capsys.readouterr()
+    print(terminal.out)
     assert terminal.out.strip() == testout.strip()
 
 
@@ -161,11 +163,11 @@ Japanese    (SA000010B; source=ALFRED)
 
 
 @pytest.mark.parametrize('ident,data', [
-    ('SA000019K', 'SA000019K  Russians  ALFRED'),
-    ('MHDBP-936bc36f79', 'MHDBP-936bc36f79  Asia  10.1016/j.fsigen.2018.05.008'),
-    ('MHDBP-7c055e7ee8', 'MHDBP-7c055e7ee8  Swedish  ISFG2019:P597'),
-    ('MHDBP-63967b883e', 'MHDBP-63967b883e  Japanese  10.1016/j.legalmed.2015.06.003'),
-    ('MHDBP-48c2cfb2aa', 'MHDBP-48c2cfb2aa  Han  10.1016/j.fsigen.2019.02.018'),
+    ('SA000019K', 'SA000019K Russians ALFRED'),
+    ('MHDBP-936bc36f79', 'MHDBP-936bc36f79 Asia 10.1016/j.fsigen.2018.05.008'),
+    ('MHDBP-7c055e7ee8', 'MHDBP-7c055e7ee8 Swedish ISFG2019:P597'),
+    ('MHDBP-63967b883e', 'MHDBP-63967b883e Japanese 10.1016/j.legalmed.2015.06.003'),
+    ('MHDBP-48c2cfb2aa', 'MHDBP-48c2cfb2aa  Han 10.1016/j.fsigen.2019.02.018'),
 ])
 def test_all_sources(ident, data, capsys):
     pop = microhapdb.populations[microhapdb.populations.ID == ident]

@@ -64,11 +64,11 @@ def test_allele_frequencies():
 
 
 @pytest.mark.parametrize('marker,pop,allele,data', [
-    ('mh22KK-064', 'SA000009J', 'A,A,T,AATAATT', 'mh22KK-064  SA000009J  A,A,T,AATAATT      0.828'),
-    ('mh06PK-24844', 'MHDBP-383d86606a', 'C,C,G,C,C,C,A,A,A,A', 'mh06PK-24844  MHDBP-383d86606a  C,C,G,C,C,C,A,A,A,A      0.005'),
-    ('mh20AT-40', 'MHDBP-7c055e7ee8', 'T,C,G', 'mh20AT-40  MHDBP-7c055e7ee8  T,C,G     0.0806'),
-    ('mh11NH-17', 'MHDBP-63967b883e', 'C,G,G', 'mh11NH-17  MHDBP-63967b883e  C,G,G      0.153'),
-    ('mh01CP-016', 'MHDBP-48c2cfb2aa', 'T,G,A', 'mh01CP-016  MHDBP-48c2cfb2aa  T,G,A     0.2916'),
+    ('mh22KK-064', 'SA000009J', 'A,A,T,AATAATT', 'mh22KK-064  SA000009J A,A,T,AATAATT      0.828'),
+    ('mh06PK-24844', 'MHDBP-383d86606a', 'C,C,G,C,C,C,A,A,A,A', 'mh06PK-24844 MHDBP-383d86606a C,C,G,C,C,C,A,A,A,A      0.005'),
+    ('mh20AT-40', 'MHDBP-7c055e7ee8', 'T,C,G', 'mh20AT-40 MHDBP-7c055e7ee8  T,C,G     0.0806'),
+    ('mh11NH-17', 'MHDBP-63967b883e', 'C,G,G', 'mh11NH-17 MHDBP-63967b883e  C,G,G      0.153'),
+    ('mh01CP-016', 'MHDBP-48c2cfb2aa', 'T,G,A', 'mh01CP-016 MHDBP-48c2cfb2aa  T,G,A     0.2916'),
 ])
 def test_all_sources(marker, pop, allele, data, capsys):
     arglist = ['frequency', '--marker', marker, '--population', pop, '--allele', allele]
