@@ -25,29 +25,28 @@ def subparser(subparsers):
         'frequency', description=desc, epilog=epilog, formatter_class=RawDescriptionHelpFormatter,
     )
     subparser.add_argument('--format', choices=['table', 'detail', 'mhpl8r'], default='table')
-    subparser.add_argument('--marker', metavar='ID', help='restrict frequencies by marker')
-    subparser.add_argument('--population', metavar='ID', help='restrict frequencies by population')
+    meg = subparser.add_mutually_exclusive_group()
+    meg.add_argument('--marker', metavar='ID', nargs='+', help='restrict frequencies by marker')
+    meg.add_argument('--panel', metavar='FILE', help='restrict frequencies to markers listed in FILE, one ID per line')
+    subparser.add_argument('--population', metavar='ID', nargs='+', help='restrict frequencies by population')
     subparser.add_argument('--allele', metavar='ID', help='restrict frequencies by allele')
 
 
 def main(args):
     query_args = list()
+    result = microhapdb.frequencies
     if args.marker:
-        markerid = standardize_marker_ids([args.marker])
-        criterion = 'Marker == "{m:s}"'.format(m=markerid.iloc[0])
-        query_args.append(criterion)
+        markerids = standardize_marker_ids(args.marker)
+        result = result[result.Marker.isin(markerids)]
+    if args.panel:
+        with open(args.panel, 'r') as fh:
+            markerids = fh.read().strip().split()
+        result = result[result.Marker.isin(markerids)]
     if args.population:
-        popid = standardize_population_ids([args.population])
-        criterion = 'Population == "{p:s}"'.format(p=popid.iloc[0])
-        query_args.append(criterion)
+        popids = standardize_population_ids(args.population)
+        result = result[result.Population.isin(popids)]
     if args.allele:
-        criterion = 'Allele == "{a:s}"'.format(a=args.allele)
-        query_args.append(criterion)
-    if len(query_args) > 0:
-        query = ' and '.join(query_args)
-        result = microhapdb.frequencies.query(query, engine='python')
-    else:
-        result = microhapdb.frequencies
+        result = result[result.Allele == args.allele]
     if args.format == 'table':
         print(result.to_string(index=False))
     elif args.format == 'detail':
