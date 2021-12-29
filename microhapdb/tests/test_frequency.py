@@ -6,8 +6,9 @@
 # -----------------------------------------------------------------------------
 
 
+from io import StringIO
 import microhapdb
-from microhapdb.population import standardize_ids
+import pandas
 import pytest
 
 
@@ -77,3 +78,32 @@ def test_all_sources(marker, pop, allele, data, capsys):
     terminal = capsys.readouterr()
     print(terminal.out)
     assert data in terminal.out
+
+
+def test_mhpl8r(capsys):
+    arglist = ['frequency', '--marker', 'mh02USC-2pA', '--population', 'JPT', '--format', 'mhpl8r']
+    args = microhapdb.cli.get_parser().parse_args(arglist)
+    microhapdb.cli.frequency.main(args)
+    terminal = capsys.readouterr()
+    result = pandas.read_csv(StringIO(terminal.out), sep='\t')
+    assert result.shape == (4, 3)
+    assert result.Haplotype.iloc[0] == 'A,A,G,A'
+    assert result.Frequency.iloc[0] == pytest.approx(0.005)
+
+
+def test_mhpl8r_multi_pop(capsys):
+    arglist = ['frequency', '--marker', 'mh02USC-2pA', '--format', 'mhpl8r']
+    args = microhapdb.cli.get_parser().parse_args(arglist)
+    microhapdb.cli.frequency.main(args)
+    terminal = capsys.readouterr()
+    assert 'warning: frequencies for 26 populations recovered, expected only 1' in terminal.err
+
+
+def test_bad_format():
+    arglist = ['frequency', '--marker', 'mh02USC-2pA', '--population', 'JPT', '--format', 'detail']
+    args = microhapdb.cli.get_parser().parse_args(arglist)
+    with pytest.raises(NotImplementedError):
+        microhapdb.cli.frequency.main(args)
+    args.format = 'BoGuS'
+    with pytest.raises(ValueError, match=r'unsupported view format "BoGuS"'):
+        microhapdb.cli.frequency.main(args)

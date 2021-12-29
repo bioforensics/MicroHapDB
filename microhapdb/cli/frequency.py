@@ -8,6 +8,7 @@
 from argparse import RawDescriptionHelpFormatter
 import microhapdb
 from microhapdb.retrieve import standardize_marker_ids, standardize_population_ids
+import sys
 from textwrap import dedent
 
 
@@ -23,7 +24,7 @@ def subparser(subparsers):
     subparser = subparsers.add_parser(
         'frequency', description=desc, epilog=epilog, formatter_class=RawDescriptionHelpFormatter,
     )
-    subparser.add_argument('--format', choices=['table', 'detail'], default='table')
+    subparser.add_argument('--format', choices=['table', 'detail', 'mhpl8r'], default='table')
     subparser.add_argument('--marker', metavar='ID', help='restrict frequencies by marker')
     subparser.add_argument('--population', metavar='ID', help='restrict frequencies by population')
     subparser.add_argument('--allele', metavar='ID', help='restrict frequencies by allele')
@@ -47,4 +48,15 @@ def main(args):
         result = microhapdb.frequencies.query(query, engine='python')
     else:
         result = microhapdb.frequencies
-    print(result.to_string(index=False))
+    if args.format == 'table':
+        print(result.to_string(index=False))
+    elif args.format == 'detail':
+        raise NotImplementedError('detail format not yet implemented')
+    elif args.format == 'mhpl8r':
+        npop = len(result.Population.unique())
+        if npop > 1:
+            print(f'warning: frequencies for {npop} populations recovered, expected only 1', file=sys.stderr)
+        result = result[['Marker', 'Allele', 'Frequency']].rename(columns={'Allele': 'Haplotype'})
+        result.to_csv(sys.stdout, sep="\t", index=False)
+    else:
+        raise ValueError(f'unsupported view format "{args.format}"')

@@ -7,7 +7,7 @@
 
 from argparse import RawDescriptionHelpFormatter
 import microhapdb
-from microhapdb.marker import print_detail, print_table, print_fasta
+from microhapdb.marker import print_detail, print_table, print_fasta, print_offsets
 from textwrap import dedent
 import sys
 
@@ -41,7 +41,7 @@ def subparser(subparsers):
     subparser = subparsers.add_parser(
         'marker', description=desc, epilog=epilog, formatter_class=RawDescriptionHelpFormatter,
     )
-    subparser.add_argument('--format', choices=['table', 'detail', 'fasta'], default='table')
+    subparser.add_argument('--format', choices=['table', 'detail', 'fasta', 'offsets'], default='table')
     subparser.add_argument(
         '--ae-pop', metavar='POP', help='specify the 1000 Genomes population from which to report '
         'effective number of alleles in the "Ae" column; by default, the Ae value averaged over '
@@ -119,6 +119,8 @@ def main(args):
         print_detail(result, delta=args.delta, minlen=args.min_length, extendmode=args.extend_mode)
     elif args.format == 'fasta':
         print_fasta(result, delta=args.delta, minlen=args.min_length, extendmode=args.extend_mode)
+    elif args.format == 'offsets':
+        print_offsets(result, delta=args.delta, minlen=args.min_length, extendmode=args.extend_mode)
     else:
         raise ValueError(f'unsupported view format "{args.format}"')
     if args.ae_pop:
