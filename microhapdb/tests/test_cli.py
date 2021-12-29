@@ -7,9 +7,11 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
+from io import StringIO
 import microhapdb
 from microhapdb.cli import get_parser
 from microhapdb.util import data_file
+import pandas
 import pytest
 from tempfile import NamedTemporaryFile
 
@@ -436,3 +438,18 @@ mh18KKCS-293 MHDBM-350bd971    GRCh37 chr18 76089731,76089843,76089884,76089885,
     obs_out = terminal.out
     print(obs_out)
     assert exp_out.strip() == obs_out.strip()
+
+
+def test_marker_offsets_cli(capsys):
+    arglist = [
+        'marker', '--format=offsets', '--delta=25', '--min-length=200', 'mh03AT-09', 'mh11KK-180',
+        'mh13KK-217', 'mh07USC-7qC'
+    ]
+    args = get_parser().parse_args(arglist)
+    microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    result = pandas.read_csv(StringIO(terminal.out), sep='\t')
+    assert result.shape == (15, 2)
+    observed = list(result.Offset)
+    expected = [85, 114, 66, 95, 122, 123, 134, 25, 145, 203, 218, 25, 65, 179, 217]
+    assert observed == expected

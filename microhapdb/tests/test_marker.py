@@ -6,8 +6,10 @@
 # -----------------------------------------------------------------------------
 
 
+from io import StringIO
 import microhapdb
 from microhapdb.marker import standardize_ids
+import pandas
 import pytest
 
 
@@ -578,3 +580,15 @@ def test_marker_extendmode_bad():
         microhapdb.marker.print_fasta(markers, delta=20, minlen=175, extendmode="NotAnInt")
     with pytest.raises(TypeError, match=r'argument must be a string'):
         microhapdb.marker.print_fasta(markers, delta=20, minlen=175, extendmode=None)
+
+
+def test_marker_offsets(capsys):
+    ids = ['mh03AT-09', 'mh11KK-180', 'mh13KK-217', 'mh07USC-7qC']
+    markers = microhapdb.markers[microhapdb.markers.Name.isin(ids)]
+    microhapdb.marker.print_offsets(markers, delta=25, minlen=200)
+    terminal = capsys.readouterr()
+    result = pandas.read_csv(StringIO(terminal.out), sep='\t')
+    assert result.shape == (15, 2)
+    observed = list(result.Offset)
+    expected = [85, 114, 66, 95, 122, 123, 134, 25, 145, 203, 218, 25, 65, 179, 217]
+    assert observed == expected
