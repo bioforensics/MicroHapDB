@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Support for pandas>=1.2 added, support for Python 3.6 dropped (see #74).
+- The `--marker` and `--population` flags for `microhapdb frequency` now support multiple arguments (see #81).
 
 ### Fixed
 - Error message when detail view is requested for a marker without frequency information (see #67).
