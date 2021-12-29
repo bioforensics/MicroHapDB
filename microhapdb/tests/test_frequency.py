@@ -10,6 +10,7 @@ from io import StringIO
 import microhapdb
 import pandas
 import pytest
+from tempfile import NamedTemporaryFile
 
 
 def test_assumptions():
@@ -91,12 +92,29 @@ def test_mhpl8r(capsys):
     assert result.Frequency.iloc[0] == pytest.approx(0.005)
 
 
+def test_mhpl8r_panel(capsys):
+    with NamedTemporaryFile(mode="wt") as tempfile:
+        print('mh02USC-2pA', 'mh08USC-8qA', 'mh17USC-17qA', sep='\n', file=tempfile, flush=True)
+        arglist = ['frequency', '--panel', tempfile.name, '--population', 'GBR', '--format', 'mhpl8r']
+        args = microhapdb.cli.get_parser().parse_args(arglist)
+        microhapdb.cli.frequency.main(args)
+    terminal = capsys.readouterr()
+    result = pandas.read_csv(StringIO(terminal.out), sep='\t')
+    print(result)
+    assert result.shape == (13, 3)
+    assert result.Haplotype.iloc[7] == 'A,G,T'
+    assert result.Frequency.iloc[7] == pytest.approx(0.429)
+
+
 def test_mhpl8r_multi_pop(capsys):
-    arglist = ['frequency', '--marker', 'mh02USC-2pA', '--format', 'mhpl8r']
+    arglist = [
+        'frequency', '--marker', 'mh02USC-2pA', 'mh08USC-8qA', 'mh17USC-17qA',
+        '--population', 'CLM', 'GIH', 'ASW', 'CEU', '--format', 'mhpl8r'
+    ]
     args = microhapdb.cli.get_parser().parse_args(arglist)
     microhapdb.cli.frequency.main(args)
     terminal = capsys.readouterr()
-    assert 'warning: frequencies for 26 populations recovered, expected only 1' in terminal.err
+    assert 'warning: frequencies for 4 populations recovered, expected only 1' in terminal.err
 
 
 def test_bad_format():
