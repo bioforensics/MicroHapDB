@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Markers and population frequency data (1000 Genomes and proprietary) for the mMHseq 90-plex panel (see #68).
 - New `--extend-mode` option when displaying markers in `fasta` or `detail` mode (see #72).
+- New options for preparing MicroHapDB data for import into MicroHapulator (see #80).
 
 ### Changed
 - Support for pandas>=1.2 added, support for Python 3.6 dropped (see #74).
