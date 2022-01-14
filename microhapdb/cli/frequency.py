@@ -104,7 +104,7 @@ def main(args):
         result.to_csv(sys.stdout, sep="\t", index=False)
     elif args.format == 'efm':
         if args.population is None or len(args.population) != 1:
-            raise ValueError("must specify one and only one population for --format=efm")
+            raise ValueError("must specify one and only one population with --format=efm")
         result = construct_frequency_table(args.population[0], markerids)
         result.to_csv(sys.stdout)
     else:
