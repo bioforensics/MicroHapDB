@@ -117,6 +117,33 @@ def test_mhpl8r_multi_pop(capsys):
     assert 'warning: frequencies for 4 populations recovered, expected only 1' in terminal.err
 
 
+def test_efm(capsys):
+    arglist = [
+        'frequency', '--population=CEU', '--format=efm', '--marker', 'mh01USC-1pD', 'mh17USC-17pA',
+        'mh15USC-15qA'
+    ]
+    args = microhapdb.cli.get_parser().parse_args(arglist)
+    microhapdb.cli.frequency.main(args)
+    terminal = capsys.readouterr()
+    result = pandas.read_csv(StringIO(terminal.out))
+    print(result)
+    assert result.shape == (13, 4)
+    assert result['Allele'].iloc[3] == "C,T,C"
+    assert result['mh01USC-1pD'].iloc[3] == pytest.approx(0.101)
+    assert pandas.isna(result['mh15USC-15qA'].iloc[3])
+    assert result['mh17USC-17pA'].iloc[3] == pytest.approx(0.02)
+
+
+def test_efm_multi_pop():
+    arglist = [
+        'frequency', '--population', 'CEU', 'IBS', '--format=efm', '--marker', 'mh01USC-1pD',
+        'mh17USC-17pA', 'mh15USC-15qA'
+    ]
+    args = microhapdb.cli.get_parser().parse_args(arglist)
+    with pytest.raises(ValueError, match="must specify one and only one population with --format=efm"):
+        microhapdb.cli.frequency.main(args)
+
+
 def test_bad_format():
     arglist = ['frequency', '--marker', 'mh02USC-2pA', '--population', 'JPT', '--format', 'detail']
     args = microhapdb.cli.get_parser().parse_args(arglist)
