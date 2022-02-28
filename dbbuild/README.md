@@ -46,6 +46,25 @@ If the Snakemake build process completes successfully, copy the newly created da
 cp *.tsv ../microhapdb/data/
 ```
 
+> **NOTE**: If you run the Snakemake command and it says there is nothing to be done, you may need to delete some of the .tsv files to trigger a rebuild.
+
+If adding new markers to MicroHapDB, you'll want to perform a second database rebuild.
+The first build and copy adds the markers to the database.
+You'll then want to go to the `dbbuild/sources/1kgp/` directory, recompute A<sub>e</sub> and I<sub>n</sub> statistics, and then run the root build process again.
+
+```
+cd sources/1kgp/
+rm frequency.tsv marker-informativeness.tsv marker-aes.tsv marker-fst.tsv marker-rsids-MicroHapDB-latest.tsv
+snakemake --cores 1 -p all
+cd ../../
+rm marker.tsv frequency.tsv
+snakemake --configfile config.json --cores 1 -p tables
+cp *.tsv sources/1kgp/marker-aes.tsv ../microhapdb/data/
+```
+
+> **NOTE**: The `marker.tsv` file contains A<sub>e</sub> values aggregated over 26 global populations, whereas the `sources/1kgp/marker-aes.tsv` contains per-population A<sub>e</sub> values for each marker.
+
+
 ## The Long Version: Sources
 
 Each source of microhap data has a dedicated directory located in `dbbuild/sources/`.
