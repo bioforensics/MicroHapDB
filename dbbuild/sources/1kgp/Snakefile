@@ -38,18 +38,18 @@ rule aes:
 
 rule markerrsids:
     input: 'get-marker-rsids.py'
-    output: 'marker-rsids-MicroHapDB-0.7.tsv'
-    shell: './get-marker-rsids.py > marker-rsids-MicroHapDB-0.7.tsv'
+    output: 'marker-rsids-MicroHapDB-latest.tsv'
+    shell: './get-marker-rsids.py > marker-rsids-MicroHapDB-latest.tsv'
 
 
 rule freqs:
     input:
         'mhfreqs.py',
         'sample-pops.tsv',
-        'marker-rsids-MicroHapDB-0.7.tsv'
+        'marker-rsids-MicroHapDB-latest.tsv'
     output:
         'frequency.tsv'
-    shell: './mhfreqs.py sample-pops.tsv marker-rsids-MicroHapDB-0.7.tsv > frequency.tsv'
+    shell: './mhfreqs.py sample-pops.tsv marker-rsids-MicroHapDB-latest.tsv > frequency.tsv'
 
 
 rule informativeness:
@@ -58,13 +58,13 @@ rule informativeness:
         'infocalc',
         'cleanup-in.py',
         'sample-pops.tsv',
-        'marker-rsids-MicroHapDB-0.7.tsv'
+        'marker-rsids-MicroHapDB-latest.tsv'
     output:
         'marker-informativeness.tsv',
         'individual-haplotypes.txt'
     shell:
         '''
-        ./prepinfocalc.py sample-pops.tsv marker-rsids-MicroHapDB-0.7.tsv > individual-haplotypes.txt
+        ./prepinfocalc.py sample-pops.tsv marker-rsids-MicroHapDB-latest.tsv > individual-haplotypes.txt
         ./infocalc -column 2 -numpops 26 -input individual-haplotypes.txt -output marker-informativeness.txt
         ./cleanup-in.py < marker-informativeness.txt > marker-informativeness.tsv
         '''
