@@ -1,7 +1,7 @@
 # Extending MicroHapDB or Rebuilding from Scratch
 
 MicroHapDB is a collection of microhaplotype marker and allele frequency data integrated from a variety of public sources.
-Folks interested only in using public data will likely be most interested in the data files in the `microhapdb/data/` director, and the Python wrapper MicroHapDB provides for querying these files.
+Folks interested only in using public data will likely be most interested in the data files in the `microhapdb/data/` directory, and the Python wrapper MicroHapDB provides for querying these files.
 This directory describes how those data files were constructed, and includes instructions for rebuilding the database from scratch
 We expect this will be helpful for folks who want to reproduce the database build or who want to integrate additional public or private data.
 

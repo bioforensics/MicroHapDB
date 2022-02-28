@@ -8,7 +8,7 @@ Daniel Standage, 2018-2022
 https://github.com/bioforensics/microhapdb
 
 **MicroHapDB** is a portable database intended for scientists and researchers interested in microhaplotypes for forensic analysis.
-The database includes a comprehensive collection of marker and allele frequency data from numerous databases and published research articles.<sup>[5-15]</sup>
+The database includes a comprehensive collection of marker and allele frequency data from numerous databases and published research articles.<sup>[5-16]</sup>
 Effective number of allele (*A<sub>e</sub>*)<sup>[2]</sup> and informativeness for assignment (*I<sub>n</sub>*)<sup>[3]</sup> statistics are included so that markers can be ranked for different forensic applications.
 The entire contents of the database are distributed with each copy of MicroHapDB, and instructions for adding private data to a local copy of the database are provided.
 MicroHapDB is designed to be user-friendly for both practitioners and researchers, supporting a range of access methods from browsing to simple text queries to complex queries to full programmatic access via a Python API.
@@ -167,6 +167,8 @@ If you use this database, please cite our work.
 <sup>[14]</sup>Auton A, Abecasis G, Altshuler D, et al. (2015) A global reference for human genetic variation. *Nature* 526:68–74, [doi:10.1038/nature15393](https://doi.org/10.1038/nature15393).
 
 <sup>[15]</sup>Gandotra N, Speed WC, Qin W, Tang Y, Pakstis AJ, Kidd KK, Scharfe C (2020) Validation of novel forensic DNA markers using multiplex microhaplotype sequencing. *Forensic Science International: Genetics*, **47**:102275, [doi:10.1016/j.fsigen.2020.102275](https://doi.org/10.1016/j.fsigen.2020.102275).
+
+<sup>[16]</sup>Sun S, Liu Y, Li J, Yang Z, Wen D, Liang W, Yan Y, Yu H, Cai J, Zha L (2020) Development and application of a nonbinary SNP-based microhaplotype panel for paternity testing involving close relatives. *FSI: Genetics*, 46:102255, [doi:10.1016/j.fsigen.2020.102255](https://doi.org/10.1016/j.fsigen.2020.102255).
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
 [Pandas]: https://pandas.pydata.org
