@@ -7,12 +7,12 @@ download_1kgp()
     local rooturl="ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/"
     mkdir -p ${rootdir}/1000Genomes/
     for i in {1..22}; do
-        url="${rooturl}/ALL.chr${i}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz"
+        url="${rooturl}/ALL.chr${i}.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz"
         filename="${rootdir}/1000Genomes/chr${i}.vcf.gz"
         wget -O ${filename} ${url}
         wget -O ${filename}.tbi ${url}.tbi
     done
-    url="${rooturl}/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1b.20130502.genotypes.vcf.gz"
+    url="${rooturl}/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz"
     filename="${rootdir}/1000Genomes/chrX.vcf.gz"
     wget -O ${filename} ${url}
     wget -O ${filename}.tbi ${url}.tbi
