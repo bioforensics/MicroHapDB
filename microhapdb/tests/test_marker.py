@@ -25,7 +25,7 @@ def test_standardize_ids():
 
 
 def test_assumptions():
-    assert len(microhapdb.markers) == 198 + 15 + 40 + 26 + (11 - 1) + 10 + 118 + 90 + 25
+    assert len(microhapdb.markers) == 198 + 15 + 40 + 26 + (11 - 1) + 10 + 118 + 90 + 25+ 23
 
 
 def test_markers():
@@ -510,6 +510,7 @@ def test_set_reference():
         '22137318,22137395,22137411,22137453',
         '22137395,22137411,22137453',
         '23068395,23068425,23068433',
+        '24223721,24223752',
     ]
     coords38 = [
         '24557354,24557431,24557447,24557489',
