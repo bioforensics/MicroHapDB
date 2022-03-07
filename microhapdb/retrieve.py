@@ -81,10 +81,10 @@ def by_id(ident):
 
     >>> by_id('mh17KK-014')
                Name          PermID Reference  Chrom                  Offsets      Ae      In     Fst  Source
-    422  mh17KK-014  MHDBM-83a239de    GRCh38  chr17  4497060,4497088,4497096  2.0215  0.6423  0.3014  ALFRED
+    440  mh17KK-014  MHDBM-83a239de    GRCh38  chr17  4497060,4497088,4497096  2.0215  0.6423  0.3014  ALFRED
     >>> by_id('SI664726F')
                Name          PermID Reference  Chrom                  Offsets      Ae      In     Fst  Source
-    422  mh17KK-014  MHDBM-83a239de    GRCh38  chr17  4497060,4497088,4497096  2.0215  0.6423  0.3014  ALFRED
+    440  mh17KK-014  MHDBM-83a239de    GRCh38  chr17  4497060,4497088,4497096  2.0215  0.6423  0.3014  ALFRED
     >>> by_id('MHDBM-ea520d26')
                Name          PermID Reference  Chrom                              Offsets      Ae      In     Fst  Source
     448  mh18KK-285  MHDBM-ea520d26    GRCh38  chr18  24557354,24557431,24557447,24557489  2.7524  0.1721  0.0836  ALFRED
