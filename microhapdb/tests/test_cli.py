@@ -109,7 +109,7 @@ def test_main_marker_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split('\n')
-    assert len(outlines) == 1 + 198 + 15 + 40 + 26 + (11 - 1) + 10 + 118 + 90 + 25
+    assert len(outlines) == 1 + 198 + 15 + 40 + 26 + (11 - 1) + 10 + 118 + 90 + 25 + 20
 
 
 def test_main_marker_detail(capsys):
@@ -134,10 +134,12 @@ mh19USC-19pB MHDBM-76427274    GRCh38 chr19                   16040864,16040894,
 mh19KKCS-299 MHDBM-a70896aa    GRCh38 chr19 22546697,22546702,22546748,22546779,22546810,22546829,22546850    NaN    NaN     NaN   10.1016/j.fsigen.2020.102275
   mh19KK-299 MHDBM-8cbeb11c    GRCh38 chr19                   22546697,22546748,22546779,22546810,22546850 4.1592 0.2335  0.1102                         ALFRED
    mh19AT-47 MHDBM-8f439540    GRCh38 chr19                                     22546697,22546748,22546779 2.4025 0.1298  0.1170                  ISFG2019:P597
+ mh19ZHA-007 MHDBM-afb5b4d1    GRCh38 chr19                            28397315,28397408,28397447,28397455 3.7262 0.1551 -0.0007            10.1098/rsos.191937
 mh19USC-19qA MHDBM-f757e745    GRCh38 chr19                            33273771,33273785,33273811,33273816 3.3219 0.1127  0.0880   10.1016/j.fsigen.2019.102213
   mh19KK-301 MHDBM-2069446a    GRCh38 chr19                            50938487,50938502,50938526,50938550 1.9707 0.2673  0.1698                         ALFRED
 mh19KKCS-300 MHDBM-bc8b7213    GRCh38 chr19 50947786,50947789,50947790,50947830,50947876,50947877,50947967    NaN    NaN     NaN   10.1016/j.fsigen.2020.102275
   mh19KK-057 MHDBM-eb558c37    GRCh38 chr19                                     51654948,51655025,51655062 2.3266 0.0667  0.0428                         ALFRED
+ mh19ZHA-009 MHDBM-346aa500    GRCh38 chr19                   53129072,53129075,53129133,53129203,53129249 3.8739 0.1405 -0.0241            10.1098/rsos.191937
 mh19USC-19qB MHDBM-7b40359b    GRCh38 chr19                                     53714387,53714389,53714413 4.0756 0.1368  0.0163   10.1016/j.fsigen.2019.102213
 '''
     obs_out = terminal.out
@@ -289,7 +291,7 @@ def test_main_marker_view_bad():
     ('--population=SA000009J', '--marker=mh13KK-218', None, 15),
     (None, '--marker=mh13KK-218', '--allele=C,T,C,T', 97),
     (None, '--marker=mh14PK-72639', None, 217),
-    (None, None, None, 130420)
+    (None, None, None, 133584)
 ])
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
     testargs = (pop, marker, allele)
