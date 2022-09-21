@@ -467,3 +467,14 @@ def test_marker_offsets_cli(capsys):
         1669680, 1669738, 1669753, 46291794, 46291834, 46291948, 46291986
     ]
     assert observed == expected
+
+
+def test_marker_offsets_37_cli(capsys):
+    arglist = ['marker', '--GRCh37', '--format=offsets', 'mh01USC-1qA', 'mh02USC-2qA', 'mh03USC-3qA']
+    args = get_parser().parse_args(arglist)
+    microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    result = pandas.read_csv(StringIO(terminal.out), sep='\t')
+    assert result.shape == (10, 4)
+    assert list(result.columns) == ["Marker", "Offset", "Chrom", "OffsetHg37"]
+    assert list(result.OffsetHg37)[:5] == [167126967, 167126986, 103092502, 103092512, 103092574]

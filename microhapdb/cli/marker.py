@@ -120,7 +120,8 @@ def main(args):
     elif args.format == 'fasta':
         print_fasta(result, delta=args.delta, minlen=args.min_length, extendmode=args.extend_mode)
     elif args.format == 'offsets':
-        print_offsets(result, delta=args.delta, minlen=args.min_length, extendmode=args.extend_mode)
+        refr = "Hg37" if args.GRCh37 else "Hg38"
+        print_offsets(result, delta=args.delta, minlen=args.min_length, extendmode=args.extend_mode, refr=refr)
     else:
         raise ValueError(f'unsupported view format "{args.format}"')
     if args.ae_pop:
