@@ -12,3 +12,4 @@ scratch/
 .snakemake/
 .DS_Store
 coverage.xml
+.vscode/

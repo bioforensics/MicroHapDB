@@ -457,7 +457,13 @@ def test_marker_offsets_cli(capsys):
     microhapdb.cli.main(args)
     terminal = capsys.readouterr()
     result = pandas.read_csv(StringIO(terminal.out), sep='\t')
-    assert result.shape == (15, 2)
+    assert result.shape == (15, 4)
     observed = list(result.Offset)
     expected = [85, 114, 66, 95, 122, 123, 134, 25, 145, 203, 218, 25, 65, 179, 217]
+    assert observed == expected
+    observed = list(result.OffsetHg38)
+    expected = [
+        131927127, 131927156, 151821663, 151821692, 151821719, 151821720, 151821731, 1669560,
+        1669680, 1669738, 1669753, 46291794, 46291834, 46291948, 46291986
+    ]
     assert observed == expected

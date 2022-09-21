@@ -354,7 +354,7 @@ def print_offsets(table, delta=10, minlen=80, extendmode=0):
     offsets = list()
     for n, row in table.iterrows():
         amplicon = TargetAmplicon(row, delta=delta, minlen=minlen, extendmode=extendmode)
-        for offset in amplicon.amplicon_offsets:
-            offsets.append([row.Name, offset])
-    offsetsdf = pandas.DataFrame(offsets, columns=["Marker", "Offset"])
+        for offset, offset38 in zip(amplicon.amplicon_offsets, amplicon.offsets38):
+            offsets.append([row.Name, offset, amplicon.data.Chrom, offset38])
+    offsetsdf = pandas.DataFrame(offsets, columns=["Marker", "Offset", "Chrom", "OffsetHg38"])
     offsetsdf.to_csv(sys.stdout, sep="\t", index=False)
