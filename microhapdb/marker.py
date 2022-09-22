@@ -350,11 +350,11 @@ def print_detail(table, delta=10, minlen=80, extendmode=0):
         print(amplicon)
 
 
-def print_offsets(table, delta=10, minlen=80, extendmode=0):
+def print_offsets(table, delta=10, minlen=80, extendmode=0, refr="Hg38"):
     offsets = list()
     for n, row in table.iterrows():
         amplicon = TargetAmplicon(row, delta=delta, minlen=minlen, extendmode=extendmode)
-        for offset in amplicon.amplicon_offsets:
-            offsets.append([row.Name, offset])
-    offsetsdf = pandas.DataFrame(offsets, columns=["Marker", "Offset"])
+        for offset, refr_offset in zip(amplicon.amplicon_offsets, amplicon.offsets):
+            offsets.append([row.Name, offset, amplicon.data.Chrom, refr_offset])
+    offsetsdf = pandas.DataFrame(offsets, columns=["Marker", "Offset", "Chrom", f"Offset{refr}"])
     offsetsdf.to_csv(sys.stdout, sep="\t", index=False)

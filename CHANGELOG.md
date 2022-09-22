@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Added
+- 25 marker definitions from Sun et al 2020 (see #87).
+- 23 marker definitions from Jin et al 2020 (see #89).
+- 20 marker definitions from Kureshi et al 2020 (see #90).
+- GRCh38 offsets to `microhapdb marker --format=offsets` (see #92).
+
+## Changed
+- Minor improvements to database build and corresponding documentation (see #88).
+
+
 ## [0.7] 2022-01-20
 
 ### Added
