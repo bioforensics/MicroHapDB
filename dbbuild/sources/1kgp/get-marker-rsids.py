@@ -21,6 +21,8 @@ for n, row in microhapdb.markers.iterrows():
         'rs36190610': 'rs72629020',
         'rs10987426': 'rs113012024',
         'rs71785313': 'rs143830837',
+        'rs602427': 'rs74812635',
+        'rs602875': 'rs75324027',
     }
     for newid, oldid in dbSNP_to_1kgp.items():
         rsids = rsids.replace(newid, oldid)
