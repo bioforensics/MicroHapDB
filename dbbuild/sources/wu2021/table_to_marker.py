@@ -17,4 +17,4 @@ for i, row in table.iterrows():
     newtable.append(newrow)
 colnames = ["Name", "Xref", "NumVars", "Chrom", "OffsetsHg37", "OffsetsHg38", "VarRef"]
 markers = pd.DataFrame(newtable, columns=colnames)
-markers.to_csv("marker.tsv", sep="\t", index=False)
+markers.to_csv("marker-orig.tsv", sep="\t", index=False)
