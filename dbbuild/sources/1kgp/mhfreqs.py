@@ -46,6 +46,9 @@ def construct_haplotypes(rsids, vcf, rsidxfile):
                     samples = line.strip().split()[9:]
                 continue
             fields = line.strip().split()
+            rsid = fields[2]
+            if rsid not in rsids:
+                continue
             ref = fields[3]
             alt = fields[4].split(',')
             samplegts = fields[9:]

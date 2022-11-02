@@ -8,7 +8,7 @@ NBFAC, 2018-2022
 https://github.com/bioforensics/microhapdb
 
 **MicroHapDB** is a portable database intended for scientists and researchers interested in microhaplotypes for forensic analysis.
-The database includes a comprehensive collection of marker and allele frequency data from numerous databases and published research articles.<sup>[5-18]</sup>
+The database includes a comprehensive collection of marker and allele frequency data from numerous databases and published research articles.<sup>[5-19]</sup>
 Effective number of allele (*A<sub>e</sub>*)<sup>[2]</sup> and informativeness for assignment (*I<sub>n</sub>*)<sup>[3]</sup> statistics are included so that markers can be ranked for different forensic applications.
 The entire contents of the database are distributed with each copy of MicroHapDB, and instructions for adding private data to a local copy of the database are provided.
 MicroHapDB is designed to be user-friendly for both practitioners and researchers, supporting a range of access methods from browsing to simple text queries to complex queries to full programmatic access via a Python API.
@@ -176,6 +176,8 @@ MicroHapDB was created and is maintained by the Bioinformatics Group at the Nati
 <sup>[17]</sup>Kureshi A, Li J, Wen D, Sun S, Yang Z, Zha L (2020) Construction and forensic application of 20 highly polymorphic microhaplotypes. *Royal Society Open Science*, **7**(5):191937, [doi:10.1098/rsos.191937](https://doi.org/10.1098/rsos.191937).
 
 <sup>[18]</sup>Jin XY, Cui W, Chen C, Guo YX, Zhang XR, Xing GH, Lan JW, Zhu BF (2020) Developing and population analysis of a new multiplex panel of 18 microhaplotypes and compound markers using next generation sequencing and its application in the Shaanxi Han population. *Electrophoresis*, **41**(13-14):1230-1237, [doi:10.1002/elps.201900451](https://doi.org/10.1002/elps.201900451).
+
+<sup>[19]</sup>Wu R, Li H, Li R, Peng D, Wang N, Shen X, Sun H (2021) Identification and sequencing of 59 highly polymorphic microhaplotypes for analysis of DNA mixtures. *International Journal of Legal Medicine*, 135:1137-1149, [doi:10.1007/s00414-020-02483-x](https://doi.org/10.1007/s00414-020-02483-x).
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
 [Pandas]: https://pandas.pydata.org

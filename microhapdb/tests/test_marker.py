@@ -25,7 +25,7 @@ def test_standardize_ids():
 
 
 def test_assumptions():
-    assert len(microhapdb.markers) == 198 + 15 + 40 + 26 + (11 - 1) + 10 + 118 + 90 + 25 + 20 + 23
+    assert len(microhapdb.markers) == 198 + 15 + 40 + 26 + (11 - 1) + 10 + 118 + 90 + 25 + 20 + 23 + 59
 
 
 def test_markers():
@@ -34,24 +34,24 @@ def test_markers():
     >>> m = microhapdb.markers
     >>> m[m.Name == 'mh18CP-005']
                Name          PermID Reference  Chrom                          Offsets      Ae      In     Fst  Source
-    482  mh18CP-005  MHDBM-a85754d3    GRCh38  chr18  8892864,8892893,8892896,8892907  3.6722  0.0904  0.0059  ALFRED
+    536  mh18CP-005  MHDBM-a85754d3    GRCh38  chr18  8892864,8892893,8892896,8892907  3.6722  0.0904  0.0059  ALFRED
     >>> m[m.Name == 'mh01KK-117']
               Name          PermID Reference Chrom                                  Offsets      Ae      In     Fst  Source
-    32  mh01KK-117  MHDBM-39dc025f    GRCh38  chr1  204664211,204664268,204664371,204664397  4.4565  0.1933  0.0472  ALFRED
+    33  mh01KK-117  MHDBM-39dc025f    GRCh38  chr1  204664211,204664268,204664371,204664397  4.4565  0.1933  0.0472  ALFRED
     >>> m[m.Name == 'mh11PK-63643']
                  Name          PermID Reference  Chrom                                            Offsets  Ae  In  Fst                        Source
-    315  mh11PK-63643  MHDBM-c5ce121f    GRCh38  chr11  34415814,34415816,34415818,34415835,34415836,3... NaN NaN  NaN  10.1016/j.fsigen.2018.05.008
+    353  mh11PK-63643  MHDBM-c5ce121f    GRCh38  chr11  34415814,34415816,34415818,34415835,34415836,3... NaN NaN  NaN  10.1016/j.fsigen.2018.05.008
     >>> m[m.Name == 'mh02AT-05']
              Name          PermID Reference Chrom                        Offsets      Ae   In    Fst         Source
-    77  mh02AT-05  MHDBM-c3feaba8    GRCh38  chr2  160222899,160222923,160222938  4.5544  0.2  0.152  ISFG2019:P597
+    81  mh02AT-05  MHDBM-c3feaba8    GRCh38  chr2  160222899,160222923,160222938  4.5544  0.2  0.152  ISFG2019:P597
     """
     m = microhapdb.markers
     vm = microhapdb.variantmap
-    assert m.shape == (575, 9)
+    assert m.shape == (634, 9)
     result = m[m.Chrom == 'chr19']
-    assert len(result) == 16
+    assert len(result) == 18
     varids = vm[vm.Marker.isin(result.Name)].Variant.unique()
-    assert len(varids) == 57
+    assert len(varids) == 74
 
 
 def test_marker_table(capsys):
@@ -491,11 +491,12 @@ AAGGGCAGCAGGAACCACATGATCAGATTCGCCTTTCGAATAGGTGATTCTGACAGCACTG
     ('mh04KK-010', 'mh04KK-010 MHDBM-07c8d144    GRCh38  chr4 1985210,1985244 2.9226 0.1306 0.0406 ALFRED'),
     ('mh08PK-46625', 'mh08PK-46625 MHDBM-840756f3    GRCh38  chr8 1194352,1194356,1194364,1194371 2.3775 0.1132 0.1395 10.1016/j.fsigen.2018.05.008'),
     ('mh04AT-10', 'mh04AT-10 MHDBM-07c8d144    GRCh38  chr4 1985210,1985244 2.9226 0.1306 0.0406 ISFG2019:P597'),
-    ('mh01NH-03', 'mh01NH-03 MHDBM-e7a95c5e    GRCh38  chr1 184807944,184807966,184808042 1.9085 0.1987 0.1725 10.1016/j.legalmed.2015.06.003'),
+    ('mh01NH-03', 'mh01NH-03 MHDBM-e7a95c5e    GRCh38  chr1 184807944,184807966,184808042 1.9086 0.1987 0.1725 10.1016/j.legalmed.2015.06.003'),
     ('mh04CP-004', 'mh04CP-004 MHDBM-8408d717    GRCh38  chr4 7402842,7402854,7402870 2.6744 0.0477 0.061 10.1016/j.fsigen.2019.02.018'),
     ('mh03LV-07', 'mh03LV-07 MHDBM-5f7e29b6    GRCh38  chr3 5783508,5783509,5783518,5783523,5783525,5783531,5783541,5783542,5783543,5783544,5783552,5783562,5783564,5783571,5783577,5783607,5783608,5783611,5783612,5783617,5783618,5783619,5783623,5783626,5783635,5783648,5783652,5783653,5783663,5783664,5783671,5783672,5783673,5783676,5783677,5783678,5783681,5783684,5783687,5783695,5783704,5783705 14.0275 1.081 0.057 10.1016/j.fsigen.2018.05.001'),
     ('mh09USC-9pB', 'mh09USC-9pB MHDBM-7da7af40    GRCh38  chr9 31196676,31196714,31196731,31196744 3.0919 0.1616 0.0574 10.1016/j.fsigen.2019.102213'),
-    ('mh13KKCS-223', 'mh13KKCS-223 MHDBM-3ca7e2fc    GRCh38 chr13 110154341,110154351,110154394,110154411,110154438,110154441,110154485,110154504 NaN NaN  NaN 10.1016/j.fsigen.2020.102275')
+    ('mh13KKCS-223', 'mh13KKCS-223 MHDBM-3ca7e2fc    GRCh38 chr13 110154341,110154351,110154394,110154411,110154438,110154441,110154485,110154504 NaN NaN  NaN 10.1016/j.fsigen.2020.102275'),
+    ('mh09SHY-004', 'mh09SHY-004 MHDBM-60516ed5    GRCh38  chr9 136627496,136627530,136627544,136627546,136627552,136627559,136627561,136627572,136627579,136627598,136627600,136627607,136627632,136627648 4.9395 0.1551 0.0402 10.1007/s00414-020-02483-x'),
 ])
 def test_all_sources(name, data, capsys):
     marker = microhapdb.markers[microhapdb.markers.Name == name]
