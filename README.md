@@ -26,7 +26,7 @@ conda install -c bioconda microhapdb
 To make sure the package installed correctly:
 
 ```
-conda install pytest
+conda install -y pytest
 pytest --pyargs microhapdb --doctest-modules
 ```
 
