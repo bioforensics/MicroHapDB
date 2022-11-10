@@ -9,7 +9,7 @@ Marker = namedtuple("Marker", "name nvars chrom off38 varref")
 
 def main():
     args = get_parser().parse_args()
-    header = ["Marker", "Xref", "NumVars", "Chrom", "OffsetsHg37", "OffsetsHg38", "VarRef"]
+    header = ["Name", "Xref", "NumVars", "Chrom", "OffsetsHg37", "OffsetsHg38", "VarRef"]
     with open(args.table, "r") as table, open(args.tsv, "w") as tsv, open(args.bed, "w") as bed:
         print(*header, sep="\t", file=tsv)
         for marker in parse_markers(table):

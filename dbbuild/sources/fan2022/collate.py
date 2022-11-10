@@ -40,6 +40,7 @@ def update_table(table, mapping):
         off38 = [int(o) for o in off38.split(",")]
         off37 = [mapping[row.Chrom][o] for o in off38]
         off37 = ",".join(map(str, sorted(off37)))
+        assert off37.count(",") + 1 == row.NumVars, (row.Name, row.NumVars, off37.count(","))
         table.loc[i, "OffsetsHg37"] = off37
         table.loc[i, "Chrom"] = f"chr{row.Chrom}"
 
