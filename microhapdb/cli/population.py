@@ -40,5 +40,7 @@ def main(args):
         result = microhapdb.populations[microhapdb.populations.ID.isin(idents)]
     else:
         result = microhapdb.populations
+    if len(result) == 0:
+        return
     view = print_table if args.format == 'table' else print_detail
     view(result)

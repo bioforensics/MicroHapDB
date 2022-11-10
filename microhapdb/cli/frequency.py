@@ -92,6 +92,8 @@ def main(args):
         result = result[result.Population.isin(popids)]
     if args.allele:
         result = result[result.Allele == args.allele]
+    if len(result) == 0:
+        return
     if args.format == 'table':
         print(result.to_string(index=False))
     elif args.format == 'detail':

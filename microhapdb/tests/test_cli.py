@@ -483,3 +483,16 @@ def test_marker_offsets_37_cli(capsys):
     assert result.shape == (10, 4)
     assert list(result.columns) == ["Marker", "Offset", "Chrom", "OffsetHg37"]
     assert list(result.OffsetHg37)[:5] == [167126967, 167126986, 103092502, 103092512, 103092574]
+
+
+@pytest.mark.parametrize("arglist", [
+    ("marker", "--GRCh37", "BogusMarkerID"),
+    ("population", "Atreides"),
+    ("frequency", "--marker=mh02USC-2pA", "--population=XYZ"),
+    ("frequency", "--marker=NotARealMarkerID", "--population=CEU"),
+])
+def test_cli_bad_ids(arglist, capsys):
+    args = get_parser().parse_args(arglist)
+    microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    assert terminal.out == ""

@@ -36,8 +36,18 @@ def standardize_marker_ids(idents):
 
 
 def standardize_population_ids(idents):
+    ids = set()
+    for ident in idents:
+        if id_in_series(ident, microhapdb.populations.ID):
+            ids.add(ident)
+        elif id_in_series(ident, microhapdb.populations.Name):
+            ids.add(ident)
+        elif id_in_series(ident, microhapdb.idmap.Xref):
+            popid = microhapdb.idmap[microhapdb.idmap.Xref == ident].ID
+            assert len(popid) == 1
+            ids.add(popid.iloc[0])
     result = microhapdb.populations[
-        (microhapdb.populations.ID.isin(idents)) | (microhapdb.populations.Name.isin(idents))
+        (microhapdb.populations.ID.isin(ids)) | (microhapdb.populations.Name.isin(ids))
     ]
     return result.ID
 

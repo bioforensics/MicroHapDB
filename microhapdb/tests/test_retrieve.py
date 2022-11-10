@@ -57,3 +57,9 @@ def test_marker_ids():
     assert list(standardize_marker_ids(['mh15KK-058'])) == ['mh15KK-058']
     assert list(standardize_marker_ids(['SI664549I'])) == ['mh01KK-117']
     assert list(standardize_marker_ids(['MHDBM-3d69621c'])) == ['mh11KK-040', 'mh11AT-23']
+
+
+def test_population_xref():
+    assert list(standardize_population_ids(['SA004250L'])) == ['CEU']
+    assert list(standardize_population_ids(['SA004250L', 'BogusPopID'])) == ['CEU']
+    assert list(standardize_population_ids(['SA004250L', 'Cheyenne'])) == ['SA000023F', 'CEU']

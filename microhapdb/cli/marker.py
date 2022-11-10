@@ -113,6 +113,10 @@ def main(args):
         result = microhapdb.markers[microhapdb.markers.Name.isin(idents)]
     else:
         result = microhapdb.markers
+    if len(result) == 0:
+        microhapdb.set_ae_population(popid=None)  # Reset
+        microhapdb.set_reference(38)  # Reset
+        return
     if args.format == 'table':
         print_table(result, trunc=args.trunc)
     elif args.format == 'detail':
