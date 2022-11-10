@@ -109,7 +109,7 @@ def test_main_marker_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split('\n')
-    assert len(outlines) == 1 + 198 + 15 + 40 + 26 + (11 - 1) + 10 + 118 + 90 + 25 + 20 + 23 + 59
+    assert len(outlines) == 1 + 198 + 15 + 40 + 26 + (11 - 1) + 10 + 118 + 90 + 25 + 20 + 23 + 59 + 22
 
 
 def test_main_marker_detail(capsys):
@@ -440,13 +440,15 @@ def test_hg37_ae_pop(capsys):
     microhapdb.cli.main(args)
     terminal = capsys.readouterr()
     exp_out = '''
-        Name         PermID Reference Chrom                                                                                            Offsets     Ae     In     Fst                       Source
-mh18USC-18qB MHDBM-14fcada5    GRCh37 chr18                                                                         50547498,50547528,50547540 3.8565 0.1449  0.0500 10.1016/j.fsigen.2019.102213
-mh18USC-18qC MHDBM-6bf74efc    GRCh37 chr18                                                                63842523,63842541,63842557,63842562 3.5570 0.1436 -0.0049 10.1016/j.fsigen.2019.102213
- mh18SHY-002 MHDBM-721f5fbc    GRCh37 chr18 73681402,73681414,73681416,73681430,73681439,73681497,73681525,73681529,73681563,73681574,73681588 4.8436 0.2109  0.0714   10.1007/s00414-020-02483-x
-mh18KKCS-293 MHDBM-350bd971    GRCh37 chr18                                     76089731,76089843,76089884,76089885,76089906,76089944,76089967    NaN    NaN     NaN 10.1016/j.fsigen.2020.102275
-  mh18KK-293 MHDBM-13ed6da8    GRCh37 chr18                                                                76089885,76089906,76089944,76089967 2.6445 0.2495  0.0837                       ALFRED
-   mh18AT-39 MHDBM-13ed6da8    GRCh37 chr18                                                                76089885,76089906,76089944,76089967 2.6445 0.2495  0.0837                ISFG2019:P597
+        Name         PermID Reference Chrom                                                                                                                                                                                                                                   Offsets     Ae     In     Fst                       Source
+mh18USC-18qB MHDBM-14fcada5    GRCh37 chr18                                                                                                                                                                                                                50547498,50547528,50547540 3.8565 0.1449  0.0500 10.1016/j.fsigen.2019.102213
+mh18USC-18qC MHDBM-6bf74efc    GRCh37 chr18                                                                                                                                                                                                       63842523,63842541,63842557,63842562 3.5570 0.1436 -0.0049 10.1016/j.fsigen.2019.102213
+ mh18FHL-004 MHDBM-c601865b    GRCh37 chr18 66179852,66179861,66179881,66179883,66179892,66179900,66179901,66179933,66179936,66179937,66179949,66179956,66179959,66179964,66179966,66179972,66179973,66179989,66179991,66179993,66180006,66180022,66180031,66180032,66180034,66180037    NaN    NaN     NaN 10.1016/j.fsigen.2022.102705
+ mh18SHY-002 MHDBM-721f5fbc    GRCh37 chr18                                                                                                                                        73681402,73681414,73681416,73681430,73681439,73681497,73681525,73681529,73681563,73681574,73681588 4.8436 0.2109  0.0714   10.1007/s00414-020-02483-x
+mh18KKCS-293 MHDBM-350bd971    GRCh37 chr18                                                                                                                                                                            76089731,76089843,76089884,76089885,76089906,76089944,76089967    NaN    NaN     NaN 10.1016/j.fsigen.2020.102275
+  mh18KK-293 MHDBM-13ed6da8    GRCh37 chr18                                                                                                                                                                                                       76089885,76089906,76089944,76089967 2.6445 0.2495  0.0837                       ALFRED
+   mh18AT-39 MHDBM-13ed6da8    GRCh37 chr18                                                                                                                                                                                                       76089885,76089906,76089944,76089967 2.6445 0.2495  0.0837                ISFG2019:P597
+
 '''
     obs_out = terminal.out
     print(obs_out)
