@@ -31,5 +31,6 @@ rule parse_table_s4:
     output:
         tsv="marker-sans37.tsv",
         bed="marker38.bed",
+        indels="indels.tsv",
     shell:
         "python {input} {output}"
