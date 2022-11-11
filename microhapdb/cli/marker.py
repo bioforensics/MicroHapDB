@@ -7,7 +7,7 @@
 
 from argparse import RawDescriptionHelpFormatter
 import microhapdb
-from microhapdb.marker import print_detail, print_table, print_fasta, print_offsets
+from microhapdb.marker import print_detail, print_fasta, print_offsets
 from textwrap import dedent
 import sys
 

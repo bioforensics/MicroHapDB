@@ -1,41 +1,91 @@
-# -----------------------------------------------------------------------------
-# Copyright (c) 2019, Battelle National Biodefense Institute.
+# -------------------------------------------------------------------------------------------------
+# Copyright (c) 2022, DHS.
 #
-# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
-# and is licensed under the BSD license: see LICENSE.txt.
-# -----------------------------------------------------------------------------
+# This file is part of MicroHapDB (http://github.com/bioforensics/MicroHapDB) and is licensed under
+# the BSD license: see LICENSE.txt.
+#
+# This software was prepared for the Department of Homeland Security (DHS) by the Battelle National
+# Biodefense Institute, LLC (BNBI) as part of contract HSHQDC-15-C-00064 to manage and operate the
+# National Biodefense Analysis and Countermeasures Center (NBACC), a Federally Funded Research and
+# Development Center.
+# -------------------------------------------------------------------------------------------------
 
 from collections import Counter
 from io import StringIO
 import microhapdb
+from warnings import warn
 
 
 class Population:
+    """Convenience class for accessing and manipulating population data
+
+    >>> for pop in microhapdb.Population.from_ids(["CDX", "CHB", "CHS"]):
+    ...   print(pop.popid, pop.name, pop.source)
+    CDX Chinese Dai in Xishuangbanna, China 1KGP
+    CHB Han Chinese in Beijing, China 1KGP
+    CHS Southern Han Chinese 1KGP
+    >>> for pop in microhapdb.Population.from_query("Name.str.contains('Japan')"):
+    ...   print(pop)
+    MHDBP-63967b883e	Japanese	10.1016/j.legalmed.2015.06.003
+    SA000010B	Japanese	ALFRED
+    JPT	Japanese in Tokyo, Japan	1KGP
+    >>> pop = next(microhapdb.Population.from_ids(["SA004309Q"]))
+    >>> print(pop.detail)
+    --------------------------------------------------------------[ MicroHapDB ]----
+    Iranian    (SA004309Q; source=ALFRED)
+    - 399 total allele frequencies available
+      for 65 markers
+    # Alleles | # Markers
+    ---------------------
+            19|*
+            14|*
+            13|*
+            12|****
+             9|**
+             8|*********
+             7|***
+             6|****
+             5|**********
+             4|******************************
+    --------------------------------------------------------------------------------
+    >>> microhapdb.populations.shape
+    (109, 3)
+    """
     def __init__(self, popid, name, source):
         self.popid = popid
         self.name = name
         self.source = source
 
     @classmethod
-    def from_ids(cls, identifiers):
+    def table_from_ids(cls, identifiers):
         ids = cls.standardize_ids(identifiers)
         table = microhapdb.populations[microhapdb.populations.ID.isin(ids)]
         return table
 
     @classmethod
-    def from_query(cls, query):
+    def table_from_query(cls, query):
         table = microhapdb.populations.query(query, engine="python")
         return table
 
     @classmethod
-    def objs_from_ids(cls, identifiers):
-        table = cls.from_ids(identifiers)
-        yield from cls.objectify(cls, table)
+    def from_id(cls, identifier):
+        table = cls.table_from_ids([identifier])
+        if len(table) < 1:
+            raise ValueError(f"popualtion {identifier} not found")
+        if len(table) > 1:
+            warn(f"ambiguous population identifier {identifier}", UserWarning)
+        entry = table.iloc[0]
+        return cls(entry.ID, entry.Name, entry.Source)
 
     @classmethod
-    def objs_from_query(cls, query):
-        table = cls.from_query(query)
-        yield from cls.objectify(cls, table)
+    def from_ids(cls, identifiers):
+        table = cls.table_from_ids(identifiers)
+        yield from cls.objectify(table)
+
+    @classmethod
+    def from_query(cls, query):
+        table = cls.table_from_query(query)
+        yield from cls.objectify(table)
 
     @classmethod
     def objectify(cls, table):
