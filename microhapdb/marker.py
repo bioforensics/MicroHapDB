@@ -1,5 +1,5 @@
 # -------------------------------------------------------------------------------------------------
-# Copyright (c) 2022, DHS.
+# Copyright (c) 2019, DHS.
 #
 # This file is part of MicroHapDB (http://github.com/bioforensics/MicroHapDB) and is licensed under
 # the BSD license: see LICENSE.txt.
@@ -20,6 +20,27 @@ import sys
 
 
 class Marker:
+    """Convenience class for accessing and manipulating marker data
+
+    >>> marker = microhapdb.Marker.from_id("mh13KK-218")
+    >>> marker.slug
+    'chr13:53486691-53486837'
+    >>> len(marker)
+    146
+    >>> marker.offsets
+    [53486691, 53486745, 53486756, 53486836]
+    >>> marker.start
+    53486691
+    >>> marker.marker_offsets
+    [0, 54, 65, 145]
+    >>> marker.target_offsets
+    [10, 64, 75, 155]
+    >>> print(marker.fasta)
+    >mh13KK-218 MHDBM-d645f595 GRCh38:chr13:53486691-53486837 variants=10,64,75,155 Xref=SI664607D
+    ATAGCACATTTCCAAGTTGTTCTAGTGAATTACTGAACTGGATAGGATTGTGGAAACCTGTGAATAATAGCTAGGTAGTC
+    AGAAGACATGGTGCGCTGGGGATCCTCAAAGTGTGGCTGTTAACTGAAATGAAGGTACTCTTGTGGAGGACTGAGCCCTT
+    AACATG
+    """
     def __init__(self, marker, delta=10, minlen=80, extendmode=0):
         self.extendmode = int(extendmode)
         self.data = marker
@@ -35,16 +56,29 @@ class Marker:
             markers38 = pd.read_csv(resource_filename("microhapdb", "data/marker.tsv"), sep="\t")
             self.data38 = markers38[markers38.Name == marker.Name].iloc[0]
 
-    @classmethod
-    def table_from_ids(cls, identifiers):
-        ids = cls.standardize_ids(identifiers)
+    @staticmethod
+    def table_from_ids(identifiers):
+        ids = Marker.standardize_ids(identifiers)
         table = microhapdb.markers[microhapdb.markers.Name.isin(ids)]
         return table
 
-    @classmethod
-    def table_from_query(cls, query):
+    @staticmethod
+    def table_from_query(query):
         table = microhapdb.markers.query(query, engine="python")
         return table
+
+    @staticmethod
+    def table_from_region(regionstr):
+        markers = microhapdb.markers.copy()
+        markers['Start'] = markers.Offsets.apply(lambda o: min(map(int, o.split(','))))
+        markers['End'] = markers.Offsets.apply(lambda o: max(map(int, o.split(','))) + 1)
+        chrom, start, end = Marker.parse_regionstr(regionstr)
+        query = f'Chrom == "{chrom}"'
+        if start is not None:
+            query += f' and (Start < {end}'
+            query += f' and End > {start})'
+        result = markers.query(query)
+        return result.drop(columns=['Start', 'End'])
 
     @classmethod
     def from_id(cls, identifier, **kwargs):
@@ -67,13 +101,44 @@ class Marker:
         yield from cls.objectify(table, **kwargs)
 
     @classmethod
+    def from_region(cls, region, **kwargs):
+        table = cls.table_from_region(region)
+        yield from cls.objectify(table, **kwargs)
+
+    @classmethod
     def objectify(cls, table, **kwargs):
         for i, row in table.iterrows():
             marker = cls(row, **kwargs)
             yield marker
 
     @staticmethod
+    def parse_regionstr(regionstr):
+        '''Retrieve chromosome name and coordinates from a region string
+
+        Region string is expected to be in one of the two following formats: 'chr3'
+        or 'chr3:1000000-5000000'.
+
+        >>> Marker.parse_regionstr("chr12")
+        ('chr12', None, None)
+        >>> Marker.parse_regionstr("chr12:345-678")
+        ('chr12', 345, 678)
+        '''
+        chrom, start, end = None, None, None
+        if ':' in regionstr:
+            chrom, rng = regionstr.split(':')
+            if rng.count('-') != 1:
+                raise ValueError(f'cannot parse region "{regionstr}"')
+            startstr, endstr = rng.split('-')
+            start, end = int(startstr), int(endstr)
+        else:
+            chrom = regionstr
+        return chrom, start, end
+
+    @staticmethod
     def standardize_ids(idents):
+        def id_in_series(ident, series):
+            return series.str.contains(ident).any()
+
         ids = set()
         for ident in idents:
             if id_in_series(ident, microhapdb.variantmap.Variant):
@@ -359,7 +424,3 @@ class Marker:
         if coord >= len(self):
             return None
         return coord + self.start
-
-
-def id_in_series(ident, series):
-    return series.str.contains(ident).any()

@@ -10,8 +10,15 @@ import microhapdb
 from textwrap import dedent
 
 
+def main(args):
+    result = microhapdb.retrieve_by_id(args.id)
+    print(result.to_string(index=False))
+
+
 def subparser(subparsers):
-    desc = microhapdb.cli.bubbletext + '\nRetrieve marker or population records by name or identifier'
+    desc = (
+        microhapdb.cli.bubbletext + "\nRetrieve marker or population records by name or identifier"
+    )
     epilog = """\
     Examples::
 
@@ -21,11 +28,9 @@ def subparser(subparsers):
     """
     epilog = dedent(epilog)
     subparser = subparsers.add_parser(
-        'lookup', description=desc, epilog=epilog, formatter_class=RawDescriptionHelpFormatter,
+        "lookup",
+        description=desc,
+        epilog=epilog,
+        formatter_class=RawDescriptionHelpFormatter,
     )
-    subparser.add_argument('id', help='record identifier')
-
-
-def main(args):
-    result = microhapdb.retrieve.by_id(args.id)
-    print(result.to_string(index=False))
+    subparser.add_argument("id", help="record identifier")

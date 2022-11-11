@@ -26,7 +26,7 @@ def main(args):
 
 
 def subparser(subparsers):
-    desc = microhapdb.cli.bubbletext + '\nRetrieve population records by identifier or query'
+    desc = microhapdb.cli.bubbletext + "\nRetrieve population records by identifier or query"
     epilog = """\
     Examples::
 
@@ -37,10 +37,13 @@ def subparser(subparsers):
     """
     epilog = dedent(epilog)
     subparser = subparsers.add_parser(
-        'population', description=desc, epilog=epilog, formatter_class=RawDescriptionHelpFormatter,
+        "population",
+        description=desc,
+        epilog=epilog,
+        formatter_class=RawDescriptionHelpFormatter,
     )
-    subparser.add_argument('--format', choices=['table', 'detail'], default='table')
+    subparser.add_argument("--format", choices=["table", "detail"], default="table")
     subparser.add_argument(
-        '--query', metavar='STRING', help='Retrieve records using a Pandas-style query'
+        "--query", metavar="STRING", help="Retrieve records using a Pandas-style query"
     )
-    subparser.add_argument('id', nargs='*', help='population identifier(s)')
+    subparser.add_argument("id", nargs="*", help="population identifier(s)")

@@ -29,7 +29,7 @@ class Population:
     MHDBP-63967b883e	Japanese	10.1016/j.legalmed.2015.06.003
     SA000010B	Japanese	ALFRED
     JPT	Japanese in Tokyo, Japan	1KGP
-    >>> pop = next(microhapdb.Population.from_ids(["SA004309Q"]))
+    >>> pop = microhapdb.Population.from_id("SA004309Q")
     >>> print(pop.detail)
     --------------------------------------------------------------[ MicroHapDB ]----
     Iranian    (SA004309Q; source=ALFRED)
@@ -56,14 +56,14 @@ class Population:
         self.name = name
         self.source = source
 
-    @classmethod
-    def table_from_ids(cls, identifiers):
-        ids = cls.standardize_ids(identifiers)
+    @staticmethod
+    def table_from_ids(identifiers):
+        ids = Population.standardize_ids(identifiers)
         table = microhapdb.populations[microhapdb.populations.ID.isin(ids)]
         return table
 
-    @classmethod
-    def table_from_query(cls, query):
+    @staticmethod
+    def table_from_query(query):
         table = microhapdb.populations.query(query, engine="python")
         return table
 
