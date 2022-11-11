@@ -5,39 +5,73 @@
 # and is licensed under the BSD license: see LICENSE.txt.
 # -----------------------------------------------------------------------------
 
-from collections import defaultdict
+from collections import Counter
+from io import StringIO
 import microhapdb
 
 
-def standardize_ids(idents):
-    xrefidents = list(microhapdb.idmap[microhapdb.idmap.Xref.isin(idents)].ID)
-    idents = idents + xrefidents
-    result = microhapdb.populations[
-        (microhapdb.populations.ID.isin(idents)) | (microhapdb.populations.Name.isin(idents))
-    ]
-    return result.ID
+class Population:
+    def __init__(self, popid, name, source):
+        self.popid = popid
+        self.name = name
+        self.source = source
 
+    @classmethod
+    def from_ids(cls, identifiers):
+        ids = cls.standardize_ids(identifiers)
+        table = microhapdb.populations[microhapdb.populations.ID.isin(ids)]
+        return table
 
-def print_table(table, **kwargs):
-    print(table.to_string(index=False))
+    @classmethod
+    def from_query(cls, query):
+        table = microhapdb.populations.query(query, engine="python")
+        return table
 
+    @classmethod
+    def objs_from_ids(cls, identifiers):
+        table = cls.from_ids(identifiers)
+        yield from cls.objectify(cls, table)
 
-def print_detail(table):
-    for n, row in table.iterrows():
-        print('--------------------------------------------------------------[ MicroHapDB ]----')
-        print('{name:s}    ({id:s}; source={src:s})\n'.format(id=row.ID, name=row.Name, src=row.Source))
-        result = microhapdb.frequencies[microhapdb.frequencies.Population == row.ID]
-        markers = sorted(result.Marker.unique())
-        frequencies = len(result.Frequency)
-        print('- {freq:d} total allele frequencies available\n  for {mark:d} markers'.format(
-            mark=len(markers), freq=frequencies
-        ))
-        counter = defaultdict(int)
-        for marker in markers:
-            alleles = result[result.Marker == marker]
-            nalleles = len(alleles.Allele)
-            counter[nalleles] += 1
-        print('\n# Alleles | # Markers\n---------------------')
-        for nalleles, nmarkers in sorted(counter.items(), reverse=True):
-            print('       {na:3d}|{nm:s}'.format(na=nalleles, nm='*' * nmarkers))
-        print('--------------------------------------------------------------------------------\n')
+    @classmethod
+    def objs_from_query(cls, query):
+        table = cls.from_query(query)
+        yield from cls.objectify(cls, table)
+
+    @classmethod
+    def objectify(cls, table):
+        for i, row in table.iterrows():
+            population = cls(row.ID, row.Name, row.Source)
+            yield population
+
+    @staticmethod
+    def standardize_ids(identifiers):
+        xref_ids = microhapdb.idmap[microhapdb.idmap.Xref.isin(identifiers)].ID
+        ids = set(xref_ids) | set(identifiers)
+        result = microhapdb.populations[
+            (microhapdb.populations.ID.isin(ids)) | (microhapdb.populations.Name.isin(ids))
+        ]
+        return sorted(result.ID)
+
+    def __str__(self):
+        return "\t".join((self.popid, self.name, self.source))
+
+    @property
+    def detail(self):
+        result = microhapdb.frequencies[microhapdb.frequencies.Population == self.popid]
+        markers_with_n_alleles = Counter(result.groupby("Marker").size())
+        output = StringIO()
+        print(
+            "--------------------------------------------------------------[ MicroHapDB ]----",
+            file=output,
+        )
+        print(f"{self.name}    ({self.popid}; source={self.source})\n", file=output)
+        print(f"- {len(result.Frequency)} total allele frequencies available", file=output)
+        print(f"  for {len(result.Marker.unique())} markers\n", file=output)
+        print("# Alleles | # Markers\n---------------------", file=output)
+        for nalleles, nmarkers in sorted(markers_with_n_alleles.items(), reverse=True):
+            print(f"       {nalleles:3d}|{'*' * nmarkers}", file=output)
+        print(
+            "--------------------------------------------------------------------------------",
+            file=output,
+        )
+        return output.getvalue()

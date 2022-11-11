@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-#
 # -----------------------------------------------------------------------------
 # Copyright (c) 2018, Battelle National Biodefense Institute.
 #
@@ -8,12 +6,12 @@
 # -----------------------------------------------------------------------------
 
 
+from .population import Population
 from microhapdb.util import data_file
 from microhapdb import cli
 from microhapdb import retrieve
 from microhapdb import marker
 from microhapdb import panel
-from microhapdb import population
 import os
 from pkg_resources import resource_filename
 import pandas
