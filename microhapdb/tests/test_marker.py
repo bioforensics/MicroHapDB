@@ -55,7 +55,7 @@ def test_markers():
     >>> marker.offsets
     [8892864, 8892893, 8892896, 8892907]
     >>> print(marker.fasta)
-    >mh18CP-005 MHDBM-a85754d3 GRCh38:chr18:8892864-8892908 variants=18,47,50,61 Xref=SI664898P
+    >mh18CP-005 PermID=MHDBM-a85754d3 GRCh38:chr18:8892864-8892908 variants=18,47,50,61 Xref=SI664898P
     GCAGATGTCCTTATACGCAGTGGTGTTAGTTTTAGAAACTGATTCTACGGGTATGCTTGCTCGTGTGTAAAATTATTCAT
     >>> for marker in Marker.from_query("Source == '10.1016/j.fsigen.2018.05.008'"):
     ...   print(marker)
@@ -541,3 +541,32 @@ def test_marker_definition_multi():
         46291986,
     ]
     assert observed == expected
+
+
+def test_from_region():
+    with pytest.raises(ValueError, match='cannot parse region "chr7:123-456-789"'):
+        Marker.parse_regionstr("chr7:123-456-789")
+    assert len(Marker.table_from_region("chrX")) == 11
+    assert len(Marker.table_from_region("chrY")) == 0
+
+    markers = list(Marker.from_region("chr12:100000000-200000000"))
+    assert len(markers) == 8
+    observed = sorted([marker.name for marker in markers])
+    expected = sorted([
+        "mh12KK-093",
+        "mh12KK-045",
+        "mh12KK-042",
+        "mh12KKCS-046",
+        "mh12KK-046",
+        "mh12AT-25",
+        "mh12CP-003",
+        "mh12KKCS-209",
+    ])
+    assert observed == expected
+
+
+def test_marker_ids():
+    assert Marker.standardize_ids(["BoGUSid"]) == []
+    assert Marker.standardize_ids(["mh15KK-058"]) == ["mh15KK-058"]
+    assert Marker.standardize_ids(["SI664549I"]) == ["mh01KK-117"]
+    assert Marker.standardize_ids(["MHDBM-3d69621c"]) == ["mh11AT-23", "mh11KK-040"]
