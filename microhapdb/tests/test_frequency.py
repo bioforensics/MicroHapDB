@@ -14,7 +14,10 @@ from tempfile import NamedTemporaryFile
 
 
 def test_assumptions():
-    assert len(microhapdb.frequencies) == 54347 + 366 + 137 + 33 + 103 + 66565 + 4737 + 4131 + 3164 + 2986 + 12678
+    assert (
+        len(microhapdb.frequencies)
+        == 54347 + 366 + 137 + 33 + 103 + 66565 + 4737 + 4131 + 3164 + 2986 + 12678
+    )
 
 
 def test_allele_frequencies():
@@ -57,23 +60,43 @@ def test_allele_frequencies():
     """
     af = microhapdb.frequencies
     assert af.shape == (149247, 4)
-    result = af[af.Marker == 'mh21KK-315'].Allele.unique()
+    result = af[af.Marker == "mh21KK-315"].Allele.unique()
     assert len(result) == 8
-    result = af[(af.Marker == 'mh21KK-315') & (af.Allele == 'A,C,T')]
+    result = af[(af.Marker == "mh21KK-315") & (af.Allele == "A,C,T")]
     assert len(result) == 81
-    result = af.query('Marker == "mh21KK-315" & Allele == "A,C,T" & Population == "SA001773S"').Frequency.values[0]
+    result = af.query(
+        'Marker == "mh21KK-315" & Allele == "A,C,T" & Population == "SA001773S"'
+    ).Frequency.values[0]
     assert result == pytest.approx(0.025)
 
 
-@pytest.mark.parametrize('marker,pop,allele,data', [
-    ('mh22KK-064', 'SA000009J', 'A,A,T,AATAATT', 'mh22KK-064  SA000009J A,A,T,AATAATT      0.828'),
-    ('mh06PK-24844', 'MHDBP-383d86606a', 'C,C,G,C,C,C,A,A,A,A', 'mh06PK-24844 MHDBP-383d86606a C,C,G,C,C,C,A,A,A,A      0.005'),
-    ('mh20AT-40', 'MHDBP-7c055e7ee8', 'T,C,G', 'mh20AT-40 MHDBP-7c055e7ee8  T,C,G     0.0806'),
-    ('mh11NH-17', 'MHDBP-63967b883e', 'C,G,G', 'mh11NH-17 MHDBP-63967b883e  C,G,G      0.153'),
-    ('mh01CP-016', 'MHDBP-48c2cfb2aa', 'T,G,A', 'mh01CP-016 MHDBP-48c2cfb2aa  T,G,A     0.2916'),
-])
+@pytest.mark.parametrize(
+    "marker,pop,allele,data",
+    [
+        (
+            "mh22KK-064",
+            "SA000009J",
+            "A,A,T,AATAATT",
+            "mh22KK-064  SA000009J A,A,T,AATAATT      0.828",
+        ),
+        (
+            "mh06PK-24844",
+            "MHDBP-383d86606a",
+            "C,C,G,C,C,C,A,A,A,A",
+            "mh06PK-24844 MHDBP-383d86606a C,C,G,C,C,C,A,A,A,A      0.005",
+        ),
+        ("mh20AT-40", "MHDBP-7c055e7ee8", "T,C,G", "mh20AT-40 MHDBP-7c055e7ee8  T,C,G     0.0806"),
+        ("mh11NH-17", "MHDBP-63967b883e", "C,G,G", "mh11NH-17 MHDBP-63967b883e  C,G,G      0.153"),
+        (
+            "mh01CP-016",
+            "MHDBP-48c2cfb2aa",
+            "T,G,A",
+            "mh01CP-016 MHDBP-48c2cfb2aa  T,G,A     0.2916",
+        ),
+    ],
+)
 def test_all_sources(marker, pop, allele, data, capsys):
-    arglist = ['frequency', '--marker', marker, '--population', pop, '--allele', allele]
+    arglist = ["frequency", "--marker", marker, "--population", pop, "--allele", allele]
     args = microhapdb.cli.get_parser().parse_args(arglist)
     microhapdb.cli.frequency.main(args)
     terminal = capsys.readouterr()
@@ -82,45 +105,68 @@ def test_all_sources(marker, pop, allele, data, capsys):
 
 
 def test_mhpl8r(capsys):
-    arglist = ['frequency', '--marker', 'mh02USC-2pA', '--population', 'JPT', '--format', 'mhpl8r']
+    arglist = ["frequency", "--marker", "mh02USC-2pA", "--population", "JPT", "--format", "mhpl8r"]
     args = microhapdb.cli.get_parser().parse_args(arglist)
     microhapdb.cli.frequency.main(args)
     terminal = capsys.readouterr()
-    result = pandas.read_csv(StringIO(terminal.out), sep='\t')
+    result = pandas.read_csv(StringIO(terminal.out), sep="\t")
     assert result.shape == (4, 3)
-    assert result.Haplotype.iloc[0] == 'A,A,G,A'
+    assert result.Haplotype.iloc[0] == "A,A,G,A"
     assert result.Frequency.iloc[0] == pytest.approx(0.005)
 
 
 def test_mhpl8r_panel(capsys):
     with NamedTemporaryFile(mode="wt") as tempfile:
-        print('mh02USC-2pA', 'mh08USC-8qA', 'mh17USC-17qA', sep='\n', file=tempfile, flush=True)
-        arglist = ['frequency', '--panel', tempfile.name, '--population', 'GBR', '--format', 'mhpl8r']
+        print("mh02USC-2pA", "mh08USC-8qA", "mh17USC-17qA", sep="\n", file=tempfile, flush=True)
+        arglist = [
+            "frequency",
+            "--panel",
+            tempfile.name,
+            "--population",
+            "GBR",
+            "--format",
+            "mhpl8r",
+        ]
         args = microhapdb.cli.get_parser().parse_args(arglist)
         microhapdb.cli.frequency.main(args)
     terminal = capsys.readouterr()
-    result = pandas.read_csv(StringIO(terminal.out), sep='\t')
+    result = pandas.read_csv(StringIO(terminal.out), sep="\t")
     print(result)
     assert result.shape == (13, 3)
-    assert result.Haplotype.iloc[7] == 'A,G,T'
+    assert result.Haplotype.iloc[7] == "A,G,T"
     assert result.Frequency.iloc[7] == pytest.approx(0.429)
 
 
 def test_mhpl8r_multi_pop(capsys):
     arglist = [
-        'frequency', '--marker', 'mh02USC-2pA', 'mh08USC-8qA', 'mh17USC-17qA',
-        '--population', 'CLM', 'GIH', 'ASW', 'CEU', '--format', 'mhpl8r'
+        "frequency",
+        "--marker",
+        "mh02USC-2pA",
+        "mh08USC-8qA",
+        "mh17USC-17qA",
+        "--population",
+        "CLM",
+        "GIH",
+        "ASW",
+        "CEU",
+        "--format",
+        "mhpl8r",
     ]
     args = microhapdb.cli.get_parser().parse_args(arglist)
     microhapdb.cli.frequency.main(args)
     terminal = capsys.readouterr()
-    assert 'warning: frequencies for 4 populations recovered, expected only 1' in terminal.err
+    assert "warning: frequencies for 4 populations recovered, expected only 1" in terminal.err
 
 
 def test_efm(capsys):
     arglist = [
-        'frequency', '--population=CEU', '--format=efm', '--marker', 'mh01USC-1pD', 'mh17USC-17pA',
-        'mh15USC-15qA'
+        "frequency",
+        "--population=CEU",
+        "--format=efm",
+        "--marker",
+        "mh01USC-1pD",
+        "mh17USC-17pA",
+        "mh15USC-15qA",
     ]
     args = microhapdb.cli.get_parser().parse_args(arglist)
     microhapdb.cli.frequency.main(args)
@@ -128,27 +174,36 @@ def test_efm(capsys):
     result = pandas.read_csv(StringIO(terminal.out))
     print(result)
     assert result.shape == (13, 4)
-    assert result['Allele'].iloc[3] == "C,T,C"
-    assert result['mh01USC-1pD'].iloc[3] == pytest.approx(0.101)
-    assert pandas.isna(result['mh15USC-15qA'].iloc[3])
-    assert result['mh17USC-17pA'].iloc[3] == pytest.approx(0.02)
+    assert result["Allele"].iloc[3] == "C,T,C"
+    assert result["mh01USC-1pD"].iloc[3] == pytest.approx(0.101)
+    assert pandas.isna(result["mh15USC-15qA"].iloc[3])
+    assert result["mh17USC-17pA"].iloc[3] == pytest.approx(0.02)
 
 
 def test_efm_multi_pop():
     arglist = [
-        'frequency', '--population', 'CEU', 'IBS', '--format=efm', '--marker', 'mh01USC-1pD',
-        'mh17USC-17pA', 'mh15USC-15qA'
+        "frequency",
+        "--population",
+        "CEU",
+        "IBS",
+        "--format=efm",
+        "--marker",
+        "mh01USC-1pD",
+        "mh17USC-17pA",
+        "mh15USC-15qA",
     ]
     args = microhapdb.cli.get_parser().parse_args(arglist)
-    with pytest.raises(ValueError, match="must specify one and only one population with --format=efm"):
+    with pytest.raises(
+        ValueError, match="must specify one and only one population with --format=efm"
+    ):
         microhapdb.cli.frequency.main(args)
 
 
 def test_bad_format():
-    arglist = ['frequency', '--marker', 'mh02USC-2pA', '--population', 'JPT', '--format', 'detail']
+    arglist = ["frequency", "--marker", "mh02USC-2pA", "--population", "JPT", "--format", "detail"]
     args = microhapdb.cli.get_parser().parse_args(arglist)
     with pytest.raises(NotImplementedError):
         microhapdb.cli.frequency.main(args)
-    args.format = 'BoGuS'
+    args.format = "BoGuS"
     with pytest.raises(ValueError, match=r'unsupported view format "BoGuS"'):
         microhapdb.cli.frequency.main(args)

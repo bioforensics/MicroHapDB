@@ -41,6 +41,7 @@ class Marker:
     AGAAGACATGGTGCGCTGGGGATCCTCAAAGTGTGGCTGTTAACTGAAATGAAGGTACTCTTGTGGAGGACTGAGCCCTT
     AACATG
     """
+
     def __init__(self, marker, delta=10, minlen=80, extendmode=0):
         self.extendmode = int(extendmode)
         self.data = marker
@@ -68,17 +69,21 @@ class Marker:
         return table
 
     @staticmethod
+    def definitions_from_ids(identifiers, **kwargs):
+        return pd.concat([marker.definition for marker in Marker.from_ids(identifiers, **kwargs)])
+
+    @staticmethod
     def table_from_region(regionstr):
         markers = microhapdb.markers.copy()
-        markers['Start'] = markers.Offsets.apply(lambda o: min(map(int, o.split(','))))
-        markers['End'] = markers.Offsets.apply(lambda o: max(map(int, o.split(','))) + 1)
+        markers["Start"] = markers.Offsets.apply(lambda o: min(map(int, o.split(","))))
+        markers["End"] = markers.Offsets.apply(lambda o: max(map(int, o.split(","))) + 1)
         chrom, start, end = Marker.parse_regionstr(regionstr)
         query = f'Chrom == "{chrom}"'
         if start is not None:
-            query += f' and (Start < {end}'
-            query += f' and End > {start})'
+            query += f" and (Start < {end}"
+            query += f" and End > {start})"
         result = markers.query(query)
-        return result.drop(columns=['Start', 'End'])
+        return result.drop(columns=["Start", "End"])
 
     @classmethod
     def from_id(cls, identifier, **kwargs):
@@ -113,7 +118,7 @@ class Marker:
 
     @staticmethod
     def parse_regionstr(regionstr):
-        '''Retrieve chromosome name and coordinates from a region string
+        """Retrieve chromosome name and coordinates from a region string
 
         Region string is expected to be in one of the two following formats: 'chr3'
         or 'chr3:1000000-5000000'.
@@ -122,13 +127,13 @@ class Marker:
         ('chr12', None, None)
         >>> Marker.parse_regionstr("chr12:345-678")
         ('chr12', 345, 678)
-        '''
+        """
         chrom, start, end = None, None, None
-        if ':' in regionstr:
-            chrom, rng = regionstr.split(':')
-            if rng.count('-') != 1:
+        if ":" in regionstr:
+            chrom, rng = regionstr.split(":")
+            if rng.count("-") != 1:
                 raise ValueError(f'cannot parse region "{regionstr}"')
-            startstr, endstr = rng.split('-')
+            startstr, endstr = rng.split("-")
             start, end = int(startstr), int(endstr)
         else:
             chrom = regionstr
@@ -168,6 +173,10 @@ class Marker:
 
     def __len__(self):
         return self.end - self.start
+
+    @property
+    def nvar(self):
+        return len(self.offsets)
 
     @property
     def start(self):
@@ -273,7 +282,7 @@ class Marker:
         print("\n", file=out)
 
     def print_detail_targetseq(self, out):
-        print("--[ Marker Target Sequence with Haplotypes ]--", file=out)
+        print("--[ Marker Target Sequence with MH alleles (haplotypes) ]--", file=out)
         blocks = self.build_target_seq_blocks()
         self.print_detail_targetseq_variants(blocks, out)  # Top row: variant indicators
         self.print_detail_targetseq_sequence(blocks, out)  # Second row: amplicon sequence
@@ -376,7 +385,7 @@ class Marker:
     def reference_lengths(self):
         lengths = list()
         ind = microhapdb.indels
-        for n in range(len(self.alleles[0].split(","))):
+        for n in range(self.nvar):
             refrlength = 1
             result = ind[(ind.Marker == self.data.Name) & (ind.VariantIndex == n)]
             if len(result) == 1:
@@ -393,7 +402,7 @@ class Marker:
     @property
     def defline(self):
         varstring = ",".join(map(str, self.target_offsets))
-        parts = [self.data.Name, self.data.PermID, f"GRCh38:{self.slug}", f"variants={varstring}"]
+        parts = [self.data.Name, f"PermID={self.data.PermID}", f"GRCh38:{self.slug}", f"variants={varstring}"]
         line = " ".join(parts)
         result = microhapdb.idmap[microhapdb.idmap.ID == self.data.Name]
         if len(result) > 0:
@@ -415,12 +424,21 @@ class Marker:
                 i += 80
         return out.getvalue().strip()
 
+    @property
+    def definition(self):
+        variants = list()
+        for offset, refr_offset in zip(self.target_offsets, self.offsets):
+            variants.append((self.data.Name, offset, self.data.Chrom, refr_offset))
+        return pd.DataFrame(variants, columns=["Marker", "Offset", "Chrom", f"ChromOffset"])
+
     def global_to_local(self, coord):
-        if coord < self.start or coord > self.end:
+        start, end = self.target_interval
+        if coord < start or coord > end:
             return None
-        return coord - self.start
+        return coord - start
 
     def local_to_global(self, coord):
-        if coord >= len(self):
+        start, end = self.target_interval
+        if coord >= end - start:
             return None
-        return coord + self.start
+        return coord + start

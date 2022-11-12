@@ -51,6 +51,7 @@ class Population:
     >>> microhapdb.populations.shape
     (109, 3)
     """
+
     def __init__(self, popid, name, source):
         self.popid = popid
         self.name = name

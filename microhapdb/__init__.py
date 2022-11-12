@@ -15,6 +15,8 @@ from .population import Population
 from .marker import Marker
 from microhapdb import cli
 from microhapdb import panel
+import pandas as pd
+from pkg_resources import resource_filename
 from ._version import get_versions
 
 __version__ = get_versions()["version"]
@@ -25,11 +27,13 @@ def set_ae_population(popid=None):
     global markers
     columns = ["Name", "PermID", "Reference", "Chrom", "Offsets", "Ae", "In", "Fst", "Source"]
     if popid is None:
-        defaults = pandas.read_csv(data_file("marker.tsv"), sep="\t")
+        filename = resource_filename("microhapdb", "data/marker.tsv")
+        defaults = pd.read_csv(filename, sep="\t")
         defaults = defaults[["Name", "Ae"]]
         markers = markers.drop(columns=["Ae"]).join(defaults.set_index("Name"), on="Name")[columns]
     else:
-        aes = pandas.read_csv(data_file("marker-aes.tsv"), sep="\t")
+        filename = resource_filename("microhapdb", "data/marker-aes.tsv")
+        aes = pd.read_csv(filename, sep="\t")
         if popid not in aes.Population.unique():
             raise ValueError(f'no Ae data for population "{popid}"')
         popaes = aes[aes.Population == popid].drop(columns=["Population"])
@@ -41,14 +45,14 @@ def set_reference(refr):
     assert refr in (37, 38)
     columns = ["Name", "PermID", "Reference", "Chrom", "Offsets", "Ae", "In", "Fst", "Source"]
     if refr == 38:
-        defaults = pandas.read_csv(data_file("marker.tsv"), sep="\t")[
-            ["Name", "Reference", "Offsets"]
-        ]
+        filename = resource_filename("microhapdb", "data/marker.tsv")
+        defaults = pd.read_csv(filename, sep="\t")[["Name", "Reference", "Offsets"]]
         markers = markers.drop(columns=["Reference", "Offsets"]).join(
             defaults.set_index("Name"), on="Name"
         )[columns]
     else:
-        o37 = pandas.read_csv(data_file("marker-offsets-GRCh37.tsv"), sep="\t")
+        filename = resource_filename("microhapdb", "data/marker-offsets-GRCh37.tsv")
+        o37 = pd.read_csv(filename, sep="\t")
         markers = markers.drop(columns=["Reference", "Offsets"]).join(
             o37.set_index("Marker"), on="Name"
         )[columns]

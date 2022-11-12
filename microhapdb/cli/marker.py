@@ -71,20 +71,14 @@ def display(result, view_format, delta=10, minlen=80, extend_mode=0, trunc=True,
         )
         if view_format == "detail":
             for marker in markers:
-                if len(marker.alleles) == 0:
-                    message = f"Unable to display full detail view for marker '{marker.data.Name}' without frequency information"
-                    warn(message, UserWarning)
                 print(marker.detail)
         elif view_format == "fasta":
             for marker in markers:
                 print(marker.fasta)
         elif view_format == "offsets":
             refr = "Hg37" if refr37 else "Hg38"
-            offsets = list()
-            for marker in markers:
-                for offset, refr_offset in zip(marker.target_offsets, marker.offsets):
-                    offsets.append((marker.data.Name, offset, marker.data.Chrom, refr_offset))
-            table = pd.DataFrame(offsets, columns=["Marker", "Offset", "Chrom", f"Offset{refr}"])
+            table = pd.concat([marker.definition for marker in markers])
+            table = table.rename(columns={"ChromOffset": f"Offset{refr}"})
             table.to_csv(sys.stdout, sep="\t", index=False)
         else:
             raise ValueError(f'unsupported view format "{args.format}"')

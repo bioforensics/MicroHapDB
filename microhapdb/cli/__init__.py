@@ -17,7 +17,6 @@ from argparse import ArgumentParser, RawDescriptionHelpFormatter
 import microhapdb
 from pkg_resources import resource_filename
 import sys
-import textwrap
 
 
 subparser_funcs = {
