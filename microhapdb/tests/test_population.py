@@ -7,48 +7,52 @@
 
 
 import microhapdb
-from microhapdb.population import standardize_ids
+from microhapdb import Population
 import pytest
 
 
 def test_standardize_ids():
-    assert list(standardize_ids(["SA004057Q"]).values) == ["TSI"]
-    assert list(standardize_ids(["MSL"]).values) == ["MSL"]
-    assert list(standardize_ids(["Maya, Yucatan", "SA000055K", "Greeks"]).values) == [
-        "SA002767W",
-        "SA000055K",
+    assert Population.standardize_ids(["SA004057Q"]) == ["TSI"]
+    assert Population.standardize_ids(["MSL"]) == ["MSL"]
+    assert Population.standardize_ids(["Han"]) == ["MHDBP-48c2cfb2aa", "SA000001B", "SA000009J"]
+    assert Population.standardize_ids(["Maya, Yucatan", "SA000055K", "Greeks"]) == [
         "SA000013E",
+        "SA000055K",
+        "SA002767W",
     ]
-    print(list(standardize_ids(["Han"]).values))
-    assert list(standardize_ids(["Han"]).values) == ["MHDBP-48c2cfb2aa", "SA000001B", "SA000009J"]
 
 
 def test_assumptions():
-    assert len(microhapdb.populations) == 96 + 3 + 1 + 1 + 1 + 7
+    num_populations_per_source = [
+        26,  # 1KGP
+        70,  # ALFRED
+        1,  # 10.1016/j.fsigen.2019.02.018
+        7,  # 10.1016/j.fsigen.2020.102275
+        1,  # 10.1016/j.legalmed.2015.06.003
+        1,  # ISFG2019:P597
+        3,  # 10.1016/j.fsigen.2018.05.008
+    ]
+    assert len(microhapdb.populations) == sum(num_populations_per_source)
 
 
 def test_populations():
     """
-    >>> import microhapdb
-    >>> p = microhapdb.populations
-    >>> p[p.ID == 'SA000040E']
-               ID     Name  Source
-    52  SA000040E  Kachari  ALFRED
-    >>> p[p.ID == 'SA000936S']
-               ID     Name  Source
-    58  SA000936S  Koreans  ALFRED
-    >>> p[p.Name == 'Japanese']
-                      ID      Name                          Source
-    45  MHDBP-63967b883e  Japanese  10.1016/j.legalmed.2015.06.003
-    46         SA000010B  Japanese                          ALFRED
-    >>> p[p.Name.str.contains('Han')]
-                      ID                           Name                        Source
-    33  MHDBP-48c2cfb2aa                            Han  10.1016/j.fsigen.2019.02.018
-    34         SA000001B                            Han                        ALFRED
-    35         SA000009J                            Han                        ALFRED
-    36               CHB  Han Chinese in Beijing, China                          1KGP
-    93               CHS           Southern Han Chinese                          1KGP
-    >>> p.query('Name.str.contains("Afr")', engine='python')
+    >>> from microhapdb import Population
+    >>> pop = Population.from_id("SA000040E")
+    >>> print(pop.popid, pop.name, pop.source)
+    SA000040E Kachari ALFRED
+    >>> Population.table_from_ids(["CEU", "IBS"])
+          ID                                               Name Source
+    40   IBS                        Iberian Population in Spain   1KGP
+    103  CEU  Utah Residents (CEPH) with Northern and Wester...   1KGP
+    >>> for pop in Population.from_query("Name.str.contains('Han')"):
+    ...   print(pop.popid, pop.name, pop.source)
+    MHDBP-48c2cfb2aa Han 10.1016/j.fsigen.2019.02.018
+    SA000001B Han ALFRED
+    SA000009J Han ALFRED
+    CHB Han Chinese in Beijing, China 1KGP
+    CHS Southern Han Chinese 1KGP
+    >>> Population.table_from_query("Name.str.contains('Afr')")
                      ID                                     Name                        Source
     2  MHDBP-3dab7bdd14                                   Africa  10.1016/j.fsigen.2018.05.008
     3         SA000101C                        African Americans                        ALFRED
@@ -57,42 +61,29 @@ def test_populations():
     """
     pop = microhapdb.populations
     assert pop.shape == (109, 3)
-    assert pop[pop.ID == "FIN"].Name.values == ["Finnish in Finland"]
-    assert pop[pop.ID == "SA000028K"].Name.values == ["Karitiana"]
-    result = pop[pop.Name.str.contains("Jews")].ID.values
-    assert list(result) == ["SA000490N", "SA000015G", "SA000096P", "SA000016H"]
+    assert Population.from_id("FIN").name == "Finnish in Finland"
+    assert Population.from_id("SA000028K").name == "Karitiana"
+    result = Population.table_from_query("Name.str.contains('Jews')")
+    assert result.ID.tolist() == ["SA000490N", "SA000015G", "SA000096P", "SA000016H"]
 
 
-def test_pop_table(capsys):
-    masai = microhapdb.populations[microhapdb.populations.Name == "Masai"]
-    microhapdb.population.print_table(masai)
-    testout = """
-       ID  Name Source
-SA000854R Masai ALFRED
-"""
-    terminal = capsys.readouterr()
-    print(terminal.out)
-    assert terminal.out.strip() == testout.strip()
+def test_pop_table():
+    result = Population.table_from_ids(["Masai"])
+    assert len(result) == 1
+    assert result.ID.iloc[0] == "SA000854R"
+    assert result.Source.iloc[0] == "ALFRED"
 
 
-def test_pop_table_multi(capsys):
-    hanchinese = microhapdb.populations[microhapdb.populations.Name == "Han"]
-    microhapdb.population.print_table(hanchinese)
-    testout = """
-              ID Name                       Source
-MHDBP-48c2cfb2aa  Han 10.1016/j.fsigen.2019.02.018
-       SA000001B  Han                       ALFRED
-       SA000009J  Han                       ALFRED
-"""
-    terminal = capsys.readouterr()
-    print(terminal.out)
-    assert terminal.out.strip() == testout.strip()
+def test_pop_table_multi():
+    result = Population.table_from_query("Name == 'Han'")
+    assert len(result) == 3
+    assert result.ID.tolist() == ["MHDBP-48c2cfb2aa", "SA000001B", "SA000009J"]
 
 
-def test_pop_detail(capsys):
-    hausa = microhapdb.populations[microhapdb.populations.Name == "Hausa"]
-    microhapdb.population.print_detail(hausa)
-    testout = """
+def test_pop_detail():
+    pop = Population.from_id("Hausa")
+    observed = pop.detail
+    expected = """
 --------------------------------------------------------------[ MicroHapDB ]----
 Hausa    (SA000100B; source=ALFRED)
 
@@ -117,14 +108,14 @@ Hausa    (SA000100B; source=ALFRED)
          2|****
 --------------------------------------------------------------------------------
 """
-    terminal = capsys.readouterr()
-    assert terminal.out.strip() == testout.strip()
+    assert observed.strip() == expected.strip()
 
 
 def test_pop_detail_multi(capsys):
-    japanese = microhapdb.populations[microhapdb.populations.Name == "Japanese"]
-    microhapdb.population.print_detail(japanese)
-    testout = """
+    for pop in Population.from_query("Name == 'Japanese'"):
+        print(pop.detail)
+    observed = capsys.readouterr().out
+    expected = """
 --------------------------------------------------------------[ MicroHapDB ]----
 Japanese    (MHDBP-63967b883e; source=10.1016/j.legalmed.2015.06.003)
 
@@ -162,23 +153,23 @@ Japanese    (SA000010B; source=ALFRED)
          2|****
 --------------------------------------------------------------------------------
 """
-    terminal = capsys.readouterr()
-    assert terminal.out.strip() == testout.strip()
+    assert observed.strip() == expected.strip()
 
 
 @pytest.mark.parametrize(
-    "ident,data",
+    "popid,name,source",
     [
-        ("SA000019K", "SA000019K Russians ALFRED"),
-        ("MHDBP-936bc36f79", "MHDBP-936bc36f79 Asia 10.1016/j.fsigen.2018.05.008"),
-        ("MHDBP-7c055e7ee8", "MHDBP-7c055e7ee8 Swedish ISFG2019:P597"),
-        ("MHDBP-63967b883e", "MHDBP-63967b883e Japanese 10.1016/j.legalmed.2015.06.003"),
-        ("MHDBP-48c2cfb2aa", "MHDBP-48c2cfb2aa  Han 10.1016/j.fsigen.2019.02.018"),
+        ("GBR", "British in England and Scotland", "1KGP"),
+        ("SA000019K", "Russians", "ALFRED"),
+        ("MHDBP-48c2cfb2aa", "Han", "10.1016/j.fsigen.2019.02.018"),
+        ("mMHseq-Zaramo", "Zaramo", "10.1016/j.fsigen.2020.102275"),
+        ("MHDBP-63967b883e", "Japanese", "10.1016/j.legalmed.2015.06.003"),
+        ("MHDBP-7c055e7ee8", "Swedish", "ISFG2019:P597"),
+        ("MHDBP-936bc36f79", "Asia", "10.1016/j.fsigen.2018.05.008"),
     ],
 )
-def test_all_sources(ident, data, capsys):
-    pop = microhapdb.populations[microhapdb.populations.ID == ident]
-    microhapdb.population.print_table(pop)
-    terminal = capsys.readouterr()
-    print(terminal.out)
-    assert data in terminal.out
+def test_all_sources(popid, name, source):
+    pop = Population.from_id(popid)
+    assert pop.popid == popid
+    assert pop.name == name
+    assert pop.source == source
