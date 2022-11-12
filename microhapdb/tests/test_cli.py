@@ -10,7 +10,6 @@
 from io import StringIO
 import microhapdb
 from microhapdb.cli import get_parser
-from microhapdb.util import data_file
 import pandas
 import pytest
 from tempfile import NamedTemporaryFile

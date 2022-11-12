@@ -15,7 +15,6 @@ from io import StringIO
 from math import ceil
 import microhapdb
 import pandas as pd
-from pkg_resources import resource_filename
 import sys
 
 
@@ -35,6 +34,12 @@ class Marker:
     [0, 54, 65, 145]
     >>> marker.target_offsets
     [10, 64, 75, 155]
+    >>> marker.definition
+           Marker  Offset  Chrom  ChromOffset
+    0  mh13KK-218      10  chr13     53486691
+    1  mh13KK-218      64  chr13     53486745
+    2  mh13KK-218      75  chr13     53486756
+    3  mh13KK-218     155  chr13     53486836
     >>> print(marker.fasta)
     >mh13KK-218 MHDBM-d645f595 GRCh38:chr13:53486691-53486837 variants=10,64,75,155 Xref=SI664607D
     ATAGCACATTTCCAAGTTGTTCTAGTGAATTACTGAACTGGATAGGATTGTGGAAACCTGTGAATAATAGCTAGGTAGTC
@@ -48,13 +53,13 @@ class Marker:
         self.delta = delta
         self.minlen = minlen
         self.flanking_sequence_data = microhapdb.sequences[
-            microhapdb.sequences.Marker == self.data.Name
+            microhapdb.sequences.Marker == self.name
         ].iloc[0]
         self.data38 = marker
         if marker.Reference != "GRCh38":
             # We need GRCh38 coordinates to work with marker sequences
             assert marker.Reference == "GRCh37"
-            markers38 = pd.read_csv(resource_filename("microhapdb", "data/marker.tsv"), sep="\t")
+            markers38 = pd.read_csv(microhapdb.data_file("marker.tsv"), sep="\t")
             self.data38 = markers38[markers38.Name == marker.Name].iloc[0]
 
     @staticmethod
@@ -164,11 +169,19 @@ class Marker:
         return sorted(microhapdb.markers[microhapdb.markers.Name.isin(ids)].Name)
 
     def __str__(self):
-        return f"{self.data.Name} ({self.slug})"
+        return f"{self.name} ({self.slug})"
+
+    @property
+    def chrom(self):
+        return self.data.Chrom
+
+    @property
+    def name(self):
+        return self.data.Name
 
     @property
     def slug(self):
-        seqid = self.data.Chrom
+        seqid = self.chrom
         return f"{seqid}:{self.start}-{self.end}"
 
     def __len__(self):
@@ -192,7 +205,7 @@ class Marker:
 
     @property
     def target_slug(self):
-        seqid = self.data.Chrom
+        seqid = self.chrom
         start, end = self.target_interval
         return f"{seqid}:{start}-{end}"
 
@@ -223,7 +236,7 @@ class Marker:
     def variant_lengths(self):
         nvars = len(self.offsets)
         lengths = [1] * nvars
-        for n, row in microhapdb.indels[microhapdb.indels.Marker == self.data.Name].iterrows():
+        for n, row in microhapdb.indels[microhapdb.indels.Marker == self.name].iterrows():
             assert row.VariantIndex < nvars, (row.VariantIndex, nvars)
             varalleles = [row.Refr] + row.Alt.split(",")
             varallelelengths = [len(va) for va in varalleles]
@@ -234,7 +247,7 @@ class Marker:
     def detail(self):
         output = StringIO()
         print("-" * 62, "[ MicroHapDB ]----", sep="", file=output)
-        print(self.data.Name, "   a.k.a", ", ".join(self.xrefs), end="\n\n", file=output)
+        print(self.name, "   a.k.a", ", ".join(self.xrefs), end="\n\n", file=output)
         self.print_detail_definition(output)
         self.print_detail_markerseq(output)
         self.print_detail_targetseq(output)
@@ -244,12 +257,12 @@ class Marker:
     @property
     def xrefs(self):
         xreflist = [self.data.PermID]
-        xreflist.extend(sorted(microhapdb.idmap[microhapdb.idmap.ID == self.data.Name].Xref))
+        xreflist.extend(sorted(microhapdb.idmap[microhapdb.idmap.ID == self.name].Xref))
         return xreflist
 
     @property
     def varrefs(self):
-        return microhapdb.variantmap[microhapdb.variantmap.Marker == self.data.Name].Variant
+        return microhapdb.variantmap[microhapdb.variantmap.Marker == self.name].Variant
 
     def print_detail_definition(self, out):
         marker_slug = f"{self.slug} ({len(self)} bp)"
@@ -270,7 +283,7 @@ class Marker:
         print("\n", file=out)
 
     def print_detail_markerseq(self, out):
-        print("--[ Core Marker Sequence ]--\n>", self.data.Name, sep="", file=out)
+        print("--[ Core Marker Sequence ]--\n>", self.name, sep="", file=out)
         markerseq = self.marker_seq
         if len(markerseq) < 80:
             print(markerseq, file=out)
@@ -387,7 +400,7 @@ class Marker:
         ind = microhapdb.indels
         for n in range(self.nvar):
             refrlength = 1
-            result = ind[(ind.Marker == self.data.Name) & (ind.VariantIndex == n)]
+            result = ind[(ind.Marker == self.name) & (ind.VariantIndex == n)]
             if len(result) == 1:
                 refrlength = len(result.Refr.iloc[0])
             lengths.append(refrlength)
@@ -396,15 +409,15 @@ class Marker:
     @property
     def alleles(self):
         return sorted(
-            microhapdb.frequencies[microhapdb.frequencies.Marker == self.data.Name].Allele.unique()
+            microhapdb.frequencies[microhapdb.frequencies.Marker == self.name].Allele.unique()
         )
 
     @property
     def defline(self):
         varstring = ",".join(map(str, self.target_offsets))
-        parts = [self.data.Name, f"PermID={self.data.PermID}", f"GRCh38:{self.slug}", f"variants={varstring}"]
+        parts = [self.name, f"PermID={self.data.PermID}", f"GRCh38:{self.slug}", f"variants={varstring}"]
         line = " ".join(parts)
-        result = microhapdb.idmap[microhapdb.idmap.ID == self.data.Name]
+        result = microhapdb.idmap[microhapdb.idmap.ID == self.name]
         if len(result) > 0:
             xrefstr = ",".join(result.Xref)
             line += f" Xref={xrefstr}"
@@ -428,7 +441,7 @@ class Marker:
     def definition(self):
         variants = list()
         for offset, refr_offset in zip(self.target_offsets, self.offsets):
-            variants.append((self.data.Name, offset, self.data.Chrom, refr_offset))
+            variants.append((self.name, offset, self.chrom, refr_offset))
         return pd.DataFrame(variants, columns=["Marker", "Offset", "Chrom", f"ChromOffset"])
 
     def global_to_local(self, coord):

@@ -15,7 +15,6 @@
 from . import lookup, marker, population, frequency
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 import microhapdb
-from pkg_resources import resource_filename
 import sys
 
 
@@ -82,4 +81,4 @@ def get_parser():
 def print_files():
     tables = ("marker", "population", "frequency", "variantmap", "idmap", "sequence", "indels")
     for table in tables:
-        print(resource_filename("microhapdb", f"{table}.tsv"))
+        print(microhapdb.data_file(f"{table}.tsv"))
