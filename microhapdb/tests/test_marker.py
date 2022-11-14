@@ -557,16 +557,18 @@ def test_from_region():
     markers = list(Marker.from_region("chr12:100000000-200000000"))
     assert len(markers) == 8
     observed = sorted([marker.name for marker in markers])
-    expected = sorted([
-        "mh12KK-093",
-        "mh12KK-045",
-        "mh12KK-042",
-        "mh12KKCS-046",
-        "mh12KK-046",
-        "mh12AT-25",
-        "mh12CP-003",
-        "mh12KKCS-209",
-    ])
+    expected = sorted(
+        [
+            "mh12KK-093",
+            "mh12KK-045",
+            "mh12KK-042",
+            "mh12KKCS-046",
+            "mh12KK-046",
+            "mh12AT-25",
+            "mh12CP-003",
+            "mh12KKCS-209",
+        ]
+    )
     assert observed == expected
 
 

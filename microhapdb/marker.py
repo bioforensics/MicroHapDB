@@ -415,7 +415,12 @@ class Marker:
     @property
     def defline(self):
         varstring = ",".join(map(str, self.target_offsets))
-        parts = [self.name, f"PermID={self.data.PermID}", f"GRCh38:{self.slug}", f"variants={varstring}"]
+        parts = [
+            self.name,
+            f"PermID={self.data.PermID}",
+            f"GRCh38:{self.slug}",
+            f"variants={varstring}",
+        ]
         line = " ".join(parts)
         result = microhapdb.idmap[microhapdb.idmap.ID == self.name]
         if len(result) > 0:

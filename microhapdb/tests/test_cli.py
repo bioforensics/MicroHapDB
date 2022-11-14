@@ -19,7 +19,6 @@ import pytest
 from tempfile import NamedTemporaryFile
 
 
-
 def data_file(path):
     return resource_filename("microhapdb", f"tests/data/{path}")
 

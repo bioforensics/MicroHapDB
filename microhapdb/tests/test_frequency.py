@@ -81,13 +81,23 @@ def test_allele_frequencies():
 @pytest.mark.parametrize(
     "marker,pop,allele,frequency",
     [
-        ("mh10USC-10qC", "MXL", "G,C,A", 0.039), # 1KGP
-        ("mh22KK-064", "SA000009J", "A,A,T,AATAATT", 0.828,),  # ALFRED
-        ("mh01CP-016", "MHDBP-48c2cfb2aa", "T,G,A", 0.2916), # 10.1016/j.fsigen.2019.02.018
-        ("mh18KKCS-293", "mMHseq-Chagga", "G,C,G,A,T,A,G", 0.011), # 10.1016/j.fsigen.2020.102275
-        ("mh11NH-17", "MHDBP-63967b883e", "C,G,G", 0.153), # 10.1016/j.legalmed.2015.06.003
-        ("mh20AT-40", "MHDBP-7c055e7ee8", "T,C,G", 0.0806), # ISFG2019:P597
-        ("mh06PK-24844", "MHDBP-383d86606a", "C,C,G,C,C,C,A,A,A,A", 0.005,), # 10.1016/j.fsigen.2018.05.008
+        ("mh10USC-10qC", "MXL", "G,C,A", 0.039),  # 1KGP
+        (
+            "mh22KK-064",
+            "SA000009J",
+            "A,A,T,AATAATT",
+            0.828,
+        ),  # ALFRED
+        ("mh01CP-016", "MHDBP-48c2cfb2aa", "T,G,A", 0.2916),  # 10.1016/j.fsigen.2019.02.018
+        ("mh18KKCS-293", "mMHseq-Chagga", "G,C,G,A,T,A,G", 0.011),  # 10.1016/j.fsigen.2020.102275
+        ("mh11NH-17", "MHDBP-63967b883e", "C,G,G", 0.153),  # 10.1016/j.legalmed.2015.06.003
+        ("mh20AT-40", "MHDBP-7c055e7ee8", "T,C,G", 0.0806),  # ISFG2019:P597
+        (
+            "mh06PK-24844",
+            "MHDBP-383d86606a",
+            "C,C,G,C,C,C,A,A,A,A",
+            0.005,
+        ),  # 10.1016/j.fsigen.2018.05.008
     ],
 )
 def test_all_sources(marker, pop, allele, frequency):
