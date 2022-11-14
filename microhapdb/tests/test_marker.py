@@ -47,6 +47,7 @@ def test_assumptions():
         20,  # 10.1098/rsos.191937
         23,  # 10.1002/elps.201900451
         59,  # 10.1007/s00414-020-02483-x
+        22,  # 10.1016/j.fsigen.2022.102705
     ]
     assert len(microhapdb.markers) == sum(num_markers_per_source)
 
@@ -80,7 +81,7 @@ def test_markers():
     mh21PK-MX1s (chr21:41464744-41464824)
     mh22PK-104638 (chr22:44857882-44857955)
     """
-    assert microhapdb.markers.shape == (634, 9)
+    assert microhapdb.markers.shape == (656, 9)
     result = microhapdb.markers[microhapdb.markers.Chrom == "chr19"]
     assert len(result) == 18
     varids = microhapdb.variantmap[microhapdb.variantmap.Marker.isin(result.Name)].Variant.unique()
@@ -438,6 +439,7 @@ def test_marker_object(capsys):
         ("mh15PK-75170", "chr15:24802313-24802380", 67, "10.1016/j.fsigen.2018.05.008"),
         ("mh03LV-06", "chr3:11914400-11914598", 198, "10.1016/j.fsigen.2018.05.001"),
         ("mh15SHY-003", "chr15:92605652-92605846", 194, "10.1007/s00414-020-02483-x"),
+        ("mh01FHL-009", "chr1:231954505-231954668", 163, "10.1016/j.fsigen.2022.102705"),
     ],
 )
 def test_all_sources(markername, slug, length, source):

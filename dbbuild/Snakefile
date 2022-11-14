@@ -374,4 +374,4 @@ rule indels:
             df = pandas.read_csv(freqfile, sep='\t', index_col=None)
             dfs.append(df)
         data = pandas.concat(dfs, axis=0, ignore_index=True)
-        data.sort_values('Marker').to_csv(output[0], sep='\t', index=False)
+        data.sort_values(['Marker', 'VariantIndex']).to_csv(output[0], sep='\t', index=False)

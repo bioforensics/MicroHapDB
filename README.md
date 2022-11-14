@@ -8,7 +8,7 @@ NBFAC, 2018-2022
 https://github.com/bioforensics/microhapdb
 
 **MicroHapDB** is a portable database intended for scientists and researchers interested in microhaplotypes for forensic analysis.
-The database includes a comprehensive collection of marker and allele frequency data from numerous databases and published research articles.<sup>[5-19]</sup>
+The database includes a comprehensive collection of marker and allele frequency data from numerous databases and published research articles.<sup>[5-20]</sup>
 Effective number of allele (*A<sub>e</sub>*)<sup>[2]</sup> and informativeness for assignment (*I<sub>n</sub>*)<sup>[3]</sup> statistics are included so that markers can be ranked for different forensic applications.
 The entire contents of the database are distributed with each copy of MicroHapDB, and instructions for adding private data to a local copy of the database are provided.
 MicroHapDB is designed to be user-friendly for both practitioners and researchers, supporting a range of access methods from browsing and simple text queries to complex queries and full programmatic access via a Python API.
@@ -26,7 +26,7 @@ conda install -c bioconda microhapdb
 To make sure the package installed correctly:
 
 ```
-conda install pytest
+conda install -y pytest
 pytest --pyargs microhapdb --doctest-modules
 ```
 
@@ -170,7 +170,7 @@ MicroHapDB was created and is maintained by the Bioinformatics Group at the Nati
 
 <sup>[7]</sup>Kidd KK, Rajeevan H (2018) ALFRED data download. *The Allele Frequency Database*, https://alfred.med.yale.edu/alfred/selectDownload/Microhap_alleleF_198.txt. Accessed December 7, 2018.
 
-<sup>[8]</sup>van der Gaag KJ, de Leeuw RH, Laros JFJ, den Dunnen JT, de Knijff P (2018) Short hypervariable microhaplotypes: A novel set of very short high discriminating power loci without stutter artefacts. *Forensic Science International: Genetics*, 35:169-175, [doi:10.1016/j.fsigen.2018.05.008](https://doi.org/10.1016/j.fsigen.2018.05.008).
+<sup>[8]</sup>van der Gaag KJ, de Leeuw RH, Laros JFJ, den Dunnen JT, de Knijff P (2018) Short hypervariable microhaplotypes: A novel set of very short high discriminating power loci without stutter artefacts. *FSI: Genetics*, 35:169-175, [doi:10.1016/j.fsigen.2018.05.008](https://doi.org/10.1016/j.fsigen.2018.05.008).
 
 <sup>[9]</sup>Staadig A, Tillmar A (2019) Evaluation of microhaplotypes—A promising new type of forensic marker. *The 28th Congress of the International Society for Forensic Genetics*, P597.
 
@@ -184,7 +184,7 @@ MicroHapDB was created and is maintained by the Bioinformatics Group at the Nati
 
 <sup>[14]</sup>Auton A, Abecasis G, Altshuler D, et al. (2015) A global reference for human genetic variation. *Nature* 526:68–74, [doi:10.1038/nature15393](https://doi.org/10.1038/nature15393).
 
-<sup>[15]</sup>Gandotra N, Speed WC, Qin W, Tang Y, Pakstis AJ, Kidd KK, Scharfe C (2020) Validation of novel forensic DNA markers using multiplex microhaplotype sequencing. *Forensic Science International: Genetics*, **47**:102275, [doi:10.1016/j.fsigen.2020.102275](https://doi.org/10.1016/j.fsigen.2020.102275).
+<sup>[15]</sup>Gandotra N, Speed WC, Qin W, Tang Y, Pakstis AJ, Kidd KK, Scharfe C (2020) Validation of novel forensic DNA markers using multiplex microhaplotype sequencing. *FSI: Genetics*, **47**:102275, [doi:10.1016/j.fsigen.2020.102275](https://doi.org/10.1016/j.fsigen.2020.102275).
 
 <sup>[16]</sup>Sun S, Liu Y, Li J, Yang Z, Wen D, Liang W, Yan Y, Yu H, Cai J, Zha L (2020) Development and application of a nonbinary SNP-based microhaplotype panel for paternity testing involving close relatives. *FSI: Genetics*, 46:102255, [doi:10.1016/j.fsigen.2020.102255](https://doi.org/10.1016/j.fsigen.2020.102255).
 
@@ -193,6 +193,8 @@ MicroHapDB was created and is maintained by the Bioinformatics Group at the Nati
 <sup>[18]</sup>Jin XY, Cui W, Chen C, Guo YX, Zhang XR, Xing GH, Lan JW, Zhu BF (2020) Developing and population analysis of a new multiplex panel of 18 microhaplotypes and compound markers using next generation sequencing and its application in the Shaanxi Han population. *Electrophoresis*, **41**(13-14):1230-1237, [doi:10.1002/elps.201900451](https://doi.org/10.1002/elps.201900451).
 
 <sup>[19]</sup>Wu R, Li H, Li R, Peng D, Wang N, Shen X, Sun H (2021) Identification and sequencing of 59 highly polymorphic microhaplotypes for analysis of DNA mixtures. *International Journal of Legal Medicine*, 135:1137-1149, [doi:10.1007/s00414-020-02483-x](https://doi.org/10.1007/s00414-020-02483-x).
+
+<sup>[20]</sup>Fan H, Xie Q, Wang L, Ru K, Tan X, Ding J, Wang X, Huang J, Wang Z, Li Y, Wang X, He Y, Gu C, Liu M, Ma S, Wen S, Qiu P (2022) Microhaplotype and Y-SNP/STR (MY): A novel MPS-based system for genotype pattern recognition in two-person DNA mixtures. *FSI: Genetics*, 59:102705, [doi:10.1016/j.fsigen.2022.102705](https://doi.org/10.1016/j.fsigen.2022.102705).
 
 [alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
 [Pandas]: https://pandas.pydata.org
