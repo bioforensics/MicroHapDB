@@ -183,3 +183,9 @@ def test_all_sources(popid, name, source):
 def test_from_id_pop_not_found():
     with pytest.raises(ValueError, match=r"population 'Romulans' not found"):
         Population.from_id("Romulans")
+
+
+def test_population_xref():
+    assert Population.standardize_ids(["SA004250L"]) == ["CEU"]
+    assert Population.standardize_ids(["SA004250L", "BogusPopID"]) == ["CEU"]
+    assert Population.standardize_ids(["SA004250L", "Cheyenne"]) == ["CEU", "SA000023F"]

@@ -23,6 +23,8 @@ def main(args):
         result = Population.table_from_ids(args.id)
     else:
         result = microhapdb.populations
+    if len(result) == 0:
+        return
     if args.format == "detail":
         for pop in Population.objectify(result):
             print(pop.detail)

@@ -26,19 +26,21 @@ def main(args):
         microhapdb.set_reference(37)
     markerids = resolve_panel(args.panel) if args.panel else args.id
     result = apply_filters(markerids, args.region, args.query)
-    display(
-        result,
-        args.format,
-        delta=args.delta,
-        minlen=args.min_length,
-        extend_mode=args.extend_mode,
-        trunc=args.trunc,
-        refr37=args.GRCh37,
-    )
+    if len(result) > 0:
+        display(
+            result,
+            args.format,
+            delta=args.delta,
+            minlen=args.min_length,
+            extend_mode=args.extend_mode,
+            trunc=args.trunc,
+            refr37=args.GRCh37,
+        )
+    # Reset
     if args.ae_pop:
-        microhapdb.set_ae_population(popid=None)  # Reset
+        microhapdb.set_ae_population(popid=None)
     if args.GRCh37:
-        microhapdb.set_reference(38)  # Reset
+        microhapdb.set_reference(38)
 
 
 def resolve_panel(panel):

@@ -675,3 +675,19 @@ def test_bad_format():
     args.format = "BoGuS"
     with pytest.raises(ValueError, match=r'unsupported view format "BoGuS"'):
         microhapdb.cli.frequency.main(args)
+
+
+@pytest.mark.parametrize(
+    "arglist",
+    [
+        ("marker", "--GRCh37", "BogusMarkerID"),
+        ("population", "Atreides"),
+        ("frequency", "--marker=mh02USC-2pA", "--population=XYZ"),
+        ("frequency", "--marker=NotARealMarkerID", "--population=CEU"),
+    ],
+)
+def test_cli_bad_ids(arglist, capsys):
+    args = get_parser().parse_args(arglist)
+    microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    assert terminal.out == ""
