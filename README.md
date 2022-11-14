@@ -54,7 +54,7 @@ Using the `microhapdb` command in the terminal, a user can provide filtering cri
 - `microhapdb frequency` for retrieving microhap population frequencies
 - `microhapdb lookup` for retrieving individual records of any type
 
-Executing `microhapdb marker --help` in the terminal will print a usage statement with detailed instructions for configuring and running database queries.
+Executing `microhapdb population --help`, `microhapdb marker --help`, and so on in the terminal will print a usage statement with detailed instructions for configuring and running database queries.
 
 </details>
 
