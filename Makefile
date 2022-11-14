@@ -24,4 +24,4 @@ style:
 
 ## format:    autoformat code with Black
 format:
-	black --line-length=99 --check *.py microhapdb/*.py microhapdb/*/*.py
+	black --line-length=99 *.py microhapdb/*.py microhapdb/*/*.py

@@ -109,70 +109,73 @@ def subparser(subparsers):
         epilog=epilog,
         formatter_class=RawDescriptionHelpFormatter,
     )
-    subparser.add_argument(
-        "--format", choices=["table", "detail", "fasta", "offsets"], default="table"
+    retrieval = subparser.add_argument_group(
+        "Data Retrieval", "Configure how marker records are retrieved from the database."
     )
-    subparser.add_argument(
+    retrieval.add_argument(
         "--ae-pop",
         metavar="POP",
         help="specify the 1000 Genomes population from which to report "
         'effective number of alleles in the "Ae" column; by default, the Ae value averaged over '
         "all 26 1KGP populations is reported",
     )
-    subparser.add_argument(
+    retrieval.add_argument(
         "--GRCh37",
         action="store_true",
         help="use coordinates from the GRCh37 reference "
         "assembly; by default, the GRCh38 reference is used",
     )
-    subparser.add_argument(
+    retrieval.add_argument(
+        "--panel",
+        metavar="FILE",
+        help="file containing a list of marker names/identifiers," " one per line",
+    )
+    retrieval.add_argument(
+        "--region",
+        metavar="RGN",
+        help="restrict results to the " "specified genomic region; format chrX:YYYY-ZZZZZ",
+    )
+    retrieval.add_argument(
+        "--query", metavar="QRY", help="Retrieve records using a Pandas-style query"
+    )
+    formatting = subparser.add_argument_group(
+        "Formatting",
+        "Configure how results are formatted. Some formats assume a 'target sequence' for each marker, representing what would be targeted by e.g. hybridization capture probes or PCR primers for amplicon sequencing. MicroHapDB computes the endpoints of these target sequences by extending --delta=D nucleotides beyond the first and last variants defining the marker, and then—if needed—extending further until --min-length=L is satisfied. Configuration of these and related parameters is described below.",
+    )
+    formatting.add_argument(
+        "--format", choices=["table", "detail", "fasta", "offsets"], default="table"
+    )
+    formatting.add_argument(
         "--delta",
         metavar="D",
         type=int,
         default=10,
-        help="extend D nucleotides beyond the "
-        "marker extent when computing amplicon boundaries (detail and fasta format only); by "
-        "default D=10",
+        help="extend D nucleotides beyond the marker extent when computing target sequence boundaries; by default D=10",
     )
-    subparser.add_argument(
+    formatting.add_argument(
         "--min-length",
         metavar="L",
         type=int,
         default=80,
-        help="minimum amplicon length (detail " "and fasta format only); by default L=80",
+        help="minimum length of the target sequence; by default L=80",
     )
-    subparser.add_argument(
+    formatting.add_argument(
         "--extend-mode",
         metavar="E",
         type=str_to_extend_mode,
         default="symmetric",
-        help="specify how coordinates will be adjusted if extension is required to satisfy the "
-        "minimum amplicon length; use `5` to extend the 5' end, `3` to extend the 3' end, or "
-        "`symmetric` to extend both ends equally; by default, symmetric mode is used",
+        help="specify how coordinates will be adjusted if extension is required to satisfy the minimum target sequence length; use `5` to extend only the 5' end, `3` to extend only the 3' end, or `symmetric` to extend both ends equally; by default, symmetric mode is used",
     )
-    subparser.add_argument(
+    formatting.add_argument(
         "--notrunc",
         dest="trunc",
         action="store_false",
         default=True,
         help="disable truncation of tabular results",
     )
-    subparser.add_argument(
-        "-p",
-        "--panel",
-        metavar="FILE",
-        help="file containing a list of marker names/identifiers," " one per line",
-    )
-    subparser.add_argument(
-        "-r",
-        "--region",
-        metavar="RGN",
-        help="restrict results to the " "specified genomic region; format chrX:YYYY-ZZZZZ",
-    )
-    subparser.add_argument(
-        "--query", metavar="STRING", help="Retrieve records using a Pandas-style query"
-    )
-    subparser.add_argument("id", nargs="*", help="marker identifier")
+    subparser.add_argument("id", nargs="*", help="one or more marker identifiers")
+    subparser._positionals.title = "Required Arguments"
+    subparser._optionals.title = "Options"
 
 
 def str_to_extend_mode(value):

@@ -296,7 +296,7 @@ class Marker:
         print("--[ Marker Target Sequence with MH alleles (haplotypes) ]--", file=out)
         blocks = self.build_target_seq_blocks()
         self.print_detail_targetseq_variants(blocks, out)  # Top row: variant indicators
-        self.print_detail_targetseq_sequence(blocks, out)  # Second row: amplicon sequence
+        self.print_detail_targetseq_sequence(blocks, out)  # Second row: target sequence
         self.print_detail_targetseq_alleles(blocks, out)  # Row 3+: alleles
 
     def build_target_seq_blocks(self):

@@ -61,6 +61,7 @@ def main(args=None):
 
 def get_parser():
     cli = ArgumentParser(description=bubbletext, formatter_class=RawDescriptionHelpFormatter)
+    cli._positionals.title = "Subcommands"
     cli._optionals.title = "Configuration"
     cli.add_argument(
         "-v",
