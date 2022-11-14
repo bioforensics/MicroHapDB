@@ -1,0 +1,36 @@
+rule marker:
+    input:
+        script="collate.py",
+        tsv="marker-sans37.tsv",
+        bed37="marker37.bed",
+        bed38="marker38.bed",
+    output:
+        marker="marker.tsv"
+    shell:
+        "python {input} {output}"
+
+
+rule get_hg37_coords:
+    input:
+        bed38="marker38.bed",
+        chain="hg38ToHg19.over.chain.gz",
+    output:
+        bed37="marker37.bed",
+        bedunmapped="marker-unmapped.bed",
+    shell:
+        """
+        liftOver {input} {output}
+        [ ! -s {output.bedunmapped} ]
+        """
+
+
+rule parse_table_s4:
+    input:
+        script="table-to-markers.py",
+        table="Fan-mmc2-TableS4.txt",
+    output:
+        tsv="marker-sans37.tsv",
+        bed="marker38.bed",
+        indels="indels.tsv",
+    shell:
+        "python {input} {output}"
