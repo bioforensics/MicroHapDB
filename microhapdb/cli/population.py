@@ -18,9 +18,9 @@ from textwrap import dedent
 
 def main(args):
     if args.query:
-        result = Population.from_query(query)
+        result = Population.table_from_query(query)
     elif len(args.id) > 0:
-        result = Population.from_ids(args.id)
+        result = Population.table_from_ids(args.id)
     else:
         result = microhapdb.populations
     if args.format == "detail":
