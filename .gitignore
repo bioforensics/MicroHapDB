@@ -13,3 +13,4 @@ scratch/
 .DS_Store
 coverage.xml
 .vscode/
+docs/_build/
