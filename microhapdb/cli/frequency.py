@@ -26,6 +26,8 @@ def main(args):
         with open(args.panel, "r") as fh:
             markers = fh.read().strip().split()
     result = apply_filters(markers, args.population, args.allele)
+    if len(result) == 0:
+        return
     display(result, args.format, args.population)
 
 
