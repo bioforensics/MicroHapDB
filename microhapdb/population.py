@@ -72,9 +72,8 @@ class Population:
     def from_id(cls, identifier):
         table = cls.table_from_ids([identifier])
         if len(table) < 1:
-            raise ValueError(f"popualtion {identifier} not found")
-        if len(table) > 1:
-            warn(f"ambiguous population identifier {identifier}", UserWarning)
+            raise ValueError(f"population '{identifier}' not found")
+        assert len(table) == 1, identifier
         entry = table.iloc[0]
         return cls(entry.ID, entry.Name, entry.Source)
 

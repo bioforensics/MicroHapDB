@@ -43,11 +43,11 @@ def main(args):
 
 def resolve_panel(panel):
     markerids = list()
-    if hasattr(microhapdb.panel, args.panel):
-        func = getattr(microhapdb.panel, args.panel)
+    if hasattr(microhapdb.panel, panel):
+        func = getattr(microhapdb.panel, panel)
         markerids.extend(func())
     else:
-        with open(args.panel, "r") as fh:
+        with open(panel, "r") as fh:
             markerids = fh.read().strip().split()
     return markerids
 
@@ -86,7 +86,7 @@ def display(result, view_format, delta=10, minlen=80, extend_mode=0, trunc=True,
             table = table.rename(columns={"ChromOffset": f"Offset{refr}"})
             table.to_csv(sys.stdout, sep="\t", index=False)
         else:
-            raise ValueError(f'unsupported view format "{args.format}"')
+            raise ValueError(f'unsupported view format "{view_format}"')
 
 
 def subparser(subparsers):

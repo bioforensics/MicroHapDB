@@ -14,8 +14,14 @@ from io import StringIO
 import microhapdb
 from microhapdb.cli import get_parser
 import pandas
+from pkg_resources import resource_filename
 import pytest
 from tempfile import NamedTemporaryFile
+
+
+
+def data_file(path):
+    return resource_filename("microhapdb", f"tests/data/{path}")
 
 
 def test_main_no_args(capsys):
@@ -47,7 +53,6 @@ def test_files(capsys):
         args = get_parser().parse_args(["--files"])
         microhapdb.cli.main(args)
     out, err = capsys.readouterr()
-    print(err)
     outlines = out.strip().split("\n")
     assert len(outlines) == 7
 
@@ -82,9 +87,7 @@ def test_main_pop_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert (
-        len(outlines) == 1 + 96 + 3 + 1 + 1 + 1 + 7
-    )  # 1 header line + 96 ALFRED + 3 LOVD + 1 Linköping + 1 NRIPS + 1 Chen2019 + 7 mMHseq
+    assert len(outlines) == 1 + 109
 
 
 def test_main_pop_detail(capsys):
@@ -115,7 +118,15 @@ def test_main_marker_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 198 + 15 + 40 + 26 + (11 - 1) + 10 + 118 + 90 + 25 + 20 + 23 + 59
+    assert len(outlines) == 1 + 634
+
+
+def test_main_marker_notrunc(capsys):
+    args = get_parser().parse_args(["marker", "--notrunc"])
+    microhapdb.cli.main(args)
+    out, err = capsys.readouterr()
+    outlines = out.strip().split("\n")
+    assert len(outlines) == 1 + 634
 
 
 def test_main_marker_detail(capsys):
@@ -160,10 +171,10 @@ def test_main_marker_fasta_default_delta(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     testout = """
->mh01CP-016 PermID=MHDBM-021e569a GRCh38:chr1:55559012-55559056 variants=18,56,62 Xref=SI664876L
+>mh01CP-016 PermID=MHDBM-021e569a GRCh38:chr1:55559012-55559057 variants=18,56,62 Xref=SI664876L
 TGGCACACAACAAGTGCTTATAATGAAAGCATTAGTGAGTAAAAGAGTGATCCCTGGCTTTGAACTCCCTCTAAGTGTAC
 C
->mh06PK-24844 PermID=MHDBM-aa39cbba GRCh38:chr6:13861392-13861446 variants=13,20,35,42,51,55,59,60,61,67
+>mh06PK-24844 PermID=MHDBM-aa39cbba GRCh38:chr6:13861392-13861447 variants=13,20,35,42,51,55,59,60,61,67
 AGGAAGAAAGTGATTACATCCAAACGTGAGCAGGAGGAAACTCGGAACATACTGTTTTTAAGAACTAGTATCACTAGAGT
 T
 """
@@ -185,12 +196,12 @@ def test_main_marker_fasta_long_delta(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     testout = """
->mh08PK-46625 PermID=MHDBM-840756f3 GRCh38:chr8:1194352-1194371 variants=115,119,127,134
+>mh08PK-46625 PermID=MHDBM-840756f3 GRCh38:chr8:1194352-1194372 variants=115,119,127,134
 TGCTGGCAAGTTGGAAACACAGGCTCTGCGATTTTGAGAGTGAACCTGCAAGAGACAAGCAGACGTTGGCAGTGCCGCGT
 CCCGGCTGGTGGAGGGAGCCCGGATGCCTGGCAGACAGTCAGTGGTCGGTTGGCGGCCGGCCCACATAAGGGCACCATGC
 TCACCGTGTCTAGGCAGAGCTGGAGGCTCCTCCTGCCCAGGGCGGCCTCCAGGTGGGGAGGACGGCAGAGCTTCCCTCAG
 TCCCACTTTC
->mh13CP-010 PermID=MHDBM-13233c9a GRCh38:chr13:29218044-29218076 variants=109,120,141
+>mh13CP-010 PermID=MHDBM-13233c9a GRCh38:chr13:29218044-29218077 variants=109,120,141
 AATAAGACCTGGTCTCCACAAAGAAATTTTAAAAATTAGCTGGGCTTGGTGATGCATGCCTGTAGTCCCAGCTACTGAGG
 CTGAGGCAGGAGTATTCCTTGAGTCCAGGAGGTCATGGCTGCAGTGAGTTATGATTGTGCCGTCATACTCCAGCCTGAAC
 AAAAGAGTGAGACCTTGTCCCTCCCCGCCAAAACCAAACCAAAACAAAACAAAACAAAAAAAAAACACCTAAAAACCCCA
@@ -236,7 +247,7 @@ mh20KK-035 MHDBM-92f3685a    GRCh38 chr20            2088698,2088728 2.1328 0.21
     assert testout.strip() == terminal.out.strip()
 
 
-def test_main_marker_panel_query_conflict(capsys):
+def test_main_marker_panel_plus_query(capsys):
     with NamedTemporaryFile() as panelfile:
         with open(panelfile.name, "w") as fh:
             for marker in ["mh05KK-058", "mh06KK-101", "mh20KK-035"]:
@@ -245,19 +256,8 @@ def test_main_marker_panel_query_conflict(capsys):
         args = get_parser().parse_args(arglist)
         microhapdb.cli.main(args)
     terminal = capsys.readouterr()
-    assert "ignoring user-supplied marker IDs in --query mode" in terminal.err
-
-
-def test_main_marker_panel_region_conflict(capsys):
-    with NamedTemporaryFile() as panelfile:
-        with open(panelfile.name, "w") as fh:
-            for marker in ["mh05KK-058", "mh06KK-101", "mh20KK-035"]:
-                print(marker, file=fh)
-        arglist = ["marker", "--panel", panelfile.name, "--region=chr12"]
-        args = get_parser().parse_args(arglist)
-        microhapdb.cli.main(args)
-    terminal = capsys.readouterr()
-    assert "ignoring user-supplied marker IDs in --region mode" in terminal.err
+    outlines = terminal.out.strip().split("\n")
+    assert len(outlines) == 2
 
 
 @pytest.mark.parametrize(
@@ -369,10 +369,11 @@ def test_main_panel(panel, capsys):
     args = get_parser().parse_args(arglist)
     microhapdb.cli.main(args)
     terminal = capsys.readouterr()
-    testout = data_file("tests/panel-" + panel + ".fasta")
-    print(terminal.out)
+    observed = terminal.out.strip()
+    testout = data_file(f"panel-{panel}.fasta")
     with open(testout, "r") as fh:
-        assert fh.read().strip() == terminal.out.strip()
+        expected = fh.read().strip()
+    assert observed == expected
 
 
 def test_lookup(capsys):
@@ -446,19 +447,20 @@ def test_hg37_detail(capsys):
     args = get_parser().parse_args(arglist)
     microhapdb.cli.main(args)
     terminal = capsys.readouterr()
-    exp_out = """
+    observed = terminal.out
+    expected = """
 --------------------------------------------------------------[ MicroHapDB ]----
 mh17USC-17pA    a.k.a MHDBM-d5646523
 
 Marker Definition (GRCh37)
     Marker extent
         - chr17:3821918-3821988 (70 bp)
-    Target amplicon
+    Target locus
         - chr17:3918614-3918704 (90 bp)
     Constituent variants
         - chromosome offsets: 3821918,3821952,3821987
         - marker offsets: 0,34,69
-        - amplicon offsets: 10,44,79
+        - target offsets: 10,44,79
         - cross-references: rs4995288, rs4995289, rs9904113
     Observed haplotypes
         - C,C,A
@@ -476,7 +478,7 @@ Marker Definition (GRCh37)
 CGTCTCATTTGGGGATCTTATCATATCCACAGTGTACCCCAGGGACCTACATTTATTTTCCTGCTGCTGA
 
 
---[ Target Amplicon Sequence with Haplotypes ]--
+--[ Marker Target Sequence with MH alleles (haplotypes) ]--
           *                                 *                                  *
 CCTGGAGCACCGTCTCATTTGGGGATCTTATCATATCCACAGTGTACCCCAGGGACCTACATTTATTTTCCTGCTGCTGATAACTCCACA
 ..........C.................................C..................................A..........
@@ -489,8 +491,7 @@ CCTGGAGCACCGTCTCATTTGGGGATCTTATCATATCCACAGTGTACCCCAGGGACCTACATTTATTTTCCTGCTGCTGA
 ..........T.................................T..................................C..........
 --------------------------------------------------------------------------------
 """
-    obs_out = terminal.out
-    assert exp_out.strip() == obs_out.strip()
+    assert observed.strip() == expected.strip()
 
 
 def test_hg37_ae_pop(capsys):
@@ -603,7 +604,7 @@ def test_mhpl8r_panel(capsys):
     assert result.Frequency.iloc[7] == pytest.approx(0.429)
 
 
-def test_mhpl8r_multi_pop(capsys):
+def test_mhpl8r_multi_pop():
     arglist = [
         "frequency",
         "--marker",
@@ -619,9 +620,9 @@ def test_mhpl8r_multi_pop(capsys):
         "mhpl8r",
     ]
     args = microhapdb.cli.get_parser().parse_args(arglist)
-    microhapdb.cli.frequency.main(args)
-    terminal = capsys.readouterr()
-    assert "warning: frequencies for 4 populations recovered, expected only 1" in terminal.err
+    message = r"frequencies for 4 populations recovered, expected only 1"
+    with pytest.warns(UserWarning, match=message):
+        microhapdb.cli.frequency.main(args)
 
 
 def test_efm(capsys):

@@ -575,3 +575,13 @@ def test_marker_ids():
     assert Marker.standardize_ids(["mh15KK-058"]) == ["mh15KK-058"]
     assert Marker.standardize_ids(["SI664549I"]) == ["mh01KK-117"]
     assert Marker.standardize_ids(["MHDBM-3d69621c"]) == ["mh11AT-23", "mh11KK-040"]
+
+
+def test_from_id_no_such_marker():
+    with pytest.raises(ValueError, match=r"no such marker 'BoGUSid'"):
+        Marker.from_id("BoGUSid")
+
+
+def test_from_id_no_such_marker():
+    with pytest.raises(ValueError, match=r"no such marker 'BoGUSid'"):
+        Marker.from_id("BoGUSid")

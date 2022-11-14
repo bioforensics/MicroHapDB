@@ -178,3 +178,8 @@ def test_all_sources(popid, name, source):
     assert pop.popid == popid
     assert pop.name == name
     assert pop.source == source
+
+
+def test_from_id_pop_not_found():
+    with pytest.raises(ValueError, match=r"population 'Romulans' not found"):
+        Population.from_id("Romulans")

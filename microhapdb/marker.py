@@ -95,9 +95,9 @@ class Marker:
         markerids = cls.standardize_ids([identifier])
         if len(markerids) < 1:
             raise ValueError(f"no such marker '{identifier}'")
-        if len(markerids) > 1:
-            raise ValueError(f"problem retrieving marker '{identifier}'")
-        marker = microhapdb.markers[microhapdb.markers.Name.isin(markerids)].iloc[0]
+        result = microhapdb.markers[microhapdb.markers.Name.isin(markerids)]
+        assert len(result) == 1, identifier
+        marker = result.iloc[0]
         return cls(marker, **kwargs)
 
     @classmethod

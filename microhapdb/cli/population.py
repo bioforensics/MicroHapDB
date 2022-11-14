@@ -18,7 +18,7 @@ from textwrap import dedent
 
 def main(args):
     if args.query:
-        result = Population.table_from_query(query)
+        result = Population.table_from_query(args.query)
     elif len(args.id) > 0:
         result = Population.table_from_ids(args.id)
     else:

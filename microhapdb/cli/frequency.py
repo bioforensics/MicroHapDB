@@ -56,7 +56,7 @@ def display(result, view_format, population):
     elif view_format == "efm":
         if population is None or len(population) != 1:
             raise ValueError("must specify one and only one population with --format=efm")
-        result = construct_frequency_table(args.population[0], markerids)
+        result = construct_frequency_table(population[0], result.Marker.unique())
         result.to_csv(sys.stdout)
     else:
         raise ValueError(f'unsupported view format "{view_format}"')
