@@ -21,9 +21,6 @@ def main(args):
 
 
 def subparser(subparsers):
-    desc = (
-        microhapdb.cli.bubbletext + "\nRetrieve marker or population records by name or identifier"
-    )
     epilog = """\
     Examples::
 
@@ -34,7 +31,7 @@ def subparser(subparsers):
     epilog = dedent(epilog)
     subparser = subparsers.add_parser(
         "lookup",
-        description=desc,
+        description="Retrieve marker or population records by name or identifier",
         epilog=epilog,
         formatter_class=RawDescriptionHelpFormatter,
     )

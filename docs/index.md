@@ -13,11 +13,12 @@ MicroHapDB is also designed as a community resource requiring minimal infrastruc
 ```{toctree}
 :maxdepth: 2
 
-install
 starting
+install
 ranking
 targets
 extending
+cli
 citations
 ```
 

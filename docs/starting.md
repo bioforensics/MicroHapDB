@@ -20,7 +20,8 @@ Using the `microhapdb` command in the terminal, a user can specify filtering cri
 - `microhapdb frequency` for retrieving microhap population frequencies
 - `microhapdb lookup` for retrieving individual records of any type
 
-Executing any of the commands above with the text `--help` (e.g. `microhapdb marker --help`) will print a usage statement to the terminal with detailed instructions for configuring and running database queries.
+Reference documentation for these commands, including detailed instructions for configuring and running database queries, is available [here](cli.md).
+Alternatively, executing any of the commands above with the text `--help` (e.g. `microhapdb marker --help`) will print the same documentation to the terminal.
 
 
 ## Python API

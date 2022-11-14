@@ -65,7 +65,6 @@ def display(result, view_format, population):
 
 
 def subparser(subparsers):
-    desc = microhapdb.cli.bubbletext + "\nRetrieve population allele frequencies"
     epilog = """\
     Examples::
 
@@ -75,7 +74,7 @@ def subparser(subparsers):
     epilog = dedent(epilog)
     subparser = subparsers.add_parser(
         "frequency",
-        description=desc,
+        description="Retrieve population allele frequencies",
         epilog=epilog,
         formatter_class=RawDescriptionHelpFormatter,
     )

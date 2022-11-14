@@ -92,7 +92,6 @@ def display(result, view_format, delta=10, minlen=80, extend_mode=0, trunc=True,
 
 
 def subparser(subparsers):
-    desc = microhapdb.cli.bubbletext + "\nRetrieve marker records by identifier or query"
     epilog = """\
     Examples::
 
@@ -107,7 +106,7 @@ def subparser(subparsers):
     epilog = dedent(epilog)
     subparser = subparsers.add_parser(
         "marker",
-        description=desc,
+        description="Retrieve marker records by identifier or query",
         epilog=epilog,
         formatter_class=RawDescriptionHelpFormatter,
     )
