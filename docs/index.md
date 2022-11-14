@@ -18,8 +18,19 @@ install
 ranking
 targets
 extending
-cli
 citations
+```
+
+
+## Reference: command line interface
+
+```{toctree}
+:maxdepth: 1
+
+cli-population
+cli-marker
+cli-frequency
+cli-lookup
 ```
 
 

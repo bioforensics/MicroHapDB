@@ -1,4 +1,4 @@
-# CLI reference: `microhapdb lookup`
+# `microhapdb lookup`
 
 ```{argparse}
 :module: microhapdb.cli
