@@ -10,12 +10,10 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
-from collections import defaultdict
 from io import StringIO
 from math import ceil
 import microhapdb
 import pandas as pd
-import sys
 
 
 class Marker:
