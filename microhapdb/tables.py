@@ -1,5 +1,5 @@
 # -------------------------------------------------------------------------------------------------
-# Copyright (c) 2019, DHS.
+# Copyright (c) 2022, DHS.
 #
 # This file is part of MicroHapDB (http://github.com/bioforensics/MicroHapDB) and is licensed under
 # the BSD license: see LICENSE.txt.
@@ -10,12 +10,19 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
+from pkg_resources import resource_filename
+import pandas as pd
 
-import pandas
-import pytest
+
+def read_table(table_path):
+    table = pd.read_csv(resource_filename("microhapdb", f"data/{table_path}"), sep="\t")
+    return table
 
 
-@pytest.fixture(autouse=True, scope="session")
-def pandas_terminal_width():
-    pandas.set_option("display.width", 1000)
-    pandas.set_option("display.max_columns", 1000)
+markers = read_table("marker.tsv")
+populations = read_table("population.tsv")
+frequencies = read_table("frequency.tsv")
+variantmap = read_table("variantmap.tsv")
+idmap = read_table("idmap.tsv")
+sequences = read_table("sequences.tsv")
+indels = read_table("indels.tsv")

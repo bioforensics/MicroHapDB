@@ -6,18 +6,22 @@ help: Makefile
 
 ## test:      execute the automated test suite
 test:
-	pytest --cov=microhapdb --cov-report=term --cov-report=xml --doctest-modules microhapdb/cli/*.py microhapdb/retrieve.py microhapdb/tests/test_*.py
+	pytest --cov=microhapdb --cov-report=term --cov-report=xml --doctest-modules microhapdb/cli/*.py microhapdb/marker.py microhapdb/population.py microhapdb/tests/test_*.py
 
 ## devdeps:   install development dependencies
 devdeps:
 	pip install --upgrade pip setuptools
 	pip install wheel twine
-	pip install pycodestyle 'pytest>=5.0' pytest-cov pytest-sugar
+	pip install black==22.10 'pytest>=5.0' pytest-cov
 
 ## clean:     remove development artifacts
 clean:
 	rm -rf __pycache__/ microhapdb/__pycache__/ microhapdb/*/__pycache__ build/ dist/ *.egg-info/ dbbuild/.snakemake
 
-## style:     check code style against PEP8
+## style:     check code style
 style:
-	pycodestyle --ignore=E501,W503 microhapdb/*.py
+	black --line-length=99 --check *.py microhapdb/*.py microhapdb/*/*.py
+
+## format:    autoformat code with Black
+format:
+	black --line-length=99 *.py microhapdb/*.py microhapdb/*/*.py
