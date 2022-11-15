@@ -33,7 +33,6 @@ def main(args):
 
 
 def subparser(subparsers):
-    desc = microhapdb.cli.bubbletext + "\nRetrieve population records by identifier or query"
     epilog = """\
     Examples::
 
@@ -45,7 +44,7 @@ def subparser(subparsers):
     epilog = dedent(epilog)
     subparser = subparsers.add_parser(
         "population",
-        description=desc,
+        description="Retrieve population records by identifier or query",
         epilog=epilog,
         formatter_class=RawDescriptionHelpFormatter,
     )

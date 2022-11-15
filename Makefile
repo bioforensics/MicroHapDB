@@ -12,7 +12,7 @@ test:
 devdeps:
 	pip install --upgrade pip setuptools
 	pip install wheel twine
-	pip install black==22.10 'pytest>=5.0' pytest-cov
+	pip install black==22.10 'pytest>=5.0' pytest-cov myst-parser sphinx sphinx-argparse
 
 ## clean:     remove development artifacts
 clean:
@@ -25,3 +25,14 @@ style:
 ## format:    autoformat code with Black
 format:
 	black --line-length=99 *.py microhapdb/*.py microhapdb/*/*.py
+
+## doc:       build HTML documentation
+doc:
+	sphinx-build -b html docs docs/_build/
+
+## devhooks:  install development hooks
+devhooks:
+	echo 'set -eo pipefail' > .git/hooks/pre-commit
+	echo 'make style' >> .git/hooks/pre-commit
+	echo 'make doc' >> .git/hooks/pre-commit
+	chmod 755 .git/hooks/pre-commit
