@@ -2,11 +2,8 @@
 
 MicroHapDB is designed as a community resource requiring minimal infrastructure to use and maintain.
 No web interface is available for MicroHapDB.
-In fact, installation of the MicroHapDB software isn't strictly required to access the database contents.
-For the bold and intrepid user, all database tables can be downloaded anonymously from the [https://github.com/bioforensics/MicroHapDB/tree/master/microhapdb/data](https://github.com/bioforensics/MicroHapDB/tree/master/microhapdb/data) and opened in Excel, R, Python, or any preferred data analysis environment.
-
-The recommended mode of accessing MicroHapDB is through a single package with data and software bundled together.
-Instructions for installing this package are provided [here](install.md).
+The recommended mode of accessing MicroHapDB is through a software package that comes bundled with the database contents.
+Instructions for installing the MicroHapDB package are provided [here](install.md).
 Once installed, users can access the database contents in any of the following ways.
 
 
