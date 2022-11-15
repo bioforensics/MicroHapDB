@@ -12,7 +12,7 @@ test:
 devdeps:
 	pip install --upgrade pip setuptools
 	pip install wheel twine
-	pip install black==22.10 'pytest>=5.0' pytest-cov
+	pip install black==22.10 'pytest>=5.0' pytest-cov myst-parser sphinx sphinx-argparse
 
 ## clean:     remove development artifacts
 clean:
