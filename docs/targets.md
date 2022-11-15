@@ -62,8 +62,8 @@ The minimum length criterion $L=90$ requires that the sequence be extended an ad
 
 ```text
      <~~~~==========------------------------- E=s ------------------------------==========~~~~>
-<~~~~~~~~~========== E=5 -------------------------------------------------------=========>
-          <=========------------------------------------------------------- E=3 ==========~~~~~~~~~>
+<~~~~~~~~~==========--- E=5 ----------------------------------------------------=========>
+          <=========---------------------------------------------------- E=3 ---==========~~~~~~~~~>
                     *                          *                               *
 AAAACAAGAAAGCAAACAAAGAACAGTATGTGACAGAGACTGTATCTGGTATGCAAAACTTGAAATACTTACTATCTGCCACTTTACAGAAAAGTTTGCC
 ....................G..........................G...............................C....................
@@ -99,10 +99,10 @@ microhapdb marker --panel=markerids.txt --delta=25 --min-length=150 --extend-mod
 ## Impacted outputs
 
 MicroHapDB provides several different views for marker information.
-This includes the default tabular summary format, a detailed human-readable description of the marker, a view for target sequences in Fasta format, and a table of the position of each marker's SNPs.
+This includes the default tabular summary format, a detailed human-readable description of the marker, a view for target sequences in FASTA format, and a table of the position of each marker's SNPs.
 The default tabular summary does not include target sequence information, but all other views do.
 As a result, it is important to use consistent values of $\delta$, $L$, and $E$ parameters for different views of the same data.
 
-For example, haplotype calling with [MicroHapulator](https://microhapulator.readthedocs.io) requires marker reference sequences in Fasta format and marker definitions (SNP offsets) in tabular format.
+For example, haplotype calling with [MicroHapulator](https://microhapulator.readthedocs.io) requires marker reference sequences in FASTA format and marker definitions (SNP offsets) in tabular format.
 These files can be prepared using the `--format=fasta` and `--format=offsets` modes of `microhapdb marker`, respectively.
 However, if the two files were not prepared using consistent $\delta$, $L$, and $E$ values, the haplotype calls made with MicroHapulator will be incorrect.

@@ -21,4 +21,4 @@ Rosenberg's informativeness for assignment to populations ($I_n$) is computed on
 
 The fixation index ($F_{ST}$) is computed on 26 global population groups.
 
-The $I_n$ and F_{ST} statistics measure *between-population* allelic variation at a locus, which corresponds to the marker's utility for predicting population of origin.
+The $I_n$ and $F_{ST}$ statistics measure *between-population* allelic variation at a locus, which corresponds to the marker's utility for predicting population of origin.
