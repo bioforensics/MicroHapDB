@@ -1,4 +1,4 @@
-# `microhapdb frequency`
+# `microhapdb marker`
 
 ## `microhapdb marker`
 

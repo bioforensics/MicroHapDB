@@ -5,7 +5,9 @@
 For best results, installation from [bioconda](https://bioconda.github.io/) is recommended.
 
 ```
-conda install -c bioconda microhapdb
+conda create --name microhapdb -y python=3.9 microhapdb
+conda activate microhapdb
+microhapdb --help
 ```
 
 To make sure the package installed correctly:

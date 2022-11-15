@@ -141,7 +141,7 @@ def subparser(subparsers):
     )
     formatting = subparser.add_argument_group(
         "Formatting",
-        "Configure how results are formatted. Some formats assume a 'target sequence' for each marker, representing what would be targeted by e.g. hybridization capture probes or PCR primers for amplicon sequencing. MicroHapDB computes the endpoints of these target sequences by extending --delta=D nucleotides beyond the first and last variants defining the marker, and then—if needed—extending further until --min-length=L is satisfied. Configuration of these and related parameters is described below.",
+        "Configure how results are formatted. Some formats include information for a 'target sequence' for each marker, representing what would be targeted by e.g. hybridization capture probes or PCR primers for amplicon sequencing. MicroHapDB computes the endpoints of these target sequences by extending `--delta=D` nucleotides beyond the first and last SNPs defining the marker, and then—if needed—extending further until `--min-length=L` is satisfied. Configuration of these and related parameters is described below.",
     )
     formatting.add_argument(
         "--format", choices=["table", "detail", "fasta", "offsets"], default="table"
@@ -165,7 +165,7 @@ def subparser(subparsers):
         metavar="E",
         type=str_to_extend_mode,
         default="symmetric",
-        help="specify how coordinates will be adjusted if extension is required to satisfy the minimum target sequence length; use `5` to extend only the 5' end, `3` to extend only the 3' end, or `symmetric` to extend both ends equally; by default, symmetric mode is used",
+        help="specify how the target sequence will be extended to satisfy the minimum length criterion; use `5` to extend only the 5' end, `3` to extend only the 3' end, or `symmetric` to extend both ends equally; by default, symmetric mode is used",
     )
     formatting.add_argument(
         "--notrunc",
