@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.8.1] 2022-11-21
+
+### Fixed
+- Bundling of files used for automated test suite.
+
+
 ## [0.8] 2022-11-21
 
 ### Added
@@ -13,11 +19,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - 22 marker definitions from Fan et al 2022 (see #97).
 - New sphinx-based documentation suite hosted on ReadTheDocs.org (see #101).
 
-## Changed
+### Changed
 - Minor improvements to database build and corresponding documentation (see #88).
 - Major overhaul of the Python API (see #99).
 
-## Fixed
+### Fixed
 - Bug with dereferencing IDs and ID cross-references (see #99, #100).
 
 
