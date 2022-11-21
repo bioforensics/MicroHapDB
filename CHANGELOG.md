@@ -2,16 +2,23 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [0.8] 2022-11-21
 
 ### Added
 - 25 marker definitions from Sun et al 2020 (see #87).
 - 23 marker definitions from Jin et al 2020 (see #89).
 - 20 marker definitions from Kureshi et al 2020 (see #90).
 - GRCh38 offsets to `microhapdb marker --format=offsets` (see #92).
+- 59 marker definitions from Wu et al 2021 (see #96).
+- 22 marker definitions from Fan et al 2022 (see #97).
+- New sphinx-based documentation suite hosted on ReadTheDocs.org (see #101).
 
 ## Changed
 - Minor improvements to database build and corresponding documentation (see #88).
+- Major overhaul of the Python API (see #99).
+
+## Fixed
+- Bug with dereferencing IDs and ID cross-references (see #99, #100).
 
 
 ## [0.7] 2022-01-20
