@@ -1,0 +1,33 @@
+# -------------------------------------------------------------------------------------------------
+# Copyright (c) 2018, DHS.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/MicroHapDB) and is licensed under
+# the BSD license: see LICENSE.txt.
+#
+# This software was prepared for the Department of Homeland Security (DHS) by the Battelle National
+# Biodefense Institute, LLC (BNBI) as part of contract HSHQDC-15-C-00064 to manage and operate the
+# National Biodefense Analysis and Countermeasures Center (NBACC), a Federally Funded Research and
+# Development Center.
+# -------------------------------------------------------------------------------------------------
+
+from utils import parse_markers_from_table
+
+
+rule all:
+    input:
+        "Microhap_alleleF_198.txt",
+        expand("marker-detail/{marker}.html.gz", marker=parse_markers_from_table("Microhap_alleleF_198.txt")),
+
+
+checkpoint frequencies:
+    output:
+        "Microhap_alleleF_198.txt",
+    shell:
+        "curl https://alfred.med.yale.edu/alfred/selectDownload/Microhap_alleleF_198.txt > {output}"
+
+
+rule markerdetail:
+    output:
+        "marker-detail/{marker}.html.gz",
+    shell:
+        "curl https://alfred.med.yale.edu/alfred/recordinfo.asp?UNID={wildcards.marker} | gzip -c > {output}"
