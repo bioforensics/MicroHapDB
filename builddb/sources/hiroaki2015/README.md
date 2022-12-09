@@ -9,7 +9,7 @@ Hiroaki N, Fujii K, Kitayama T, Sekiguchi K, Nakanishi H, Saito K (2015) Approac
 Run the following command from the `dbbuild/sources/hiroaki2015/` directory to compile the data into the table format required by MicroHapDB.
 
 ```
-snakemake --configfile ../../config.json --cores 1 -p all
+snakemake --configfile ../../config.json --cores 1
 ```
 
 
