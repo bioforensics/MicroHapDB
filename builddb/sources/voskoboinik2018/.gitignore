@@ -1,0 +1,5 @@
+ALL.*.vcf.gz*
+*.rsidx
+*-unfiltered.vcf
+*-filtered.vcf
+*-GRCh3?.vcf
