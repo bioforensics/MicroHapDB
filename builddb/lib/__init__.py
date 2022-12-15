@@ -10,4 +10,5 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
+from .marker import Marker
 from .source import DataSource

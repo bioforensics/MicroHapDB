@@ -105,6 +105,6 @@ class DataSource:
                 numhaps = self.num_distinct_haplotypes
                 message = f"  - {numhaps} haplotype frequencies in 1 population"
             else:
-                message = f"  - {self.num_distinct_haplotypes} haplotype frequencies in {self.num_frequency_populations} populations; {self.num_frequencies} total frequencies"
+                message = f"  - frequencies for {self.num_distinct_haplotypes} distinct haplotypes in {self.num_frequency_populations} populations; {self.num_frequencies} total frequencies"
             print(message, file=output)
         return output.getvalue().strip()
