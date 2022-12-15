@@ -66,4 +66,4 @@ def reformat_frequencies(infile, mapfile, outfile):
     freqs["Population"] = "MHDBP-7c055e7ee8"
     freqs.rename(columns={"MarkerName": "Marker", "Haplotype": "Allele"}, inplace=True)
     freqs = freqs[["Marker", "Population", "Allele", "Frequency"]]
-    freqs.to_csv(outfile, index=False)
+    freqs.to_csv(outfile, index=False, float_format="%.3f")

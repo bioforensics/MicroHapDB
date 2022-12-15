@@ -39,4 +39,4 @@ def reformat_frequencies(infile, outfile):
         entry = (standardname, "MHDBP-48c2cfb2aa", haplotype, row.Frequency)
         freqdata.append(entry)
     freqtable = pd.DataFrame(freqdata, columns=["Marker", "Population", "Allele", "Frequency"])
-    freqtable.to_csv(outfile, index=False)
+    freqtable.to_csv(outfile, index=False, float_format="%.4f")

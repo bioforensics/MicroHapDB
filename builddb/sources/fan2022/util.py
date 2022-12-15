@@ -23,7 +23,7 @@ def compile_marker_definitions(infile, outfile):
         for marker in parse_markers(fh):
             positions = ";".join(map(str, marker.positions))
             rsids = ";".join(marker.varref)
-            chrom = f"chrom{marker.chrom}"
+            chrom = f"chr{marker.chrom}"
             entry = (marker.name, None, marker.nvars, "GRCh38", chrom, positions, rsids)
             markers.append(entry)
     colnames = ["Name", "Xref", "NumVars", "Refr", "Chrom", "Positions", "VarRef"]
