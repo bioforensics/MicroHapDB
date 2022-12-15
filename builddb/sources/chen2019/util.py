@@ -10,7 +10,6 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
-from collections import defaultdict
 import pandas as pd
 
 
@@ -21,7 +20,7 @@ def reformat_markers(infile, outfile):
         name = "mh" + marker[2:6] + "-" + marker[6:]
         chrom = f"chr{mdata.Chrom.iloc[0]}"
         rsids = mdata.SNPID.tolist()
-        offsets = [pos - 1 for pos in mdata.Position]
+        offsets = [pos for pos in mdata.Position]
         rsidstr = ";".join(rsids)
         offsetstr = ";".join(map(str, offsets))
         entry = (name, None, len(rsids), "GRCh38", chrom, offsetstr, rsidstr)
