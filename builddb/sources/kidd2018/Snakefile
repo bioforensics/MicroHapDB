@@ -89,4 +89,4 @@ rule frequency:
         csv="frequency.csv",
     run:
         table = alfred_frequencies(input.freqs, input.xrefs)
-        table.to_csv(output.csv, index=False, float_format='%.04f')
+        table.to_csv(output.csv, index=False, float_format="%.04f")

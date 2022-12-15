@@ -10,57 +10,27 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
-import argparse
-from gzip import open as gzopen
 import pandas as pd
-import subprocess
 
 
-def compile_marker_definitions(rsids, vcf, outcsv):
-    with gzopen(vcf, "rt") as fh:
-        rsidcoords = parse_rsid_coords(fh)
-    markers = marker_coords(rsids, rsidcoords)
-    markers.to_csv(outcsv, index=False)
+def compile_marker_definitions(infile, outfile):
+    markers = marker_coords(infile)
+    markers.to_csv(outfile, index=False)
 
 
-def parse_rsid_coords(vcf):
-    rsidcoords = dict()
-    for line in vcf:
-        if line.startswith("#"):
-            continue
-        chrnum, posstr, rsid, *values = line.strip().split()
-        chrom = chrnum if chrnum.startswith("chr") else "chr" + chrnum
-        pos = int(posstr)
-        rsidcoords[rsid] = (chrom, pos)
-    return rsidcoords
-
-
-def marker_coords(markerfile, rsidcoords):
-    final_defs = list()
-    markers = pd.read_csv(markerfile, sep="\t")
+def marker_coords(infile):
+    definitions = list()
+    markers = pd.read_csv(infile, sep="\t")
     for n, row in markers.iterrows():
-        rsids = row.RSIDs.split(",")
-        positions = [rsidcoords[r][1] for r in rsids]
-        rsids = [rsid for pos, rsid in sorted(zip(positions, rsids))]
-        rsidstr = ";".join(rsids)
-        positions = sorted(positions)
-        offsetstr = ";".join(map(str, positions))
-        chrom = rsidcoords[rsids[0]][0]
-        chromlabel = "0X" if chrom == "chrX" else "{:02d}".format(int(chrom[3:]))
+        rsids = row.RSIDs.replace(",", ";")
+        numvars = rsids.count(";") + 1
+        chrom = row.GRCh37Position.split(":")[0]
+        chromlabel = "0X" if chrom == "X" else "{:02d}".format(int(chrom))
         name = f"mh{chromlabel}USC-{row.Label}"
-        entry = (name, None, len(positions), "GRCh38", chrom, offsetstr, rsidstr)
-        final_defs.append(entry)
+        entry = (name, None, numvars, None, f"chr{chrom}", None, rsids)
+        definitions.append(entry)
     colnames = ["Name", "Xref", "NumVars", "Refr", "Chrom", "Positions", "VarRef"]
-    return pd.DataFrame(final_defs, columns=colnames)
-
-
-def subset_dbsnp(tsv, invcf, rsidx, outvcf):
-    markers = pd.read_csv(tsv, sep="\t")
-    rsids = list()
-    for n, row in markers.iterrows():
-        rsids.extend(row.RSIDs.split(","))
-    args = ["rsidx", "search", "--header", "--out", outvcf, invcf, rsidx, *rsids]
-    subprocess.run(args)
+    return pd.DataFrame(definitions, columns=colnames)
 
 
 def text2table(infile, outfile):

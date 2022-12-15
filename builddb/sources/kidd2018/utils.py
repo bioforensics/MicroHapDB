@@ -147,7 +147,7 @@ def alfred_pop_data(instream, mapping):
 
 def parse_popid_mapping(mappingfile):
     popdict = dict()
-    mapping = pd.read_csv(mappingfile, sep='\t')
+    mapping = pd.read_csv(mappingfile, sep="\t")
     for n, row in mapping.iterrows():
         popdict[row.ALFRED] = row.ID1KGP
     return popdict
@@ -156,7 +156,7 @@ def parse_popid_mapping(mappingfile):
 def alfred_frequencies(table, mappingfile):
     data = list()
     mapping = parse_popid_mapping(mappingfile)
-    with smartopen(table, 'r') as fh:
+    with smartopen(table, "r") as fh:
         for marker, pop, allele, freq in parse_freqs(fh, mapping):
             if marker == "mh05KK-058":
                 marker = "mh15KK-058"

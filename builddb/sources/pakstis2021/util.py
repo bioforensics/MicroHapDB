@@ -1,6 +1,15 @@
-#!/usr/bin/env python
+# -------------------------------------------------------------------------------------------------
+# Copyright (c) 2022, DHS.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/MicroHapDB) and is licensed under
+# the BSD license: see LICENSE.txt.
+#
+# This software was prepared for the Department of Homeland Security (DHS) by the Battelle National
+# Biodefense Institute, LLC (BNBI) as part of contract HSHQDC-15-C-00064 to manage and operate the
+# National Biodefense Analysis and Countermeasures Center (NBACC), a Federally Funded Research and
+# Development Center.
+# -------------------------------------------------------------------------------------------------
 
-from argparse import ArgumentParser
 from collections import namedtuple
 import pandas as pd
 
@@ -8,16 +17,16 @@ import pandas as pd
 MarkerInfo = namedtuple("MarkerInfo", "name chrom nsnps off37 rsids")
 
 
-def main(args):
+def format_markers(infile, outfile):
     table = list()
-    with open(args.intable, "r") as fh:
+    with open(infile, "r") as fh:
         for marker in parse_markers(fh):
             offsets = ";".join(map(str, marker.off37))
             rsids = ";".join(marker.rsids)
             table.append((marker.name, None, marker.nsnps, "GRCh37", marker.chrom, offsets, rsids))
     colnames = ["Name", "Xref", "NumVars", "Refr", "Chrom", "Positions", "VarRef"]
     data = pd.DataFrame(table, columns=colnames)
-    data.to_csv(args.outtable, index=False)
+    data.to_csv(outfile, index=False)
 
 
 def parse_markers(infile):
@@ -51,14 +60,3 @@ def parse_markers(infile):
                 marker.rsids.append(rsid)
     assert marker.nsnps == len(marker.off37), marker.name
     yield marker
-
-
-def get_parser():
-    parser = ArgumentParser()
-    parser.add_argument("intable")
-    parser.add_argument("outtable")
-    return parser
-
-
-if __name__ == "__main__":
-    main(get_parser().parse_args())

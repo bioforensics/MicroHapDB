@@ -10,28 +10,16 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
-from util import compile_marker_definitions, subset_dbsnp, text2table
+from util import compile_marker_definitions, text2table
 
 
 rule marker_coords:
     input:
         markers="supp-file-s1.tsv",
-        dbsnp="dbsnp-subset.vcf.gz",
     output:
         csv="marker.csv",
     run:
-        compile_marker_definitions(input.markers, input.dbsnp, output.csv)
-
-
-rule dbsnp_subset:
-    input:
-        markers="supp-file-s1.tsv",
-        dbsnp=config["dbsnp38"],
-        rsidx=config["dbsnp38"].replace(".vcf.gz", ".rsidx"),
-    output:
-        vcf="dbsnp-subset.vcf.gz",
-    run:
-        subset_dbsnp(input.markers, input.dbsnp, input.rsidx, output.vcf)
+        compile_marker_definitions(input.markers, output.csv)
 
 
 rule supp_file_s1:
