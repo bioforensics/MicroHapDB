@@ -1,0 +1,24 @@
+# -------------------------------------------------------------------------------------------------
+# Copyright (c) 2022, DHS.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/MicroHapDB) and is licensed under
+# the BSD license: see LICENSE.txt.
+#
+# This software was prepared for the Department of Homeland Security (DHS) by the Battelle National
+# Biodefense Institute, LLC (BNBI) as part of contract HSHQDC-15-C-00064 to manage and operate the
+# National Biodefense Analysis and Countermeasures Center (NBACC), a Federally Funded Research and
+# Development Center.
+# -------------------------------------------------------------------------------------------------
+
+from util import compile_marker_definitions, collect_indel_metadata
+
+
+rule markers:
+    input:
+        txt="Fan-mmc2-TableS4.txt",
+    output:
+        csv="marker.csv",
+        indels="indels.csv"
+    run:
+        compile_marker_definitions(input.txt, output.csv)
+        collect_indel_metadata(input.txt, output.indels)
