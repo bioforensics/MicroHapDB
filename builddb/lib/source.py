@@ -18,7 +18,7 @@ from pathlib import Path
 
 
 class DataSource:
-    def __init__(self, source_path):
+    def __init__(self, source_path, dbsnp_path=None):
         self.path = Path(source_path)
         self.metadata = DataSource.meta_from_json(self.path / "source.json")
         self.indels = DataSource.data_from_csv(self.path / "indels.csv")
@@ -27,7 +27,7 @@ class DataSource:
         self.markers = None
         markerpath = self.path / "marker.csv"
         if markerpath.is_file():
-            self.markers = list(Marker.from_csv(markerpath))
+            self.markers = list(Marker.from_csv(markerpath, dbsnp_path=dbsnp_path))
 
     @staticmethod
     def meta_from_json(metapath):
