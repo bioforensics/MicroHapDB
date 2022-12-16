@@ -570,5 +570,5 @@ mh22USC-22qB	  0.291642	        NA	  0.100936	  0.135831
 mh22ZBF-001	  0.193502	        NA	 0.0793918	  0.111678
 mh22ZHA-003	  0.207343	        NA	  0.085176	  0.113705
 mh22ZHA-008	  0.114788	        NA	 0.0804745	  0.101771
-Command:       infocalc  -column 2  -numpops 26  -input individual-haplotypes.txt  -output marker-informativeness.txt  -weightfile [none]
+Command:       infocalc  -column 2  -numpops 26  -input aux/individual-haplotypes.txt  -output aux/marker-informativeness.txt  -weightfile [none]
 PriorWeights:  ACB 0.0384615   ASW 0.0384615   BEB 0.0384615   CDX 0.0384615   CEU 0.0384615   CHB 0.0384615   CHS 0.0384615   CLM 0.0384615   ESN 0.0384615   FIN 0.0384615   GBR 0.0384615   GIH 0.0384615   GWD 0.0384615   IBS 0.0384615   ITU 0.0384615   JPT 0.0384615   KHV 0.0384615   LWK 0.0384615   MSL 0.0384615   MXL 0.0384615   PEL 0.0384615   PJL 0.0384615   PUR 0.0384615   STU 0.0384615   TSI 0.0384615   YRI 0.0384615   

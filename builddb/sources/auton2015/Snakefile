@@ -13,109 +13,69 @@
 import pandas as pd
 
 
-def compute_marker_ae(freqs):
-    aedata = {"Marker": list(), "Population": list(), "Ae": list()}
-    pops1kgp = set(
-        [
-            "CHB",
-            "JPT",
-            "CHS",
-            "CDX",
-            "KHV",
-            "CEU",
-            "TSI",
-            "FIN",
-            "GBR",
-            "IBS",
-            "YRI",
-            "LWK",
-            "GWD",
-            "MSL",
-            "ESN",
-            "ASW",
-            "ACB",
-            "MXL",
-            "PUR",
-            "CLM",
-            "PEL",
-            "GIH",
-            "PJL",
-            "BEB",
-            "STU",
-            "ITU",
-        ]
-    )
-    for marker, mdata in freqs[freqs.Population.isin(pops1kgp)].groupby("Marker"):
-        for population, pdata in mdata.groupby("Population"):
-            ae = 1.0 / sum([f**2 for f in pdata.Frequency])
-            aedata["Marker"].append(marker)
-            aedata["Population"].append(population)
-            aedata["Ae"].append(ae)
-    return pd.DataFrame(aedata).sort_values(["Marker", "Population"])
-
-
 rule all:
     input:
-        "frequency.tsv",
+        "frequency.csv",
         "marker-informativeness.tsv",
-        "marker-aes.tsv",
-        "marker-fst.tsv",
+        "marker-aes.csv",
+        "marker-fst.csv",
 
 
 rule aes:
     input:
-        "frequency.tsv",
+        "scripts/compute-marker-aes.py",
+        "frequency.csv",
+        "aux/sample-pops.tsv",
     output:
-        "marker-aes.tsv",
-    run:
-        freqs = pd.read_csv(input[0], sep="\t")
-        aedata = compute_marker_ae(freqs)
-        aedata.to_csv(output[0], sep="\t", index=False, float_format="%.4f")
+        "marker-aes.csv",
+    shell:
+        "{input} > {output}"
 
 
 rule markerrsids:
     input:
-        "get-marker-rsids.py",
+        "scripts/get-marker-rsids.py",
     output:
         "marker-rsids-MicroHapDB-latest.tsv",
     shell:
-        "./get-marker-rsids.py > marker-rsids-MicroHapDB-latest.tsv"
+        "{input} > {output}"
 
 
 rule freqs:
     input:
-        "mhfreqs.py",
-        "sample-pops.tsv",
+        "scripts/mhfreqs.py",
+        "aux/sample-pops.tsv",
         "marker-rsids-MicroHapDB-latest.tsv",
     output:
-        "frequency.tsv",
+        "frequency.csv",
     shell:
-        "./mhfreqs.py sample-pops.tsv marker-rsids-MicroHapDB-latest.tsv > frequency.tsv"
+        "{input} > {output}"
 
 
 rule informativeness:
     input:
-        "prepinfocalc.py",
-        "infocalc",
-        "cleanup-in.py",
-        "sample-pops.tsv",
+        "scripts/prepinfocalc.py",
+        "scripts/infocalc",
+        "scripts/cleanup-in.py",
+        "aux/sample-pops.tsv",
         "marker-rsids-MicroHapDB-latest.tsv",
     output:
-        "marker-informativeness.tsv",
-        "individual-haplotypes.txt",
+        "marker-informativeness.csv",
+        "aux/marker-informativeness.txt",
+        "aux/individual-haplotypes.txt",
     shell:
         """
-        ./prepinfocalc.py sample-pops.tsv marker-rsids-MicroHapDB-latest.tsv > individual-haplotypes.txt
-        ./infocalc -column 2 -numpops 26 -input individual-haplotypes.txt -output marker-informativeness.txt
-        ./cleanup-in.py < marker-informativeness.txt > marker-informativeness.tsv
+        scripts/prepinfocalc.py aux/sample-pops.tsv marker-rsids-MicroHapDB-latest.tsv > aux/individual-haplotypes.txt
+        scripts/infocalc -column 2 -numpops 26 -input aux/individual-haplotypes.txt -output aux/marker-informativeness.txt
+        scripts/cleanup-in.py < aux/marker-informativeness.txt > marker-informativeness.csv
         """
 
 
 rule fst:
     input:
-        "fstcalc.py",
-        "individual-haplotypes.txt",
+        "scripts/fstcalc.py",
+        "aux/individual-haplotypes.txt",
     output:
-        "marker-fst.tsv",
+        "marker-fst.csv",
     shell:
-        "./fstcalc.py individual-haplotypes.txt > marker-fst.tsv"
+        "{input} > {output}"

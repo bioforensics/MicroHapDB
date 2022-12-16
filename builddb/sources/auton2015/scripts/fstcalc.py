@@ -84,7 +84,7 @@ def main():
             "Fst": fst,
         }
     )
-    data.round({"Fst": 4}).to_csv(sys.stdout, sep="\t", index=False)
+    data.round({"Fst": 4}).to_csv(sys.stdout, index=False)
 
 
 if __name__ == "__main__":
