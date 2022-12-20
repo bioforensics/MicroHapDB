@@ -10,6 +10,6 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
-from .marker import BaseMarkerDefinition, CompleteMarkerDefinition
-from .resolver import Resolver
-from .source import DataSource, VariantIndex
+from .variant import VariantList, VariantIndex
+from .marker import Marker, MarkerFromPositions, MarkerFromIDs
+from .source import DataSource, SourceIndex
