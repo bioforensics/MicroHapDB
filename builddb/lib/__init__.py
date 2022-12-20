@@ -12,4 +12,4 @@
 
 from .marker import BaseMarkerDefinition, CompleteMarkerDefinition
 from .resolver import Resolver
-from .source import DataSource, SourceIndex
+from .source import DataSource, VariantIndex

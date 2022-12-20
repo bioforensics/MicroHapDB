@@ -11,7 +11,7 @@ for i, row in table.iterrows():
         row[1],
         None,
         row[7],
-        "GRCh38",
+        None,
         row[0],
         None,
         rsids,

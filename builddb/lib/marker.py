@@ -10,6 +10,7 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
+from dataclasses import dataclass
 from liftover import get_lifter
 import pandas as pd
 from pathlib import Path
@@ -17,6 +18,104 @@ from pathlib import Path
 
 class InvalidMarkerNameError(ValueError):
     pass
+
+
+@dataclass
+class VariantList:
+    refr: str
+    chrom: str
+    pos: list[int]
+
+
+class BaseMarker:
+    def __init__(self, name, index, xref=None, source=None):
+        self.name = BaseMarker.check_name(name)
+        self.index = index
+        self.xref = xref
+        self.source = source
+        self.positions = dict(GRCh37=list(), GRCh38=list())
+
+    @staticmethod
+    def check_name(name):
+        strikes = list()
+        if not name.startswith(("mh", "MH")):
+            strikes.append("does not start with mh/MH")
+        chromstr = name[2:4]
+        try:
+            chrom = int(chromstr)
+            if chrom < 1 or chrom > 22:
+                strikes.append(f"invalid chromosome '{chromstr}'")
+        except:
+            if chromstr != "0X":
+                strikes.append(f"invalid chromosome '{chromstr}'")
+        labpi, mhnumber = name[4:].split("-", 1)
+        if len(labpi) < 2 or len(labpi) > 4:
+            strikes.append(f"lab or PI designation '{labpi}' isn't between 2-4 characters")
+        if "." in mhnumber:
+            if mhnumber.count(".") > 1:
+                strikes.append(f"invalid marker number '{mhnumber}'")
+            version = mhnumber.split(".")[-1]
+            if not version.startswith("v"):
+                strikes.append(f"invalid version designator in marker number '{mhnumber}'")
+            try:
+                int(version[1:])
+            except:
+                strikes.append(f"invalid version designator in  marker number '{mhnumber}'")
+        if len(strikes) > 0:
+            message = f"{name}: " + "; ".join(strikes)
+            raise InvalidMarkerNameError(message)
+        return name.replace("MH", "mh")
+
+    def check_chrom(self):
+        name_chrom = self.name[2:4]
+        if name_chrom.startswith("0"):
+            name_chrom = name_chrom[1:]
+        chrom = self.chrom.replace("chr", "")
+        if chrom != name_chrom:
+            raise ValueError(f"{self.name}: chromosome mismatch, {name_chrom} vs. {chrom}")
+
+    def resolve(self, resolver):
+        raise NotImplementedError()
+
+    @property
+    def all_rsids_present(self):
+        if self.varref is None:
+            return False
+        if len(self.varref) < self.base.numvars:
+            return False
+        sum37 = sum([1 for rsid in self.varref if rsid in self.index.coords_by_rsid["GRCh37"]])
+        sum38 = sum([1 for rsid in self.varref if rsid in self.index.coords_by_rsid["GRCh38"]])
+        return sum37 == sum38 == self.base.numvars
+
+
+class ExplicitMarker(BaseMarker):
+    def __init__(self, name, index, varlist, xref=None, varref=None, source=None):
+        super(ExplicitMarker, self).__init__(name, index, xref=xref, source=source)
+        self.varref = varref
+        if self.all_rsids_present:
+            raise ValueError("use ImplicitMarker class when a full complement of RSIDs is available")
+        self.check_chrom()
+        self.resolve(varlist)
+
+    @property
+    def refr(self):
+        return self.varlist.refr
+
+    @property
+    def chrom(self):
+        return self.varlist.chrom
+
+    @property
+    def positions(self):
+        return self.varlist.pos
+
+    def resolve(self, varlist):
+        alt_refr = "GRCh38" if varlist.refr == "GRCh37" else "GRCh37"
+        varmap = self.index.position_mapping[varlist.refr]
+        self.alt_varlist = VariantList(alt_refr, varlist.chrom, [varmap[p] for p in varlist.pos])
+        self.varlist = varlist
+
+
 
 
 class BaseMarkerDefinition:
