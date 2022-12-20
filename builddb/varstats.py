@@ -11,26 +11,21 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
-from lib import DataSource
+from lib import DataSource, BaseMarkerDefinition, CompleteMarkerDefinition, Resolver
 from pathlib import Path
 
-sources = list()
-for sourcepath in Path("sources").iterdir():
-    if not sourcepath.is_dir():
-        continue
-    sources.append(DataSource(sourcepath, dbsnp_path="databases/dbSNP"))
-sources.sort(key=lambda s: (s.year, s.name.lower()))
+markers = list()
+for markerfile in Path("sources").glob("*/marker.csv"):
+    markers.extend(BaseMarkerDefinition.from_csv(markerfile))
+rsids = set()
+for marker in markers:
+    rsids.update(marker.varref)
+resolver = Resolver("databases/dbSNP")
+resolver.resolve_rsids(rsids)
 mismatches = set()
-for source in sources:
-    if source.markers is None:
-        continue
-    for marker in source.markers:
-        match = None
-        if marker.positions is not None and marker.positions37 is not None:
-            match = sorted(marker.positions) == sorted(marker.positions37)
-        elif marker.positions is not None and marker.positions38 is not None:
-            match = sorted(marker.positions) == sorted(marker.positions38)
-        if match is False:
-            mismatches.add(marker.name)
-        print(marker.name, match, marker.region, marker.region37, marker.region38, sep="\t")
+for marker in markers:
+    cm = CompleteMarkerDefinition(marker, resolver)
+    print(cm)
+    if cm.is_match is False:
+        mismatches.add(cm.base.name)
 print("Mismatches:", *sorted(mismatches))

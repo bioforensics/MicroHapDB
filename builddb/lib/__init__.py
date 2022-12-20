@@ -10,5 +10,6 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
-from .marker import Marker
-from .source import DataSource
+from .marker import BaseMarkerDefinition, CompleteMarkerDefinition
+from .resolver import Resolver
+from .source import DataSource, SourceIndex

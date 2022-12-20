@@ -113,7 +113,7 @@ def vcf_to_rsid_offsets(vcfstream):
     for line in vcfstream:
         chrom, pos, rsid, *values = line.strip().split("\t")
         markerchrom = "chr" + chrom
-        offsets.append(int(pos) - 1)
+        offsets.append(int(pos))
         rsids.append(rsid)
     return markerchrom, rsids, offsets
 

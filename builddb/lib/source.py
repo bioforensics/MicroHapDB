@@ -10,7 +10,9 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
-from .marker import Marker
+from .marker import BaseMarkerDefinition, CompleteMarkerDefinition
+from .resolver import Resolver
+from collections import Counter, defaultdict
 from io import StringIO
 import json
 import pandas as pd
@@ -27,7 +29,7 @@ class DataSource:
         self.markers = None
         markerpath = self.path / "marker.csv"
         if markerpath.is_file():
-            self.markers = list(Marker.from_csv(markerpath, dbsnp_path=dbsnp_path))
+            self.markers = list(BaseMarkerDefinition.from_csv(markerpath, source=self))
 
     @staticmethod
     def meta_from_json(metapath):
@@ -108,3 +110,64 @@ class DataSource:
                 message = f"  - frequencies for {self.num_distinct_haplotypes} distinct haplotypes in {self.num_frequency_populations} populations; {self.num_frequencies} total frequencies"
             print(message, file=output)
         return output.getvalue().strip()
+
+
+class SourceIndex:
+    def __init__(self, rootdir, dbsnp_dir):
+        self.sources = SourceIndex.populate(rootdir)
+        self.all_rsids = set()
+        for source in self.sources:
+            if source.markers is None:
+                continue
+            for marker in source.markers:
+                if marker.varref is not None:
+                    self.all_rsids.update(marker.varref)
+        self.resolver = Resolver(dbsnp_dir)
+        self.resolver.resolve_rsids(self.all_rsids)
+        self.markers = list()
+        self.update_marker_names()
+
+    @staticmethod
+    def populate(rootdir):
+        sources = list()
+        for sourcepath in Path(rootdir).iterdir():
+            if not sourcepath.is_dir():
+                continue
+            sources.append(DataSource(sourcepath))
+        return sources
+
+    def update_marker_names(self):
+        markers_by_name = defaultdict(list)
+        for source in self.sources:
+            if source.markers is not None:
+                for marker in source.markers:
+                    marker = CompleteMarkerDefinition(marker, self.resolver)
+                    if marker.is_match is False:
+                        print(f"[{marker.base.source.name}::{marker.name}] WARNING: inferred positions do not match published positions")
+                    markers_by_name[marker.name].append(marker)
+        for name, markers in markers_by_name.items():
+            name_by_positions = dict()
+            distinct_definitions = set([m.posstr for m in markers])
+            for marker in sorted(markers, key=lambda m: (m.base.source.year, m.base.name.lower())):
+                if len(markers) > 1:
+                    if marker.posstr in name_by_positions:
+                        print(f"Marker {marker.base.name} as defined in {marker.base.source.name} is redundant")
+                        continue
+                    elif len(distinct_definitions) > 1:
+                        newname = f"{marker.base.name}.v{len(name_by_positions) + 1}"
+                        name_by_positions[marker.posstr] = newname
+                    marker.base.name = newname
+                self.markers.append(marker)
+
+    def marker_definitions(self):
+        table = list()
+        for marker in sorted(self.markers, key=lambda m: (m.chrom_num, m.span, m.base.name)):
+            entry = (marker.base.name, marker.base.chrom, marker.posstr, marker.base.source.name)
+            table.append(entry)
+        return pd.DataFrame(table, columns=["Name", "Chrom", "Positions", "Source"])
+
+    def __str__(self):
+        output = StringIO()
+        for source in sorted(self.sources, key=lambda s: (s.year, s.name.lower())):
+            print(source, file=output)
+        return output.getvalue()

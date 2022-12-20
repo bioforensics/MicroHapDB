@@ -13,25 +13,21 @@
 from liftover import get_lifter
 import pandas as pd
 from pathlib import Path
-import rsidx
-import sqlite3
-from subprocess import run
 
 
 class InvalidMarkerNameError(ValueError):
     pass
 
 
-class Marker:
+class BaseMarkerDefinition:
     @staticmethod
-    def from_csv(csvpath, dbsnp_path=None):
+    def from_csv(csvpath, source=None):
         markers = pd.read_csv(csvpath)
         for n, row in markers.iterrows():
-            yield Marker.from_row(row, dbsnp_path=dbsnp_path)
-            print(".", flush=True, end="")
+            yield BaseMarkerDefinition.from_row(row, source)
 
     @classmethod
-    def from_row(cls, row, dbsnp_path=None):
+    def from_row(cls, row, source=None):
         xref = None if pd.isna(row.Xref) else row.Xref
         refr = None if pd.isna(row.Refr) else row.Refr
         chrom = None if pd.isna(row.Chrom) else row.Chrom
@@ -50,7 +46,7 @@ class Marker:
             chrom=chrom,
             positions=positions,
             varref=rsids,
-            dbsnp_path=dbsnp_path
+            source=source,
         )
 
     def __init__(
@@ -62,18 +58,18 @@ class Marker:
         positions=None,
         varref=None,
         xref=None,
-        dbsnp_path=None,
+        source=None,
     ):
-        self.name = Marker.check_name(name)
-        self.numvars = Marker.check_num_vars(numvars)
+        self.name = BaseMarkerDefinition.check_name(name)
+        self.numvars = BaseMarkerDefinition.check_num_vars(numvars)
         self.xref = xref
         self.refr = refr
         self.chrom = chrom
         self.positions = positions
         self.varref = varref
+        self.source = source
         self.validate_definition()
         self.check_chrom()
-        self.set_positions(dbsnp_path=Path(dbsnp_path))
 
     @staticmethod
     def check_name(name):
@@ -144,6 +140,7 @@ class Marker:
     def set_positions(self, dbsnp_path=None):
         if dbsnp_path is None:
             return
+        dbsnp_path = Path(dbsnp_path)
         if self.varref is not None and len(self.varref) == self.numvars:
             self.set_positions_from_rsids(dbsnp_path)
         else:
@@ -157,22 +154,6 @@ class Marker:
             else:
                 raise ValueError(f"unsupported reference '{self.refr}'")
 
-    def set_positions_from_rsids(self, dbsnp_path):
-        self.positions37 = Marker.rsidx_search(self.varref, dbsnp_path / "dbSNP_GRCh37.vcf.gz", dbsnp_path / "dbSNP_GRCh37.rsidx")
-        self.positions38 = Marker.rsidx_search(self.varref, dbsnp_path / "dbSNP_GRCh38.vcf.gz", dbsnp_path / "dbSNP_GRCh38.rsidx")
-
-    @staticmethod
-    def rsidx_search(rsids, vcf, idx):
-        positions = dict()
-        with sqlite3.connect(idx) as db:
-            for line in rsidx.search.search(rsids, db, vcf):
-                values = line.strip().split("\t")
-                pos = int(values[1])
-                rsid = values[2]
-                assert ";" not in rsid
-                positions[rsid] = pos
-        return positions
-
     def liftover(self, positions, lifter):
         return [lifter[self.chrom][pos][0][1] for pos in positions]
 
@@ -180,26 +161,91 @@ class Marker:
     def labpi(self):
         return self.name[4:].split("-")[0]
 
+
+class CompleteMarkerDefinition:
+    def __init__(self, base, resolver):
+        self.base = base
+        self.resolver = resolver
+        self.positions = dict(GRCh37=list(), GRCh38=list())
+        self._resolve()
+
+    def _resolve(self):
+        if self.all_rsids_present:
+            self.positions["GRCh37"] = [self.resolver.coords_by_rsid["GRCh37"][rsid] for rsid in self.base.varref]
+            self.positions["GRCh38"] = [self.resolver.coords_by_rsid["GRCh38"][rsid] for rsid in self.base.varref]
+        elif self.base.refr == "GRCh37":
+            self.positions["GRCh37"] = self.base.positions
+            lifter = get_lifter("hg19", "hg38")
+            self.positions["GRCh38"] = [lifter[self.base.chrom][pos][0][1] for pos in self.base.positions]
+        else:
+            assert self.base.positions is not None, self.base.name
+            self.positions["GRCh38"] = self.base.positions
+            lifter = get_lifter("hg38", "hg19")
+            self.positions["GRCh37"] = [lifter[self.base.chrom][pos][0][1] for pos in self.base.positions]
+        if self.base.varref is not None and len(self.base.varref) == self.base.numvars and not self.all_rsids_present:
+            print(f"[{self.base.source.name}::{self.name}] all RSIDs provided, but some not found in dbSNP; falling back to explicitly provided positions")
+
+    @property
+    def all_rsids_present(self):
+        if self.base.varref is None:
+            return False
+        if len(self.base.varref) < self.base.numvars:
+            return False
+        sum37 = sum([1 for rsid in self.base.varref if rsid in self.resolver.coords_by_rsid["GRCh37"]])
+        sum38 = sum([1 for rsid in self.base.varref if rsid in self.resolver.coords_by_rsid["GRCh38"]])
+        return sum37 == sum38 == self.base.numvars
+
     @property
     def region(self):
-        if self.positions is None:
+        if self.base.positions is None:
             return None
-        start, end = min(self.positions), max(self.positions)
-        return f"{self.refr}|{self.chrom}:{start}-{end}"
+        start, end = min(self.base.positions), max(self.base.positions)
+        return f"{self.base.refr}|{self.base.chrom}:{start}-{end}"
 
     @property
     def region37(self):
-        return self._region("positions37")
+        return self._region(self.positions["GRCh37"])
 
     @property
     def region38(self):
-        return self._region("positions38")
+        return self._region(self.positions["GRCh38"])
 
     def _region(self, poslist):
-        if not hasattr(self, poslist):
+        start, end = min(poslist), max(poslist)
+        return f"{self.base.chrom}:{start}-{end}"
+
+    @property
+    def is_match(self):
+        if self.base.positions is None or not self.all_rsids_present:
             return None
-        positions = getattr(self, poslist)
-        if isinstance(positions, dict):
-            positions = list(positions.values())
-        start, end = min(positions), max(positions)
-        return f"{self.chrom}:{start}-{end}"
+        return sorted(self.base.positions) == sorted(self.positions[self.base.refr])
+
+    def __str__(self):
+        return f"{self.base.name}\t{self.is_match}\t{self.region}\t{self.region37}\t{self.region38}"
+
+    @property
+    def start(self):
+        return min(self.positions["GRCh38"])
+
+    @property
+    def end(self):
+        return max(self.positions["GRCh38"])
+
+    @property
+    def span(self):
+        return (self.start, self.end)
+
+    @property
+    def posstr(self):
+        return ";".join(map(str, self.positions["GRCh38"]))
+
+    @property
+    def name(self):
+        return self.base.name
+
+    @property
+    def chrom_num(self):
+        if self.base.chrom == "chrX":
+            return 23
+        else:
+            return int(self.base.chrom[3:])

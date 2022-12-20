@@ -41,7 +41,7 @@ def parse_markers(infile):
             if marker is not None:
                 assert marker.nsnps == len(marker.off37)
                 yield marker
-            offset = int(fields[4]) - 1
+            offset = int(fields[4])
             rsid = fields[5]
             marker = MarkerInfo(
                 name=fields[0],
@@ -53,7 +53,7 @@ def parse_markers(infile):
             if rsid != ".":
                 marker.rsids.append(rsid)
         else:
-            offset = int(fields[0]) - 1
+            offset = int(fields[0])
             rsid = fields[1]
             marker.off37.append(offset)
             if rsid != ".":
