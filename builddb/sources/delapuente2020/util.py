@@ -11,6 +11,7 @@
 # -------------------------------------------------------------------------------------------------
 
 import pandas as pd
+import re
 
 
 def compile_marker_definitions(infile, outfile):
@@ -46,13 +47,7 @@ def parse_marker(instream):
         label = blocklines[0]
         coords = blocklines[1]
         extent = blocklines[2]
-        rsids = (
-            ",".join(blocklines[3:-2])
-            .replace("nors", "rs772115763")
-            .replace("rs74898010", "rs73151289")
-            .replace("rs28970291", "rs4076758")
-            .replace("rs72629020", "rs36190610")
-        )
+        rsids = ",".join(blocklines[3:-2]).replace("nors", "rs772115763")
         gd = blocklines[-1]
         yield label, coords, extent, rsids, gd
 

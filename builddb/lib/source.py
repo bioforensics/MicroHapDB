@@ -154,7 +154,7 @@ class SourceIndex:
                 if len(markers) > 1:
                     if marker.posstr() in name_by_positions:
                         print(
-                            f"Marker {marker.base.name} as defined in {marker.base.source.name} was defined previously and is redundant"
+                            f"Marker {marker.name} as defined in {marker.source.name} was defined previously and is redundant"
                         )
                         continue
                     elif len(distinct_definitions) > 1:

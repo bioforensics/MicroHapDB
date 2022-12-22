@@ -19,16 +19,7 @@ snakemake --configfile ../../config.json --cores 1 -p all
 The [pdfminer](https://github.com/euske/pdfminer) package was used to extract text from the Supplementary File S1 (PDF) file.
 One variant in the file was marked as "nors."
 Manual examination confirms that rs772115763 refers to the SNP at the correct position with the expected alleles.
-However, rs772115763 does not appear in 1000 Genomes VCFs and thus summary statistics such as A<sub>e</sub> and I<sub>n</sub> cannot be computed for the corresponding marker.
-
-Three additional SNPs are labeled in File S1 with rsIDs that have been deprecated and merged into newer rsIDs.
-The `text2table.py` script makes the following rsID replacements.
-
-```
-rs74898010 --> rs73151289
-rs28970291 --> rs4076758
-rs72629020 --> rs36190610
-```
+The "nors" string is substituted with rs772115763 by the `text2table.py` script.
 
 [Snakemake]: https://snakemake.readthedocs.io/en/stable/
 [rsidx]: https://github.com/bioforensics/rsidx

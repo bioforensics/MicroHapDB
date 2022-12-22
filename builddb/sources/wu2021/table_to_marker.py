@@ -6,7 +6,6 @@ table = pd.read_csv("tables2.txt", sep="\t", skiprows=3, header=None)
 newtable = list()
 for i, row in table.iterrows():
     rsids = row[8].replace(",", ";")
-    rsids = rsids.replace("rs74812635", "rs602427").replace("rs75324027", "rs602875")
     newrow = (
         row[1],
         None,

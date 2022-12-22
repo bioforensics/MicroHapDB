@@ -112,10 +112,15 @@ def vcf_to_rsid_offsets(vcfstream):
     rsids = list()
     for line in vcfstream:
         chrom, pos, rsid, *values = line.strip().split("\t")
-        markerchrom = "chr" + chrom
+        if chrom.startswith("NC_"):
+            chrom = chrom.split("_")[1].split(".")[0]
+            chrom = int(chrom)
+            chrom = f"chr{chrom}"
+        elif not chrom.startswith("chr"):
+            chrom = "chr" + chrom
         offsets.append(int(pos))
         rsids.append(rsid)
-    return markerchrom, rsids, offsets
+    return chrom, rsids, offsets
 
 
 class Variant:

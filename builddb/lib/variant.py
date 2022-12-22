@@ -18,6 +18,7 @@ import rsidx
 import sqlite3
 import subprocess
 from tempfile import TemporaryDirectory
+from warnings import warn
 
 
 @dataclass
@@ -40,14 +41,15 @@ class VariantIndex:
         self.chain_path = Path(chain_path)
         self.coords_by_rsid = dict(GRCh37=dict(), GRCh38=dict())
         self.position_mapping = dict(GRCh37=defaultdict(dict), GRCh38=defaultdict(dict))
-        self.resolve_rsids()
-        self.resolve_positions()
+        self.resolve_all_rsids()
+        self.map_all_positions()
 
     @staticmethod
     def table_from_filenames(filenames):
         return pd.concat([pd.read_csv(fn) for fn in filenames]).reset_index()
 
-    def resolve_rsids(self):
+    def resolve_all_rsids(self):
+        self.load_merged_rsids()
         rsids = set(self.all_rsids())
         vcf = self.dbsnp_path / "dbSNP_GRCh37.vcf.gz"
         idx = self.dbsnp_path / "dbSNP_GRCh37.rsidx"
@@ -62,6 +64,8 @@ class VariantIndex:
                 continue
             for rsid in row.VarRef.split(";"):
                 yield rsid
+                if rsid in self.merged_rsids:
+                    yield self.merged_rsids[rsid]
 
     @staticmethod
     def rsidx_search(rsids, vcf, idx, vardict):
@@ -75,18 +79,41 @@ class VariantIndex:
                 assert ";" not in rsid
                 vardict[rsid] = pos
 
-    def resolve_positions(self):
-        self.map_positions("GRCh37", self.chain_path / "hg19ToHg38.over.chain.gz")
-        self.map_positions("GRCh38", self.chain_path / "hg38ToHg19.over.chain.gz")
+    def load_merged_rsids(self, updateint=1e6):
+        merged_file = self.dbsnp_path / "refsnp-merged.csv.gz"
+        if not merged_file.is_file():
+            merged_file = self.dbsnp_path / "refsnp-merged.csv"
+        if merged_file:
+            table = pd.read_csv(merged_file)
+            self.merged_rsids = dict(zip(table.Source, table.Target))
+        else:
+            merged_file = self.dbsnp_path / "refsnp-merged.json"
+            if not merged_file.is_file():
+                raise FileNotFoundError(merged_file)
+            self.merged_rsids = dict()
+            threshold = updateint
+            for n, line in enumerate(instream):
+                try:
+                    data = json.loads(line)
+                except:
+                    warn(f"Could not parse line {n+1}, skipping: {line}")
+                source = data["refsnp_id"]
+                targets = data["merged_snapshot_data"]["merged_into"]
+                for target in targets:
+                    self.merged_rsids[f"rs{source}"] = f"rs{target}"
+                if n >= threshold:
+                    threshold += updateint
+                    if threshold == updateint * 10:
+                        updateint = threshold
+                    print(f"processed {n} rows")
+            table = pd.DataFrame(self.merged_rsids.items(), columns=["Source", "Target"])
+            table.to_csv(self.dbsnp_path / "refsnp-merged.csv", index=False)
 
-    def all_positions(self, refr):
-        for n, row in self.table.iterrows():
-            if pd.isna(row.Refr) or row.Refr != refr:
-                continue
-            for position in row.Positions.split(";"):
-                yield row.Chrom, int(position) - 1, int(position)
+    def map_all_positions(self):
+        self.map_all_positions_for_refr("GRCh37", self.chain_path / "hg19ToHg38.over.chain.gz")
+        self.map_all_positions_for_refr("GRCh38", self.chain_path / "hg38ToHg19.over.chain.gz")
 
-    def map_positions(self, refr, chain):
+    def map_all_positions_for_refr(self, refr, chain):
         with TemporaryDirectory() as tmpdir:
             source_file = Path(tmpdir) / f"{refr}-source.bed"
             dest_file = Path(tmpdir) / f"{refr}-dist.bed"
@@ -101,3 +128,27 @@ class VariantIndex:
             dest_positions = pd.read_csv(dest_file, sep="\t", names=["Chrom", "Start", "End"])
             for source, dest in zip(source_positions.iterrows(), dest_positions.iterrows()):
                 self.position_mapping[refr][source[1].Chrom][source[1].End] = dest[1].End
+
+    def all_positions(self, refr):
+        for n, row in self.table.iterrows():
+            if pd.isna(row.Refr) or row.Refr != refr:
+                continue
+            for position in row.Positions.split(";"):
+                yield row.Chrom, int(position) - 1, int(position)
+
+    def resolve(self, rsids, refr, strict=False):
+        for rsid in rsids:
+            while rsid not in self.coords_by_rsid[refr] and rsid in self.merged_rsids:
+                print(f"swapping out {rsid} for {self.merged_rsids[rsid]}")
+                rsid = self.merged_rsids[rsid]
+            if rsid in self.coords_by_rsid[refr]:
+                yield self.coords_by_rsid[refr][rsid]
+            elif strict is True:
+                raise ValueError(f"no {refr} coordinate for {rsid}")
+
+    def map(self, refr, chrom, positions, strict=False):
+        for position in positions:
+            if position in self.position_mapping[refr][chrom]:
+                yield self.position_mapping[refr][chrom][position]
+            elif strict is True:
+                raise ValueError(f"no mapping for {chrom}:{position} from {refr} to alternate assembly")

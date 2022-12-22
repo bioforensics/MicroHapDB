@@ -19,6 +19,19 @@ class InvalidMarkerNameError(ValueError):
 
 
 class Marker:
+    field_names = (
+        "Name",
+        "NumVars",
+        "Extent",
+        "Chrom",
+        "Start",
+        "End",
+        "Positions",
+        "Positions37",
+        "RSIDs",
+        "Source",
+    )
+
     @staticmethod
     def from_csv(csvpath, index, source=None):
         table = pd.read_csv(csvpath)
@@ -43,6 +56,9 @@ class Marker:
         self.xrefs = xrefs
         self.source = source
         self.positions = dict(GRCh37=list(), GRCh38=list())
+
+    def __len__(self):
+        return self.end - self.start + 1
 
     @staticmethod
     def check_name(name):
@@ -96,9 +112,9 @@ class Marker:
             return False
         if len(self.rsids) < self.numvars:
             return False
-        sum37 = sum([1 for rsid in self.rsids if rsid in self.index.coords_by_rsid["GRCh37"]])
-        sum38 = sum([1 for rsid in self.rsids if rsid in self.index.coords_by_rsid["GRCh38"]])
-        return sum37 == sum38 == self.base.numvars
+        num37 = len(list(index.resolve(self.rsids, "GRCh37")))
+        num38 = len(list(index.resolve(self.rsids, "GRCh38")))
+        return num37 == num38 == self.base.numvars
 
     @property
     def fields(self):
@@ -108,30 +124,15 @@ class Marker:
         return (
             self.name,
             self.numvars,
+            len(self),
             self.chrom,
             self.start,
+            self.end,
             pos38,
             pos37,
             rsids,
-            None,
-            None,
             self.sourcename,
         )
-
-    @property
-    def field_names(self):
-        return [
-            "Name",
-            "NumVars",
-            "Chrom",
-            "Start",
-            "End",
-            "Positions",
-            "Positions37",
-            "Ae",
-            "In",
-            "Source",
-        ]
 
     @property
     def start(self):
@@ -175,14 +176,7 @@ class MarkerFromPositions(Marker):
     def resolve(self, varlist):
         self.positions[varlist.refr] = varlist.pos
         alt_refr = "GRCh38" if varlist.refr == "GRCh37" else "GRCh37"
-        varmap = self.index.position_mapping[varlist.refr][varlist.chrom]
-        new_positions = [varmap[p] for p in varlist.pos if p in varmap]
-        self.positions[alt_refr] = new_positions
-        if len(new_positions) < len(varlist.pos):
-            alt_varlist = VariantList(alt_refr, varlist.chrom, new_positions)
-            raise ValueError(
-                f"[{self.name}] unable to lift over all variants: {varlist} vs {alt_varlist}"
-            )
+        self.positions[alt_refr] = list(self.index.map(varlist.refr, varlist.chrom, varlist.pos, strict=True))
 
     @property
     def numvars(self):
@@ -198,11 +192,8 @@ class MarkerFromIDs(Marker):
 
     def resolve(self):
         for refr in ("GRCh37", "GRCh38"):
-            for rsid in self.rsids:
-                if rsid not in self.index.coords_by_rsid[refr]:
-                    raise IndexError(f"no {refr} coordinate for {rsid}")
-                pos = self.index.coords_by_rsid[refr][rsid]
-                self.positions[refr].append(pos)
+            for position in self.index.resolve(self.rsids, refr, strict=True):
+                self.positions[refr].append(position)
             self.positions[refr].sort()
 
     @property
