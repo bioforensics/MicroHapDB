@@ -176,7 +176,9 @@ class MarkerFromPositions(Marker):
     def resolve(self, varlist):
         self.positions[varlist.refr] = varlist.pos
         alt_refr = "GRCh38" if varlist.refr == "GRCh37" else "GRCh37"
-        self.positions[alt_refr] = list(self.index.map(varlist.refr, varlist.chrom, varlist.pos, strict=True))
+        self.positions[alt_refr] = list(
+            self.index.map(varlist.refr, varlist.chrom, varlist.pos, strict=True)
+        )
 
     @property
     def numvars(self):

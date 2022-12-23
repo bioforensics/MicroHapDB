@@ -151,4 +151,6 @@ class VariantIndex:
             if position in self.position_mapping[refr][chrom]:
                 yield self.position_mapping[refr][chrom][position]
             elif strict is True:
-                raise ValueError(f"no mapping for {chrom}:{position} from {refr} to alternate assembly")
+                raise ValueError(
+                    f"no mapping for {chrom}:{position} from {refr} to alternate assembly"
+                )

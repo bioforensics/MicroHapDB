@@ -13,3 +13,4 @@
 from .variant import VariantList, VariantIndex
 from .marker import Marker, MarkerFromPositions, MarkerFromIDs
 from .source import DataSource, SourceIndex
+from .genotype import GenotypeIndexer
