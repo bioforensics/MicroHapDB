@@ -124,6 +124,7 @@ class SourceIndex:
         self.populate_variants()
         self.populate_sources()
         self.markers = list()
+        self.indels = None
 
     def populate_variants(self):
         csvs = self.rootdir.glob("*/marker.csv")
@@ -147,21 +148,31 @@ class SourceIndex:
         markers_by_name = defaultdict(list)
         for marker in self.all_markers():
             markers_by_name[marker.name].append(marker)
+        source_name_map = defaultdict(dict)
         for name, markers in markers_by_name.items():
             name_by_positions = dict()
             distinct_definitions = set([m.posstr() for m in markers])
             for marker in sorted(markers, key=lambda m: (m.source.year, m.name.lower())):
-                if len(markers) > 1:
+                if len(markers) > 1 and len(distinct_definitions) > 1:
+                    newname = f"{marker.name}.v{len(name_by_positions) + 1}"
+                    source_name_map[marker.source.name][marker.name] = newname
                     if marker.posstr() in name_by_positions:
                         print(
                             f"Marker {marker.name} as defined in {marker.source.name} was defined previously and is redundant"
                         )
                         continue
-                    elif len(distinct_definitions) > 1:
-                        newname = f"{marker.name}.v{len(name_by_positions) + 1}"
+                    else:
                         name_by_positions[marker.posstr()] = newname
-                    marker.name = newname
+                        marker.name = newname
                 self.markers.append(marker)
+        indel_tables = list()
+        for source in self.sources:
+            if source.indels is None:
+                continue
+            table = source.indels.replace(source_name_map[source.name])
+            indel_tables.append(table)
+        self.indels = pd.concat(indel_tables).reset_index(drop=True)
+
 
     def marker_definitions(self):
         table = list()
