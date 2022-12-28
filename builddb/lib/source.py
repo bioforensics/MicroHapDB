@@ -96,6 +96,14 @@ class DataSource:
             return 0
         return len(self.frequencies)
 
+    def rename_markers(self, name_map):
+        for oldname, newname in name_map.items():
+            print(f"[{self.name}] {oldname} --> {newname}")
+        if self.indels is not None:
+            self.indels.replace(name_map, inplace=True)
+        if self.frequencies is not None:
+            self.frequencies.replace(name_map, inplace=True)
+
     def __str__(self):
         output = StringIO()
         print(f"[{self.name}]", file=output)
@@ -117,14 +125,14 @@ class DataSource:
 
 
 class SourceIndex:
-    def __init__(self, rootdir, dbsnp_path, chain_path):
+    def __init__(self, rootdir, dbsnp_path, chain_path, exclude=None):
         self.rootdir = Path(rootdir)
         self.dbsnp_path = Path(dbsnp_path)
         self.chain_path = Path(chain_path)
+        self.exclusion_list = exclude
         self.populate_variants()
         self.populate_sources()
-        self.markers = list()
-        self.indels = None
+        self._markers = list()
 
     def populate_variants(self):
         csvs = self.rootdir.glob("*/marker.csv")
@@ -136,7 +144,9 @@ class SourceIndex:
         for sourcepath in self.rootdir.iterdir():
             if not sourcepath.is_dir():
                 continue
-            self.sources.append(DataSource(sourcepath, self.variant_index))
+            source = DataSource(sourcepath, self.variant_index)
+            if source.name not in self.exclusion_list:
+                self.sources.append(source)
 
     def all_markers(self):
         for source in self.sources:
@@ -164,21 +174,29 @@ class SourceIndex:
                     else:
                         name_by_positions[marker.posstr()] = newname
                         marker.name = newname
-                self.markers.append(marker)
-        indel_tables = list()
-        for source in self.sources:
-            if source.indels is None:
-                continue
-            table = source.indels.replace(source_name_map[source.name])
-            indel_tables.append(table)
-        self.indels = pd.concat(indel_tables).reset_index(drop=True)
+                self._markers.append(marker)
+        for source in sorted(self.sources, key=lambda s: (s.year, s.name)):
+            source.rename_markers(source_name_map[source.name])
 
 
-    def marker_definitions(self):
+    @property
+    def markers(self):
         table = list()
-        for marker in sorted(self.markers, key=lambda m: (m.chrom_num, m.span, m.name)):
+        for marker in sorted(self._markers, key=lambda m: (m.chrom_num, m.span, m.name)):
             table.append(marker.fields)
         return pd.DataFrame(table, columns=Marker.field_names)
+
+    @property
+    def indels(self):
+        table = pd.concat([source.indels for source in self.sources if source.indels is not None])
+        table = table.sort_values(["Marker", "VariantIndex"]).reset_index(drop=True)
+        return table
+
+    @property
+    def frequencies(self):
+        table = pd.concat([source.frequencies for source in self.sources if source.frequencies is not None])
+        table = table.sort_values(["Marker", "Population"]).reset_index(drop=True)
+        return table
 
     def __str__(self):
         output = StringIO()
