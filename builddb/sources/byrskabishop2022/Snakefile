@@ -16,9 +16,9 @@ from util import collect_haplotypes, compile_sample_populations, compile_frequen
 
 rule aes:
     input:
-        freqs="frequency.csv"
+        freqs="frequency.csv",
     output:
-        aes="marker-aes.csv"
+        aes="marker-aes.csv",
     run:
         frequencies = pd.read_csv(input.freqs)
         aes = compute_aes(frequencies)
@@ -29,7 +29,7 @@ rule frequencies:
     input:
         haplotypes="haplotypes.csv.gz",
     output:
-        freqs="frequency.csv"
+        freqs="frequency.csv",
     run:
         haplotypes = pd.read_csv(input.haplotypes)
         frequencies = compile_frequencies(haplotypes)
@@ -44,11 +44,14 @@ rule haplotypes:
         csv="haplotypes.csv.gz",
     params:
         dir1kgp=config["1kgp_dir"],
-        refr=config["refr"]
+        refr=config["refr"],
     run:
         markers = pd.read_csv(input.markers)
         samples = pd.read_csv(input.samples)
-        sample_pops = {row.Sample: (row.Population, row.Superpopulation) for n, row in samples.iterrows()}
+        sample_pops = {
+            row.Sample: (row.Population, row.Superpopulation, row.Gender)
+            for n, row in samples.iterrows()
+        }
         haplotypes = collect_haplotypes(markers, sample_pops, params.refr, params.dir1kgp)
         haplotypes.to_csv(output.csv, index=False)
 

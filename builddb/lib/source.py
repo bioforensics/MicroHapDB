@@ -178,7 +178,6 @@ class SourceIndex:
         for source in sorted(self.sources, key=lambda s: (s.year, s.name)):
             source.rename_markers(source_name_map[source.name])
 
-
     @property
     def markers(self):
         table = list()
@@ -194,7 +193,9 @@ class SourceIndex:
 
     @property
     def frequencies(self):
-        table = pd.concat([source.frequencies for source in self.sources if source.frequencies is not None])
+        table = pd.concat(
+            [source.frequencies for source in self.sources if source.frequencies is not None]
+        )
         table = table.sort_values(["Marker", "Population"]).reset_index(drop=True)
         return table
 

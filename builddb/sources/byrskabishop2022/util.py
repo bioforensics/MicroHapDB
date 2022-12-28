@@ -20,8 +20,6 @@ from pysam import VariantFile
 def collect_haplotypes(markers, sample_pops, refr_file, vcfdir):
     haplo_table = list()
     for n, marker in markers.iterrows():
-        if marker.Chrom == "chrX":
-            continue
         vcfs = list(Path(vcfdir).glob(f"*{marker.Chrom}.*.vcf.gz"))
         if len(vcfs) != 1:
             message = f"found {len(vcfs)} VCFs for {marker.Chrom} ($VCFDIR/*{marker.Chrom}.*.vcf.gz), expected 1"
@@ -31,7 +29,9 @@ def collect_haplotypes(markers, sample_pops, refr_file, vcfdir):
         for sample, hapl1, hapl2 in gti.get_haplotypes(marker.Chrom, positions):
             if sample not in sample_pops:
                 continue
-            pop, superpop = sample_pops[sample]
+            pop, superpop, gender = sample_pops[sample]
+            if marker.Chrom == "chrX" and gender == "male":
+                hapl2 = None
             entry = (marker.Name, sample, pop, superpop, hapl1, hapl2)
             haplo_table.append(entry)
     colnames = ["Marker", "Sample", "Population", "Superpopulation", "Haplotype1", "Haplotype2"]
@@ -91,7 +91,6 @@ class Haplotype:
         self.alleles[position] = allele
 
 
-
 def compile_sample_populations(vcf_path, pop_table, pedigree):
     vcf = VariantFile(vcf_path)
     samples = set(vcf.header.samples)
@@ -103,7 +102,9 @@ def compile_sample_populations(vcf_path, pop_table, pedigree):
     pedigree = pedigree[~pedigree["Population"].isin(admixed)]
     pedigree["Superpopulation"] = pedigree["Population"].map(superpops)
     pedigree["Gender"] = pedigree["Gender"].map({1: "male", 2: "female"})
-    pedigree = pedigree[["Individual ID", "Gender", "Population", "Superpopulation"]].rename(columns={"Individual ID": "Sample"})
+    pedigree = pedigree[["Individual ID", "Gender", "Population", "Superpopulation"]].rename(
+        columns={"Individual ID": "Sample"}
+    )
     summarize_population_groups(pedigree, superpops)
     return pedigree
 
@@ -133,8 +134,10 @@ def list_frequencies(haplotypes):
     agg_tallies = defaultdict(Counter)
     for n, row in haplotypes.iterrows():
         for haplokey in ("Haplotype1", "Haplotype2"):
-            pop_tallies[row["Marker"]][row["Superpopulation"]].update([row[haplokey]])
-            agg_tallies[row["Marker"]].update([row[haplokey]])
+            mhallele = [row[haplokey]]
+            if not pd.isna(mhallele):
+                pop_tallies[row["Marker"]][row["Superpopulation"]].update(mhallele)
+                agg_tallies[row["Marker"]].update(mhallele)
     for marker, popcounts in sorted(pop_tallies.items()):
         for mhallele, agg_count in sorted(agg_tallies[marker].items()):
             freq = agg_count / sum(agg_tallies[marker].values())
@@ -149,7 +152,7 @@ def compute_aes(frequencies):
     aes = list()
     for marker, marker_data in frequencies.groupby("Marker"):
         for population, pop_data in marker_data.groupby("Population"):
-            ae = 1.0 / sum([f ** 2 for f in pop_data.Frequency])
+            ae = 1.0 / sum([f**2 for f in pop_data.Frequency])
             entry = (marker, population, ae)
             aes.append(entry)
     return pd.DataFrame(aes, columns=["Marker", "Population", "Ae"])
