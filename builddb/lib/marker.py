@@ -161,6 +161,10 @@ class Marker:
             return 23
         return int(self.chrom[3:])
 
+    @property
+    def locus(self):
+        return self.name.split(".")[0]
+
 
 class MarkerFromPositions(Marker):
     def __init__(self, name, positions, rsids, index, xrefs=None, source=None):

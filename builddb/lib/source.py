@@ -17,6 +17,7 @@ from io import StringIO
 import json
 import pandas as pd
 from pathlib import Path
+from pyfaidx import Fasta as FastaIdx
 import rsidx
 import sqlite3
 import subprocess
@@ -204,3 +205,54 @@ class SourceIndex:
         for source in sorted(self.sources, key=lambda s: (s.year, s.name.lower())):
             print(source, file=output)
         return output.getvalue()
+
+    def marker_seqs_to_fasta(self, fasta_path, outstream):
+        fasta = FastaIdx(fasta_path)
+        loci = defaultdict(Locus)
+        for marker in self._markers:
+            loci[marker.locus].append(marker)
+        for locus in sorted(loci.values(), key=lambda l: (l.chrom_num, l.extent)):
+            start, end = locus.target
+            length = end - start
+            sequence = fasta[locus.chrom][start:end]
+            assert len(sequence) == length
+            print(locus.defline, sequence, sep="\n", file=outstream)
+
+
+class Locus(list):
+    @property
+    def name(self):
+        return self[0].locus
+
+    @property
+    def chrom(self):
+        return self[0].chrom
+
+    @property
+    def chrom_num(self):
+        return self[0].chrom_num
+
+    @property
+    def extent(self):
+        return self.start, self.end
+
+    @property
+    def target(self):
+        return self.start - 61, self.end + 60
+
+    @property
+    def start(self):
+        return min([m.start for m in self])
+
+    @property
+    def end(self):
+        return max([m.end for m in self])
+
+    @property
+    def region(self):
+        start, end = self.target
+        return f"{self.chrom}:{start+1}-{end}"
+
+    @property
+    def defline(self):
+        return f">{self.name} GRCh38 {self.region}"
