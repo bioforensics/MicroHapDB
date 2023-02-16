@@ -91,15 +91,16 @@ class Haplotype:
         self.alleles[position] = allele
 
 
-def compile_sample_populations(vcf_path, pop_table, pedigree):
+def compile_sample_populations(vcf_path, pop_table, pedigree, dofilters=True):
     vcf = VariantFile(vcf_path)
     samples = set(vcf.header.samples)
     superpops = dict(zip(pop_table["Population code"], pop_table["Superpopulation code"]))
     admixed = ("ACB", "ASW", "CLM", "MXL", "PEL", "PUR")
-    pedigree = pedigree[pedigree["Individual ID"].isin(samples)]
-    pedigree = pedigree[~pedigree["Paternal ID"].isin(samples)]
-    pedigree = pedigree[~pedigree["Maternal ID"].isin(samples)]
-    pedigree = pedigree[~pedigree["Population"].isin(admixed)]
+    if dofilters:
+        pedigree = pedigree[pedigree["Individual ID"].isin(samples)]
+        pedigree = pedigree[~pedigree["Paternal ID"].isin(samples)]
+        pedigree = pedigree[~pedigree["Maternal ID"].isin(samples)]
+        pedigree = pedigree[~pedigree["Population"].isin(admixed)]
     pedigree["Superpopulation"] = pedigree["Population"].map(superpops)
     pedigree["Gender"] = pedigree["Gender"].map({1: "male", 2: "female"})
     pedigree = pedigree[["Individual ID", "Gender", "Population", "Superpopulation"]].rename(

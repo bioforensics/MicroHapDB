@@ -40,20 +40,23 @@ rule haplotypes:
     input:
         markers="marker-latest.csv",
         samples="sample_pops.csv",
+        samplesunf="sample_pops_unfiltered.csv",
     output:
         csv="haplotypes.csv.gz",
+        csvunf="haplotypes_unfiltered.csv.gz",
     params:
         dir1kgp=config["1kgp_dir"],
         refr=config["refr"],
     run:
         markers = pd.read_csv(input.markers)
-        samples = pd.read_csv(input.samples)
-        sample_pops = {
-            row.Sample: (row.Population, row.Superpopulation, row.Gender)
-            for n, row in samples.iterrows()
-        }
-        haplotypes = collect_haplotypes(markers, sample_pops, params.refr, params.dir1kgp)
-        haplotypes.to_csv(output.csv, index=False)
+        for samplesfile, outfile in zip((input.samples, input.samplesunf), (output.csv, output.csvunf)):
+            samples = pd.read_csv(samplesfile)
+            sample_pops = {
+                row.Sample: (row.Population, row.Superpopulation, row.Gender)
+                for n, row in samples.iterrows()
+            }
+            haplotypes = collect_haplotypes(markers, sample_pops, params.refr, params.dir1kgp)
+            haplotypes.to_csv(outfile, index=False)
 
 
 rule populations:
@@ -62,6 +65,7 @@ rule populations:
         pedigree="20130606_g1k.ped",
     output:
         csv="sample_pops.csv",
+        csvunf="sample_pops_unfiltered.csv",
     params:
         dir1kgp=config["1kgp_dir"],
     run:
@@ -70,3 +74,5 @@ rule populations:
         vcf = list(Path(params.dir1kgp).glob(f"*chr19.*.vcf.gz"))[0]
         sample_pops = compile_sample_populations(vcf, pops, pedigree)
         sample_pops.to_csv(output.csv, index=False)
+        sample_pops_unfiltered = compile_sample_populations(vcf, pops, pedigree, dofilters=False)
+        sample_pops_unfiltered.to_csv(output.csvunf, index=False)
