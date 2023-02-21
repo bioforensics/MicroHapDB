@@ -22,8 +22,6 @@ from warnings import warn
 def main(args):
     if args.ae_pop:
         microhapdb.set_ae_population(popid=args.ae_pop)
-    if args.GRCh37:
-        microhapdb.set_reference(37)
     markerids = resolve_panel(args.panel) if args.panel else args.id
     result = apply_filters(markerids, args.region, args.query)
     if len(result) > 0:
@@ -35,13 +33,10 @@ def main(args):
             minlen=args.min_length,
             extend_mode=args.extend_mode,
             trunc=args.trunc,
-            refr37=args.GRCh37,
         )
-    # Reset
     if args.ae_pop:
-        microhapdb.set_ae_population(popid=None)
-    if args.GRCh37:
-        microhapdb.set_reference(38)
+        # Reset
+        microhapdb.set_ae_population(popid="1KGP")
 
 
 def resolve_panel(panel):
@@ -75,7 +70,6 @@ def display(
     minlen=80,
     extend_mode=0,
     trunc=True,
-    refr37=False,
 ):
     if view_format == "table":
         result = subset_result(result, columns)
@@ -112,6 +106,7 @@ def subset_result(result, columns):
         "p": "Positions",
         "q": "Positions37",
         "r": "RSIDs",
+        "a": "Ae",
     }
     for code in columns:
         if code not in fmt:
@@ -145,15 +140,10 @@ def subparser(subparsers):
     retrieval.add_argument(
         "--ae-pop",
         metavar="POP",
+        type=str,
         help="specify the 1000 Genomes population from which to report "
         'effective number of alleles in the "Ae" column; by default, the Ae value averaged over '
         "all 26 1KGP populations is reported",
-    )
-    retrieval.add_argument(
-        "--GRCh37",
-        action="store_true",
-        help="use coordinates from the GRCh37 reference "
-        "assembly; by default, the GRCh38 reference is used",
     )
     retrieval.add_argument(
         "--panel",
@@ -178,8 +168,8 @@ def subparser(subparsers):
     formatting.add_argument(
         "--columns",
         metavar="C",
-        default="nxcse",
-        help="string of column codes indicating which fields to include in tabular output; n=NumVars x=Extent c=Chrom s=Start e=End p=Positions q=Positions37 r=RSIDs a=Ae; by default C=nxcse",
+        default="nxcsea",
+        help="string of column codes indicating which fields to include in tabular output; n=NumVars x=Extent c=Chrom s=Start e=End p=Positions q=Positions37 r=RSIDs a=Ae; by default C=nxcsea",
     )
     formatting.add_argument(
         "--delta",

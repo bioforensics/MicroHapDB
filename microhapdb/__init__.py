@@ -27,35 +27,14 @@ def data_file(path):
     return resource_filename("microhapdb", f"data/{path}")
 
 
-def set_ae_population(popid=None):
+def set_ae_population(popid="1KGP"):
     global markers
-    columns = ["Name", "PermID", "Reference", "Chrom", "Offsets", "Ae", "In", "Fst", "Source"]
-    if popid is None:
-        defaults = pd.read_csv(data_file("marker.tsv"), sep="\t")
-        defaults = defaults[["Name", "Ae"]]
-        markers = markers.drop(columns=["Ae"]).join(defaults.set_index("Name"), on="Name")[columns]
-    else:
-        aes = pd.read_csv(data_file("marker-aes.tsv"), sep="\t")
-        if popid not in aes.Population.unique():
-            raise ValueError(f'no Ae data for population "{popid}"')
-        popaes = aes[aes.Population == popid].drop(columns=["Population"])
-        markers = markers.drop(columns=["Ae"]).join(popaes.set_index("Marker"), on="Name")[columns]
-
-
-def set_reference(refr):
-    global markers
-    assert refr in (37, 38)
-    columns = ["Name", "PermID", "Reference", "Chrom", "Offsets", "Ae", "In", "Fst", "Source"]
-    if refr == 38:
-        defaults = pd.read_csv(data_file("marker.tsv"), sep="\t")[["Name", "Reference", "Offsets"]]
-        markers = markers.drop(columns=["Reference", "Offsets"]).join(
-            defaults.set_index("Name"), on="Name"
-        )[columns]
-    else:
-        o37 = pd.read_csv(data_file("marker-offsets-GRCh37.tsv"), sep="\t")
-        markers = markers.drop(columns=["Reference", "Offsets"]).join(
-            o37.set_index("Marker"), on="Name"
-        )[columns]
+    markers["Ae"] = None
+    aes = pd.read_csv(data_file("marker-aes.csv"))
+    if popid not in aes.Population.unique():
+        raise ValueError(f'no Ae data for population "{popid}"')
+    popaes = aes[aes.Population == popid].drop(columns=["Population"])
+    markers = markers.drop(columns=["Ae"]).join(popaes.set_index("Marker"), on="Name")
 
 
 def retrieve_by_id(ident):
@@ -100,3 +79,6 @@ def retrieve_by_id(ident):
         return Marker.table_from_ids([ident])
     else:
         raise ValueError(f'identifier "{ident}" not found in MicroHapDB')
+
+
+set_ae_population("1KGP")
