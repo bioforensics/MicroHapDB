@@ -160,7 +160,7 @@ class Marker:
     @property
     def slug(self):
         seqid = self.chrom
-        return f"{seqid}:{self.start}-{self.end}"
+        return f"{seqid}:{self.start+1}-{self.end}"
 
     def __len__(self):
         return self.end - self.start
@@ -171,15 +171,11 @@ class Marker:
 
     @property
     def start(self):
-        return self.data.Start
+        return self.data.Start - 1
 
     @property
     def end(self):
-        return self.data.End + self.variant_lengths[-1]
-
-    @property
-    def marker_extent38(self):
-        return self.start, self.end
+        return self.data.End - 1 + self.variant_lengths[-1]
 
     @property
     def target_slug(self):
@@ -194,7 +190,7 @@ class Marker:
 
     @property
     def target_interval(self):
-        o = self.offsets38
+        o = self.offsets
         vl = self.variant_lengths
         start, end = min(o) - self.delta, max(o) + self.delta + vl[-1]
         length = end - start
@@ -338,7 +334,7 @@ class Marker:
     @property
     def target_offsets(self):
         start, end = self.target_interval
-        return [o - start for o in self.offsets38]
+        return [o - start for o in self.offsets]
 
     @property
     def offsets(self):
@@ -346,21 +342,14 @@ class Marker:
 
     @property
     def marker_seq(self):
-        fullseq = self.flanking_sequence_data.Sequence
-        mstart, mend = self.marker_extent38
-        seqstart = mstart - self.flanking_sequence_data.LeftFlank
-        seqend = seqstart + (mend - mstart)
-        markerseq = fullseq[seqstart:seqend]
-        return markerseq
+        start = self.start
+        end = self.end
+        return str(microhapdb.hg38[self.chrom][start:end])
 
     @property
     def target_seq(self):
-        fullseq = self.flanking_sequence_data.Sequence
-        tstart, tend = self.target_interval
-        seqstart = tstart - self.flanking_sequence_data.LeftFlank
-        seqend = seqstart + (tend - tstart)
-        targetseq = fullseq[seqstart:seqend]
-        return targetseq
+        start, end = self.target_interval
+        return str(microhapdb.hg38[self.chrom][start:end])
 
     @property
     def reference_lengths(self):
@@ -385,15 +374,10 @@ class Marker:
         varstring = ",".join(map(str, self.target_offsets))
         parts = [
             self.name,
-            f"PermID={self.data.PermID}",
-            f"GRCh38:{self.slug}",
+            f"GRCh38:{self.target_slug}",
             f"variants={varstring}",
         ]
         line = " ".join(parts)
-        result = microhapdb.idmap[microhapdb.idmap.ID == self.name]
-        if len(result) > 0:
-            xrefstr = ",".join(result.Xref)
-            line += f" Xref={xrefstr}"
         return line
 
     @property

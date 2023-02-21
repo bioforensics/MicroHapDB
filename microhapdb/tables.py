@@ -12,6 +12,7 @@
 
 from pkg_resources import resource_filename
 import pandas as pd
+from pyfaidx import Fasta as FastaIdx
 
 
 def read_table(table_path):
@@ -32,3 +33,4 @@ populations = read_table("population.csv")
 frequencies = read_table("frequency.csv")
 indels = read_table("indels.csv")
 variantmap = compile_variant_map(markers)
+hg38 = FastaIdx(resource_filename("microhapdb", "data/hg38.fasta.gz"))

@@ -10,7 +10,7 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
-from .tables import markers, populations, frequencies, indels, variantmap
+from .tables import markers, populations, frequencies, indels, variantmap, hg38
 from .population import Population
 from .marker import Marker
 from microhapdb import cli
