@@ -31,6 +31,8 @@ class DataSource:
         self.indels = DataSource.data_from_csv(self.path / "indels.csv")
         self.frequencies = DataSource.data_from_csv(self.path / "frequency.csv")
         self.populations = DataSource.data_from_csv(self.path / "population.csv")
+        if self.populations is not None:
+            self.populations["Source"] = self.name
         self.markers = None
         markerpath = self.path / "marker.csv"
         if markerpath.is_file():
@@ -198,6 +200,12 @@ class SourceIndex:
             [source.frequencies for source in self.sources if source.frequencies is not None]
         )
         table = table.sort_values(["Marker", "Population"]).reset_index(drop=True)
+        return table
+
+    @property
+    def populations(self):
+        table = pd.concat([source.populations for source in self.sources if source.populations is not None])
+        table = table.sort_values("Name").reset_index(drop=True)
         return table
 
     def __str__(self):

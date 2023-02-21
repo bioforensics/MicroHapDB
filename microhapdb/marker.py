@@ -50,15 +50,6 @@ class Marker:
         self.data = marker
         self.delta = delta
         self.minlen = minlen
-        self.flanking_sequence_data = microhapdb.sequences[
-            microhapdb.sequences.Marker == self.name
-        ].iloc[0]
-        self.data38 = marker
-        if marker.Reference != "GRCh38":
-            # We need GRCh38 coordinates to work with marker sequences
-            assert marker.Reference == "GRCh37"
-            markers38 = pd.read_csv(microhapdb.data_file("marker.tsv"), sep="\t")
-            self.data38 = markers38[markers38.Name == marker.Name].iloc[0]
 
     @staticmethod
     def table_from_ids(identifiers):
@@ -78,15 +69,13 @@ class Marker:
     @staticmethod
     def table_from_region(regionstr):
         markers = microhapdb.markers.copy()
-        markers["Start"] = markers.Offsets.apply(lambda o: min(map(int, o.split(","))))
-        markers["End"] = markers.Offsets.apply(lambda o: max(map(int, o.split(","))) + 1)
         chrom, start, end = Marker.parse_regionstr(regionstr)
         query = f'Chrom == "{chrom}"'
         if start is not None:
             query += f" and (Start < {end}"
             query += f" and End > {start})"
         result = markers.query(query)
-        return result.drop(columns=["Start", "End"])
+        return result
 
     @classmethod
     def from_id(cls, identifier, **kwargs):
@@ -152,17 +141,8 @@ class Marker:
             if id_in_series(ident, microhapdb.variantmap.Variant):
                 markernames = microhapdb.variantmap[microhapdb.variantmap.Variant == ident].Marker
                 ids.update(markernames)
-            elif id_in_series(ident, microhapdb.markers.PermID):
-                result = microhapdb.markers[microhapdb.markers.PermID == ident]
-                ids.update(result.Name)
             elif id_in_series(ident, microhapdb.markers.Name):
                 result = microhapdb.markers[microhapdb.markers.Name == ident]
-                ids.update(result.Name)
-            elif id_in_series(ident, microhapdb.idmap.Xref):
-                markername = microhapdb.idmap[microhapdb.idmap.Xref == ident].ID
-                assert len(markername) == 1
-                markername = markername.iloc[0]
-                result = microhapdb.markers[microhapdb.markers.Name == markername]
                 ids.update(result.Name)
         return sorted(microhapdb.markers[microhapdb.markers.Name.isin(ids)].Name)
 
@@ -191,15 +171,15 @@ class Marker:
 
     @property
     def start(self):
-        return min(self.offsets)
+        return self.data.Start
 
     @property
     def end(self):
-        return max(self.offsets) + self.variant_lengths[-1]
+        return self.data.End + self.variant_lengths[-1]
 
     @property
     def marker_extent38(self):
-        return min(self.offsets38), max(self.offsets38) + self.variant_lengths[-1]
+        return self.start, self.end
 
     @property
     def target_slug(self):
@@ -245,7 +225,7 @@ class Marker:
     def detail(self):
         output = StringIO()
         print("-" * 62, "[ MicroHapDB ]----", sep="", file=output)
-        print(self.name, "   a.k.a", ", ".join(self.xrefs), end="\n\n", file=output)
+        print(self.name, end="\n\n", file=output)
         self.print_detail_definition(output)
         self.print_detail_markerseq(output)
         self.print_detail_targetseq(output)
@@ -253,14 +233,8 @@ class Marker:
         return output.getvalue()
 
     @property
-    def xrefs(self):
-        xreflist = [self.data.PermID]
-        xreflist.extend(sorted(microhapdb.idmap[microhapdb.idmap.ID == self.name].Xref))
-        return xreflist
-
-    @property
     def varrefs(self):
-        return microhapdb.variantmap[microhapdb.variantmap.Marker == self.name].Variant
+        return self.data.RSIDs.split(";")
 
     def print_detail_definition(self, out):
         marker_slug = f"{self.slug} ({len(self)} bp)"
@@ -368,11 +342,7 @@ class Marker:
 
     @property
     def offsets(self):
-        return sorted(map(int, self.data.Offsets.split(",")))
-
-    @property
-    def offsets38(self):
-        return sorted(map(int, self.data38.Offsets.split(",")))
+        return sorted([int(p) - 1 for p in self.data.Positions.split(";")])
 
     @property
     def marker_seq(self):
