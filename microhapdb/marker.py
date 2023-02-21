@@ -235,13 +235,16 @@ class Marker:
     def print_detail_definition(self, out):
         marker_slug = f"{self.slug} ({len(self)} bp)"
         target_slug = f"{self.target_slug} ({self.target_length} bp)"
-        marker_offsets = ",".join([str(o) for o in self.marker_offsets])
-        target_offsets = ",".join([str(o) for o in self.target_offsets])
-        print(f"Marker Definition ({self.data.Reference})", file=out)
+        offsets37 = ", ".join([str(o) for o in self.offsets37])
+        offsets38 = ", ".join([str(o) for o in self.offsets])
+        marker_offsets = ", ".join([str(o) for o in self.marker_offsets])
+        target_offsets = ", ".join([str(o) for o in self.target_offsets])
+        print(f"Marker Definition", file=out)
         print(f"    Marker extent\n        - {marker_slug}", file=out)
         print(f"    Target locus\n        - {target_slug}", file=out)
         print(f"    Constituent variants", file=out)
-        print(f"        - chromosome offsets:", self.data.Offsets, file=out)
+        print(f"        - chromosome offsets (GRCh37):", offsets37, file=out)
+        print(f"        - chromosome offsets (GRCh38):", offsets38, file=out)
         print(f"        - marker offsets:", marker_offsets, file=out)
         print(f"        - target offsets:", target_offsets, file=out)
         print(f"        - cross-references:", ", ".join(self.varrefs), file=out)
@@ -313,7 +316,7 @@ class Marker:
 
     def print_detail_targetseq_alleles(self, blocks, out):
         for allele in self.alleles:
-            allelevars = allele.split(",")
+            allelevars = allele.split("|")
             n = -1
             for blocktype, blocklength in blocks:
                 if blocktype == "span":
@@ -339,6 +342,10 @@ class Marker:
     @property
     def offsets(self):
         return sorted([int(p) - 1 for p in self.data.Positions.split(";")])
+
+    @property
+    def offsets37(self):
+        return sorted([int(p) - 1 for p in self.data.Positions37.split(";")])
 
     @property
     def marker_seq(self):
