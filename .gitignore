@@ -14,4 +14,4 @@ scratch/
 coverage.xml
 .vscode/
 docs/_build/
-microhapdb/data/hg38.fasta.gz*
+microhapdb/data/hg38.fasta*

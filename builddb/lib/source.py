@@ -166,17 +166,19 @@ class SourceIndex:
             name_by_positions = dict()
             distinct_definitions = set([m.posstr() for m in markers])
             for marker in sorted(markers, key=lambda m: (m.source.year, m.name.lower())):
-                if len(markers) > 1 and len(distinct_definitions) > 1:
-                    newname = f"{marker.name}.v{len(name_by_positions) + 1}"
-                    source_name_map[marker.source.name][marker.name] = newname
+                if len(markers) > 1:
+                    name = marker.name
+                    if len(distinct_definitions) > 1:
+                        name = f"{marker.name}.v{len(name_by_positions) + 1}"
+                        source_name_map[marker.source.name][marker.name] = name
                     if marker.posstr() in name_by_positions:
                         print(
                             f"Marker {marker.name} as defined in {marker.source.name} was defined previously and is redundant"
                         )
                         continue
                     else:
-                        name_by_positions[marker.posstr()] = newname
-                        marker.name = newname
+                        name_by_positions[marker.posstr()] = name
+                        marker.name = name
                 self._markers.append(marker)
         for source in sorted(self.sources, key=lambda s: (s.year, s.name)):
             source.rename_markers(source_name_map[source.name])

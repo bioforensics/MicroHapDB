@@ -14,14 +14,26 @@ Marker mh01NK-001 as defined in Gandotra2020 was defined previously and is redun
 Marker mh02KK-136 as defined in Staadig2021 was defined previously and is redundant
 Marker mh03KK-150 as defined in Gandotra2020 was defined previously and is redundant
 Marker mh04KK-010 as defined in Staadig2021 was defined previously and is redundant
+Marker mh06KK-104 as defined in Pakstis2021 was defined previously and is redundant
+Marker mh09KK-010 as defined in Pakstis2021 was defined previously and is redundant
 Marker mh09KK-157 as defined in Pakstis2021 was defined previously and is redundant
+Marker mh10KK-167 as defined in Pakstis2021 was defined previously and is redundant
+Marker mh11KK-190 as defined in Pakstis2021 was defined previously and is redundant
 Marker mh12KK-202 as defined in Pakstis2021 was defined previously and is redundant
 Marker mh12KK-046 as defined in Staadig2021 was defined previously and is redundant
+Marker mh12KK-209 as defined in Pakstis2021 was defined previously and is redundant
 Marker mh13KK-218 as defined in Pakstis2021 was defined previously and is redundant
+Marker mh13KK-221 as defined in Pakstis2021 was defined previously and is redundant
 Marker mh17KK-272 as defined in Pakstis2021 was defined previously and is redundant
 Marker mh18KK-293 as defined in Staadig2021 was defined previously and is redundant
 Marker mh18KK-293 as defined in Pakstis2021 was defined previously and is redundant
+Marker mh19KK-300 as defined in Pakstis2021 was defined previously and is redundant
 Marker mh20KK-307 as defined in Pakstis2021 was defined previously and is redundant
+Marker mh11CP-004 as defined in Chen2019 was defined previously and is redundant
+Marker mh03KK-007 as defined in Staadig2021 was defined previously and is redundant
+Marker mh05KK-022 as defined in Staadig2021 was defined previously and is redundant
+Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redundant
+Marker mh17KK-054 as defined in Staadig2021 was defined previously and is redundant
 [Kidd2018] mh01KK-172 --> mh01KK-172.v1
 [Kidd2018] mh01KK-001 --> mh01KK-001.v1
 [Kidd2018] mh01KK-205 --> mh01KK-205.v1
