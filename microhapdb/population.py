@@ -95,8 +95,7 @@ class Population:
 
     @staticmethod
     def standardize_ids(identifiers):
-        xref_ids = microhapdb.idmap[microhapdb.idmap.Xref.isin(identifiers)].ID
-        ids = set(xref_ids) | set(identifiers)
+        ids = set(identifiers)
         result = microhapdb.populations[
             (microhapdb.populations.ID.isin(ids)) | (microhapdb.populations.Name.isin(ids))
         ]

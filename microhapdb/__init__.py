@@ -64,18 +64,13 @@ def retrieve_by_id(ident):
     def id_in_series(ident, series):
         return series.str.contains(ident).any()
 
-    if id_in_series(ident, idmap.Xref):
-        result = idmap[idmap.Xref == ident]
-        assert len(result) == 1
-        ident = result.ID.iloc[0]
     id_in_pop_ids = id_in_series(ident, populations.ID)
     id_in_pop_names = id_in_series(ident, populations.Name)
     id_in_variants = id_in_series(ident, variantmap.Variant)
     id_in_marker_names = id_in_series(ident, markers.Name)
-    id_in_marker_permids = id_in_series(ident, markers.PermID)
     if id_in_pop_ids or id_in_pop_names:
         return Population.table_from_ids([ident])
-    elif id_in_variants or id_in_marker_names or id_in_marker_permids:
+    elif id_in_variants or id_in_marker_names:
         return Marker.table_from_ids([ident])
     else:
         raise ValueError(f'identifier "{ident}" not found in MicroHapDB')

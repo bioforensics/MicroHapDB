@@ -32,6 +32,7 @@ class DataSource:
         self.frequencies = DataSource.data_from_csv(self.path / "frequency.csv")
         self.populations = DataSource.data_from_csv(self.path / "population.csv")
         if self.populations is not None:
+            self.populations.drop(columns=["Xref"], inplace=True)
             self.populations["Source"] = self.name
         self.markers = None
         markerpath = self.path / "marker.csv"

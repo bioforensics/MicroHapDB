@@ -88,9 +88,8 @@ def display(
             for marker in markers:
                 print(marker.fasta)
         elif view_format == "offsets":
-            refr = "Hg37" if refr37 else "Hg38"
             table = pd.concat([marker.definition for marker in markers])
-            table = table.rename(columns={"ChromOffset": f"Offset{refr}"})
+            table = table.rename(columns={"ChromOffset": f"OffsetHg38"})
             table.to_csv(sys.stdout, sep="\t", index=False)
         else:
             raise ValueError(f'unsupported view format "{view_format}"')
