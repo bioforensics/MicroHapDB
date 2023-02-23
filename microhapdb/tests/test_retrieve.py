@@ -22,16 +22,19 @@ def test_retrieve_by_id():
     assert len(results) == 1
     assert results.Name.values == ["mh17CP-006"]
     assert results.Chrom.values == ["chr17"]
-    assert results.Offsets.values == ["15385768,15385781,15385817"]
+    assert results.Positions.values == ["15385769;15385782;15385818"]
 
 
 def test_all_ids():
     with pytest.raises(ValueError, match=r'identifier "BoGUSid" not found in MicroHapDB'):
         retrieve_by_id("BoGUSid")
-    assert retrieve_by_id("mh03KK-150").Name.tolist() == ["mh03KK-150"]
-    assert retrieve_by_id("SI664623B").Name.tolist() == ["mh17KK-077"]
-    assert retrieve_by_id("MHDBM-c2b1818c").Name.tolist() == ["mh15CP-003"]
-    assert retrieve_by_id("MHDBM-f4474b7c").Name.tolist() == ["mh17KK-054", "mh17AT-35"]
-    assert retrieve_by_id("rs58111155").Name.tolist() == ["mh01KKCS-001", "mh01KK-001"]
-    assert retrieve_by_id("PEL").ID.tolist() == ["PEL"]
-    assert retrieve_by_id("Han").ID.tolist() == ["MHDBP-48c2cfb2aa", "SA000001B", "SA000009J"]
+    assert retrieve_by_id("mh03KK-150.v1").Name.tolist() == ["mh03KK-150.v1"]
+    print(retrieve_by_id("rs58111155").Name.tolist())
+    assert retrieve_by_id("rs58111155").Name.tolist() == [
+        "mh01KK-001.v2",
+        "mh01KK-001.v4",
+        "mh01KK-001.v1",
+        "mh01KK-001.v3",
+    ]
+    assert retrieve_by_id("EUR").ID.tolist() == ["EUR"]
+    assert retrieve_by_id("Han").ID.tolist() == ["MHDBP-48c2cfb2aa", "SA000009J", "SA000001B"]

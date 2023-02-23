@@ -19,9 +19,9 @@ import pandas as pd
 class Marker:
     """Convenience class for accessing and manipulating marker data
 
-    >>> marker = microhapdb.Marker.from_id("mh13KK-218")
+    >>> marker = microhapdb.Marker.from_id("mh13KK-218.v1")
     >>> marker.slug
-    'chr13:53486691-53486837'
+    'chr13:53486692-53486837'
     >>> len(marker)
     146
     >>> marker.offsets
@@ -33,13 +33,13 @@ class Marker:
     >>> marker.target_offsets
     [10, 64, 75, 155]
     >>> marker.definition
-           Marker  Offset  Chrom  ChromOffset
-    0  mh13KK-218      10  chr13     53486691
-    1  mh13KK-218      64  chr13     53486745
-    2  mh13KK-218      75  chr13     53486756
-    3  mh13KK-218     155  chr13     53486836
+              Marker  Offset  Chrom  ChromOffset
+    0  mh13KK-218.v1      10  chr13     53486691
+    1  mh13KK-218.v1      64  chr13     53486745
+    2  mh13KK-218.v1      75  chr13     53486756
+    3  mh13KK-218.v1     155  chr13     53486836
     >>> print(marker.fasta)
-    >mh13KK-218 PermID=MHDBM-d645f595 GRCh38:chr13:53486691-53486837 variants=10,64,75,155 Xref=SI664607D
+    >mh13KK-218.v1 GRCh38:chr13:53486681-53486847 variants=10,64,75,155
     ATAGCACATTTCCAAGTTGTTCTAGTGAATTACTGAACTGGATAGGATTGTGGAAACCTGTGAATAATAGCTAGGTAGTC
     AGAAGACATGGTGCGCTGGGGATCCTCAAAGTGTGGCTGTTAACTGAAATGAAGGTACTCTTGTGGAGGACTGAGCCCTT
     AACATG
