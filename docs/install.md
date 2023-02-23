@@ -7,6 +7,7 @@ For best results, installation from [bioconda](https://bioconda.github.io/) is r
 ```
 conda create --name microhapdb -y python=3.9 microhapdb
 conda activate microhapdb
+microhapdb --download  # Install GRCh38 human genome sequence
 microhapdb --help
 ```
 

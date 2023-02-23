@@ -33,4 +33,7 @@ populations = read_table("population.csv")
 frequencies = read_table("frequency.csv")
 indels = read_table("indels.csv")
 variantmap = compile_variant_map(markers)
-hg38 = FastaIdx(resource_filename("microhapdb", "data/hg38.fasta"))
+try:
+    hg38 = FastaIdx(resource_filename("microhapdb", "data/hg38.fasta"))
+except:  # pragma: no cover
+    hg38 = None

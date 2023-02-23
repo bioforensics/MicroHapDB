@@ -15,7 +15,10 @@
 from . import lookup, marker, population, frequency
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 import microhapdb
+from pyfaidx import Fasta as FastaIdx
+from subprocess import run
 import sys
+from urllib.request import urlretrieve
 
 
 subparser_funcs = {
@@ -53,7 +56,10 @@ def main(args=None):
         pass
     if args.files:
         print_files()
-        raise SystemExit
+        raise SystemExit()
+    if args.download:  # pragma: no cover
+        download_hg38()
+        raise SystemExit()
     assert args.cmd in mains
     mainmethod = mains[args.cmd]
     mainmethod(args)
@@ -72,6 +78,7 @@ def get_parser():
     cli.add_argument(
         "-f", "--files", action="store_true", help="print data table filenames and exit"
     )
+    cli.add_argument("--download", action="store_true", help="download the GRCh38 genome and exit")
     subcommandstr = ", ".join(sorted(subparser_funcs.keys()))
     subparsers = cli.add_subparsers(dest="cmd", metavar="cmd", help=subcommandstr)
     for func in subparser_funcs.values():
@@ -83,3 +90,13 @@ def print_files():
     tables = ("marker", "population", "frequency", "marker-aes")
     for table in tables:
         print(microhapdb.data_file(f"{table}.csv"))
+
+
+def download_hg38():  # pragma: no cover
+    url = "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz"
+    path = microhapdb.data_file("hg38.fasta")
+    pathgz = f"{path}.gz"
+    urlretrieve(url, pathgz)
+    run(["gunzip", pathgz])
+    hg38 = FastaIdx(path)
+    markerseq = hg38["chr13"][53486574:53486837]  # Ensure index is built
