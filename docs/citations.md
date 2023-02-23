@@ -54,6 +54,6 @@ Contact: daniel.standage@st.dhs.gov.
 
 <sup>[20]</sup>Fan H, Xie Q, Wang L, Ru K, Tan X, Ding J, Wang X, Huang J, Wang Z, Li Y, Wang X, He Y, Gu C, Liu M, Ma S, Wen S, Qiu P (2022) Microhaplotype and Y-SNP/STR (MY): A novel MPS-based system for genotype pattern recognition in two-person DNA mixtures. *FSI: Genetics*, 59:102705, [doi:10.1016/j.fsigen.2022.102705](https://doi.org/10.1016/j.fsigen.2022.102705).
 
-<sup>[21]</sup>Pakstis AJ, Gandotra N, Speed WC, Murtha M, Scharfe C, Kidd KK (2021) The population genetics characteristics of a 90 locus panel of microhaplotypes. *Human Genetics*, 140:1753-1773, [doi:10.1007/s00439-021-02382-0](10.1007/s00439-021-02382-0).
+<sup>[21]</sup>Pakstis AJ, Gandotra N, Speed WC, Murtha M, Scharfe C, Kidd KK (2021) The population genetics characteristics of a 90 locus panel of microhaplotypes. *Human Genetics*, 140:1753-1773, [doi:10.1007/s00439-021-02382-0](https://doi.org/10.1007/s00439-021-02382-0).
 
 <sup>[22]</sup>Kidd KK, Pakstis AJ, Gandotra N, Scharfe C, Podini D (2022) A multipurpose panel of microhaplotypes for use with STR markers in casework. *FSI: Genetics*, 60:102729, [doi:10.1016/j.fsigen.2022.102729](https://doi.org/10.1016/j.fsigen.2022.102729).
