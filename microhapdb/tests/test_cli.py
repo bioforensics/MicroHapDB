@@ -86,7 +86,7 @@ def test_main_pop_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 88
+    assert len(outlines) == 1 + 114
 
 
 def test_main_pop_detail(capsys):
@@ -328,14 +328,21 @@ def test_main_marker_view_bad():
         microhapdb.cli.main(args)
 
 
+def test_main_marker_bad_code():
+    arglist = ["marker", "mh05USC-5pB", "--columns=nausea"]
+    args = get_parser().parse_args(arglist)
+    with pytest.raises(ValueError, match=r"unsupported format code 'u'"):
+        microhapdb.cli.main(args)
+
+
 @pytest.mark.parametrize(
     "pop,marker,allele,numrows",
     [
         ("--population=Swedish", None, None, 187),
         ("--population=SA000009J", "--marker=mh13KK-218.v1", None, 15),
         (None, "--marker=mh13KK-218.v1", "--allele=C|T|C|T", 102),
-        (None, "--marker=mh14PK-72639", None, 86),
-        (None, None, None, 122634),
+        (None, "--marker=mh14PK-72639", None, 257),
+        (None, None, None, 212158),
     ],
 )
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):

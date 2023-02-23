@@ -29,12 +29,13 @@ def test_standardize_ids():
 
 def test_assumptions():
     num_populations_per_source = [
-        5,  # byrska-bishop2022
-        70,  # kidd2018
-        1,  # chen2019
-        7,  # gandotra2020
-        1,  # hiroaki2015
-        1,  # staadig2021
+        26,  # Auton2015
+        5,  # Byrska-Bishop2022
+        1,  # Chen2019
+        7,  # Gandotra2020
+        1,  # Hiroaki2015
+        70,  # Kidd2018
+        1,  # Staadig2021
         3,  # vanderGaag2018
     ]
     assert len(microhapdb.populations) == sum(num_populations_per_source)
@@ -47,23 +48,26 @@ def test_populations():
     >>> print(pop.popid, pop.name, pop.source)
     SA000040E Kachari Kidd2018
     >>> Population.table_from_ids(["EAS", "SAS"])
-         ID       Name             Source
-    19  EAS   EastAsia  Byrska-Bishop2022
-    76  SAS  SouthAsia  Byrska-Bishop2022
+         ID        Name             Source
+    25  EAS   East Asia  Byrska-Bishop2022
+    97  SAS  South Asia  Byrska-Bishop2022
     >>> for pop in Population.from_query("Name.str.contains('Han')"):
     ...   print(pop.popid, pop.name, pop.source)
-    ...
-    MHDBP-48c2cfb2aa Han Chen2019
     SA000009J Han Kidd2018
+    MHDBP-48c2cfb2aa Han Chen2019
     SA000001B Han Kidd2018
+    CHB Han Chinese in Beijing, China Auton2015
+    CHS Southern Han Chinese Auton2015
     >>> Population.table_from_query("Name.str.contains('Afr')")
-                     ID               Name             Source
-    3               AFR             Africa  Byrska-Bishop2022
-    4  MHDBP-3dab7bdd14             Africa     vanderGaag2018
-    5         SA000101C  African Americans           Kidd2018
+                     ID                                     Name             Source
+    3               AFR                                   Africa  Byrska-Bishop2022
+    4  MHDBP-3dab7bdd14                                   Africa     vanderGaag2018
+    5         SA000101C                        African Americans           Kidd2018
+    6               ACB           African Caribbeans in Barbados          Auton2015
+    7               ASW  Americans of African Ancestry in SW USA          Auton2015
     """
     pop = microhapdb.populations
-    assert pop.shape == (88, 3)
+    assert pop.shape == (114, 3)
     assert Population.from_id("MHDBP-7c055e7ee8").name == "Swedish"
     assert Population.from_id("SA000028K").name == "Karitiana"
     result = Population.table_from_query("Name.str.contains('Jews')")
@@ -120,19 +124,6 @@ def test_pop_detail_multi(capsys):
     observed = capsys.readouterr().out
     expected = """
 --------------------------------------------------------------[ MicroHapDB ]----
-Japanese    (MHDBP-63967b883e; source=Hiroaki2015)
-
-- 33 total allele frequencies available
-  for 7 markers
-
-# Alleles | # Markers
----------------------
-         7|*
-         6|*
-         4|*****
---------------------------------------------------------------------------------
-
---------------------------------------------------------------[ MicroHapDB ]----
 Japanese    (SA000010B; source=Kidd2018)
 
 - 878 total allele frequencies available
@@ -155,6 +146,19 @@ Japanese    (SA000010B; source=Kidd2018)
          4|**************************************************************************************************
          2|****
 --------------------------------------------------------------------------------
+
+--------------------------------------------------------------[ MicroHapDB ]----
+Japanese    (MHDBP-63967b883e; source=Hiroaki2015)
+
+- 33 total allele frequencies available
+  for 7 markers
+
+# Alleles | # Markers
+---------------------
+         7|*
+         6|*
+         4|*****
+--------------------------------------------------------------------------------
 """
     assert observed.strip() == expected.strip()
 
@@ -162,7 +166,7 @@ Japanese    (SA000010B; source=Kidd2018)
 @pytest.mark.parametrize(
     "popid,name,source",
     [
-        ("SAS", "SouthAsia", "Byrska-Bishop2022"),
+        ("SAS", "South Asia", "Byrska-Bishop2022"),
         ("SA000019K", "Russians", "Kidd2018"),
         ("MHDBP-48c2cfb2aa", "Han", "Chen2019"),
         ("mMHseq-Zaramo", "Zaramo", "Gandotra2020"),

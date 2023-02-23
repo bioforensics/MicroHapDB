@@ -297,6 +297,9 @@ Marker mh17KK-054 as defined in Staadig2021 was defined previously and is redund
 [Staadig2021] mh17KK-055 --> mh17KK-055.v2
 [Staadig2021] mh18KK-285 --> mh18KK-285.v2
 [Staadig2021] mh22KK-060 --> mh22KK-060.v2
+[Auton2015]
+  - 26 population samples
+  - frequencies for 7827 distinct haplotypes in 26 populations; 89524 total frequencies
 [Hiroaki2015]
   - 26 marker definitions based on 80 SNPs
   - 1 population sample

@@ -49,15 +49,15 @@ def retrieve_by_id(ident):
     587  mh17KK-014        3      37  chr17  4497061  4497097  4497061;4497089;4497097  4400356;4400384;4400392  rs333113;rs8074965;rs11657785  Kidd2018  3.914
     >>> retrieve_by_id("Chagga")
                    ID    Name        Source
-    12      SA000487T  Chagga      Kidd2018
-    13  mMHseq-Chagga  Chagga  Gandotra2020
+    16      SA000487T  Chagga      Kidd2018
+    17  mMHseq-Chagga  Chagga  Gandotra2020
     >>> retrieve_by_id("Asia")
                      ID  Name          Source
-    7  MHDBP-936bc36f79  Asia  vanderGaag2018
+    9  MHDBP-936bc36f79  Asia  vanderGaag2018
     >>> retrieve_by_id("Japanese")
                       ID      Name       Source
-    36  MHDBP-63967b883e  Japanese  Hiroaki2015
-    37         SA000010B  Japanese     Kidd2018
+    49         SA000010B  Japanese     Kidd2018
+    50  MHDBP-63967b883e  Japanese  Hiroaki2015
     """
 
     def id_in_series(ident, series):

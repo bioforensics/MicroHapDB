@@ -17,13 +17,14 @@ import pytest
 
 def test_assumptions():
     num_allele_freqs_per_source = [
-        35041,  # byrska-bishop2022
-        82167,  # kidd2018
-        103,  # chen2019
-        4737,  # gandotra2020
-        33,  # hiroaki2015
-        186,  # staadig2021
-        366,  # vandergaag2018
+        89524,  # Auton2015
+        35041,  # Byrska-Bishop2022
+        103,  # Chen2019
+        4737,  # Gandotra2020
+        33,  # Hiroaki2015
+        82167,  # Kidd2018
+        186,  # Staadig2021
+        366,  # vanderGaag2018
     ]
     assert len(microhapdb.frequencies) == sum(num_allele_freqs_per_source)
 
@@ -34,45 +35,20 @@ def test_allele_frequencies():
     >>> f = microhapdb.frequencies
     >>> f[f.Marker == 'mh15CP-003'].Allele.unique()
     array(['A|A|C', 'A|G|A', 'A|G|C', 'C|G|C'], dtype=object)
-    >>> f[(f.Marker == "mh15CP-003") & (f.Allele == "A|A|C")]
-               Marker Population Allele  Frequency
-    90512  mh15CP-003       1KGP  A|A|C    0.19947
-    90518  mh15CP-003        ACB  A|A|C    0.05700
-    90520  mh15CP-003        AFR  A|A|C    0.03565
-    90525  mh15CP-003        ASW  A|A|C    0.03300
-    90529  mh15CP-003        BEB  A|A|C    0.23800
-    90533  mh15CP-003        CDX  A|A|C    0.28000
-    90537  mh15CP-003        CEU  A|A|C    0.29300
-    90541  mh15CP-003        CHB  A|A|C    0.24300
-    90545  mh15CP-003        CHS  A|A|C    0.26200
-    90549  mh15CP-003        CLM  A|A|C    0.21300
-    90551  mh15CP-003        EAS  A|A|C    0.25828
-    90557  mh15CP-003        ESN  A|A|C    0.04000
-    90559  mh15CP-003        EUR  A|A|C    0.26046
-    90565  mh15CP-003        FIN  A|A|C    0.31800
-    90569  mh15CP-003        GBR  A|A|C    0.28600
-    90573  mh15CP-003        GIH  A|A|C    0.27200
-    90577  mh15CP-003        GWD  A|A|C    0.01800
-    90581  mh15CP-003        IBS  A|A|C    0.21500
-    90585  mh15CP-003        ITU  A|A|C    0.24500
-    90589  mh15CP-003        JPT  A|A|C    0.22600
-    90593  mh15CP-003        KHV  A|A|C    0.26800
-    90597  mh15CP-003        LWK  A|A|C    0.05600
-    90601  mh15CP-003        MSL  A|A|C    0.04700
-    90605  mh15CP-003        MXL  A|A|C    0.32800
-    90609  mh15CP-003        PEL  A|A|C    0.23500
-    90613  mh15CP-003        PJL  A|A|C    0.34400
-    90617  mh15CP-003        PUR  A|A|C    0.22100
-    90619  mh15CP-003        SAS  A|A|C    0.24806
-    90625  mh15CP-003        STU  A|A|C    0.15700
-    90629  mh15CP-003        TSI  A|A|C    0.19600
-    90633  mh15CP-003        YRI  A|A|C    0.02800
+    >>> f[(f.Marker == "mh15CP-003") & (f.Allele == "A|A|C") & (f.Source == "Byrska-Bishop2022")]
+                Marker Population Allele  Frequency             Source
+    158523  mh15CP-003       1KGP  A|A|C    0.19947  Byrska-Bishop2022
+    158535  mh15CP-003        AFR  A|A|C    0.03565  Byrska-Bishop2022
+    158592  mh15CP-003        EAS  A|A|C    0.25828  Byrska-Bishop2022
+    158603  mh15CP-003        EUR  A|A|C    0.26046  Byrska-Bishop2022
+    158711  mh15CP-003        SAS  A|A|C    0.24806  Byrska-Bishop2022
     >>> f.query("Marker == 'mh15CP-003' and Allele == 'A|A|C' and Population == 'FIN'")
-               Marker Population Allele  Frequency
-    90565  mh15CP-003        FIN  A|A|C      0.318
+                Marker Population Allele  Frequency     Source
+    158607  mh15CP-003        FIN  A|A|C      0.318  Auton2015
+    158613  mh15CP-003        FIN  A|A|C      0.318   Kidd2018
     """
     af = microhapdb.frequencies
-    assert af.shape == (122633, 4)
+    assert af.shape == (212157, 5)
     result = af[af.Marker == "mh21KK-315.v1"].Allele.unique()
     assert len(result) == 8
     result = af[(af.Marker == "mh21KK-315.v1") & (af.Allele == "A|C|T")]

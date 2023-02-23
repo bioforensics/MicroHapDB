@@ -30,6 +30,8 @@ class DataSource:
         self.metadata = DataSource.meta_from_json(self.path / "source.json")
         self.indels = DataSource.data_from_csv(self.path / "indels.csv")
         self.frequencies = DataSource.data_from_csv(self.path / "frequency.csv")
+        if self.frequencies is not None:
+            self.frequencies["Source"] = self.name
         self.populations = DataSource.data_from_csv(self.path / "population.csv")
         if self.populations is not None:
             self.populations.drop(columns=["Xref"], inplace=True)
@@ -129,7 +131,7 @@ class DataSource:
 
 
 class SourceIndex:
-    def __init__(self, rootdir, dbsnp_path, chain_path, exclude=None):
+    def __init__(self, rootdir, dbsnp_path, chain_path, exclude=[]):
         self.rootdir = Path(rootdir)
         self.dbsnp_path = Path(dbsnp_path)
         self.chain_path = Path(chain_path)

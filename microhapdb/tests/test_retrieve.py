@@ -29,7 +29,6 @@ def test_all_ids():
     with pytest.raises(ValueError, match=r'identifier "BoGUSid" not found in MicroHapDB'):
         retrieve_by_id("BoGUSid")
     assert retrieve_by_id("mh03KK-150.v1").Name.tolist() == ["mh03KK-150.v1"]
-    print(retrieve_by_id("rs58111155").Name.tolist())
     assert retrieve_by_id("rs58111155").Name.tolist() == [
         "mh01KK-001.v2",
         "mh01KK-001.v4",
@@ -37,4 +36,8 @@ def test_all_ids():
         "mh01KK-001.v3",
     ]
     assert retrieve_by_id("EUR").ID.tolist() == ["EUR"]
-    assert retrieve_by_id("Han").ID.tolist() == ["MHDBP-48c2cfb2aa", "SA000009J", "SA000001B"]
+    assert sorted(retrieve_by_id("Han").ID.tolist()) == [
+        "MHDBP-48c2cfb2aa",
+        "SA000001B",
+        "SA000009J",
+    ]
