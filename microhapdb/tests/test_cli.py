@@ -53,7 +53,7 @@ def test_files(capsys):
         microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 7
+    assert len(outlines) == 4
 
 
 def test_parser():

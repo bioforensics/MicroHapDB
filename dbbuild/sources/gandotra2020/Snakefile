@@ -1,62 +1,81 @@
-# -----------------------------------------------------------------------------
-# Copyright (c) 2020, Battelle National Biodefense Institute.
+# -------------------------------------------------------------------------------------------------
+# Copyright (c) 2020, DHS.
 #
-# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
-# and is licensed under the BSD license: see LICENSE.txt.
-# -----------------------------------------------------------------------------
+# This file is part of MicroHapDB (http://github.com/bioforensics/MicroHapDB) and is licensed under
+# the BSD license: see LICENSE.txt.
+#
+# This software was prepared for the Department of Homeland Security (DHS) by the Battelle National
+# Biodefense Institute, LLC (BNBI) as part of contract HSHQDC-15-C-00064 to manage and operate the
+# National Biodefense Analysis and Countermeasures Center (NBACC), a Federally Funded Research and
+# Development Center.
+# -------------------------------------------------------------------------------------------------
 
-# rule all:
-#     input: 'marker.tsv'
+from util import compile_freqs, prepare_markers, novel_coords, cross_checks, vcfadd
+
+
+rule all:
+    input:
+        markers="marker.csv",
+        frequencies="frequency.csv",
 
 
 rule format:
     input:
-        script='./prep.py',
-        table='complete.tsv'
+        table="complete.tsv",
     output:
-        table='marker.tsv'
-    shell:
-        '{input} {output}'
+        table="marker.csv",
+    run:
+        prepare_markers(input.table, output.table)
 
 
 rule complete:
     input:
-        script1='./novelcoords.py',
-        table='auto.tsv',
-        bed37='novel.grch37.bed',
-        bed38='novel.grch38.bed',
-        script2='crosschecks.py',
-        refr37=config['refr37'],
-        refr38=config['refr'],
+        table="auto.tsv",
+        bed37="novel.grch37.bed",
+        bed38="novel.grch38.bed",
+        refr37=config["refr37"],
+        refr38=config["refr"],
     output:
-        table='complete.tsv'
-    shell:
-        '''
-        ./novelcoords.py {input.table} {input.bed37} {input.bed38} {output.table}
-        ./crosschecks.py {output.table} {input.refr37} {input.refr38}
-        '''
+        table="complete.tsv",
+    run:
+        novel_coords(input.bed37, input.bed38, input.table, output.table)
+        cross_checks(output.table, input.refr37, input.refr38)
 
 
 rule novel:
     input:
-        bed37='novel.grch37.bed',
-        chain='hg19ToHg38.over.chain.gz',
+        bed37="novel.grch37.bed",
+        chain="hg19ToHg38.over.chain.gz",
     output:
-        bed38='novel.grch38.bed'
+        bed38="novel.grch38.bed",
     shell:
-        'liftOver {input} {output} novel-unmapped.bed'
+        "liftOver {input} {output} novel-unmapped.bed"
 
 
 rule vcf:
     input:
-        script='./vcfadd.py',
-        table='manual.tsv',
-        dbsnp37=config['dbsnp37'],
-        rsidx37=config['dbsnp37'].replace('.vcf.gz', '.rsidx'),
-        dbsnp38=config['dbsnp38'],
-        rsidx38=config['dbsnp38'].replace('.vcf.gz', '.rsidx'),
+        table="manual.tsv",
+        dbsnp37=config["dbsnp37"],
+        rsidx37=config["dbsnp37"].replace(".vcf.gz", ".rsidx"),
+        dbsnp38=config["dbsnp38"],
+        rsidx38=config["dbsnp38"].replace(".vcf.gz", ".rsidx"),
     output:
-        table='auto.tsv',
-        novel='novel.grch37.bed',
-    shell:
-        '{input} {output}'
+        table="auto.tsv",
+        novel="novel.grch37.bed",
+    run:
+        vcfadd(
+            input.table,
+            input.dbsnp37,
+            input.rsidx37,
+            input.dbsnp38,
+            input.rsidx38,
+            output.table,
+            output.novel,
+        )
+
+
+rule frequencies:
+    output:
+        csv="frequency.csv",
+    run:
+        compile_freqs("original", output.csv)

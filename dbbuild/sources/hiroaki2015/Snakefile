@@ -1,37 +1,40 @@
-# -----------------------------------------------------------------------------
-# Copyright (c) 2019, Battelle National Biodefense Institute.
+# -------------------------------------------------------------------------------------------------
+# Copyright (c) 2019, DHS.
 #
-# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
-# and is licensed under the BSD license: see LICENSE.txt.
-# -----------------------------------------------------------------------------
+# This file is part of MicroHapDB (http://github.com/bioforensics/MicroHapDB) and is licensed under
+# the BSD license: see LICENSE.txt.
+#
+# This software was prepared for the Department of Homeland Security (DHS) by the Battelle National
+# Biodefense Institute, LLC (BNBI) as part of contract HSHQDC-15-C-00064 to manage and operate the
+# National Biodefense Analysis and Countermeasures Center (NBACC), a Federally Funded Research and
+# Development Center.
+# -------------------------------------------------------------------------------------------------
 
-import pandas
-
-
-rule all:
-    input: 'marker.tsv'
-
-
-rule dbsnp_subset:
-    input:
-        markers='table1-subset.tsv',
-        dbsnp=config['dbsnp38'],
-        rsidx=config['dbsnp38'].replace('.vcf.gz', '.rsidx'),
-    output: 'dbsnp-subset.vcf.gz'
-    run:
-        markers = pandas.read_csv(input.markers, sep='\t')
-        rsids = list()
-        for n, row in markers.iterrows():
-            rsids.extend(row.Variants.split(','))
-        rsids = ' '.join(rsids)
-        command = f'rsidx search --header --out {output[0]} {input.dbsnp} {input.rsidx} {rsids}'
-        shell(command)
+from util import collate_marker_definitions
+import pandas as pd
 
 
 rule marker_coords:
     input:
-        script='./compile_marker_definitions.py',
-        markers='table1-subset.tsv',
-        dbsnp='dbsnp-subset.vcf.gz',
-    output: 'marker.tsv'
-    shell: '{input} {output}'
+        markers="table1-subset.tsv",
+        dbsnp="dbsnp-subset.vcf.gz",
+    output:
+        csv="marker.csv",
+    run:
+        collate_marker_definitions(input.markers, input.dbsnp, output.csv)
+
+
+rule dbsnp_subset:
+    input:
+        markers="table1-subset.tsv",
+        dbsnp=config["dbsnp38"],
+        rsidx=config["dbsnp38"].replace(".vcf.gz", ".rsidx"),
+    output:
+        "dbsnp-subset.vcf.gz",
+    run:
+        markers = pd.read_csv(input.markers, sep="\t")
+        rsids = list()
+        for n, row in markers.iterrows():
+            rsids.extend(row.Variants.split(","))
+        rsids = " ".join(rsids)
+        shell(f"rsidx search --header --out {output[0]} {input.dbsnp} {input.rsidx} {rsids}")

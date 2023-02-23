@@ -1,0 +1,28 @@
+# -----------------------------------------------------------------------------
+# Copyright (c) 2019, Battelle National Biodefense Institute.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
+# and is licensed under the BSD license: see LICENSE.txt.
+# -----------------------------------------------------------------------------
+
+from collections import defaultdict
+
+
+rule all:
+    input: 'marker.tsv', 'frequency.tsv'
+
+
+rule markers:
+    input:
+        script='./compile_marker_definitions.py',
+        markers='prelim-marker-variants.tsv',
+    output: 'marker.tsv'
+    shell: '{input} {output}'
+
+
+rule frequencies:
+    input:
+        script='./compile_frequencies.py',
+        freqs='prelim-allele-freqs.tsv',
+    output: 'frequency.tsv'
+    shell: '{input} {output}'

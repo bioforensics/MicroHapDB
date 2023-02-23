@@ -1,7 +1,1 @@
-{
-    "refr": "databases/hg38.fa",
-    "refr37": "databases/hg37.fa",
-    "dbsnp37": "databases/dbSNP/dbSNP_GRCh37.vcf.gz",
-    "dbsnp38": "databases/dbSNP/dbSNP_GRCh38.vcf.gz",
-    "1kgp_dir": "databases/1000Genomes"
-}
+../dbbuild/config.json

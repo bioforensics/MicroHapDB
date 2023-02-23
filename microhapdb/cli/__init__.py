@@ -80,6 +80,6 @@ def get_parser():
 
 
 def print_files():
-    tables = ("marker", "population", "frequency", "variantmap", "idmap", "sequence", "indels")
+    tables = ("marker", "population", "frequency", "marker-aes")
     for table in tables:
-        print(microhapdb.data_file(f"{table}.tsv"))
+        print(microhapdb.data_file(f"{table}.csv"))
