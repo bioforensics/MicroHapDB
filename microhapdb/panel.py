@@ -174,3 +174,32 @@ def beta_legacy():
         "mh22KK-060.v1",
         "mh22KK-061.v1",
     ]
+
+
+def kidd2022():
+    return [
+        "mh01KK-212.v2",
+        "mh02KK-022.v2",
+        "mh02KK-029.v2",
+        "mh02KK-134.v4",
+        "mh02KK-014.v2",
+        "mh05KK-170.v4",
+        "mh07KK-009.v2",
+        "mh08KK-137.v2",
+        "mh09KK-145.v2",
+        "mh09KK-153.v3",
+        "mh10KK-162.v2",
+        "mh11KK-180.v4",
+        "mh11KK-183.v2",
+        "mh12KK-201.v2",
+        "mh13KK-213.v4",
+        "mh13KK-217.v4",
+        "mh13KK-218.v2",
+        "mh13KK-221",
+        "mh16KK-259.v2",
+        "mh16KK-011.v2",
+        "mh17KK-278.v2",
+        "mh20KK-306.v2",
+        "mh21KK-320.v4",
+        "mh22KK-340.v2",
+    ]

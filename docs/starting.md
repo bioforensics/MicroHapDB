@@ -38,8 +38,6 @@ In the Python API, each is stored in memory as a [Pandas](https://pandas.pydata.
 Additional auxiliary tables are also provided, including the following.
 
 - `microhapdb.variantmap`: contains a mapping of dbSNP variants to their corresponding microhap markers
-- `microhapdb.idmap`: cross-references external names and identifiers with internal MicroHapDB identifiers
-- `microhapdb.sequences`: contains the sequence spanning and flanking each microhap locus
 - `microhapdb.indels`: contains variant information for markers that include insertion/deletion variants
 
 ### Convenience functions for data retrieval
