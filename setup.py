@@ -31,7 +31,7 @@ setup(
     packages=["microhapdb", "microhapdb.cli", "microhapdb.tests"],
     package_data={"microhapdb": ["microhapdb/data/*", "microhapdb/data/tests/*"]},
     include_package_data=True,
-    install_requires=["pandas>=1.2"],
+    install_requires=["pandas>=1.2", "pyfaidx>=0.7"],
     entry_points={"console_scripts": ["microhapdb = microhapdb.cli:main"]},
     classifiers=[
         "Environment :: Console",
