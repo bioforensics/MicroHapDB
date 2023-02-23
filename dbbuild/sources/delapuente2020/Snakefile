@@ -1,0 +1,31 @@
+# -------------------------------------------------------------------------------------------------
+# Copyright (c) 2020, DHS.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/MicroHapDB) and is licensed under
+# the BSD license: see LICENSE.txt.
+#
+# This software was prepared for the Department of Homeland Security (DHS) by the Battelle National
+# Biodefense Institute, LLC (BNBI) as part of contract HSHQDC-15-C-00064 to manage and operate the
+# National Biodefense Analysis and Countermeasures Center (NBACC), a Federally Funded Research and
+# Development Center.
+# -------------------------------------------------------------------------------------------------
+
+from util import compile_marker_definitions, text2table
+
+
+rule marker_coords:
+    input:
+        markers="supp-file-s1.tsv",
+    output:
+        csv="marker.csv",
+    run:
+        compile_marker_definitions(input.markers, output.csv)
+
+
+rule supp_file_s1:
+    input:
+        txt="original/mmc8.txt",
+    output:
+        tsv="supp-file-s1.tsv",
+    run:
+        text2table(input.txt, output.tsv)

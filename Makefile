@@ -6,7 +6,7 @@ help: Makefile
 
 ## test:      execute the automated test suite
 test:
-	pytest --cov=microhapdb --cov-report=term --cov-report=xml --doctest-modules --pyargs microhapdb
+	pytest --cov=microhapdb --doctest-modules --pyargs microhapdb
 
 ## devdeps:   install development dependencies
 devdeps:
@@ -29,6 +29,12 @@ format:
 ## doc:       build HTML documentation
 doc:
 	sphinx-build -b html docs docs/_build/
+
+## hg38:      download and index the GRCh38 reference genome
+hg38:
+	curl -L https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz > microhapdb/data/hg38.fasta.gz
+	gunzip microhapdb/data/hg38.fasta.gz
+	faidx microhapdb/data/hg38.fasta chr13:53486575-53486837
 
 ## devhooks:  install development hooks
 devhooks:

@@ -9,7 +9,7 @@ Hiroaki N, Fujii K, Kitayama T, Sekiguchi K, Nakanishi H, Saito K (2015) Approac
 Run the following command from the `dbbuild/sources/hiroaki2015/` directory to compile the data into the table format required by MicroHapDB.
 
 ```
-snakemake --configfile ../../config.json --cores 1 -p all
+snakemake --configfile ../../config.json --cores 1
 ```
 
 
@@ -18,7 +18,7 @@ snakemake --configfile ../../config.json --cores 1 -p all
 ### Manual Pre-processing
 
 The file `table1-subset.tsv` was created manually from Table 1 of the manuscript.
-The file `frequency.tsv` was created manually from Table 2 of the manuscript.
+The file `frequency.csv` was created manually from Table 2 of the manuscript.
 In both cases, marker numbers were converted into marker names using the `mh<chrom>NH-<number>` convention.
 
 The population ID was created by appending the output of `echo $'10.1016/j.legalmed.2015.06.003\tJapanese' | md5 | cut -c 1-10` to the prefix `MHDBP-`.

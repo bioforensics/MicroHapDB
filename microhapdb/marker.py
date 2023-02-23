@@ -19,9 +19,9 @@ import pandas as pd
 class Marker:
     """Convenience class for accessing and manipulating marker data
 
-    >>> marker = microhapdb.Marker.from_id("mh13KK-218")
+    >>> marker = microhapdb.Marker.from_id("mh13KK-218.v1")
     >>> marker.slug
-    'chr13:53486691-53486837'
+    'chr13:53486692-53486837'
     >>> len(marker)
     146
     >>> marker.offsets
@@ -33,13 +33,13 @@ class Marker:
     >>> marker.target_offsets
     [10, 64, 75, 155]
     >>> marker.definition
-           Marker  Offset  Chrom  ChromOffset
-    0  mh13KK-218      10  chr13     53486691
-    1  mh13KK-218      64  chr13     53486745
-    2  mh13KK-218      75  chr13     53486756
-    3  mh13KK-218     155  chr13     53486836
+              Marker  Offset  Chrom  ChromOffset
+    0  mh13KK-218.v1      10  chr13     53486691
+    1  mh13KK-218.v1      64  chr13     53486745
+    2  mh13KK-218.v1      75  chr13     53486756
+    3  mh13KK-218.v1     155  chr13     53486836
     >>> print(marker.fasta)
-    >mh13KK-218 PermID=MHDBM-d645f595 GRCh38:chr13:53486691-53486837 variants=10,64,75,155 Xref=SI664607D
+    >mh13KK-218.v1 GRCh38:chr13:53486681-53486847 variants=10,64,75,155
     ATAGCACATTTCCAAGTTGTTCTAGTGAATTACTGAACTGGATAGGATTGTGGAAACCTGTGAATAATAGCTAGGTAGTC
     AGAAGACATGGTGCGCTGGGGATCCTCAAAGTGTGGCTGTTAACTGAAATGAAGGTACTCTTGTGGAGGACTGAGCCCTT
     AACATG
@@ -50,15 +50,6 @@ class Marker:
         self.data = marker
         self.delta = delta
         self.minlen = minlen
-        self.flanking_sequence_data = microhapdb.sequences[
-            microhapdb.sequences.Marker == self.name
-        ].iloc[0]
-        self.data38 = marker
-        if marker.Reference != "GRCh38":
-            # We need GRCh38 coordinates to work with marker sequences
-            assert marker.Reference == "GRCh37"
-            markers38 = pd.read_csv(microhapdb.data_file("marker.tsv"), sep="\t")
-            self.data38 = markers38[markers38.Name == marker.Name].iloc[0]
 
     @staticmethod
     def table_from_ids(identifiers):
@@ -78,15 +69,13 @@ class Marker:
     @staticmethod
     def table_from_region(regionstr):
         markers = microhapdb.markers.copy()
-        markers["Start"] = markers.Offsets.apply(lambda o: min(map(int, o.split(","))))
-        markers["End"] = markers.Offsets.apply(lambda o: max(map(int, o.split(","))) + 1)
         chrom, start, end = Marker.parse_regionstr(regionstr)
         query = f'Chrom == "{chrom}"'
         if start is not None:
             query += f" and (Start < {end}"
             query += f" and End > {start})"
         result = markers.query(query)
-        return result.drop(columns=["Start", "End"])
+        return result
 
     @classmethod
     def from_id(cls, identifier, **kwargs):
@@ -152,17 +141,8 @@ class Marker:
             if id_in_series(ident, microhapdb.variantmap.Variant):
                 markernames = microhapdb.variantmap[microhapdb.variantmap.Variant == ident].Marker
                 ids.update(markernames)
-            elif id_in_series(ident, microhapdb.markers.PermID):
-                result = microhapdb.markers[microhapdb.markers.PermID == ident]
-                ids.update(result.Name)
             elif id_in_series(ident, microhapdb.markers.Name):
                 result = microhapdb.markers[microhapdb.markers.Name == ident]
-                ids.update(result.Name)
-            elif id_in_series(ident, microhapdb.idmap.Xref):
-                markername = microhapdb.idmap[microhapdb.idmap.Xref == ident].ID
-                assert len(markername) == 1
-                markername = markername.iloc[0]
-                result = microhapdb.markers[microhapdb.markers.Name == markername]
                 ids.update(result.Name)
         return sorted(microhapdb.markers[microhapdb.markers.Name.isin(ids)].Name)
 
@@ -180,7 +160,7 @@ class Marker:
     @property
     def slug(self):
         seqid = self.chrom
-        return f"{seqid}:{self.start}-{self.end}"
+        return f"{seqid}:{self.start+1}-{self.end}"
 
     def __len__(self):
         return self.end - self.start
@@ -191,15 +171,11 @@ class Marker:
 
     @property
     def start(self):
-        return min(self.offsets)
+        return self.data.Start - 1
 
     @property
     def end(self):
-        return max(self.offsets) + self.variant_lengths[-1]
-
-    @property
-    def marker_extent38(self):
-        return min(self.offsets38), max(self.offsets38) + self.variant_lengths[-1]
+        return self.data.End - 1 + self.variant_lengths[-1]
 
     @property
     def target_slug(self):
@@ -214,7 +190,7 @@ class Marker:
 
     @property
     def target_interval(self):
-        o = self.offsets38
+        o = self.offsets
         vl = self.variant_lengths
         start, end = min(o) - self.delta, max(o) + self.delta + vl[-1]
         length = end - start
@@ -245,7 +221,7 @@ class Marker:
     def detail(self):
         output = StringIO()
         print("-" * 62, "[ MicroHapDB ]----", sep="", file=output)
-        print(self.name, "   a.k.a", ", ".join(self.xrefs), end="\n\n", file=output)
+        print(self.name, end="\n\n", file=output)
         self.print_detail_definition(output)
         self.print_detail_markerseq(output)
         self.print_detail_targetseq(output)
@@ -253,25 +229,22 @@ class Marker:
         return output.getvalue()
 
     @property
-    def xrefs(self):
-        xreflist = [self.data.PermID]
-        xreflist.extend(sorted(microhapdb.idmap[microhapdb.idmap.ID == self.name].Xref))
-        return xreflist
-
-    @property
     def varrefs(self):
-        return microhapdb.variantmap[microhapdb.variantmap.Marker == self.name].Variant
+        return self.data.RSIDs.split(";")
 
     def print_detail_definition(self, out):
         marker_slug = f"{self.slug} ({len(self)} bp)"
         target_slug = f"{self.target_slug} ({self.target_length} bp)"
-        marker_offsets = ",".join([str(o) for o in self.marker_offsets])
-        target_offsets = ",".join([str(o) for o in self.target_offsets])
-        print(f"Marker Definition ({self.data.Reference})", file=out)
+        offsets37 = ", ".join([str(o) for o in self.offsets37])
+        offsets38 = ", ".join([str(o) for o in self.offsets])
+        marker_offsets = ", ".join([str(o) for o in self.marker_offsets])
+        target_offsets = ", ".join([str(o) for o in self.target_offsets])
+        print(f"Marker Definition", file=out)
         print(f"    Marker extent\n        - {marker_slug}", file=out)
         print(f"    Target locus\n        - {target_slug}", file=out)
         print(f"    Constituent variants", file=out)
-        print(f"        - chromosome offsets:", self.data.Offsets, file=out)
+        print(f"        - chromosome offsets (GRCh37):", offsets37, file=out)
+        print(f"        - chromosome offsets (GRCh38):", offsets38, file=out)
         print(f"        - marker offsets:", marker_offsets, file=out)
         print(f"        - target offsets:", target_offsets, file=out)
         print(f"        - cross-references:", ", ".join(self.varrefs), file=out)
@@ -343,7 +316,7 @@ class Marker:
 
     def print_detail_targetseq_alleles(self, blocks, out):
         for allele in self.alleles:
-            allelevars = allele.split(",")
+            allelevars = allele.split("|")
             n = -1
             for blocktype, blocklength in blocks:
                 if blocktype == "span":
@@ -364,33 +337,26 @@ class Marker:
     @property
     def target_offsets(self):
         start, end = self.target_interval
-        return [o - start for o in self.offsets38]
+        return [o - start for o in self.offsets]
 
     @property
     def offsets(self):
-        return sorted(map(int, self.data.Offsets.split(",")))
+        return sorted([int(p) - 1 for p in self.data.Positions.split(";")])
 
     @property
-    def offsets38(self):
-        return sorted(map(int, self.data38.Offsets.split(",")))
+    def offsets37(self):
+        return sorted([int(p) - 1 for p in self.data.Positions37.split(";")])
 
     @property
     def marker_seq(self):
-        fullseq = self.flanking_sequence_data.Sequence
-        mstart, mend = self.marker_extent38
-        seqstart = mstart - self.flanking_sequence_data.LeftFlank
-        seqend = seqstart + (mend - mstart)
-        markerseq = fullseq[seqstart:seqend]
-        return markerseq
+        start = self.start
+        end = self.end
+        return str(microhapdb.hg38[self.chrom][start:end])
 
     @property
     def target_seq(self):
-        fullseq = self.flanking_sequence_data.Sequence
-        tstart, tend = self.target_interval
-        seqstart = tstart - self.flanking_sequence_data.LeftFlank
-        seqend = seqstart + (tend - tstart)
-        targetseq = fullseq[seqstart:seqend]
-        return targetseq
+        start, end = self.target_interval
+        return str(microhapdb.hg38[self.chrom][start:end])
 
     @property
     def reference_lengths(self):
@@ -415,15 +381,10 @@ class Marker:
         varstring = ",".join(map(str, self.target_offsets))
         parts = [
             self.name,
-            f"PermID={self.data.PermID}",
-            f"GRCh38:{self.slug}",
+            f"GRCh38:{self.target_slug}",
             f"variants={varstring}",
         ]
         line = " ".join(parts)
-        result = microhapdb.idmap[microhapdb.idmap.ID == self.name]
-        if len(result) > 0:
-            xrefstr = ",".join(result.Xref)
-            line += f" Xref={xrefstr}"
         return line
 
     @property

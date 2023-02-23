@@ -1,0 +1,81 @@
+# -------------------------------------------------------------------------------------------------
+# Copyright (c) 2019, DHS.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/MicroHapDB) and is licensed under
+# the BSD license: see LICENSE.txt.
+#
+# This software was prepared for the Department of Homeland Security (DHS) by the Battelle National
+# Biodefense Institute, LLC (BNBI) as part of contract HSHQDC-15-C-00064 to manage and operate the
+# National Biodefense Analysis and Countermeasures Center (NBACC), a Federally Funded Research and
+# Development Center.
+# -------------------------------------------------------------------------------------------------
+
+import pandas as pd
+
+
+rule all:
+    input:
+        "frequency.csv",
+        "marker-informativeness.tsv",
+        "marker-aes.csv",
+        "marker-fst.csv",
+
+
+rule aes:
+    input:
+        "scripts/compute-marker-aes.py",
+        "frequency.csv",
+        "aux/sample-pops.tsv",
+    output:
+        "marker-aes.csv",
+    shell:
+        "{input} > {output}"
+
+
+rule markerrsids:
+    input:
+        "scripts/get-marker-rsids.py",
+    output:
+        "marker-rsids-MicroHapDB-latest.tsv",
+    shell:
+        "{input} > {output}"
+
+
+rule freqs:
+    input:
+        "scripts/mhfreqs.py",
+        "aux/sample-pops.tsv",
+        "marker-rsids-MicroHapDB-latest.tsv",
+    output:
+        "frequency.csv",
+    shell:
+        "{input} > {output}"
+
+
+rule informativeness:
+    input:
+        "scripts/prepinfocalc.py",
+        "scripts/infocalc",
+        "scripts/cleanup-in.py",
+        "aux/sample-pops.tsv",
+        "marker-rsids-MicroHapDB-latest.tsv",
+    output:
+        "marker-informativeness.csv",
+        "aux/marker-informativeness.txt",
+        "aux/individual-haplotypes.txt",
+    shell:
+        """
+        scripts/prepinfocalc.py aux/sample-pops.tsv marker-rsids-MicroHapDB-latest.tsv > aux/individual-haplotypes.txt
+        scripts/infocalc -column 2 -numpops 26 -input aux/individual-haplotypes.txt -output aux/marker-informativeness.txt
+        scripts/cleanup-in.py < aux/marker-informativeness.txt > marker-informativeness.csv
+        """
+
+
+rule fst:
+    input:
+        "scripts/fstcalc.py",
+        "aux/individual-haplotypes.txt",
+    output:
+        "marker-fst.csv",
+    shell:
+        "{input} > {output}"

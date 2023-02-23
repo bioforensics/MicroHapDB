@@ -13,8 +13,8 @@ To compile the data into the table format required by MicroHapDB, run the `snake
 
 ### Manual Pre-processing
 
-The file  `prelim-marker-variants.xslx` is a manually reformatted version of Table 1 from the manuscript.
-The file `prelim-allele-freq.xlsx` is a manually reformatted version of the allele frequency table included in the supplementary data (`mmc6.xlsx`).
+The file  `original/prelim-marker-variants.xslx` is a manually reformatted version of Table 1 from the manuscript.
+The file `original/prelim-allele-freq.xlsx` is a manually reformatted version of the allele frequency table included in the supplementary data (`mmc6.xlsx`).
 Credit goes to Rebecca Mitchell for this work!
 
 These files were manually exported to TSV format to facilitate subsequent processing.
@@ -24,7 +24,7 @@ The population ID was created by appending the output of `echo $'10.1016/j.fsige
 ### Problematic allele
 
 The allele frequency table included in the supplement includes an allele designated simply as "6" for the marker MH06CP003.
-This marker is not one of the 11 markers described in the paper, and had been recorded previously in the ALFRED database—see https://alfred.med.yale.edu/alfred/recordinfo.asp?UNID=SI664884K.
+This marker is not one of the 11 new markers described in the paper, and had been recorded previously in the ALFRED database—see https://alfred.med.yale.edu/alfred/recordinfo.asp?UNID=SI664884K.
 The only allele for this marker present in ALFRED but missing from the frequency table is GAC, and we have thus substituted this for "6" in the manually reformatted allele frequency table.
 
 

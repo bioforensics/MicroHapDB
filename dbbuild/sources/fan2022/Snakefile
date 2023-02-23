@@ -1,36 +1,24 @@
-rule marker:
+# -------------------------------------------------------------------------------------------------
+# Copyright (c) 2022, DHS.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/MicroHapDB) and is licensed under
+# the BSD license: see LICENSE.txt.
+#
+# This software was prepared for the Department of Homeland Security (DHS) by the Battelle National
+# Biodefense Institute, LLC (BNBI) as part of contract HSHQDC-15-C-00064 to manage and operate the
+# National Biodefense Analysis and Countermeasures Center (NBACC), a Federally Funded Research and
+# Development Center.
+# -------------------------------------------------------------------------------------------------
+
+from util import compile_marker_definitions, collect_indel_metadata
+
+
+rule markers:
     input:
-        script="collate.py",
-        tsv="marker-sans37.tsv",
-        bed37="marker37.bed",
-        bed38="marker38.bed",
+        txt="Fan-mmc2-TableS4.txt",
     output:
-        marker="marker.tsv"
-    shell:
-        "python {input} {output}"
-
-
-rule get_hg37_coords:
-    input:
-        bed38="marker38.bed",
-        chain="hg38ToHg19.over.chain.gz",
-    output:
-        bed37="marker37.bed",
-        bedunmapped="marker-unmapped.bed",
-    shell:
-        """
-        liftOver {input} {output}
-        [ ! -s {output.bedunmapped} ]
-        """
-
-
-rule parse_table_s4:
-    input:
-        script="table-to-markers.py",
-        table="Fan-mmc2-TableS4.txt",
-    output:
-        tsv="marker-sans37.tsv",
-        bed="marker38.bed",
-        indels="indels.tsv",
-    shell:
-        "python {input} {output}"
+        csv="marker.csv",
+        indels="indels.csv",
+    run:
+        compile_marker_definitions(input.txt, output.csv)
+        collect_indel_metadata(input.txt, output.indels)

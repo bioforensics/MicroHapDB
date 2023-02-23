@@ -1,0 +1,92 @@
+# -------------------------------------------------------------------------------------------------
+# Copyright (c) 2018, DHS.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/MicroHapDB) and is licensed under
+# the BSD license: see LICENSE.txt.
+#
+# This software was prepared for the Department of Homeland Security (DHS) by the Battelle National
+# Biodefense Institute, LLC (BNBI) as part of contract HSHQDC-15-C-00064 to manage and operate the
+# National Biodefense Analysis and Countermeasures Center (NBACC), a Federally Funded Research and
+# Development Center.
+# -------------------------------------------------------------------------------------------------
+
+import pandas as pd
+from utils import (
+    smartopen,
+    parse_markers_from_table,
+    compile_marker_coords,
+    compile_marker_rsids,
+    compile_pop_data,
+    parse_popid_mapping,
+    alfred_frequencies,
+)
+
+
+MARKERS = parse_markers_from_table("downloads/Microhap_alleleF_198.txt")
+
+
+rule all:
+    input:
+        "marker.csv",
+        "population.csv",
+        "frequency.csv",
+
+
+rule markers:
+    input:
+        csv="marker-rsids.csv",
+        vcf="dbsnp-subset.vcf.gz",
+    output:
+        csv="marker.csv",
+    run:
+        table = compile_marker_coords(input.csv, input.vcf)
+        table.to_csv(output.csv, index=False)
+
+
+rule dbsnp_subset:
+    input:
+        markers="marker-rsids.csv",
+        dbsnp=config["dbsnp38"],
+        rsidx=config["dbsnp38"].replace(".vcf.gz", ".rsidx"),
+    output:
+        vcf="dbsnp-subset.vcf.gz",
+    run:
+        marker_rsids = pd.read_csv(input.markers)
+        rsids = set()
+        for rsidlist in marker_rsids.rsIDs:
+            rsids.update(rsidlist.split(";"))
+        rsids = " ".join(sorted(rsids))
+        command = f"rsidx search --header --out {output.vcf} {input.dbsnp} {input.rsidx} {rsids}"
+        shell(command)
+
+
+rule marker_rsids:
+    input:
+        expand("downloads/marker-detail/{marker}.html.gz", marker=MARKERS),
+    output:
+        csv="marker-rsids.csv",
+    run:
+        table = compile_marker_rsids(input)
+        table.to_csv(output.csv, index=False)
+
+
+rule population:
+    input:
+        freqs="downloads/Microhap_alleleF_198.txt",
+        xrefs="1kgp-mapping.tsv",
+    output:
+        csv="population.csv",
+    run:
+        table = compile_pop_data(input.freqs, input.xrefs)
+        table.to_csv(output.csv, index=False)
+
+
+rule frequency:
+    input:
+        freqs="downloads/Microhap_alleleF_198.txt",
+        xrefs="1kgp-mapping.tsv",
+    output:
+        csv="frequency.csv",
+    run:
+        table = alfred_frequencies(input.freqs, input.xrefs)
+        table.to_csv(output.csv, index=False, float_format="%.04f")

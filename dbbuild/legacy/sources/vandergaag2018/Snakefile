@@ -1,0 +1,32 @@
+# -----------------------------------------------------------------------------
+# Copyright (c) 2019, Battelle National Biodefense Institute.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
+# and is licensed under the BSD license: see LICENSE.txt.
+# -----------------------------------------------------------------------------
+
+import pandas
+
+
+rule all:
+    input: 'marker.tsv', 'frequency.tsv'
+
+
+rule markers:
+    input:
+        script='./compile_marker_definitions.py',
+        rsids='marker-rsids.tsv',
+        markers='figure-S1.txt',
+    output:
+        defs='marker.tsv'
+    shell: '{input} {output}'
+
+
+rule frequencies:
+    input:
+        script='./compile_frequencies.py',
+        markers='figure-S1.txt',
+        freqs='table-S2.txt',
+    output:
+        freqs='frequency.tsv'
+    shell: '{input} {output}'

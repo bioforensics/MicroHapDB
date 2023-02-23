@@ -22,25 +22,21 @@ from warnings import warn
 def main(args):
     if args.ae_pop:
         microhapdb.set_ae_population(popid=args.ae_pop)
-    if args.GRCh37:
-        microhapdb.set_reference(37)
     markerids = resolve_panel(args.panel) if args.panel else args.id
     result = apply_filters(markerids, args.region, args.query)
     if len(result) > 0:
         display(
             result,
             args.format,
+            columns=args.columns,
             delta=args.delta,
             minlen=args.min_length,
             extend_mode=args.extend_mode,
             trunc=args.trunc,
-            refr37=args.GRCh37,
         )
-    # Reset
     if args.ae_pop:
-        microhapdb.set_ae_population(popid=None)
-    if args.GRCh37:
-        microhapdb.set_reference(38)
+        # Reset
+        microhapdb.set_ae_population(popid="1KGP")
 
 
 def resolve_panel(panel):
@@ -66,8 +62,17 @@ def apply_filters(markerids=None, region=None, query=None):
     return result
 
 
-def display(result, view_format, delta=10, minlen=80, extend_mode=0, trunc=True, refr37=False):
+def display(
+    result,
+    view_format,
+    columns="nxcse",
+    delta=10,
+    minlen=80,
+    extend_mode=0,
+    trunc=True,
+):
     if view_format == "table":
+        result = subset_result(result, columns)
         if trunc:
             print(result.to_string(index=False))
         else:
@@ -83,12 +88,30 @@ def display(result, view_format, delta=10, minlen=80, extend_mode=0, trunc=True,
             for marker in markers:
                 print(marker.fasta)
         elif view_format == "offsets":
-            refr = "Hg37" if refr37 else "Hg38"
             table = pd.concat([marker.definition for marker in markers])
-            table = table.rename(columns={"ChromOffset": f"Offset{refr}"})
+            table = table.rename(columns={"ChromOffset": f"OffsetHg38"})
             table.to_csv(sys.stdout, sep="\t", index=False)
         else:
             raise ValueError(f'unsupported view format "{view_format}"')
+
+
+def subset_result(result, columns):
+    fmt = {
+        "n": "NumVars",
+        "x": "Extent",
+        "c": "Chrom",
+        "s": "Start",
+        "e": "End",
+        "p": "Positions",
+        "q": "Positions37",
+        "r": "RSIDs",
+        "a": "Ae",
+    }
+    for code in columns:
+        if code not in fmt:
+            raise ValueError(f"unsupported format code '{code}'")
+    cols = ["Name"] + [fmt[code] for code in columns] + ["Source"]
+    return result[cols]
 
 
 def subparser(subparsers):
@@ -116,15 +139,10 @@ def subparser(subparsers):
     retrieval.add_argument(
         "--ae-pop",
         metavar="POP",
+        type=str,
         help="specify the 1000 Genomes population from which to report "
         'effective number of alleles in the "Ae" column; by default, the Ae value averaged over '
         "all 26 1KGP populations is reported",
-    )
-    retrieval.add_argument(
-        "--GRCh37",
-        action="store_true",
-        help="use coordinates from the GRCh37 reference "
-        "assembly; by default, the GRCh38 reference is used",
     )
     retrieval.add_argument(
         "--panel",
@@ -145,6 +163,12 @@ def subparser(subparsers):
     )
     formatting.add_argument(
         "--format", choices=["table", "detail", "fasta", "offsets"], default="table"
+    )
+    formatting.add_argument(
+        "--columns",
+        metavar="C",
+        default="nxcsea",
+        help="string of column codes indicating which fields to include in tabular output; n=NumVars x=Extent c=Chrom s=Start e=End p=Positions q=Positions37 r=RSIDs a=Ae; by default C=nxcsea",
     )
     formatting.add_argument(
         "--delta",

@@ -1,0 +1,78 @@
+# -------------------------------------------------------------------------------------------------
+# Copyright (c) 2022, DHS.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/MicroHapDB) and is licensed under
+# the BSD license: see LICENSE.txt.
+#
+# This software was prepared for the Department of Homeland Security (DHS) by the Battelle National
+# Biodefense Institute, LLC (BNBI) as part of contract HSHQDC-15-C-00064 to manage and operate the
+# National Biodefense Analysis and Countermeasures Center (NBACC), a Federally Funded Research and
+# Development Center.
+# -------------------------------------------------------------------------------------------------
+
+import pandas as pd
+from util import collect_haplotypes, compile_sample_populations, compile_frequencies, compute_aes
+
+
+rule aes:
+    input:
+        freqs="frequency.csv",
+    output:
+        aes="marker-aes.csv",
+    run:
+        frequencies = pd.read_csv(input.freqs)
+        aes = compute_aes(frequencies)
+        aes.to_csv(output.aes, index=False, float_format="%.3f")
+
+
+rule frequencies:
+    input:
+        haplotypes="haplotypes.csv.gz",
+    output:
+        freqs="frequency.csv",
+    run:
+        haplotypes = pd.read_csv(input.haplotypes)
+        frequencies = compile_frequencies(haplotypes)
+        frequencies.to_csv(output.freqs, index=False, float_format="%.5f")
+
+
+rule haplotypes:
+    input:
+        markers="marker-latest.csv",
+        samples="sample_pops.csv",
+        samplesunf="sample_pops_unfiltered.csv",
+    output:
+        csv="haplotypes.csv.gz",
+        csvunf="haplotypes_unfiltered.csv.gz",
+    params:
+        dir1kgp=config["1kgp_dir"],
+        refr=config["refr"],
+    run:
+        markers = pd.read_csv(input.markers)
+        for samplesfile, outfile in zip((input.samples, input.samplesunf), (output.csv, output.csvunf)):
+            samples = pd.read_csv(samplesfile)
+            sample_pops = {
+                row.Sample: (row.Population, row.Superpopulation, row.Gender)
+                for n, row in samples.iterrows()
+            }
+            haplotypes = collect_haplotypes(markers, sample_pops, params.refr, params.dir1kgp)
+            haplotypes.to_csv(outfile, index=False)
+
+
+rule populations:
+    input:
+        samples="igsr_populations.tsv",
+        pedigree="20130606_g1k.ped",
+    output:
+        csv="sample_pops.csv",
+        csvunf="sample_pops_unfiltered.csv",
+    params:
+        dir1kgp=config["1kgp_dir"],
+    run:
+        pops = pd.read_csv(input.samples, sep="\t")
+        pedigree = pd.read_csv(input.pedigree, sep="\t")
+        vcf = list(Path(params.dir1kgp).glob(f"*chr19.*.vcf.gz"))[0]
+        sample_pops = compile_sample_populations(vcf, pops, pedigree)
+        sample_pops.to_csv(output.csv, index=False)
+        sample_pops_unfiltered = compile_sample_populations(vcf, pops, pedigree, dofilters=False)
+        sample_pops_unfiltered.to_csv(output.csvunf, index=False)

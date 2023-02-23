@@ -1,0 +1,37 @@
+# -----------------------------------------------------------------------------
+# Copyright (c) 2019, Battelle National Biodefense Institute.
+#
+# This file is part of MicroHapDB (http://github.com/bioforensics/microhapdb)
+# and is licensed under the BSD license: see LICENSE.txt.
+# -----------------------------------------------------------------------------
+
+import pandas
+
+
+rule all:
+    input: 'marker.tsv'
+
+
+rule dbsnp_subset:
+    input:
+        markers='table1-subset.tsv',
+        dbsnp=config['dbsnp38'],
+        rsidx=config['dbsnp38'].replace('.vcf.gz', '.rsidx'),
+    output: 'dbsnp-subset.vcf.gz'
+    run:
+        markers = pandas.read_csv(input.markers, sep='\t')
+        rsids = list()
+        for n, row in markers.iterrows():
+            rsids.extend(row.Variants.split(','))
+        rsids = ' '.join(rsids)
+        command = f'rsidx search --header --out {output[0]} {input.dbsnp} {input.rsidx} {rsids}'
+        shell(command)
+
+
+rule marker_coords:
+    input:
+        script='./compile_marker_definitions.py',
+        markers='table1-subset.tsv',
+        dbsnp='dbsnp-subset.vcf.gz',
+    output: 'marker.tsv'
+    shell: '{input} {output}'

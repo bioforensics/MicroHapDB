@@ -21,35 +21,18 @@ class Population:
 
     >>> for pop in microhapdb.Population.from_ids(["CDX", "CHB", "CHS"]):
     ...   print(pop.popid, pop.name, pop.source)
-    CDX Chinese Dai in Xishuangbanna, China 1KGP
-    CHB Han Chinese in Beijing, China 1KGP
-    CHS Southern Han Chinese 1KGP
+    ...
+    CDX Chinese Dai in Xishuangbanna, China Auton2015
+    CHB Han Chinese in Beijing, China Auton2015
+    CHS Southern Han Chinese Auton2015
     >>> for pop in microhapdb.Population.from_query("Name.str.contains('Japan')"):
     ...   print(pop)
-    MHDBP-63967b883e	Japanese	10.1016/j.legalmed.2015.06.003
-    SA000010B	Japanese	ALFRED
-    JPT	Japanese in Tokyo, Japan	1KGP
-    >>> pop = microhapdb.Population.from_id("SA004309Q")
-    >>> print(pop.detail)
-    --------------------------------------------------------------[ MicroHapDB ]----
-    Iranian    (SA004309Q; source=ALFRED)
-    - 399 total allele frequencies available
-      for 65 markers
-    # Alleles | # Markers
-    ---------------------
-            19|*
-            14|*
-            13|*
-            12|****
-             9|**
-             8|*********
-             7|***
-             6|****
-             5|**********
-             4|******************************
-    --------------------------------------------------------------------------------
+    ...
+    SA000010B       Japanese        Kidd2018
+    MHDBP-63967b883e        Japanese        Hiroaki2015
+    JPT     Japanese in Tokyo, Japan        Auton2015
     >>> microhapdb.populations.shape
-    (109, 3)
+    (114, 3)
     """
 
     def __init__(self, popid, name, source):
@@ -95,8 +78,7 @@ class Population:
 
     @staticmethod
     def standardize_ids(identifiers):
-        xref_ids = microhapdb.idmap[microhapdb.idmap.Xref.isin(identifiers)].ID
-        ids = set(xref_ids) | set(identifiers)
+        ids = set(identifiers)
         result = microhapdb.populations[
             (microhapdb.populations.ID.isin(ids)) | (microhapdb.populations.Name.isin(ids))
         ]

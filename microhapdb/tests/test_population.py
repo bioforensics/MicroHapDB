@@ -17,8 +17,8 @@ import pytest
 
 
 def test_standardize_ids():
-    assert Population.standardize_ids(["SA004057Q"]) == ["TSI"]
-    assert Population.standardize_ids(["MSL"]) == ["MSL"]
+    assert Population.standardize_ids(["SA002766V"]) == ["SA002766V"]
+    assert Population.standardize_ids(["Samoans"]) == ["SA000072J"]
     assert Population.standardize_ids(["Han"]) == ["MHDBP-48c2cfb2aa", "SA000001B", "SA000009J"]
     assert Population.standardize_ids(["Maya, Yucatan", "SA000055K", "Greeks"]) == [
         "SA000013E",
@@ -29,13 +29,14 @@ def test_standardize_ids():
 
 def test_assumptions():
     num_populations_per_source = [
-        26,  # 1KGP
-        70,  # ALFRED
-        1,  # 10.1016/j.fsigen.2019.02.018
-        7,  # 10.1016/j.fsigen.2020.102275
-        1,  # 10.1016/j.legalmed.2015.06.003
-        1,  # ISFG2019:P597
-        3,  # 10.1016/j.fsigen.2018.05.008
+        26,  # Auton2015
+        5,  # Byrska-Bishop2022
+        1,  # Chen2019
+        7,  # Gandotra2020
+        1,  # Hiroaki2015
+        70,  # Kidd2018
+        1,  # Staadig2021
+        3,  # vanderGaag2018
     ]
     assert len(microhapdb.populations) == sum(num_populations_per_source)
 
@@ -45,28 +46,29 @@ def test_populations():
     >>> from microhapdb import Population
     >>> pop = Population.from_id("SA000040E")
     >>> print(pop.popid, pop.name, pop.source)
-    SA000040E Kachari ALFRED
-    >>> Population.table_from_ids(["CEU", "IBS"])
-          ID                                               Name Source
-    40   IBS                        Iberian Population in Spain   1KGP
-    103  CEU  Utah Residents (CEPH) with Northern and Wester...   1KGP
+    SA000040E Kachari Kidd2018
+    >>> Population.table_from_ids(["EAS", "SAS"])
+         ID        Name             Source
+    25  EAS   East Asia  Byrska-Bishop2022
+    97  SAS  South Asia  Byrska-Bishop2022
     >>> for pop in Population.from_query("Name.str.contains('Han')"):
     ...   print(pop.popid, pop.name, pop.source)
-    MHDBP-48c2cfb2aa Han 10.1016/j.fsigen.2019.02.018
-    SA000001B Han ALFRED
-    SA000009J Han ALFRED
-    CHB Han Chinese in Beijing, China 1KGP
-    CHS Southern Han Chinese 1KGP
+    SA000009J Han Kidd2018
+    MHDBP-48c2cfb2aa Han Chen2019
+    SA000001B Han Kidd2018
+    CHB Han Chinese in Beijing, China Auton2015
+    CHS Southern Han Chinese Auton2015
     >>> Population.table_from_query("Name.str.contains('Afr')")
-                     ID                                     Name                        Source
-    2  MHDBP-3dab7bdd14                                   Africa  10.1016/j.fsigen.2018.05.008
-    3         SA000101C                        African Americans                        ALFRED
-    4               ACB           African Caribbeans in Barbados                          1KGP
-    5               ASW  Americans of African Ancestry in SW USA                          1KGP
+                     ID                                     Name             Source
+    3               AFR                                   Africa  Byrska-Bishop2022
+    4  MHDBP-3dab7bdd14                                   Africa     vanderGaag2018
+    5         SA000101C                        African Americans           Kidd2018
+    6               ACB           African Caribbeans in Barbados          Auton2015
+    7               ASW  Americans of African Ancestry in SW USA          Auton2015
     """
     pop = microhapdb.populations
-    assert pop.shape == (109, 3)
-    assert Population.from_id("FIN").name == "Finnish in Finland"
+    assert pop.shape == (114, 3)
+    assert Population.from_id("MHDBP-7c055e7ee8").name == "Swedish"
     assert Population.from_id("SA000028K").name == "Karitiana"
     result = Population.table_from_query("Name.str.contains('Jews')")
     assert result.ID.tolist() == ["SA000490N", "SA000015G", "SA000096P", "SA000016H"]
@@ -76,13 +78,13 @@ def test_pop_table():
     result = Population.table_from_ids(["Masai"])
     assert len(result) == 1
     assert result.ID.iloc[0] == "SA000854R"
-    assert result.Source.iloc[0] == "ALFRED"
+    assert result.Source.iloc[0] == "Kidd2018"
 
 
 def test_pop_table_multi():
     result = Population.table_from_query("Name == 'Han'")
     assert len(result) == 3
-    assert result.ID.tolist() == ["MHDBP-48c2cfb2aa", "SA000001B", "SA000009J"]
+    assert sorted(result.ID.tolist()) == ["MHDBP-48c2cfb2aa", "SA000001B", "SA000009J"]
 
 
 def test_pop_detail():
@@ -90,7 +92,7 @@ def test_pop_detail():
     observed = pop.detail
     expected = """
 --------------------------------------------------------------[ MicroHapDB ]----
-Hausa    (SA000100B; source=ALFRED)
+Hausa    (SA000100B; source=Kidd2018)
 
 - 878 total allele frequencies available
   for 165 markers
@@ -122,20 +124,7 @@ def test_pop_detail_multi(capsys):
     observed = capsys.readouterr().out
     expected = """
 --------------------------------------------------------------[ MicroHapDB ]----
-Japanese    (MHDBP-63967b883e; source=10.1016/j.legalmed.2015.06.003)
-
-- 33 total allele frequencies available
-  for 7 markers
-
-# Alleles | # Markers
----------------------
-         7|*
-         6|*
-         4|*****
---------------------------------------------------------------------------------
-
---------------------------------------------------------------[ MicroHapDB ]----
-Japanese    (SA000010B; source=ALFRED)
+Japanese    (SA000010B; source=Kidd2018)
 
 - 878 total allele frequencies available
   for 165 markers
@@ -157,6 +146,19 @@ Japanese    (SA000010B; source=ALFRED)
          4|**************************************************************************************************
          2|****
 --------------------------------------------------------------------------------
+
+--------------------------------------------------------------[ MicroHapDB ]----
+Japanese    (MHDBP-63967b883e; source=Hiroaki2015)
+
+- 33 total allele frequencies available
+  for 7 markers
+
+# Alleles | # Markers
+---------------------
+         7|*
+         6|*
+         4|*****
+--------------------------------------------------------------------------------
 """
     assert observed.strip() == expected.strip()
 
@@ -164,13 +166,13 @@ Japanese    (SA000010B; source=ALFRED)
 @pytest.mark.parametrize(
     "popid,name,source",
     [
-        ("GBR", "British in England and Scotland", "1KGP"),
-        ("SA000019K", "Russians", "ALFRED"),
-        ("MHDBP-48c2cfb2aa", "Han", "10.1016/j.fsigen.2019.02.018"),
-        ("mMHseq-Zaramo", "Zaramo", "10.1016/j.fsigen.2020.102275"),
-        ("MHDBP-63967b883e", "Japanese", "10.1016/j.legalmed.2015.06.003"),
-        ("MHDBP-7c055e7ee8", "Swedish", "ISFG2019:P597"),
-        ("MHDBP-936bc36f79", "Asia", "10.1016/j.fsigen.2018.05.008"),
+        ("SAS", "South Asia", "Byrska-Bishop2022"),
+        ("SA000019K", "Russians", "Kidd2018"),
+        ("MHDBP-48c2cfb2aa", "Han", "Chen2019"),
+        ("mMHseq-Zaramo", "Zaramo", "Gandotra2020"),
+        ("MHDBP-63967b883e", "Japanese", "Hiroaki2015"),
+        ("MHDBP-7c055e7ee8", "Swedish", "Staadig2021"),
+        ("MHDBP-936bc36f79", "Asia", "vanderGaag2018"),
     ],
 )
 def test_all_sources(popid, name, source):
@@ -183,9 +185,3 @@ def test_all_sources(popid, name, source):
 def test_from_id_pop_not_found():
     with pytest.raises(ValueError, match=r"population 'Romulans' not found"):
         Population.from_id("Romulans")
-
-
-def test_population_xref():
-    assert Population.standardize_ids(["SA004250L"]) == ["CEU"]
-    assert Population.standardize_ids(["SA004250L", "BogusPopID"]) == ["CEU"]
-    assert Population.standardize_ids(["SA004250L", "Cheyenne"]) == ["CEU", "SA000023F"]

@@ -5,16 +5,17 @@ import pandas as pd
 table = pd.read_csv("tables2.txt", sep="\t", skiprows=3, header=None)
 newtable = list()
 for i, row in table.iterrows():
+    rsids = row[8].replace(",", ";")
     newrow = (
         row[1],
         None,
         row[7],
+        None,
         row[0],
         None,
-        None,
-        row[8],
+        rsids,
     )
     newtable.append(newrow)
-colnames = ["Name", "Xref", "NumVars", "Chrom", "OffsetsHg37", "OffsetsHg38", "VarRef"]
+colnames = ["Name", "Xref", "NumVars", "Refr", "Chrom", "Positions", "VarRef"]
 markers = pd.DataFrame(newtable, columns=colnames)
-markers.to_csv("marker-orig.tsv", sep="\t", index=False)
+markers.to_csv("marker.csv", index=False)

@@ -30,7 +30,7 @@ Contact: daniel.standage@st.dhs.gov.
 
 <sup>[8]</sup>van der Gaag KJ, de Leeuw RH, Laros JFJ, den Dunnen JT, de Knijff P (2018) Short hypervariable microhaplotypes: A novel set of very short high discriminating power loci without stutter artefacts. *FSI: Genetics*, 35:169-175, [doi:10.1016/j.fsigen.2018.05.008](https://doi.org/10.1016/j.fsigen.2018.05.008).
 
-<sup>[9]</sup>Staadig A, Tillmar A (2019) Evaluation of microhaplotypes—A promising new type of forensic marker. *The 28th Congress of the International Society for Forensic Genetics*, P597.
+<sup>[9]</sup>Staadig A, Tillmar A (2021) Evaluation of microhaplotypes in forensic kinship analysis from a Swedish population perspective. *International Journal of Legal Medicine*, 135:1151-1160, [doi:10.1016/j.fsigen.2022.102729](https://10.1016/j.fsigen.2022.102729).
 
 <sup>[10]</sup>Hiroaki N, Fujii K, Kitayama T, Sekiguchi K, Nakanishi H, Saito K (2015) Approaches for identifying multiple-SNP haplotype blocks for use in human identification. *Legal Medicine*, 17(5):415-420, [doi:10.1016/j.legalmed.2015.06.003](https://doi.org/10.1016/j.legalmed.2015.06.003).
 
@@ -53,3 +53,7 @@ Contact: daniel.standage@st.dhs.gov.
 <sup>[19]</sup>Wu R, Li H, Li R, Peng D, Wang N, Shen X, Sun H (2021) Identification and sequencing of 59 highly polymorphic microhaplotypes for analysis of DNA mixtures. *International Journal of Legal Medicine*, 135:1137-1149, [doi:10.1007/s00414-020-02483-x](https://doi.org/10.1007/s00414-020-02483-x).
 
 <sup>[20]</sup>Fan H, Xie Q, Wang L, Ru K, Tan X, Ding J, Wang X, Huang J, Wang Z, Li Y, Wang X, He Y, Gu C, Liu M, Ma S, Wen S, Qiu P (2022) Microhaplotype and Y-SNP/STR (MY): A novel MPS-based system for genotype pattern recognition in two-person DNA mixtures. *FSI: Genetics*, 59:102705, [doi:10.1016/j.fsigen.2022.102705](https://doi.org/10.1016/j.fsigen.2022.102705).
+
+<sup>[21]</sup>Pakstis AJ, Gandotra N, Speed WC, Murtha M, Scharfe C, Kidd KK (2021) The population genetics characteristics of a 90 locus panel of microhaplotypes. *Human Genetics*, 140:1753-1773, [doi:10.1007/s00439-021-02382-0](https://doi.org/10.1007/s00439-021-02382-0).
+
+<sup>[22]</sup>Kidd KK, Pakstis AJ, Gandotra N, Scharfe C, Podini D (2022) A multipurpose panel of microhaplotypes for use with STR markers in casework. *FSI: Genetics*, 60:102729, [doi:10.1016/j.fsigen.2022.102729](https://doi.org/10.1016/j.fsigen.2022.102729).
