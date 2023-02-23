@@ -30,10 +30,10 @@ def test_all_ids():
         retrieve_by_id("BoGUSid")
     assert retrieve_by_id("mh03KK-150.v1").Name.tolist() == ["mh03KK-150.v1"]
     assert retrieve_by_id("rs58111155").Name.tolist() == [
-        "mh01KK-001.v2",
-        "mh01KK-001.v4",
-        "mh01KK-001.v1",
         "mh01KK-001.v3",
+        "mh01KK-001.v5",
+        "mh01KK-001.v1",
+        "mh01KK-001.v4",
     ]
     assert retrieve_by_id("EUR").ID.tolist() == ["EUR"]
     assert sorted(retrieve_by_id("Han").ID.tolist()) == [

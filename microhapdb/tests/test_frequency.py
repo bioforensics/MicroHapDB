@@ -24,6 +24,7 @@ def test_assumptions():
         33,  # Hiroaki2015
         82167,  # Kidd2018
         186,  # Staadig2021
+        427,  # Turchi2019
         366,  # vanderGaag2018
     ]
     assert len(microhapdb.frequencies) == sum(num_allele_freqs_per_source)
@@ -31,24 +32,23 @@ def test_assumptions():
 
 def test_allele_frequencies():
     """
-    >>> import microhapdb
     >>> f = microhapdb.frequencies
     >>> f[f.Marker == 'mh15CP-003'].Allele.unique()
     array(['A|A|C', 'A|G|A', 'A|G|C', 'C|G|C'], dtype=object)
     >>> f[(f.Marker == "mh15CP-003") & (f.Allele == "A|A|C") & (f.Source == "Byrska-Bishop2022")]
                 Marker Population Allele  Frequency             Source
-    158523  mh15CP-003       1KGP  A|A|C    0.19947  Byrska-Bishop2022
-    158535  mh15CP-003        AFR  A|A|C    0.03565  Byrska-Bishop2022
-    158592  mh15CP-003        EAS  A|A|C    0.25828  Byrska-Bishop2022
-    158603  mh15CP-003        EUR  A|A|C    0.26046  Byrska-Bishop2022
-    158711  mh15CP-003        SAS  A|A|C    0.24806  Byrska-Bishop2022
+    158806  mh15CP-003       1KGP  A|A|C    0.19947  Byrska-Bishop2022
+    158818  mh15CP-003        AFR  A|A|C    0.03565  Byrska-Bishop2022
+    158875  mh15CP-003        EAS  A|A|C    0.25828  Byrska-Bishop2022
+    158886  mh15CP-003        EUR  A|A|C    0.26046  Byrska-Bishop2022
+    158994  mh15CP-003        SAS  A|A|C    0.24806  Byrska-Bishop2022
     >>> f.query("Marker == 'mh15CP-003' and Allele == 'A|A|C' and Population == 'FIN'")
                 Marker Population Allele  Frequency     Source
-    158607  mh15CP-003        FIN  A|A|C      0.318  Auton2015
-    158613  mh15CP-003        FIN  A|A|C      0.318   Kidd2018
+    158890  mh15CP-003        FIN  A|A|C      0.318  Auton2015
+    158896  mh15CP-003        FIN  A|A|C      0.318   Kidd2018
     """
     af = microhapdb.frequencies
-    assert af.shape == (212157, 5)
+    assert af.shape == (212584, 5)
     result = af[af.Marker == "mh21KK-315.v1"].Allele.unique()
     assert len(result) == 8
     result = af[(af.Marker == "mh21KK-315.v1") & (af.Allele == "A|C|T")]

@@ -1,0 +1,46 @@
+import pandas as pd
+
+
+def chrom_from_marker_name(name):
+    num = name[2:4]
+    if num.startswith("0"):
+        num = num[1:]
+    return f"chr{num}"
+
+
+rule all:
+    input:
+        "marker.csv",
+        "frequency.csv",
+
+
+rule markers:
+    input:
+        csv="Turchi2019-TableS2.csv",
+    output:
+        csv="marker.csv",
+    run:
+        markers = pd.read_csv(input.csv)
+        markers["VarRef"] = markers["SNPs"].str.replace("/", ";")
+        markers["Chrom"] = markers.Marker.apply(chrom_from_marker_name)
+        markers["NumVars"] = markers["SNPs"].apply(lambda x: x.count("/") + 1)
+        markers["Xref"] = None
+        markers["Refr"] = None
+        markers["Positions"] = None
+        markers = markers.rename(columns={"Marker": "Name"})
+        markers = markers[["Name", "Xref", "NumVars", "Refr", "Chrom", "Positions", "VarRef"]]
+        markers.to_csv(output.csv, index=False)
+
+
+rule frequencies:
+    input:
+        csv="Turchi2019-TableS3.csv",
+    output:
+        csv="frequency.csv",
+    run:
+        freqs = pd.read_csv(input.csv)
+        freqs = freqs.fillna(method="ffill")
+        freqs["Allele"] = freqs["Haplotype"].apply(lambda x: "|".join(list(x)))
+        freqs["Population"] = "Italians"
+        freqs = freqs[["Marker", "Population", "Allele", "Frequency"]]
+        freqs.to_csv(output.csv, index=False)

@@ -21,18 +21,16 @@ class Population:
 
     >>> for pop in microhapdb.Population.from_ids(["CDX", "CHB", "CHS"]):
     ...   print(pop.popid, pop.name, pop.source)
-    ...
     CDX Chinese Dai in Xishuangbanna, China Auton2015
     CHB Han Chinese in Beijing, China Auton2015
     CHS Southern Han Chinese Auton2015
     >>> for pop in microhapdb.Population.from_query("Name.str.contains('Japan')"):
     ...   print(pop)
-    ...
     SA000010B       Japanese        Kidd2018
     MHDBP-63967b883e        Japanese        Hiroaki2015
     JPT     Japanese in Tokyo, Japan        Auton2015
     >>> microhapdb.populations.shape
-    (114, 3)
+    (115, 3)
     """
 
     def __init__(self, popid, name, source):

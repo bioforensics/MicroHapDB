@@ -4,8 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+### Added
+- Italian population frequencies for 98 markers from Turchi et al 2019 (see #107).
+
 ### Changed
-- Overhaul of the marker table structure and database build procedure (#106)
+- Overhaul of the marker table structure and database build procedure (see #106).
 
 
 ## [0.8.2] 2022-11-21

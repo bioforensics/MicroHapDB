@@ -15,8 +15,8 @@ mMHseq-Biaka,Biaka,Gandotra2020
 SA000005F,Biaka,Kidd2018
 GBR,British in England and Scotland,Auton2015
 SA000022E,"Cambodians, Khmer",Kidd2018
-SA000487T,Chagga,Kidd2018
 mMHseq-Chagga,Chagga,Gandotra2020
+SA000487T,Chagga,Kidd2018
 SA000023F,Cheyenne,Kidd2018
 CDX,"Chinese Dai in Xishuangbanna, China",Auton2015
 SA000491O,Chuvash,Kidd2018
@@ -48,6 +48,7 @@ SA000099S,Ibo,Kidd2018
 ITU,Indian Telugu from the UK,Auton2015
 SA004309Q,Iranian,Kidd2018
 SA000057M,Irish,Kidd2018
+Italians,Italians,Turchi2019
 SA000010B,Japanese,Kidd2018
 MHDBP-63967b883e,Japanese,Hiroaki2015
 JPT,"Japanese in Tokyo, Japan",Auton2015
