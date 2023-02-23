@@ -36,26 +36,28 @@ def test_standardize_ids():
 
 def test_assumptions():
     total_markers_per_source = [
-        198,  # kidd2018
-        15,  # vandergaag2018
-        45,  # staadig2021
-        26,  # hiroaki2015
-        11,  # chen2019
-        10,  # voskoboinik2018
-        118,  # delapuente2020
-        90,  # gandotra2020
-        25,  # sun2020
-        20,  # kureshi2020
-        23,  # jin2020
-        59,  # wu2021
-        22,  # fan2022
-        90,  # pakstis2021
+        11,  # Chen2019
+        22,  # Fan2022
+        90,  # Gandotra2020
+        26,  # Hiroaki2015
+        23,  # Jin2020
+        198,  # Kidd2018
+        20,  # Kureshi2020
+        90,  # Pakstis2021
+        45,  # Staadig2021
+        25,  # Sun2020
+        89,  # Turchi2019
+        10,  # Voskoboinik2018
+        59,  # Wu2021
+        118,  # delaPuente2020
+        15,  # vanderGaag2018
     ]
     redundant_markers_per_source = [
-        8,  # staadig2021
-        1,  # chen2019
-        2,  # gandotra2020
-        13,  # pakstis2021
+        1,  # Chen2019
+        2,  # Gandotra2020
+        13,  # Pakstis2021
+        8,  # Staadig2021
+        84,  # Turchi2019
     ]
     expected_markers = sum(total_markers_per_source) - sum(redundant_markers_per_source)
     observed_markers = len(microhapdb.markers)
@@ -91,7 +93,7 @@ def test_markers():
     mh21PK-MX1s (chr21:41464745-41464824)
     mh22PK-104638 (chr22:44857883-44857955)
     """
-    assert microhapdb.markers.shape == (728, 11)
+    assert microhapdb.markers.shape == (733, 11)
     result = microhapdb.markers[microhapdb.markers.Chrom == "chr19"]
     assert len(result) == 19
     varids = microhapdb.variantmap[microhapdb.variantmap.Marker.isin(result.Name)].Variant.unique()
