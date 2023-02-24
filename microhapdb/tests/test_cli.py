@@ -138,26 +138,26 @@ def test_main_marker_query(capsys):
     microhapdb.cli.main(args)
     terminal = capsys.readouterr()
     exp_out = """
-         Name  NumVars  Extent Chrom    Start      End    Ae         Source
- mh19USC-19pA        3      38 chr19   561779   561816 2.913 delaPuente2020
-   mh19KK-056        2     201 chr19  4852125  4852325 2.594       Kidd2018
-  mh19SHY-001        8     185 chr19  7698913  7699097 6.347         Wu2021
-   mh19CP-007        3      42 chr19 14310740 14310781 3.254       Kidd2018
- mh19USC-19pB        5      66 chr19 16040865 16040930 3.799 delaPuente2020
-  mh19ZHA-006        6      63 chr19 20579863 20579925 3.167        Sun2020
-    mh19NH-23        3      95 chr19 22052724 22052818 2.024    Hiroaki2015
-mh19KK-299.v1        5     154 chr19 22546698 22546851 4.060       Kidd2018
-mh19KK-299.v2        7     154 chr19 22546698 22546851 4.073   Gandotra2020
-mh19KK-299.v4       10     182 chr19 22546698 22546879 4.073    Pakstis2021
-mh19KK-299.v3        3      63 chr19 22546749 22546811 3.603    Staadig2021
-  mh19ZHA-007        4     141 chr19 28397316 28397456 4.428    Kureshi2020
- mh19USC-19qA        4      46 chr19 33273772 33273817 3.523 delaPuente2020
-   mh19KK-301        4      64 chr19 50938488 50938551 2.624       Kidd2018
-   mh19KK-300        7     182 chr19 50947787 50947968 5.821   Gandotra2020
-   mh19KK-057        3     115 chr19 51654949 51655063 2.539       Kidd2018
-  mh19ZHA-009        5     178 chr19 53129073 53129250 4.347    Kureshi2020
- mh19USC-19qB        3      27 chr19 53714388 53714414 4.933 delaPuente2020
-  mh19SHY-002        9     165 chr19 55588421 55588585 3.613         Wu2021
+         Name  NumVars  Extent Chrom    Start      End    Ae                   Source
+ mh19USC-19pA        3      38 chr19   561779   561816 2.913           delaPuente2020
+   mh19KK-056        2     201 chr19  4852125  4852325 2.594                 Kidd2018
+  mh19SHY-001        8     185 chr19  7698913  7699097 6.347                   Wu2021
+   mh19CP-007        3      42 chr19 14310740 14310781 3.254                 Kidd2018
+ mh19USC-19pB        5      66 chr19 16040865 16040930 3.799           delaPuente2020
+  mh19ZHA-006        6      63 chr19 20579863 20579925 3.167                  Sun2020
+    mh19NH-23        3      95 chr19 22052724 22052818 2.024              Hiroaki2015
+mh19KK-299.v1        5     154 chr19 22546698 22546851 4.060      Kidd2018;Turchi2019
+mh19KK-299.v2        7     154 chr19 22546698 22546851 4.073             Gandotra2020
+mh19KK-299.v4       10     182 chr19 22546698 22546879 4.073              Pakstis2021
+mh19KK-299.v3        3      63 chr19 22546749 22546811 3.603              Staadig2021
+  mh19ZHA-007        4     141 chr19 28397316 28397456 4.428              Kureshi2020
+ mh19USC-19qA        4      46 chr19 33273772 33273817 3.523           delaPuente2020
+   mh19KK-301        4      64 chr19 50938488 50938551 2.624      Kidd2018;Turchi2019
+   mh19KK-300        7     182 chr19 50947787 50947968 5.821 Gandotra2020;Pakstis2021
+   mh19KK-057        3     115 chr19 51654949 51655063 2.539      Kidd2018;Turchi2019
+  mh19ZHA-009        5     178 chr19 53129073 53129250 4.347              Kureshi2020
+ mh19USC-19qB        3      27 chr19 53714388 53714414 4.933           delaPuente2020
+  mh19SHY-002        9     165 chr19 55588421 55588585 3.613                   Wu2021
 """
     obs_out = terminal.out
     print(obs_out)
@@ -340,7 +340,7 @@ def test_main_marker_bad_code():
     [
         ("--population=Swedish", None, None, 187),
         ("--population=SA000009J", "--marker=mh13KK-218.v1", None, 15),
-        (None, "--marker=mh13KK-218.v1", "--allele=C|T|C|T", 102),
+        (None, "--marker=mh13KK-218.v1", "--allele=C|T|C|T", 103),
         (None, "--marker=mh14PK-72639", None, 257),
         (None, None, None, 214457),
     ],
@@ -388,9 +388,9 @@ def test_lookup(capsys):
     out, err = capsys.readouterr()
     print(out)
     expected = """
-         Name  NumVars  Extent Chrom  Start    End                   Positions                 Positions37                                     RSIDs      Source    Ae
-mh09KK-033.v1        3      78  chr9 680714 680791        680714;680763;680791        680714;680763;680791           rs10815466;rs9408671;rs17431629    Kidd2018 3.037
-mh09KK-033.v2        4      78  chr9 680714 680791 680714;680763;680768;680791 680714;680763;680768;680791 rs10815466;rs9408671;rs9408672;rs17431629 Staadig2021 3.066
+         Name  NumVars  Extent Chrom  Start    End                   Positions                 Positions37                                     RSIDs              Source    Ae
+mh09KK-033.v1        3      78  chr9 680714 680791        680714;680763;680791        680714;680763;680791           rs10815466;rs9408671;rs17431629 Kidd2018;Turchi2019 3.037
+mh09KK-033.v2        4      78  chr9 680714 680791 680714;680763;680768;680791 680714;680763;680768;680791 rs10815466;rs9408671;rs9408672;rs17431629         Staadig2021 3.066
 """
     observed = out
     assert observed.strip() == expected.strip()
@@ -402,15 +402,15 @@ def test_ae_pop(capsys):
     microhapdb.cli.main(args)
     terminal = capsys.readouterr()
     exp_out = """
-         Name  NumVars  Extent Chrom    Start      End    Ae         Source
-  mh18SHY-001       11     181 chr18  1952477  1952657 4.127         Wu2021
- mh18PK-87558        6      47 chr18  1960543  1960589 2.217 vanderGaag2018
- mh18USC-18pA        5      77 chr18  5280018  5280094 1.923 delaPuente2020
-   mh18CP-005        4      44 chr18  8892865  8892908 3.620       Kidd2018
-  mh18ZBF-002        4      77 chr18 11900703 11900779 3.264        Jin2020
-  mh18ZHA-004        4     116 chr18 14315932 14316047 3.017        Sun2020
-mh18KK-285.v1        4     136 chr18 24557355 24557490 2.584       Kidd2018
-mh18KK-285.v2        3      59 chr18 24557432 24557490 2.577    Staadig2021
+         Name  NumVars  Extent Chrom    Start      End    Ae              Source
+  mh18SHY-001       11     181 chr18  1952477  1952657 4.127              Wu2021
+ mh18PK-87558        6      47 chr18  1960543  1960589 2.217      vanderGaag2018
+ mh18USC-18pA        5      77 chr18  5280018  5280094 1.923      delaPuente2020
+   mh18CP-005        4      44 chr18  8892865  8892908 3.620            Kidd2018
+  mh18ZBF-002        4      77 chr18 11900703 11900779 3.264             Jin2020
+  mh18ZHA-004        4     116 chr18 14315932 14316047 3.017             Sun2020
+mh18KK-285.v1        4     136 chr18 24557355 24557490 2.584 Kidd2018;Turchi2019
+mh18KK-285.v2        3      59 chr18 24557432 24557490 2.577         Staadig2021
 """
     obs_out = terminal.out
     print(obs_out)

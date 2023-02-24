@@ -473,7 +473,7 @@ def test_marker_object(capsys):
 @pytest.mark.parametrize(
     "markername,slug,length,source",
     [
-        ("mh04KK-074", "chr4:55457430-55457526", 97, "Kidd2018"),
+        ("mh16KK-062", "chr16:87468089-87468386", 298, "Kidd2018"),
         ("mh01CP-010", "chr1:85240118-85240140", 23, "Chen2019"),
         ("mh09KK-153.v2", "chr9:101207360-101207606", 247, "Gandotra2020"),
         ("mh10NH-14", "chr10:11288562-11288613", 52, "Hiroaki2015"),
@@ -486,6 +486,7 @@ def test_marker_object(capsys):
         ("mh03LV-06", "chr3:11914401-11914598", 198, "Voskoboinik2018"),
         ("mh15SHY-003", "chr15:92605653-92605846", 194, "Wu2021"),
         ("mh01FHL-009", "chr1:231954505-231954667", 163, "Fan2022"),
+        ("mh02KK-004.v2", "chr2:118984970-118985128", 159, "Turchi2019"),
     ],
 )
 def test_all_sources(markername, slug, length, source):
