@@ -1,4 +1,4 @@
 include versioneer.py
 include microhapdb/_version.py
-include microhapdb/data/*.tsv
+include microhapdb/data/*.csv
 include microhapdb/tests/data/*
