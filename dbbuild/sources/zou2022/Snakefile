@@ -1,10 +1,18 @@
+from io import StringIO
 import pandas as pd
+
+
+rule all:
+    input:
+        "marker.csv",
+        "frequency.csv",
+
 
 rule markers:
     input:
-        txt="zou-2022-table1.txt"
+        txt="zou-2022-table1.txt",
     output:
-        csv="marker.csv"
+        csv="marker.csv",
     run:
         markers = pd.read_csv(input.txt, sep="\t")
         markers["Name"] = markers["Microhaplotype"].apply(lambda x: x.replace("HYP", "HYP-"))
@@ -16,3 +24,39 @@ rule markers:
         markers["Positions"] = None
         markers = markers[["Name", "Xref", "NumVars", "Refr", "Chrom", "Positions", "VarRef"]]
         markers.to_csv(output.csv, index=False)
+
+
+rule frequencies:
+    input:
+        txt="table-s3.txt",
+    output:
+        csv="frequency.csv",
+    run:
+        with open(input.txt, "r") as fh:
+            data = fh.read()
+        oldheader, body = data.split("\n", 1)
+        newheader = list()
+        for value in oldheader.split("\t"):
+            if value == "":
+                newheader.append(newheader[-1])
+            else:
+                newheader.append(value)
+        newheader.append(newheader[-1])
+        newheader.append(newheader[-1])
+        newdata = "\t".join(newheader) + "\n" + body
+        freqs = pd.read_csv(StringIO(newdata), sep="\t", header=[0, 1])
+        freqs = freqs.transpose().reset_index()
+        header = freqs.iloc[0]
+        freqs = freqs[1:]
+        freqs.columns = header
+        freqs["Marker"] = freqs["Marker"].apply(lambda x: x.replace("HYP", "HYP-"))
+        table = list()
+        for i, row in freqs.iterrows():
+            for pop, frequency in zip(row.keys(), row.values):
+                if pop in ("Marker", "Allele"):
+                    continue
+                allele = "|".join(list(row.Allele))
+                entry = [row.Marker, pop.replace(" ", ""), allele, frequency]
+                table.append(entry)
+        frequencies = pd.DataFrame(table, columns=["Marker", "Population", "Allele", "Frequency"])
+        frequencies.to_csv(output.csv, index=False)

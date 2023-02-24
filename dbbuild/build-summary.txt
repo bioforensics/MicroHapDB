@@ -484,4 +484,6 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
   - 22 marker definitions based on 338 SNPs and 25 indels
 [Zou2022]
   - 21 marker definitions based on 42 SNPs
+  - 10 population samples
+  - frequencies for 65 distinct haplotypes in 10 populations; 650 total frequencies
 
