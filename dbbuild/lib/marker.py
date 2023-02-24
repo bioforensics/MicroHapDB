@@ -54,7 +54,9 @@ class Marker:
         self.rsids = rsids
         self.index = index
         self.xrefs = xrefs
-        self.source = source
+        self.sources = list()
+        if source is not None:
+            self.sources.append(source)
         self.positions = dict(GRCh37=list(), GRCh38=list())
 
     def __len__(self):
@@ -148,9 +150,10 @@ class Marker:
 
     @property
     def sourcename(self):
-        if self.source is None:
+        if len(self.sources) == 0:
             return None
-        return self.source.name
+        names = [s.name for s in sorted(self.sources, key=lambda x: (x.year, x.name))]
+        return ";".join(names)
 
     def posstr(self, refr="GRCh38"):
         return ";".join(map(str, self.positions[refr]))

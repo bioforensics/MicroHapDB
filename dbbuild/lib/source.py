@@ -10,6 +10,7 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
+from .locus import Locus
 from .marker import Marker
 from .variant import VariantIndex
 from collections import Counter, defaultdict
@@ -161,28 +162,15 @@ class SourceIndex:
                     yield marker
 
     def update_marker_names(self):
-        markers_by_name = defaultdict(list)
+        markers_by_locus = defaultdict(Locus)
         for marker in self.all_markers():
-            markers_by_name[marker.name].append(marker)
+            markers_by_locus[marker.locus].add(marker)
         source_name_map = defaultdict(dict)
-        for name, markers in markers_by_name.items():
-            name_by_positions = dict()
-            distinct_definitions = set([m.posstr() for m in markers])
-            for marker in sorted(markers, key=lambda m: (m.source.year, m.name.lower())):
-                if len(markers) > 1:
-                    name = marker.name
-                    if len(distinct_definitions) > 1:
-                        name = f"{marker.name}.v{len(name_by_positions) + 1}"
-                        source_name_map[marker.source.name][marker.name] = name
-                    if marker.posstr() in name_by_positions:
-                        print(
-                            f"Marker {marker.name} as defined in {marker.source.name} was defined previously and is redundant"
-                        )
-                        continue
-                    else:
-                        name_by_positions[marker.posstr()] = name
-                        marker.name = name
+        for name, locus in markers_by_locus.items():
+            for marker in locus.resolve():
                 self._markers.append(marker)
+            for sourcename, namedict in locus.source_name_map.items():
+                source_name_map[sourcename].update(namedict)
         for source in sorted(self.sources, key=lambda s: (s.year, s.name)):
             source.rename_markers(source_name_map[source.name])
 
@@ -218,54 +206,3 @@ class SourceIndex:
         for source in sorted(self.sources, key=lambda s: (s.year, s.name.lower())):
             print(source, file=output)
         return output.getvalue()
-
-    def marker_seqs_to_fasta(self, fasta_path, outstream):
-        fasta = FastaIdx(fasta_path)
-        loci = defaultdict(Locus)
-        for marker in self._markers:
-            loci[marker.locus].append(marker)
-        for locus in sorted(loci.values(), key=lambda l: (l.chrom_num, l.extent)):
-            start, end = locus.target
-            length = end - start
-            sequence = fasta[locus.chrom][start:end]
-            assert len(sequence) == length
-            print(locus.defline, sequence, sep="\n", file=outstream)
-
-
-class Locus(list):
-    @property
-    def name(self):
-        return self[0].locus
-
-    @property
-    def chrom(self):
-        return self[0].chrom
-
-    @property
-    def chrom_num(self):
-        return self[0].chrom_num
-
-    @property
-    def extent(self):
-        return self.start, self.end
-
-    @property
-    def target(self):
-        return self.start - 61, self.end + 60
-
-    @property
-    def start(self):
-        return min([m.start for m in self])
-
-    @property
-    def end(self):
-        return max([m.end for m in self])
-
-    @property
-    def region(self):
-        start, end = self.target
-        return f"{self.chrom}:{start+1}-{end}"
-
-    @property
-    def defline(self):
-        return f">{self.name} GRCh38 {self.region}"
