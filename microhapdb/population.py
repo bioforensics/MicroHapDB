@@ -30,7 +30,7 @@ class Population:
     MHDBP-63967b883e        Japanese        Hiroaki2015
     JPT     Japanese in Tokyo, Japan        Auton2015
     >>> microhapdb.populations.shape
-    (115, 3)
+    (125, 3)
     """
 
     def __init__(self, popid, name, source):

@@ -11,12 +11,13 @@ SA000002C,Ami,Kidd2018
 MHDBP-936bc36f79,Asia,vanderGaag2018
 SA000021D,Atayal,Kidd2018
 BEB,Bengali from Bangladesh,Auton2015
-mMHseq-Biaka,Biaka,Gandotra2020
 SA000005F,Biaka,Kidd2018
+mMHseq-Biaka,Biaka,Gandotra2020
 GBR,British in England and Scotland,Auton2015
 SA000022E,"Cambodians, Khmer",Kidd2018
 mMHseq-Chagga,Chagga,Gandotra2020
 SA000487T,Chagga,Kidd2018
+ChengduHan,Chengdu Han,Zou2022
 SA000023F,Cheyenne,Kidd2018
 CDX,"Chinese Dai in Xishuangbanna, China",Auton2015
 SA000491O,Chuvash,Kidd2018
@@ -24,6 +25,7 @@ CLM,"Colombians from Medellin, Colombia",Auton2015
 SA004333N,"Cypriot, Turkish",Kidd2018
 SA000007H,Danes,Kidd2018
 SA000047L,Druze,Kidd2018
+DujiangyanTibetan,Dujiangyan Tibetan,Zou2022
 EAS,East Asia,Byrska-Bishop2022
 ESN,Esan in Nigeria,Auton2015
 mMHseq-EuroAmer,EuroAmer,Gandotra2020
@@ -35,6 +37,8 @@ GWD,Gambian in Western Divisions in the Gambia,Auton2015
 SA002767W,Greeks,Kidd2018
 SA000055K,Guihiba,Kidd2018
 GIH,"Gujarati Indian from Houston, Texas",Auton2015
+HainanHan,Hainan Han,Zou2022
+HainanLi,Hainan Li,Zou2022
 SA000003D,Hakka,Kidd2018
 SA000009J,Han,Kidd2018
 MHDBP-48c2cfb2aa,Han,Chen2019
@@ -77,8 +81,10 @@ MXL,Mexican Ancestry from Los Angeles USA,Auton2015
 SA000063J,Micronesians,Kidd2018
 SA002139P,Mohanna,Kidd2018
 SA004035M,Mongolian,Kidd2018
+MuliTibetan,Muli Tibetan,Zou2022
 MHDBP-383d86606a,NL,vanderGaag2018
 SA002137N,Negroid Makrani,Kidd2018
+OrdosMongolian,Ordos Mongolian,Zou2022
 SA002766V,Palestinian,Kidd2018
 SA000084M,Papuan New Guinean,Kidd2018
 SA002873U,Pashtun,Kidd2018
@@ -88,8 +94,8 @@ SA000026I,"Pima, Mexico",Kidd2018
 PUR,Puerto Ricans from Puerto Rico,Auton2015
 PJL,"Punjabi from Lahore, Pakistan",Auton2015
 SA000069P,Quechua,Kidd2018
-SA001530J,Russians,Kidd2018
 SA000019K,Russians,Kidd2018
+SA001530J,Russians,Kidd2018
 SA000098R,Samaritans,Kidd2018
 SA000072J,Samoans,Kidd2018
 SA001773S,Sandawe,Kidd2018
@@ -104,13 +110,17 @@ SA000014F,Surui,Kidd2018
 MHDBP-7c055e7ee8,Swedish,Staadig2021
 mMHseq-TWChinese,TWChinese,Gandotra2020
 SA000077O,Thoti,Kidd2018
+TibetSherpa,Tibet Sherpa,Zou2022
 SA000027J,Ticuna,Kidd2018
 TSI,Toscani in Italia,Auton2015
 SA004036N,Tsaatan,Kidd2018
 SA004310I,Turks,Kidd2018
 CEU,Utah Residents (CEPH) with Northern and Western European Ancestry,Auton2015
+WuzhongHui,Wuzhong Hui,Zou2022
+XichangYi,Xichang Yi,Zou2022
 SA000011C,Yakut,Kidd2018
 SA000036J,Yoruba,Kidd2018
 YRI,"Yoruba in Ibadan, Nigeria",Auton2015
-mMHseq-Zaramo,Zaramo,Gandotra2020
 SA002586V,Zaramo,Kidd2018
+mMHseq-Zaramo,Zaramo,Gandotra2020
+ZunyiGelao,Zunyi Gelao,Zou2022

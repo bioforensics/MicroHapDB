@@ -86,7 +86,7 @@ def test_main_pop_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 115
+    assert len(outlines) == 1 + 125
 
 
 def test_main_pop_detail(capsys):
@@ -115,7 +115,7 @@ def test_main_marker_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 733
+    assert len(outlines) == 1 + 754
 
 
 def test_main_marker_notrunc(capsys):
@@ -123,7 +123,7 @@ def test_main_marker_notrunc(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 733
+    assert len(outlines) == 1 + 754
 
 
 def test_main_marker_detail(capsys):
@@ -342,7 +342,7 @@ def test_main_marker_bad_code():
         ("--population=SA000009J", "--marker=mh13KK-218.v1", None, 15),
         (None, "--marker=mh13KK-218.v1", "--allele=C|T|C|T", 102),
         (None, "--marker=mh14PK-72639", None, 257),
-        (None, None, None, 212585),
+        (None, None, None, 214457),
     ],
 )
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):

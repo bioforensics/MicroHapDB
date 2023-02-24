@@ -18,13 +18,14 @@ import pytest
 def test_assumptions():
     num_allele_freqs_per_source = [
         89524,  # Auton2015
-        35041,  # Byrska-Bishop2022
+        36263,  # Byrska-Bishop2022
         103,  # Chen2019
         4737,  # Gandotra2020
         33,  # Hiroaki2015
         82167,  # Kidd2018
         186,  # Staadig2021
         427,  # Turchi2019
+        650,  # Zou2022
         366,  # vanderGaag2018
     ]
     assert len(microhapdb.frequencies) == sum(num_allele_freqs_per_source)
@@ -37,18 +38,18 @@ def test_allele_frequencies():
     array(['A|A|C', 'A|G|A', 'A|G|C', 'C|G|C'], dtype=object)
     >>> f[(f.Marker == "mh15CP-003") & (f.Allele == "A|A|C") & (f.Source == "Byrska-Bishop2022")]
                 Marker Population Allele  Frequency             Source
-    158806  mh15CP-003       1KGP  A|A|C    0.19947  Byrska-Bishop2022
-    158818  mh15CP-003        AFR  A|A|C    0.03565  Byrska-Bishop2022
-    158875  mh15CP-003        EAS  A|A|C    0.25828  Byrska-Bishop2022
-    158886  mh15CP-003        EUR  A|A|C    0.26046  Byrska-Bishop2022
-    158994  mh15CP-003        SAS  A|A|C    0.24806  Byrska-Bishop2022
+    160385  mh15CP-003       1KGP  A|A|C    0.19947  Byrska-Bishop2022
+    160397  mh15CP-003        AFR  A|A|C    0.03565  Byrska-Bishop2022
+    160454  mh15CP-003        EAS  A|A|C    0.25828  Byrska-Bishop2022
+    160465  mh15CP-003        EUR  A|A|C    0.26046  Byrska-Bishop2022
+    160573  mh15CP-003        SAS  A|A|C    0.24806  Byrska-Bishop2022
     >>> f.query("Marker == 'mh15CP-003' and Allele == 'A|A|C' and Population == 'FIN'")
                 Marker Population Allele  Frequency     Source
-    158890  mh15CP-003        FIN  A|A|C      0.318  Auton2015
-    158896  mh15CP-003        FIN  A|A|C      0.318   Kidd2018
+    160469  mh15CP-003        FIN  A|A|C      0.318  Auton2015
+    160475  mh15CP-003        FIN  A|A|C      0.318   Kidd2018
     """
     af = microhapdb.frequencies
-    assert af.shape == (212584, 5)
+    assert af.shape == (214456, 5)
     result = af[af.Marker == "mh21KK-315.v1"].Allele.unique()
     assert len(result) == 8
     result = af[(af.Marker == "mh21KK-315.v1") & (af.Allele == "A|C|T")]
