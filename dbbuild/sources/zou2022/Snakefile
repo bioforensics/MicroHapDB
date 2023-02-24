@@ -1,0 +1,18 @@
+import pandas as pd
+
+rule markers:
+    input:
+        txt="zou-2022-table1.txt"
+    output:
+        csv="marker.csv"
+    run:
+        markers = pd.read_csv(input.txt, sep="\t")
+        markers["Name"] = markers["Microhaplotype"].apply(lambda x: x.replace("HYP", "HYP-"))
+        markers["VarRef"] = markers["SNPs"].str.replace("-", ";")
+        markers["Chrom"] = markers["Chromosome"].apply(lambda x: f"chr{x}")
+        markers["NumVars"] = 2
+        markers["Xref"] = None
+        markers["Refr"] = None
+        markers["Positions"] = None
+        markers = markers[["Name", "Xref", "NumVars", "Refr", "Chrom", "Positions", "VarRef"]]
+        markers.to_csv(output.csv, index=False)
