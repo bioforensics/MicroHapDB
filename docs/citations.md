@@ -57,3 +57,7 @@ Contact: daniel.standage@st.dhs.gov.
 <sup>[21]</sup>Pakstis AJ, Gandotra N, Speed WC, Murtha M, Scharfe C, Kidd KK (2021) The population genetics characteristics of a 90 locus panel of microhaplotypes. *Human Genetics*, 140:1753-1773, [doi:10.1007/s00439-021-02382-0](https://doi.org/10.1007/s00439-021-02382-0).
 
 <sup>[22]</sup>Kidd KK, Pakstis AJ, Gandotra N, Scharfe C, Podini D (2022) A multipurpose panel of microhaplotypes for use with STR markers in casework. *FSI: Genetics*, 60:102729, [doi:10.1016/j.fsigen.2022.102729](https://doi.org/10.1016/j.fsigen.2022.102729).
+
+<sup>[23]</sup>Turchi C, Melchionda F, Pesaresi M, Tagliabracci A (2019) Evaluation of a microhaplotypes panel for forensic genetics using massive parallel sequencing technology. *FSI: Genetics* 41:120-127, [doi:10.1016/j.fsigen.2019.04.009](https://doi.org/10.1016/j.fsigen.2019.04.009).
+
+<sup>[24]</sup>Zou X, Guanglin H, Liu J, Jiang L, Wang Mengge, Chen P, Hou Y, Wang Z (2022) Screening and selection of 21 novel microhaplotype markers for ancestry inference in ten Chinese subpopulations. *FSI: Genetics*, 58:102687, [doi:10.1016/j.fsigen.2022.102687](https://doi.org/10.1016/j.fsigen.2022.102687).
