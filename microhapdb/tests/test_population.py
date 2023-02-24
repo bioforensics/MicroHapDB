@@ -37,6 +37,7 @@ def test_assumptions():
         70,  # Kidd2018
         1,  # Staadig2021
         1,  # Turchi2019
+        10,  # Zou2022
         3,  # vanderGaag2018
     ]
     assert len(microhapdb.populations) == sum(num_populations_per_source)
@@ -49,11 +50,13 @@ def test_populations():
     >>> print(pop.popid, pop.name, pop.source)
     SA000040E Kachari Kidd2018
     >>> Population.table_from_ids(["EAS", "SAS"])
-         ID        Name             Source
-    25  EAS   East Asia  Byrska-Bishop2022
-    98  SAS  South Asia  Byrska-Bishop2022
+          ID        Name             Source
+    27   EAS   East Asia  Byrska-Bishop2022
+    104  SAS  South Asia  Byrska-Bishop2022
     >>> for pop in Population.from_query("Name.str.contains('Han')"):
     ...   print(pop.popid, pop.name, pop.source)
+    ChengduHan Chengdu Han Zou2022
+    HainanHan Hainan Han Zou2022
     SA000009J Han Kidd2018
     MHDBP-48c2cfb2aa Han Chen2019
     SA000001B Han Kidd2018
@@ -68,7 +71,7 @@ def test_populations():
     7               ASW  Americans of African Ancestry in SW USA          Auton2015
     """
     pop = microhapdb.populations
-    assert pop.shape == (115, 3)
+    assert pop.shape == (125, 3)
     assert Population.from_id("MHDBP-7c055e7ee8").name == "Swedish"
     assert Population.from_id("SA000028K").name == "Karitiana"
     result = Population.table_from_query("Name.str.contains('Jews')")

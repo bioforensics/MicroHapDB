@@ -55,8 +55,8 @@ def retrieve_by_id(ident):
     9  MHDBP-936bc36f79  Asia  vanderGaag2018
     >>> retrieve_by_id("Japanese")
                       ID      Name       Source
-    50         SA000010B  Japanese     Kidd2018
-    51  MHDBP-63967b883e  Japanese  Hiroaki2015
+    54         SA000010B  Japanese     Kidd2018
+    55  MHDBP-63967b883e  Japanese  Hiroaki2015
     """
 
     def id_in_series(ident, series):
