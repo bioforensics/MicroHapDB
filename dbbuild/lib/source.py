@@ -10,6 +10,7 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
+from .interval import IntervalIndex
 from .locus import Locus
 from .marker import Marker
 from .variant import VariantIndex
@@ -140,6 +141,7 @@ class SourceIndex:
         self.populate_variants()
         self.populate_sources()
         self._markers = list()
+        self.interval_index = IntervalIndex()
 
     def populate_variants(self):
         csvs = self.rootdir.glob("*/marker.csv")
@@ -164,6 +166,8 @@ class SourceIndex:
     def update_marker_names(self):
         markers_by_locus = defaultdict(Locus)
         for marker in self.all_markers():
+            if marker.name in self.interval_index.mergeables:
+                marker.name = self.interval_index.mergeables[marker.name]
             markers_by_locus[marker.locus].add(marker)
         source_name_map = defaultdict(dict)
         for name, locus in markers_by_locus.items():
@@ -173,6 +177,11 @@ class SourceIndex:
                 source_name_map[sourcename].update(namedict)
         for source in sorted(self.sources, key=lambda s: (s.year, s.name)):
             source.rename_markers(source_name_map[source.name])
+
+    def interval_check(self):
+        for marker in self.all_markers():
+            self.interval_index.add(marker)
+        self.interval_index.check()
 
     @property
     def markers(self):
@@ -199,6 +208,12 @@ class SourceIndex:
     def populations(self):
         table = pd.concat([source.populations for source in self.sources if source.populations is not None])
         table = table.sort_values("Name").reset_index(drop=True)
+        return table
+
+    @property
+    def merges(self):
+        table = pd.DataFrame(self.interval_index.mergeables.items(), columns=["Derivative", "Original"])
+        table = table.sort_values("Original").reset_index(drop=True)
         return table
 
     def __str__(self):

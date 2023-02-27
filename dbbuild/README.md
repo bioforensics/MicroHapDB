@@ -179,6 +179,7 @@ They can be installed using pip and/or conda.
 - ucsc-liftover
 - selenium
 - geckodriver
+- intervaltree
 
 ### Databases
 
