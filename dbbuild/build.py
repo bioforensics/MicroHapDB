@@ -2,7 +2,7 @@
 
 from lib import SourceIndex
 
-index = SourceIndex("sources", "databases/dbSNP", "databases")
+index = SourceIndex("sources", "databases/dbSNP", "databases", exclude=["Auton2015"])
 index.interval_check()
 index.update_marker_names()
 index.markers.to_csv("marker.csv", index=False)
