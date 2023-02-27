@@ -1,0 +1,20 @@
+import pandas as pd
+
+
+rule markers:
+    input:
+        tsv="original/sun2020-table1.tsv",
+    output:
+        csv="marker.csv",
+    run:
+        markers = pd.read_csv(input.tsv, sep="\t")
+        markers["Name"] = markers["Microhaplotype"].str.replace("zha", "ZHA-")
+        markers["Xref"] = None
+        markers["NumVars"] = markers["# SNPs"]
+        markers["Refr"] = None
+        markers["Chrom"] = markers["Position (build37)"].apply(lambda x: x.split(":")[0])
+        markers["Positions"] = None
+        markers["VarRef"] = markers["SNPs"].str.strip("/").str.replace("/", ";")
+        columns = ["Name", "Xref", "NumVars", "Refr", "Chrom", "Positions", "VarRef"]
+        markers = markers[columns].sort_values("Name")
+        markers.to_csv(output.csv, index=False)
