@@ -134,7 +134,7 @@ def beta_legacy():
         "mh04KK-013.v1",
         "mh04KK-017",
         "mh04KK-030.v1",
-        "mh05KK-020.v1",
+        "mh05KK-023.v2",
         "mh06CP-007",
         "mh06KK-008.v1",
         "mh07CP-004",

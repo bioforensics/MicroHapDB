@@ -86,7 +86,7 @@ def test_main_pop_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 125
+    assert len(outlines) == 1 + 99
 
 
 def test_main_pop_detail(capsys):
@@ -115,7 +115,7 @@ def test_main_marker_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 754
+    assert len(outlines) == 1 + 753
 
 
 def test_main_marker_notrunc(capsys):
@@ -123,7 +123,7 @@ def test_main_marker_notrunc(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 754
+    assert len(outlines) == 1 + 753
 
 
 def test_main_marker_detail(capsys):
@@ -150,12 +150,12 @@ mh19KK-299.v1        5     154 chr19 22546698 22546851 4.060      Kidd2018;Turch
 mh19KK-299.v2        7     154 chr19 22546698 22546851 4.073             Gandotra2020
 mh19KK-299.v4       10     182 chr19 22546698 22546879 4.073              Pakstis2021
 mh19KK-299.v3        3      63 chr19 22546749 22546811 3.603              Staadig2021
-  mh19ZHA-007        4     141 chr19 28397316 28397456 4.428              Kureshi2020
+  mh19ZHA-007        4     141 chr19 28397316 28397456 4.428      Kureshi2020;Sun2020
  mh19USC-19qA        4      46 chr19 33273772 33273817 3.523           delaPuente2020
    mh19KK-301        4      64 chr19 50938488 50938551 2.624      Kidd2018;Turchi2019
    mh19KK-300        7     182 chr19 50947787 50947968 5.821 Gandotra2020;Pakstis2021
    mh19KK-057        3     115 chr19 51654949 51655063 2.539      Kidd2018;Turchi2019
-  mh19ZHA-009        5     178 chr19 53129073 53129250 4.347              Kureshi2020
+  mh19ZHA-009        5     178 chr19 53129073 53129250 4.347      Kureshi2020;Sun2020
  mh19USC-19qB        3      27 chr19 53714388 53714414 4.933           delaPuente2020
   mh19SHY-002        9     165 chr19 55588421 55588585 3.613                   Wu2021
 """
@@ -341,8 +341,8 @@ def test_main_marker_bad_code():
         ("--population=Swedish", None, None, 187),
         ("--population=SA000009J", "--marker=mh13KK-218.v1", None, 15),
         (None, "--marker=mh13KK-218.v1", "--allele=C|T|C|T", 103),
-        (None, "--marker=mh14PK-72639", None, 257),
-        (None, None, None, 214457),
+        (None, "--marker=mh14PK-72639", None, 86),
+        (None, None, None, 124911),
     ],
 )
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
