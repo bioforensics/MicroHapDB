@@ -19,17 +19,18 @@ from warnings import warn
 class Population:
     """Convenience class for accessing and manipulating population data
 
-    >>> for pop in microhapdb.Population.from_ids(["SA002023H", "SA004309Q", "SA000006G"]):
+    >>> for pop in microhapdb.Population.from_ids(["CDX", "CHB", "CHS"]):
     ...   print(pop.popid, pop.name, pop.source)
-    SA002023H Hungarian Kidd2018
-    SA004309Q Iranian Kidd2018
-    SA000006G Mbuti Kidd2018
+    CDX Chinese Dai in Xishuangbanna, China Byrska-Bishop2022
+    CHB Han Chinese in Beijing, China Byrska-Bishop2022
+    CHS Southern Han Chinese Byrska-Bishop2022
     >>> for pop in microhapdb.Population.from_query("Name.str.contains('Japan')"):
     ...   print(pop)
     MHDBP-63967b883e        Japanese        Hiroaki2015
     SA000010B       Japanese        Kidd2018
+    JPT     Japanese in Tokyo, Japan        Byrska-Bishop2022
     >>> microhapdb.populations.shape
-    (99, 3)
+    (125, 3)
     """
 
     def __init__(self, popid, name, source):

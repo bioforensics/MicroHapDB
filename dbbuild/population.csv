@@ -5,43 +5,57 @@ SA000017I,Adygei,Kidd2018
 AFR,Africa,Byrska-Bishop2022
 MHDBP-3dab7bdd14,Africa,vanderGaag2018
 SA000101C,African Americans,Kidd2018
+ACB,African Caribbeans in Barbados,Byrska-Bishop2022
+ASW,Americans of African Ancestry in SW USA,Byrska-Bishop2022
 SA000002C,Ami,Kidd2018
 MHDBP-936bc36f79,Asia,vanderGaag2018
 SA000021D,Atayal,Kidd2018
+BEB,Bengali from Bangladesh,Byrska-Bishop2022
 mMHseq-Biaka,Biaka,Gandotra2020
 SA000005F,Biaka,Kidd2018
+GBR,British in England and Scotland,Byrska-Bishop2022
 SA000022E,"Cambodians, Khmer",Kidd2018
 mMHseq-Chagga,Chagga,Gandotra2020
 SA000487T,Chagga,Kidd2018
 ChengduHan,Chengdu Han,Zou2022
 SA000023F,Cheyenne,Kidd2018
+CDX,"Chinese Dai in Xishuangbanna, China",Byrska-Bishop2022
 SA000491O,Chuvash,Kidd2018
+CLM,"Colombians from Medellin, Colombia",Byrska-Bishop2022
 SA004333N,"Cypriot, Turkish",Kidd2018
 SA000007H,Danes,Kidd2018
 SA000047L,Druze,Kidd2018
 DujiangyanTibetan,Dujiangyan Tibetan,Zou2022
 EAS,East Asia,Byrska-Bishop2022
+ESN,Esan in Nigeria,Byrska-Bishop2022
 mMHseq-EuroAmer,EuroAmer,Gandotra2020
 EUR,Europe,Byrska-Bishop2022
 SA000020C,"Europeans, Mixed",Kidd2018
+FIN,Finnish in Finland,Byrska-Bishop2022
 SA000018J,Finns,Kidd2018
+GWD,Gambian in Western Divisions in the Gambia,Byrska-Bishop2022
 SA002767W,Greeks,Kidd2018
 SA000055K,Guihiba,Kidd2018
+GIH,"Gujarati Indian from Houston, Texas",Byrska-Bishop2022
 HainanHan,Hainan Han,Zou2022
 HainanLi,Hainan Li,Zou2022
 SA000003D,Hakka,Kidd2018
 MHDBP-48c2cfb2aa,Han,Chen2019
 SA000001B,Han,Kidd2018
 SA000009J,Han,Kidd2018
+CHB,"Han Chinese in Beijing, China",Byrska-Bishop2022
 SA000100B,Hausa,Kidd2018
 SA002140H,Hazara,Kidd2018
 SA002023H,Hungarian,Kidd2018
+IBS,Iberian Population in Spain,Byrska-Bishop2022
 SA000099S,Ibo,Kidd2018
+ITU,Indian Telugu from the UK,Byrska-Bishop2022
 SA004309Q,Iranian,Kidd2018
 SA000057M,Irish,Kidd2018
 Italians,Italians,Turchi2019
 MHDBP-63967b883e,Japanese,Hiroaki2015
 SA000010B,Japanese,Kidd2018
+JPT,"Japanese in Tokyo, Japan",Byrska-Bishop2022
 SA000490N,"Jews, Ashkenazi",Kidd2018
 SA000015G,"Jews, Ethiopian",Kidd2018
 SA000096P,"Jews, Sephardic",Kidd2018
@@ -50,16 +64,20 @@ SA000040E,Kachari,Kidd2018
 SA000028K,Karitiana,Kidd2018
 SA001854S,Keralite,Kidd2018
 SA000488U,Khanty,Kidd2018
+KHV,"Kinh in Ho Chi Minh City, Vietnam",Byrska-Bishop2022
 SA000489V,Komi-Zyrian,Kidd2018
 SA000936S,Koreans,Kidd2018
 SA002765U,Kuwaiti,Kidd2018
 SA001853R,Lao Loum,Kidd2018
 SA002770Q,Lisongo,Kidd2018
+LWK,"Luhya in Webuye, Kenya",Byrska-Bishop2022
 SA000097Q,Malaysians,Kidd2018
 SA000854R,Masai,Kidd2018
 SA000013E,"Maya, Yucatan",Kidd2018
 SA000006G,Mbuti,Kidd2018
 SA000012D,"Melanesian, Nasioi",Kidd2018
+MSL,Mende in Sierra Leone,Byrska-Bishop2022
+MXL,Mexican Ancestry from Los Angeles USA,Byrska-Bishop2022
 SA000063J,Micronesians,Kidd2018
 SA002139P,Mohanna,Kidd2018
 SA004035M,Mongolian,Kidd2018
@@ -70,8 +88,11 @@ OrdosMongolian,Ordos Mongolian,Zou2022
 SA002766V,Palestinian,Kidd2018
 SA000084M,Papuan New Guinean,Kidd2018
 SA002873U,Pashtun,Kidd2018
+PEL,"Peruvians from Lima, Peru",Byrska-Bishop2022
 SA000025H,"Pima, Arizona",Kidd2018
 SA000026I,"Pima, Mexico",Kidd2018
+PUR,Puerto Ricans from Puerto Rico,Byrska-Bishop2022
+PJL,"Punjabi from Lahore, Pakistan",Byrska-Bishop2022
 SA000069P,Quechua,Kidd2018
 SA000019K,Russians,Kidd2018
 SA001530J,Russians,Kidd2018
@@ -83,18 +104,23 @@ SA002768X,Sardinian,Kidd2018
 SA004393T,Saudi,Kidd2018
 SA002138O,Somali,Kidd2018
 SAS,South Asia,Byrska-Bishop2022
+CHS,Southern Han Chinese,Byrska-Bishop2022
+STU,Sri Lankan Tamil from the UK,Byrska-Bishop2022
 SA000014F,Surui,Kidd2018
 MHDBP-7c055e7ee8,Swedish,Staadig2021
 mMHseq-TWChinese,TWChinese,Gandotra2020
 SA000077O,Thoti,Kidd2018
 TibetSherpa,Tibet Sherpa,Zou2022
 SA000027J,Ticuna,Kidd2018
+TSI,Toscani in Italia,Byrska-Bishop2022
 SA004036N,Tsaatan,Kidd2018
 SA004310I,Turks,Kidd2018
+CEU,Utah Residents (CEPH) with Northern and Western European Ancestry,Byrska-Bishop2022
 WuzhongHui,Wuzhong Hui,Zou2022
 XichangYi,Xichang Yi,Zou2022
 SA000011C,Yakut,Kidd2018
 SA000036J,Yoruba,Kidd2018
+YRI,"Yoruba in Ibadan, Nigeria",Byrska-Bishop2022
 mMHseq-Zaramo,Zaramo,Gandotra2020
 SA002586V,Zaramo,Kidd2018
 ZunyiGelao,Zunyi Gelao,Zou2022
