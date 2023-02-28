@@ -207,7 +207,7 @@ class SourceIndex:
     @property
     def populations(self):
         table = pd.concat([source.populations for source in self.sources if source.populations is not None])
-        table = table.sort_values("Name").reset_index(drop=True)
+        table = table.sort_values(["Name", "Source"]).reset_index(drop=True)
         return table
 
     @property
