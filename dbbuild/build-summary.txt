@@ -2,6 +2,66 @@ swapping out rs74812635 for rs602427
 swapping out rs75324027 for rs602875
 swapping out rs74812635 for rs602427
 swapping out rs75324027 for rs602875
+swapping out rs281863504 for rs71542446
+swapping out rs281863503 for rs41270931
+swapping out rs281863502 for rs28724261
+swapping out rs281863499 for rs71542447
+swapping out rs281863486 for rs2854267
+swapping out rs281863485 for rs9274216
+swapping out rs281863467 for rs201930518
+swapping out rs281863466 for rs17613599
+swapping out rs281863464 for rs71542448
+swapping out rs281863463 for rs9274217
+swapping out rs281863439 for rs58770498
+swapping out rs281863431 for rs17613606
+swapping out rs281863430 for rs9274218
+swapping out rs281863427 for rs115495316
+swapping out rs281863426 for rs9274219
+swapping out rs281863425 for rs9274220
+swapping out rs281863414 for rs2856703
+swapping out rs281863406 for rs41270932
+swapping out rs281863401 for rs9274222
+swapping out rs281863398 for rs72844333
+swapping out rs281863397 for rs200098349
+swapping out rs281863382 for rs74222206
+swapping out rs281863375 for rs9274225
+swapping out rs281863371 for rs41270933
+swapping out rs281863364 for rs17613629
+swapping out rs281863363 for rs17613636
+swapping out rs281863357 for rs9274227
+swapping out rs281863504 for rs71542446
+swapping out rs281863503 for rs41270931
+swapping out rs281863502 for rs28724261
+swapping out rs281863499 for rs71542447
+swapping out rs281863486 for rs2854267
+swapping out rs281863485 for rs9274216
+swapping out rs281863467 for rs201930518
+swapping out rs281863466 for rs17613599
+swapping out rs281863464 for rs71542448
+swapping out rs281863463 for rs9274217
+swapping out rs281863439 for rs58770498
+swapping out rs281863431 for rs17613606
+swapping out rs281863430 for rs9274218
+swapping out rs281863427 for rs115495316
+swapping out rs281863426 for rs9274219
+swapping out rs281863425 for rs9274220
+swapping out rs281863414 for rs2856703
+swapping out rs281863406 for rs41270932
+swapping out rs281863401 for rs9274222
+swapping out rs281863398 for rs72844333
+swapping out rs281863397 for rs200098349
+swapping out rs281863382 for rs74222206
+swapping out rs281863375 for rs9274225
+swapping out rs281863371 for rs41270933
+swapping out rs281863364 for rs17613629
+swapping out rs281863363 for rs17613636
+swapping out rs281863357 for rs9274227
+swapping out rs561074738 for rs9348865
+swapping out rs561074738 for rs9348865
+swapping out rs115980227 for rs80319605
+swapping out rs115980227 for rs80319605
+swapping out rs536547537 for rs80087112
+swapping out rs536547537 for rs80087112
 swapping out rs74898010 for rs73151289
 swapping out rs28970291 for rs4076758
 swapping out rs72629020 for rs36190610
@@ -10,20 +70,63 @@ swapping out rs28970291 for rs4076758
 swapping out rs72629020 for rs36190610
 swapping out rs10546081 for rs9657920
 swapping out rs10546081 for rs9657920
+Merging 'mh01WL-001' --> 'mh01KK-212'
+Merging 'mh01WL-012' --> 'mh01KK-211'
 Merging 'mh01NK-001' --> 'mh01NH-04'
+Merging 'mh01WL-057' --> 'mh01ZHA-012'
+Merging 'mh01WL-096' --> 'mh01FHL-009'
+Merging 'mh01WL-043' --> 'mh01KK-205'
+Merging 'mh10WL-047' --> 'mh10KK-163'
+Merging 'mh10WL-013' --> 'mh10SHY-002'
 Merging 'mh11USC-11pB' --> 'mh11PK-63643'
+Merging 'mh11WL-010' --> 'mh11SHY-001'
+Merging 'mh12WL-016' --> 'mh12SHY-001'
+Merging 'mh13WL-010' --> 'mh13USC-13qA'
+Merging 'mh13WL-040' --> 'mh13KK-215'
 Merging 'mh13SHY-003' --> 'mh13KK-218'
+Merging 'mh13WL-042' --> 'mh13SHY-001'
+Merging 'mh14WL-001' --> 'mh14SHY-003'
+Merging 'mh14WL-009' --> 'mh14SHY-002'
+Merging 'mh15WL-003' --> 'mh15SHY-004'
+Merging 'mh15WL-043' --> 'mh15SHY-001'
+Merging 'mh16WL-004' --> 'mh16KK-011'
 Merging 'mh16FHL-004' --> 'mh16KK-259'
-Merging 'mh02FHL-003' --> 'mh02KK-029'
+Merging 'mh17WL-029' --> 'mh17FHL-005'
+Merging 'mh19WL-009' --> 'mh19USC-19qA'
+Merging 'mh19WL-001' --> 'mh19SHY-001'
+Merging 'mh19WL-023' --> 'mh19USC-19qB'
+Merging 'mh02WL-036' --> 'mh02SHY-003'
+Merging 'mh02WL-035' --> 'mh02SHY-001'
 Merging 'mh02FHL-010' --> 'mh02KK-014'
+Merging 'mh02FHL-003' --> 'mh02KK-029'
+Merging 'mh02WL-029' --> 'mh02KK-029'
+Merging 'mh02WL-103' --> 'mh02SHY-002'
+Merging 'mh02WL-078' --> 'mh02USC-2qB'
 Merging 'mh02FHL-006' --> 'mh02ZHA-013'
+Merging 'mh21WL-004' --> 'mh21FHL-002'
+Merging 'mh22WL-010' --> 'mh22ZBF-001'
 Merging 'mh22USC-22qB' --> 'mh22KK-340'
+Merging 'mh03WL-090' --> 'mh03SHY-005'
 Merging 'mh03SHY-003' --> 'mh03KK-017'
+Merging 'mh03WL-001' --> 'mh03LV-06'
+Merging 'mh03WL-022' --> 'mh03FHL-003'
+Merging 'mh04WL-007' --> 'mh04FHL-005'
+Merging 'mh04WL-006' --> 'mh04ZHA-002'
+Merging 'mh04WL-005' --> 'mh04SHY-001'
+Merging 'mh05WL-019' --> 'mh05KK-178'
 Merging 'mh05KK-020' --> 'mh05KK-023'
 Merging 'mh05KK-121' --> 'mh05KK-120'
+Merging 'mh05WL-063' --> 'mh05SHY-002'
+Merging 'mh05WL-010' --> 'mh05USC-5qC'
+Merging 'mh08WL-026' --> 'mh08SHY-007'
+Merging 'mh09WL-003' --> 'mh09SHY-001'
 Merging 'mh09USC-9pA' --> 'mh09KK-010'
+Merging 'mh09WL-006' --> 'mh09FHL-002'
+Merging 'mh09WL-036' --> 'mh09SHY-004'
+Merging 'mh09WL-004' --> 'mh09KK-153'
 Marker mh01KK-205 as defined in Turchi2019 was defined previously and is redundant
 Marker mh01KK-117 as defined in Turchi2019 was defined previously and is redundant
+Marker mh01KK-117 as defined in Yu2022 was defined previously and is redundant
 Marker mh01NH-04 as defined in Turchi2019 was defined previously and is redundant
 Marker mh01NH-04 as defined in Gandotra2020 was defined previously and is redundant
 Marker mh01NH-04 as defined in Staadig2021 was defined previously and is redundant
@@ -82,6 +185,7 @@ Marker mh20KK-058 as defined in Turchi2019 was defined previously and is redunda
 Marker mh21KK-316 as defined in Turchi2019 was defined previously and is redundant
 Marker mh21KK-320 as defined in Turchi2019 was defined previously and is redundant
 Marker mh21KK-320 as defined in Sun2020 was defined previously and is redundant
+Marker mh21KK-320 as defined in Yu2022 was defined previously and is redundant
 Marker mh21KK-324 as defined in Turchi2019 was defined previously and is redundant
 Marker mh22KK-061 as defined in Turchi2019 was defined previously and is redundant
 Marker mh04ZHA-004 as defined in Kureshi2020 was defined previously and is redundant
@@ -89,9 +193,11 @@ Marker mh07ZHA-003 as defined in Kureshi2020 was defined previously and is redun
 Marker mh16ZHA-009 as defined in Kureshi2020 was defined previously and is redundant
 Marker mh19ZHA-007 as defined in Kureshi2020 was defined previously and is redundant
 Marker mh19ZHA-009 as defined in Kureshi2020 was defined previously and is redundant
+Marker mh01KK-211 as defined in Turchi2019 was defined previously and is redundant
+Marker mh10KK-163 as defined in Turchi2019 was defined previously and is redundant
+Marker mh22ZBF-001 as defined in Yu2022 was defined previously and is redundant
 Marker mh11CP-004 as defined in Chen2019 was defined previously and is redundant
 Marker mh01KK-106 as defined in Turchi2019 was defined previously and is redundant
-Marker mh01KK-211 as defined in Turchi2019 was defined previously and is redundant
 Marker mh02KK-003 as defined in Turchi2019 was defined previously and is redundant
 Marker mh02KK-005 as defined in Turchi2019 was defined previously and is redundant
 Marker mh02KK-073 as defined in Turchi2019 was defined previously and is redundant
@@ -117,7 +223,6 @@ Marker mh09KK-033 as defined in Turchi2019 was defined previously and is redunda
 Marker mh09KK-034 as defined in Turchi2019 was defined previously and is redundant
 Marker mh09KK-152 as defined in Turchi2019 was defined previously and is redundant
 Marker mh10KK-085 as defined in Turchi2019 was defined previously and is redundant
-Marker mh10KK-163 as defined in Turchi2019 was defined previously and is redundant
 Marker mh11KK-036 as defined in Turchi2019 was defined previously and is redundant
 Marker mh11KK-037 as defined in Turchi2019 was defined previously and is redundant
 Marker mh11KK-038 as defined in Turchi2019 was defined previously and is redundant
@@ -189,9 +294,10 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Kidd2018] mh21KK-313 --> mh21KK-313.v1
 [Kidd2018] mh21KK-324 --> mh21KK-324.v1
 [Kidd2018] mh22KK-061 --> mh22KK-061.v1
+[Kidd2018] mh01KK-211 --> mh01KK-211.v1
+[Kidd2018] mh10KK-163 --> mh10KK-163.v1
 [Kidd2018] mh11CP-004 --> mh11CP-004
 [Kidd2018] mh01KK-106 --> mh01KK-106
-[Kidd2018] mh01KK-211 --> mh01KK-211.v1
 [Kidd2018] mh02KK-003 --> mh02KK-003
 [Kidd2018] mh02KK-004 --> mh02KK-004.v1
 [Kidd2018] mh02KK-005 --> mh02KK-005
@@ -216,7 +322,6 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Kidd2018] mh09KK-034 --> mh09KK-034
 [Kidd2018] mh09KK-152 --> mh09KK-152.v1
 [Kidd2018] mh10KK-085 --> mh10KK-085
-[Kidd2018] mh10KK-163 --> mh10KK-163.v1
 [Kidd2018] mh10KK-169 --> mh10KK-169.v1
 [Kidd2018] mh11KK-036 --> mh11KK-036.v1
 [Kidd2018] mh11KK-037 --> mh11KK-037
@@ -245,6 +350,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Kidd2018] mh11KK-040 --> mh11KK-040
 [Kidd2018] mh17KK-055 --> mh17KK-055.v1
 [Kidd2018] mh05KK-120 --> mh05KK-120.v2
+[Voskoboinik2018] mh03LV-06 --> mh03LV-06.v1
 [vanderGaag2018] mh11PK-63643 --> mh11PK-63643.v1
 [Chen2019] mh11CP-004 --> mh11CP-004
 [Turchi2019] mh01KK-001 --> mh01KK-001.v2
@@ -285,8 +391,9 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Turchi2019] mh21KK-320 --> mh21KK-320.v1
 [Turchi2019] mh21KK-324 --> mh21KK-324.v1
 [Turchi2019] mh22KK-061 --> mh22KK-061.v1
-[Turchi2019] mh01KK-106 --> mh01KK-106
 [Turchi2019] mh01KK-211 --> mh01KK-211.v1
+[Turchi2019] mh10KK-163 --> mh10KK-163.v1
+[Turchi2019] mh01KK-106 --> mh01KK-106
 [Turchi2019] mh02KK-003 --> mh02KK-003
 [Turchi2019] mh02KK-004 --> mh02KK-004.v2
 [Turchi2019] mh02KK-005 --> mh02KK-005
@@ -311,7 +418,6 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Turchi2019] mh09KK-034 --> mh09KK-034
 [Turchi2019] mh09KK-152 --> mh09KK-152.v1
 [Turchi2019] mh10KK-085 --> mh10KK-085
-[Turchi2019] mh10KK-163 --> mh10KK-163.v1
 [Turchi2019] mh10KK-169 --> mh10KK-169.v2
 [Turchi2019] mh11KK-036 --> mh11KK-036.v1
 [Turchi2019] mh11KK-037 --> mh11KK-037
@@ -426,17 +532,20 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Gandotra2020] mh22KK-328 --> mh22KK-328.v1
 [Gandotra2020] mh22KK-061 --> mh22KK-061.v2
 [Gandotra2020] mh22KK-340 --> mh22KK-340.v1
+[Jin2020] mh22ZBF-001 --> mh22ZBF-001
 [Kureshi2020] mh04ZHA-004 --> mh04ZHA-004
 [Kureshi2020] mh07ZHA-003 --> mh07ZHA-003
 [Kureshi2020] mh16ZHA-009 --> mh16ZHA-009
 [Kureshi2020] mh19ZHA-007 --> mh19ZHA-007
 [Kureshi2020] mh19ZHA-009 --> mh19ZHA-009
+[Kureshi2020] mh04ZHA-002 --> mh04ZHA-002.v1
 [Sun2020] mh02KK-136 --> mh02KK-136.v1
 [Sun2020] mh13KK-213 --> mh13KK-213.v1
 [Sun2020] mh13KK-218 --> mh13KK-218.v1
 [Sun2020] mh13KK-223 --> mh13KK-223.v1
 [Sun2020] mh16KK-302 --> mh16KK-302.v1
 [Sun2020] mh21KK-320 --> mh21KK-320.v1
+[Sun2020] mh01ZHA-012 --> mh01ZHA-012.v1
 [Sun2020] mh02ZHA-013 --> mh02ZHA-013.v1
 [Sun2020] mh04ZHA-004 --> mh04ZHA-004
 [Sun2020] mh07ZHA-003 --> mh07ZHA-003
@@ -445,6 +554,11 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Sun2020] mh19ZHA-009 --> mh19ZHA-009
 [delaPuente2020] mh09KK-010 --> mh09KK-010.v2
 [delaPuente2020] mh22KK-340 --> mh22KK-340.v2
+[delaPuente2020] mh02USC-2qB --> mh02USC-2qB.v1
+[delaPuente2020] mh05USC-5qC --> mh05USC-5qC.v1
+[delaPuente2020] mh13USC-13qA --> mh13USC-13qA.v1
+[delaPuente2020] mh19USC-19qA --> mh19USC-19qA.v1
+[delaPuente2020] mh19USC-19qB --> mh19USC-19qB.v1
 [delaPuente2020] mh11PK-63643 --> mh11PK-63643.v2
 [Pakstis2021] mh01KK-172 --> mh01KK-172.v3
 [Pakstis2021] mh01KK-001 --> mh01KK-001.v5
@@ -568,12 +682,12 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Staadig2021] mh21KK-324 --> mh21KK-324.v3
 [Staadig2021] mh22KK-061 --> mh22KK-061.v3
 [Staadig2021] mh01KK-211 --> mh01KK-211.v2
+[Staadig2021] mh10KK-163 --> mh10KK-163.v2
 [Staadig2021] mh03KK-007 --> mh03KK-007
 [Staadig2021] mh04KK-011 --> mh04KK-011.v2
 [Staadig2021] mh05KK-022 --> mh05KK-022
 [Staadig2021] mh09KK-033 --> mh09KK-033.v2
 [Staadig2021] mh09KK-152 --> mh09KK-152.v2
-[Staadig2021] mh10KK-163 --> mh10KK-163.v2
 [Staadig2021] mh11KK-036 --> mh11KK-036.v2
 [Staadig2021] mh17KK-054 --> mh17KK-054
 [Staadig2021] mh18KK-285 --> mh18KK-285.v2
@@ -583,10 +697,80 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Staadig2021] mh17KK-055 --> mh17KK-055.v2
 [Wu2021] mh03KK-017 --> mh03KK-017.v2
 [Wu2021] mh13KK-218 --> mh13KK-218.v3
-[Fan2022] mh02KK-029 --> mh02KK-029.v3
+[Wu2021] mh02SHY-001 --> mh02SHY-001.v1
+[Wu2021] mh02SHY-002 --> mh02SHY-002.v1
+[Wu2021] mh02SHY-003 --> mh02SHY-003.v1
+[Wu2021] mh03SHY-005 --> mh03SHY-005.v1
+[Wu2021] mh04SHY-001 --> mh04SHY-001.v1
+[Wu2021] mh05SHY-002 --> mh05SHY-002.v1
+[Wu2021] mh08SHY-007 --> mh08SHY-007.v1
+[Wu2021] mh09SHY-001 --> mh09SHY-001.v1
+[Wu2021] mh09SHY-004 --> mh09SHY-004.v1
+[Wu2021] mh10SHY-002 --> mh10SHY-002.v1
+[Wu2021] mh11SHY-001 --> mh11SHY-001.v1
+[Wu2021] mh12SHY-001 --> mh12SHY-001.v1
+[Wu2021] mh13SHY-001 --> mh13SHY-001.v1
+[Wu2021] mh14SHY-002 --> mh14SHY-002.v1
+[Wu2021] mh14SHY-003 --> mh14SHY-003.v1
+[Wu2021] mh15SHY-001 --> mh15SHY-001.v1
+[Wu2021] mh15SHY-004 --> mh15SHY-004.v1
+[Wu2021] mh19SHY-001 --> mh19SHY-001.v1
+[Fan2022] mh02KK-029 --> mh02KK-029.v4
 [Fan2022] mh02KK-014 --> mh02KK-014.v3
 [Fan2022] mh16KK-259 --> mh16KK-259.v3
 [Fan2022] mh02ZHA-013 --> mh02ZHA-013.v2
+[Fan2022] mh01FHL-009 --> mh01FHL-009.v2
+[Fan2022] mh03FHL-003 --> mh03FHL-003.v2
+[Fan2022] mh04FHL-005 --> mh04FHL-005.v2
+[Fan2022] mh09FHL-002 --> mh09FHL-002.v2
+[Fan2022] mh17FHL-005 --> mh17FHL-005.v2
+[Fan2022] mh21FHL-002 --> mh21FHL-002.v2
+[Yu2022] mh01KK-205 --> mh01KK-205.v5
+[Yu2022] mh01KK-212 --> mh01KK-212.v3
+[Yu2022] mh01KK-117 --> mh01KK-117.v1
+[Yu2022] mh02KK-029 --> mh02KK-029.v3
+[Yu2022] mh05KK-178 --> mh05KK-178.v3
+[Yu2022] mh09KK-153 --> mh09KK-153.v4
+[Yu2022] mh13KK-215 --> mh13KK-215.v3
+[Yu2022] mh16KK-011 --> mh16KK-011.v3
+[Yu2022] mh21KK-320 --> mh21KK-320.v1
+[Yu2022] mh01ZHA-012 --> mh01ZHA-012.v2
+[Yu2022] mh02SHY-001 --> mh02SHY-001.v2
+[Yu2022] mh02SHY-002 --> mh02SHY-002.v2
+[Yu2022] mh02SHY-003 --> mh02SHY-003.v2
+[Yu2022] mh03SHY-005 --> mh03SHY-005.v2
+[Yu2022] mh04SHY-001 --> mh04SHY-001.v2
+[Yu2022] mh05SHY-002 --> mh05SHY-002.v2
+[Yu2022] mh08SHY-007 --> mh08SHY-007.v2
+[Yu2022] mh09SHY-001 --> mh09SHY-001.v2
+[Yu2022] mh09SHY-004 --> mh09SHY-004.v2
+[Yu2022] mh10SHY-002 --> mh10SHY-002.v2
+[Yu2022] mh11SHY-001 --> mh11SHY-001.v2
+[Yu2022] mh12SHY-001 --> mh12SHY-001.v2
+[Yu2022] mh13SHY-001 --> mh13SHY-001.v2
+[Yu2022] mh14SHY-002 --> mh14SHY-002.v2
+[Yu2022] mh14SHY-003 --> mh14SHY-003.v2
+[Yu2022] mh15SHY-001 --> mh15SHY-001.v2
+[Yu2022] mh15SHY-004 --> mh15SHY-004.v2
+[Yu2022] mh19SHY-001 --> mh19SHY-001.v2
+[Yu2022] mh01KK-211 --> mh01KK-211.v3
+[Yu2022] mh01FHL-009 --> mh01FHL-009.v1
+[Yu2022] mh02USC-2qB --> mh02USC-2qB.v2
+[Yu2022] mh03LV-06 --> mh03LV-06.v2
+[Yu2022] mh03FHL-003 --> mh03FHL-003.v1
+[Yu2022] mh04ZHA-002 --> mh04ZHA-002.v2
+[Yu2022] mh04FHL-005 --> mh04FHL-005.v1
+[Yu2022] mh05USC-5qC --> mh05USC-5qC.v2
+[Yu2022] mh06WL-069 --> mh06WL-069.v2
+[Yu2022] mh09FHL-002 --> mh09FHL-002.v1
+[Yu2022] mh10KK-163 --> mh10KK-163.v3
+[Yu2022] mh13USC-13qA --> mh13USC-13qA.v2
+[Yu2022] mh17FHL-005 --> mh17FHL-005.v1
+[Yu2022] mh19USC-19qA --> mh19USC-19qA.v2
+[Yu2022] mh19USC-19qB --> mh19USC-19qB.v2
+[Yu2022] mh21FHL-002 --> mh21FHL-002.v1
+[Yu2022] mh22WL-016 --> mh22WL-016.v2
+[Yu2022] mh22ZBF-001 --> mh22ZBF-001
 [Hiroaki2015]
   - 26 marker definitions based on 80 SNPs
   - 1 population sample
@@ -634,6 +818,8 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
   - frequencies for 11135 distinct haplotypes in 31 populations; 164453 total frequencies
 [Fan2022]
   - 22 marker definitions based on 338 SNPs and 25 indels
+[Yu2022]
+  - 703 marker definitions based on 3237 SNPs
 [Zou2022]
   - 21 marker definitions based on 42 SNPs
   - 10 population samples
