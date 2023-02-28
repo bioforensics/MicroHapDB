@@ -95,12 +95,10 @@ def compile_sample_populations(vcf_path, pop_table, pedigree, dofilters=True):
     vcf = VariantFile(vcf_path)
     samples = set(vcf.header.samples)
     superpops = dict(zip(pop_table["Population code"], pop_table["Superpopulation code"]))
-    admixed = ("ACB", "ASW", "CLM", "MXL", "PEL", "PUR")
     if dofilters:
         pedigree = pedigree[pedigree["Individual ID"].isin(samples)]
         pedigree = pedigree[~pedigree["Paternal ID"].isin(samples)]
         pedigree = pedigree[~pedigree["Maternal ID"].isin(samples)]
-        pedigree = pedigree[~pedigree["Population"].isin(admixed)]
     pedigree["Superpopulation"] = pedigree["Population"].map(superpops)
     pedigree["Gender"] = pedigree["Gender"].map({1: "male", 2: "female"})
     pedigree = pedigree[["Individual ID", "Gender", "Population", "Superpopulation"]].rename(
@@ -131,14 +129,21 @@ def compile_frequencies(haplotypes):
 
 
 def list_frequencies(haplotypes):
+    admixed = ("ACB", "ASW", "CLM", "MXL", "PEL", "PUR")
     pop_tallies = defaultdict(lambda: defaultdict(Counter))
     agg_tallies = defaultdict(Counter)
     for n, row in haplotypes.iterrows():
         for haplokey in ("Haplotype1", "Haplotype2"):
             mhallele = [row[haplokey]]
             if not pd.isna(mhallele):
-                pop_tallies[row["Marker"]][row["Superpopulation"]].update(mhallele)
+                # The following line could arguably be moved into the conditional block below to
+                # excluded admixed individuals from the aggregate haplotype tallies. But as of
+                # today, I think including them in the aggregate totals is appropriate.
+                # -- DSS, 2023-02-28.
                 agg_tallies[row["Marker"]].update(mhallele)
+                pop_tallies[row["Marker"]][row["Population"]].update(mhallele)
+                if row["Population"] not in admixed:
+                    pop_tallies[row["Marker"]][row["Superpopulation"]].update(mhallele)
     for marker, popcounts in sorted(pop_tallies.items()):
         for mhallele, agg_count in sorted(agg_tallies[marker].items()):
             freq = agg_count / sum(agg_tallies[marker].values())

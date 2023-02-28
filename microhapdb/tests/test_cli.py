@@ -86,7 +86,7 @@ def test_main_pop_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 99
+    assert len(outlines) == 1 + 125
 
 
 def test_main_pop_detail(capsys):
@@ -139,25 +139,25 @@ def test_main_marker_query(capsys):
     terminal = capsys.readouterr()
     exp_out = """
          Name  NumVars  Extent Chrom    Start      End    Ae                   Source
- mh19USC-19pA        3      38 chr19   561779   561816 2.913           delaPuente2020
-   mh19KK-056        2     201 chr19  4852125  4852325 2.594                 Kidd2018
-  mh19SHY-001        8     185 chr19  7698913  7699097 6.347                   Wu2021
-   mh19CP-007        3      42 chr19 14310740 14310781 3.254                 Kidd2018
- mh19USC-19pB        5      66 chr19 16040865 16040930 3.799           delaPuente2020
-  mh19ZHA-006        6      63 chr19 20579863 20579925 3.167                  Sun2020
-    mh19NH-23        3      95 chr19 22052724 22052818 2.024              Hiroaki2015
-mh19KK-299.v1        5     154 chr19 22546698 22546851 4.060      Kidd2018;Turchi2019
-mh19KK-299.v2        7     154 chr19 22546698 22546851 4.073             Gandotra2020
-mh19KK-299.v4       10     182 chr19 22546698 22546879 4.073              Pakstis2021
-mh19KK-299.v3        3      63 chr19 22546749 22546811 3.603              Staadig2021
-  mh19ZHA-007        4     141 chr19 28397316 28397456 4.428      Kureshi2020;Sun2020
- mh19USC-19qA        4      46 chr19 33273772 33273817 3.523           delaPuente2020
-   mh19KK-301        4      64 chr19 50938488 50938551 2.624      Kidd2018;Turchi2019
-   mh19KK-300        7     182 chr19 50947787 50947968 5.821 Gandotra2020;Pakstis2021
-   mh19KK-057        3     115 chr19 51654949 51655063 2.539      Kidd2018;Turchi2019
-  mh19ZHA-009        5     178 chr19 53129073 53129250 4.347      Kureshi2020;Sun2020
- mh19USC-19qB        3      27 chr19 53714388 53714414 4.933           delaPuente2020
-  mh19SHY-002        9     165 chr19 55588421 55588585 3.613                   Wu2021
+ mh19USC-19pA        3      38 chr19   561779   561816 2.924           delaPuente2020
+   mh19KK-056        2     201 chr19  4852125  4852325 2.608                 Kidd2018
+  mh19SHY-001        8     185 chr19  7698913  7699097 6.469                   Wu2021
+   mh19CP-007        3      42 chr19 14310740 14310781 3.271                 Kidd2018
+ mh19USC-19pB        5      66 chr19 16040865 16040930 3.866           delaPuente2020
+  mh19ZHA-006        6      63 chr19 20579863 20579925 3.175                  Sun2020
+    mh19NH-23        3      95 chr19 22052724 22052818 2.032              Hiroaki2015
+mh19KK-299.v1        5     154 chr19 22546698 22546851 4.236      Kidd2018;Turchi2019
+mh19KK-299.v2        7     154 chr19 22546698 22546851 4.253             Gandotra2020
+mh19KK-299.v4       10     182 chr19 22546698 22546879 4.253              Pakstis2021
+mh19KK-299.v3        3      63 chr19 22546749 22546811 3.771              Staadig2021
+  mh19ZHA-007        4     141 chr19 28397316 28397456 4.435      Kureshi2020;Sun2020
+ mh19USC-19qA        4      46 chr19 33273772 33273817 3.660           delaPuente2020
+   mh19KK-301        4      64 chr19 50938488 50938551 2.577      Kidd2018;Turchi2019
+   mh19KK-300        7     182 chr19 50947787 50947968 5.407 Gandotra2020;Pakstis2021
+   mh19KK-057        3     115 chr19 51654949 51655063 2.498      Kidd2018;Turchi2019
+  mh19ZHA-009        5     178 chr19 53129073 53129250 4.286      Kureshi2020;Sun2020
+ mh19USC-19qB        3      27 chr19 53714388 53714414 4.912           delaPuente2020
+  mh19SHY-002        9     165 chr19 55588421 55588585 3.544                   Wu2021
 """
     obs_out = terminal.out
     print(obs_out)
@@ -237,9 +237,9 @@ def test_main_marker_panel(capsys):
     terminal = capsys.readouterr()
     testout = """
       Name  NumVars  Extent Chrom     Start       End    Ae   Source
-mh06KK-101        2     187  chr6 170280715 170280901 2.196 Kidd2018
-mh15KK-058        3     303 chr15  28120285  28120587 3.343 Kidd2018
-mh20KK-035        2      31 chr20   2088699   2088729 2.695 Kidd2018
+mh06KK-101        2     187  chr6 170280715 170280901 2.120 Kidd2018
+mh15KK-058        3     303 chr15  28120285  28120587 3.353 Kidd2018
+mh20KK-035        2      31 chr20   2088699   2088729 2.703 Kidd2018
 """
     print(terminal.out)
     assert testout.strip() == terminal.out.strip()
@@ -340,9 +340,9 @@ def test_main_marker_bad_code():
     [
         ("--population=Swedish", None, None, 187),
         ("--population=SA000009J", "--marker=mh13KK-218.v1", None, 15),
-        (None, "--marker=mh13KK-218.v1", "--allele=C|T|C|T", 103),
-        (None, "--marker=mh14PK-72639", None, 86),
-        (None, None, None, 124911),
+        (None, "--marker=mh13KK-218.v1", "--allele=C|T|C|T", 129),
+        (None, "--marker=mh14PK-72639", None, 227),
+        (None, None, None, 253123),
     ],
 )
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
@@ -389,8 +389,8 @@ def test_lookup(capsys):
     print(out)
     expected = """
          Name  NumVars  Extent Chrom  Start    End                   Positions                 Positions37                                     RSIDs              Source    Ae
-mh09KK-033.v1        3      78  chr9 680714 680791        680714;680763;680791        680714;680763;680791           rs10815466;rs9408671;rs17431629 Kidd2018;Turchi2019 3.037
-mh09KK-033.v2        4      78  chr9 680714 680791 680714;680763;680768;680791 680714;680763;680768;680791 rs10815466;rs9408671;rs9408672;rs17431629         Staadig2021 3.066
+mh09KK-033.v1        3      78  chr9 680714 680791        680714;680763;680791        680714;680763;680791           rs10815466;rs9408671;rs17431629 Kidd2018;Turchi2019 3.150
+mh09KK-033.v2        4      78  chr9 680714 680791 680714;680763;680768;680791 680714;680763;680768;680791 rs10815466;rs9408671;rs9408672;rs17431629         Staadig2021 3.177
 """
     observed = out
     assert observed.strip() == expected.strip()
@@ -593,9 +593,9 @@ def test_cli_locus_name(capsys):
     observed = terminal.out
     expected = """
         Name  NumVars  Extent Chrom     Start       End    Ae                           Source
-mh01NH-04.v2        4     280  chr1 230684605 230684884 4.006 Kidd2018;Turchi2019;Gandotra2020
-mh01NH-04.v3        5     280  chr1 230684605 230684884 4.006                      Pakstis2021
-mh01NH-04.v1        3      53  chr1 230684832 230684884 3.544          Hiroaki2015;Staadig2021
+mh01NH-04.v2        4     280  chr1 230684605 230684884 4.029 Kidd2018;Turchi2019;Gandotra2020
+mh01NH-04.v3        5     280  chr1 230684605 230684884 4.029                      Pakstis2021
+mh01NH-04.v1        3      53  chr1 230684832 230684884 3.566          Hiroaki2015;Staadig2021
     """
     print(observed)
     assert observed.strip() == expected.strip()

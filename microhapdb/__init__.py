@@ -42,21 +42,21 @@ def retrieve_by_id(ident):
 
     >>> retrieve_by_id("mh17KK-014")
                Name  NumVars  Extent  Chrom    Start      End                Positions              Positions37                          RSIDs    Source     Ae
-    608  mh17KK-014        3      37  chr17  4497061  4497097  4497061;4497089;4497097  4400356;4400384;4400392  rs333113;rs8074965;rs11657785  Kidd2018  3.914
+    608  mh17KK-014        3      37  chr17  4497061  4497097  4497061;4497089;4497097  4400356;4400384;4400392  rs333113;rs8074965;rs11657785  Kidd2018  3.923
     >>> retrieve_by_id("rs8074965")
                Name  NumVars  Extent  Chrom    Start      End                Positions              Positions37                          RSIDs    Source     Ae
-    608  mh17KK-014        3      37  chr17  4497061  4497097  4497061;4497089;4497097  4400356;4400384;4400392  rs333113;rs8074965;rs11657785  Kidd2018  3.914
+    608  mh17KK-014        3      37  chr17  4497061  4497097  4497061;4497089;4497097  4400356;4400384;4400392  rs333113;rs8074965;rs11657785  Kidd2018  3.923
     >>> retrieve_by_id("Chagga")
                    ID    Name        Source
-    12  mMHseq-Chagga  Chagga  Gandotra2020
-    13      SA000487T  Chagga      Kidd2018
+    16  mMHseq-Chagga  Chagga  Gandotra2020
+    17      SA000487T  Chagga      Kidd2018
     >>> retrieve_by_id("Asia")
                      ID  Name          Source
-    7  MHDBP-936bc36f79  Asia  vanderGaag2018
+    9  MHDBP-936bc36f79  Asia  vanderGaag2018
     >>> retrieve_by_id("Japanese")
                       ID      Name       Source
-    41  MHDBP-63967b883e  Japanese  Hiroaki2015
-    42         SA000010B  Japanese     Kidd2018
+    54  MHDBP-63967b883e  Japanese  Hiroaki2015
+    55         SA000010B  Japanese     Kidd2018
     """
 
     def id_in_series(ident, series):

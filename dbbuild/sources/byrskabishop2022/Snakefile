@@ -14,6 +14,12 @@ import pandas as pd
 from util import collect_haplotypes, compile_sample_populations, compile_frequencies, compute_aes
 
 
+rule all:
+    input:
+        "frequency.csv",
+        "marker-aes.csv",
+
+
 rule aes:
     input:
         freqs="frequency.csv",

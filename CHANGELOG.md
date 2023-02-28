@@ -7,9 +7,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Italian population frequencies for 98 markers from Turchi et al 2019 (see #107).
 - 21 marker definitions and population frequences from Zou et al 2022 (see #109).
+- Check for overlapping microhaps from different sources during the database build (#112).
 
 ### Changed
-- Overhaul of the marker table structure and database build procedure (see #106).
+- Overhaul of the marker table structure and database build procedure (see #106, #111, #112).
+- Use Byrska-Bishop 2022 instead of Auton 2015 for main frequency and Ae calculations (see #106, #112, #114).
 
 
 ## [0.8.2] 2022-11-21
