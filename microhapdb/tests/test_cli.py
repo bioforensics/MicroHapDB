@@ -422,6 +422,7 @@ def test_ae_pop_bad_pop():
     args = get_parser().parse_args(arglist)
     with pytest.raises(ValueError, match=r'no Ae data for population "ABC"'):
         microhapdb.cli.main(args)
+    microhapdb.set_ae_population("1KGP")
 
 
 def test_marker_offsets_cli(capsys):
@@ -583,3 +584,18 @@ def test_cli_bad_ids(arglist, capsys):
     microhapdb.cli.main(args)
     terminal = capsys.readouterr()
     assert terminal.out == ""
+
+
+def test_cli_locus_name(capsys):
+    args = get_parser().parse_args(["marker", "mh01NH-04"])
+    microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    observed = terminal.out
+    expected = """
+        Name  NumVars  Extent Chrom     Start       End    Ae                           Source
+mh01NH-04.v2        4     280  chr1 230684605 230684884 4.006 Kidd2018;Turchi2019;Gandotra2020
+mh01NH-04.v3        5     280  chr1 230684605 230684884 4.006                      Pakstis2021
+mh01NH-04.v1        3      53  chr1 230684832 230684884 3.544          Hiroaki2015;Staadig2021
+    """
+    print(observed)
+    assert observed.strip() == expected.strip()

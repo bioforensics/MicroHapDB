@@ -599,3 +599,37 @@ def test_from_id_no_such_marker():
 def test_from_id_no_such_marker():
     with pytest.raises(ValueError, match=r"no such marker 'BoGUSid'"):
         Marker.from_id("BoGUSid")
+
+
+@pytest.mark.parametrize(
+    "query,result",
+    [
+        (
+            ["mh02FHL-006", "mh10FHL-007", "mh21FHL-002"],
+            ["mh02ZHA-013.v1", "mh02ZHA-013.v2", "mh10FHL-007", "mh21FHL-002"],
+        ),
+        (["mh11USC-11pB"], ["mh11PK-63643.v1", "mh11PK-63643.v2"]),
+        (["mh05KK-020"], ["mh05KK-023.v1", "mh05KK-023.v2", "mh05KK-023.v3", "mh05KK-023.v4"]),
+    ],
+)
+def test_standardize_merged_designators(query, result):
+    assert Marker.standardize_ids(query) == result
+
+
+@pytest.mark.parametrize(
+    "locus,num_markers",
+    [
+        ("mh01KK-001", 5),
+        ("mh13KK-225", 4),
+        ("mh06KK-008", 3),
+        ("mh02KK-031", 2),
+        ("mh10KK-088", 1),
+    ],
+)
+def test_standardize_locus_names(locus, num_markers):
+    marker_names = Marker.standardize_ids([locus])
+    assert len(marker_names) == num_markers
+
+
+def test_standardize_ids_incomplete_prefixes():
+    assert Marker.standardize_ids(["mh01"]) == []
