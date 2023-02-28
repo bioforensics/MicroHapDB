@@ -29,6 +29,7 @@ def compile_variant_map(markers):
 
 markers = read_table("marker.csv")
 markers["Ae"] = None
+merged = read_table("merged.csv")
 populations = read_table("population.csv")
 frequencies = read_table("frequency.csv")
 indels = read_table("indels.csv")

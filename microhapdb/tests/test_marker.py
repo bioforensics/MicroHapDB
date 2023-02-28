@@ -45,7 +45,7 @@ def test_assumptions():
         20,  # Kureshi2020
         90,  # Pakstis2021
         45,  # Staadig2021
-        25,  # Sun2020
+        36,  # Sun2020
         89,  # Turchi2019
         10,  # Voskoboinik2018
         59,  # Wu2021
@@ -56,8 +56,10 @@ def test_assumptions():
     redundant_markers_per_source = [
         1,  # Chen2019
         2,  # Gandotra2020
+        1,  # Kidd2018
         13,  # Pakstis2021
         8,  # Staadig2021
+        11,  # Sun2020
         84,  # Turchi2019
     ]
     expected_markers = sum(total_markers_per_source) - sum(redundant_markers_per_source)
@@ -76,7 +78,7 @@ def test_markers():
     >>> print(marker.fasta)
     >mh18CP-005 GRCh38:chr18:8892846-8892926 variants=18,47,50,61
     GCAGATGTCCTTATACGCAGTGGTGTTAGTTTTAGAAACTGATTCTACGGGTATGCTTGCTCGTGTGTAAAATTATTCAT
-    >>> for marker in Marker.from_query("Source == 'vanderGaag2018'"):
+    >>> for marker in Marker.from_query("Source.str.contains('vanderGaag2018')"):
     ...   print(marker)
     mh06PK-24844 (chr6:13861393-13861447)
     mh06PK-25713 (chr6:31196950-31197002)
@@ -84,7 +86,7 @@ def test_markers():
     mh08PK-46625 (chr8:1194353-1194372)
     mh10PK-62104 (chr10:127392566-127392633)
     mh11PK-62906 (chr11:247980-248036)
-    mh11PK-63643 (chr11:34415815-34415851)
+    mh11PK-63643.v1 (chr11:34415815-34415851)
     mh14PK-72639 (chr14:32203274-32203324)
     mh15PK-75170 (chr15:24802314-24802380)
     mh16PK-83362 (chr16:77999243-77999292)
@@ -94,7 +96,7 @@ def test_markers():
     mh21PK-MX1s (chr21:41464745-41464824)
     mh22PK-104638 (chr22:44857883-44857955)
     """
-    assert microhapdb.markers.shape == (754, 11)
+    assert microhapdb.markers.shape == (753, 11)
     result = microhapdb.markers[microhapdb.markers.Chrom == "chr19"]
     assert len(result) == 19
     varids = microhapdb.variantmap[microhapdb.variantmap.Marker.isin(result.Name)].Variant.unique()
@@ -235,7 +237,6 @@ Marker Definition
         - C|G|G|G|A|T
         - C|G|G|G|G|T
         - T|A|C|G|T|C
-        - T|A|G|G|A|T
         - T|A|G|G|T|C
 
 
@@ -251,7 +252,6 @@ C.......G......................G.........C............A........T
 C.......G......................G.........G............A........T
 C.......G......................G.........G............G........T
 T.......A......................C.........G............T........C
-T.......A......................G.........G............A........T
 T.......A......................G.........G............T........C
 --------------------------------------------------------------------------------
 """
@@ -337,10 +337,7 @@ Marker Definition
     Observed haplotypes
         - C|A|A|G|A|T
         - C|A|G|C|A|C
-        - C|A|G|C|A|T
         - C|A|G|C|T|C
-        - C|G|A|G|A|T
-        - T|A|G|C|T|C
         - T|G|A|G|A|T
 
 
@@ -354,10 +351,7 @@ TCAGGTGTTAGCAACGAGGATTTAGAAAAAACAGGTACAAATTATTT
 AGCCTAGCCAAGAGCTGTCAGGTGTTAGCAACGAGGATTTAGAAAAAACAGGTACAAATTATTTCATCACCCAGGTAGTGA
 .................C..............A...A....G...............A.....T.................
 .................C..............A...G....C...............A.....C.................
-.................C..............A...G....C...............A.....T.................
 .................C..............A...G....C...............T.....C.................
-.................C..............G...A....G...............A.....T.................
-.................T..............A...G....C...............T.....C.................
 .................T..............G...A....G...............A.....T.................
 --------------------------------------------------------------------------------
 
@@ -605,3 +599,37 @@ def test_from_id_no_such_marker():
 def test_from_id_no_such_marker():
     with pytest.raises(ValueError, match=r"no such marker 'BoGUSid'"):
         Marker.from_id("BoGUSid")
+
+
+@pytest.mark.parametrize(
+    "query,result",
+    [
+        (
+            ["mh02FHL-006", "mh10FHL-007", "mh21FHL-002"],
+            ["mh02ZHA-013.v1", "mh02ZHA-013.v2", "mh10FHL-007", "mh21FHL-002"],
+        ),
+        (["mh11USC-11pB"], ["mh11PK-63643.v1", "mh11PK-63643.v2"]),
+        (["mh05KK-020"], ["mh05KK-023.v1", "mh05KK-023.v2", "mh05KK-023.v3", "mh05KK-023.v4"]),
+    ],
+)
+def test_standardize_merged_designators(query, result):
+    assert Marker.standardize_ids(query) == result
+
+
+@pytest.mark.parametrize(
+    "locus,num_markers",
+    [
+        ("mh01KK-001", 5),
+        ("mh13KK-225", 4),
+        ("mh06KK-008", 3),
+        ("mh02KK-031", 2),
+        ("mh10KK-088", 1),
+    ],
+)
+def test_standardize_locus_names(locus, num_markers):
+    marker_names = Marker.standardize_ids([locus])
+    assert len(marker_names) == num_markers
+
+
+def test_standardize_ids_incomplete_prefixes():
+    assert Marker.standardize_ids(["mh01"]) == []

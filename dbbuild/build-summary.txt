@@ -10,12 +10,26 @@ swapping out rs28970291 for rs4076758
 swapping out rs72629020 for rs36190610
 swapping out rs10546081 for rs9657920
 swapping out rs10546081 for rs9657920
+Merging 'mh01NK-001' --> 'mh01NH-04'
+Merging 'mh11USC-11pB' --> 'mh11PK-63643'
+Merging 'mh13SHY-003' --> 'mh13KK-218'
+Merging 'mh16FHL-004' --> 'mh16KK-259'
+Merging 'mh02FHL-003' --> 'mh02KK-029'
+Merging 'mh02FHL-010' --> 'mh02KK-014'
+Merging 'mh02FHL-006' --> 'mh02ZHA-013'
+Merging 'mh22USC-22qB' --> 'mh22KK-340'
+Merging 'mh03SHY-003' --> 'mh03KK-017'
+Merging 'mh05KK-020' --> 'mh05KK-023'
+Merging 'mh05KK-121' --> 'mh05KK-120'
+Merging 'mh09USC-9pA' --> 'mh09KK-010'
 Marker mh01KK-205 as defined in Turchi2019 was defined previously and is redundant
 Marker mh01KK-117 as defined in Turchi2019 was defined previously and is redundant
-Marker mh01NK-001 as defined in Turchi2019 was defined previously and is redundant
-Marker mh01NK-001 as defined in Gandotra2020 was defined previously and is redundant
+Marker mh01NH-04 as defined in Turchi2019 was defined previously and is redundant
+Marker mh01NH-04 as defined in Gandotra2020 was defined previously and is redundant
+Marker mh01NH-04 as defined in Staadig2021 was defined previously and is redundant
 Marker mh02KK-134 as defined in Turchi2019 was defined previously and is redundant
 Marker mh02KK-136 as defined in Turchi2019 was defined previously and is redundant
+Marker mh02KK-136 as defined in Sun2020 was defined previously and is redundant
 Marker mh02KK-136 as defined in Staadig2021 was defined previously and is redundant
 Marker mh03KK-150 as defined in Turchi2019 was defined previously and is redundant
 Marker mh03KK-150 as defined in Gandotra2020 was defined previously and is redundant
@@ -23,6 +37,7 @@ Marker mh04KK-010 as defined in Turchi2019 was defined previously and is redunda
 Marker mh04KK-010 as defined in Staadig2021 was defined previously and is redundant
 Marker mh04KK-013 as defined in Turchi2019 was defined previously and is redundant
 Marker mh05KK-170 as defined in Turchi2019 was defined previously and is redundant
+Marker mh05KK-023 as defined in Turchi2019 was defined previously and is redundant
 Marker mh06KK-104 as defined in Pakstis2021 was defined previously and is redundant
 Marker mh09KK-010 as defined in Pakstis2021 was defined previously and is redundant
 Marker mh09KK-153 as defined in Turchi2019 was defined previously and is redundant
@@ -38,17 +53,21 @@ Marker mh12KK-046 as defined in Turchi2019 was defined previously and is redunda
 Marker mh12KK-046 as defined in Staadig2021 was defined previously and is redundant
 Marker mh12KK-209 as defined in Pakstis2021 was defined previously and is redundant
 Marker mh13KK-213 as defined in Turchi2019 was defined previously and is redundant
+Marker mh13KK-213 as defined in Sun2020 was defined previously and is redundant
 Marker mh13KK-217 as defined in Turchi2019 was defined previously and is redundant
 Marker mh13KK-218 as defined in Turchi2019 was defined previously and is redundant
+Marker mh13KK-218 as defined in Sun2020 was defined previously and is redundant
 Marker mh13KK-218 as defined in Pakstis2021 was defined previously and is redundant
 Marker mh13KK-225 as defined in Turchi2019 was defined previously and is redundant
 Marker mh13KK-221 as defined in Pakstis2021 was defined previously and is redundant
 Marker mh13KK-223 as defined in Turchi2019 was defined previously and is redundant
+Marker mh13KK-223 as defined in Sun2020 was defined previously and is redundant
 Marker mh14KK-048 as defined in Turchi2019 was defined previously and is redundant
 Marker mh15KK-067 as defined in Turchi2019 was defined previously and is redundant
 Marker mh15KK-066 as defined in Turchi2019 was defined previously and is redundant
 Marker mh16KK-049 as defined in Turchi2019 was defined previously and is redundant
 Marker mh16KK-302 as defined in Turchi2019 was defined previously and is redundant
+Marker mh16KK-302 as defined in Sun2020 was defined previously and is redundant
 Marker mh16KK-255 as defined in Turchi2019 was defined previously and is redundant
 Marker mh17KK-272 as defined in Turchi2019 was defined previously and is redundant
 Marker mh17KK-272 as defined in Pakstis2021 was defined previously and is redundant
@@ -62,8 +81,14 @@ Marker mh20KK-307 as defined in Pakstis2021 was defined previously and is redund
 Marker mh20KK-058 as defined in Turchi2019 was defined previously and is redundant
 Marker mh21KK-316 as defined in Turchi2019 was defined previously and is redundant
 Marker mh21KK-320 as defined in Turchi2019 was defined previously and is redundant
+Marker mh21KK-320 as defined in Sun2020 was defined previously and is redundant
 Marker mh21KK-324 as defined in Turchi2019 was defined previously and is redundant
 Marker mh22KK-061 as defined in Turchi2019 was defined previously and is redundant
+Marker mh04ZHA-004 as defined in Kureshi2020 was defined previously and is redundant
+Marker mh07ZHA-003 as defined in Kureshi2020 was defined previously and is redundant
+Marker mh16ZHA-009 as defined in Kureshi2020 was defined previously and is redundant
+Marker mh19ZHA-007 as defined in Kureshi2020 was defined previously and is redundant
+Marker mh19ZHA-009 as defined in Kureshi2020 was defined previously and is redundant
 Marker mh11CP-004 as defined in Chen2019 was defined previously and is redundant
 Marker mh01KK-106 as defined in Turchi2019 was defined previously and is redundant
 Marker mh01KK-211 as defined in Turchi2019 was defined previously and is redundant
@@ -82,7 +107,6 @@ Marker mh04KK-017 as defined in Turchi2019 was defined previously and is redunda
 Marker mh04KK-074 as defined in Turchi2019 was defined previously and is redundant
 Marker mh05KK-022 as defined in Turchi2019 was defined previously and is redundant
 Marker mh05KK-022 as defined in Staadig2021 was defined previously and is redundant
-Marker mh05KK-023 as defined in Turchi2019 was defined previously and is redundant
 Marker mh05KK-062 as defined in Turchi2019 was defined previously and is redundant
 Marker mh06KK-025 as defined in Turchi2019 was defined previously and is redundant
 Marker mh06KK-026 as defined in Turchi2019 was defined previously and is redundant
@@ -118,11 +142,12 @@ Marker mh22KK-064 as defined in Turchi2019 was defined previously and is redunda
 Marker mh22KK-069 as defined in Turchi2019 was defined previously and is redundant
 Marker mh22KK-303 as defined in Turchi2019 was defined previously and is redundant
 Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redundant
+[Hiroaki2015] mh01NH-04 --> mh01NH-04.v1
 [Kidd2018] mh01KK-172 --> mh01KK-172.v1
 [Kidd2018] mh01KK-001 --> mh01KK-001.v1
 [Kidd2018] mh01KK-205 --> mh01KK-205.v1
 [Kidd2018] mh01KK-117 --> mh01KK-117.v1
-[Kidd2018] mh01NK-001 --> mh01NK-001.v1
+[Kidd2018] mh01NH-04 --> mh01NH-04.v2
 [Kidd2018] mh02KK-138 --> mh02KK-138.v1
 [Kidd2018] mh02KK-134 --> mh02KK-134.v1
 [Kidd2018] mh02KK-136 --> mh02KK-136.v1
@@ -131,7 +156,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Kidd2018] mh04KK-030 --> mh04KK-030.v1
 [Kidd2018] mh04KK-013 --> mh04KK-013.v1
 [Kidd2018] mh05KK-170 --> mh05KK-170.v1
-[Kidd2018] mh05KK-020 --> mh05KK-020.v1
+[Kidd2018] mh05KK-023 --> mh05KK-023.v2
 [Kidd2018] mh06KK-008 --> mh06KK-008.v1
 [Kidd2018] mh08KK-039 --> mh08KK-039.v1
 [Kidd2018] mh09KK-161 --> mh09KK-161.v1
@@ -181,7 +206,6 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Kidd2018] mh04KK-017 --> mh04KK-017
 [Kidd2018] mh04KK-074 --> mh04KK-074
 [Kidd2018] mh05KK-022 --> mh05KK-022
-[Kidd2018] mh05KK-023 --> mh05KK-023
 [Kidd2018] mh05KK-062 --> mh05KK-062
 [Kidd2018] mh06KK-025 --> mh06KK-025
 [Kidd2018] mh06KK-026 --> mh06KK-026
@@ -220,17 +244,20 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Kidd2018] mh09KK-035 --> mh09KK-035.v1
 [Kidd2018] mh11KK-040 --> mh11KK-040
 [Kidd2018] mh17KK-055 --> mh17KK-055.v1
+[Kidd2018] mh05KK-120 --> mh05KK-120.v2
+[vanderGaag2018] mh11PK-63643 --> mh11PK-63643.v1
 [Chen2019] mh11CP-004 --> mh11CP-004
 [Turchi2019] mh01KK-001 --> mh01KK-001.v2
 [Turchi2019] mh01KK-205 --> mh01KK-205.v1
 [Turchi2019] mh01KK-117 --> mh01KK-117.v1
-[Turchi2019] mh01NK-001 --> mh01NK-001.v1
+[Turchi2019] mh01NH-04 --> mh01NH-04.v2
 [Turchi2019] mh02KK-134 --> mh02KK-134.v1
 [Turchi2019] mh02KK-136 --> mh02KK-136.v1
 [Turchi2019] mh03KK-150 --> mh03KK-150.v1
 [Turchi2019] mh04KK-010 --> mh04KK-010.v1
 [Turchi2019] mh04KK-013 --> mh04KK-013.v1
 [Turchi2019] mh05KK-170 --> mh05KK-170.v1
+[Turchi2019] mh05KK-023 --> mh05KK-023.v1
 [Turchi2019] mh09KK-153 --> mh09KK-153.v1
 [Turchi2019] mh09KK-157 --> mh09KK-157.v1
 [Turchi2019] mh11KK-180 --> mh11KK-180.v1
@@ -274,7 +301,6 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Turchi2019] mh04KK-017 --> mh04KK-017
 [Turchi2019] mh04KK-074 --> mh04KK-074
 [Turchi2019] mh05KK-022 --> mh05KK-022
-[Turchi2019] mh05KK-023 --> mh05KK-023
 [Turchi2019] mh05KK-062 --> mh05KK-062
 [Turchi2019] mh06KK-025 --> mh06KK-025
 [Turchi2019] mh06KK-026 --> mh06KK-026
@@ -315,7 +341,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Gandotra2020] mh01KK-205 --> mh01KK-205.v2
 [Gandotra2020] mh01KK-212 --> mh01KK-212.v1
 [Gandotra2020] mh01KK-117 --> mh01KK-117.v2
-[Gandotra2020] mh01NK-001 --> mh01NK-001.v1
+[Gandotra2020] mh01NH-04 --> mh01NH-04.v2
 [Gandotra2020] mh01KK-213 --> mh01KK-213.v1
 [Gandotra2020] mh02KK-022 --> mh02KK-022.v1
 [Gandotra2020] mh02KK-138 --> mh02KK-138.v2
@@ -336,7 +362,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Gandotra2020] mh04KK-013 --> mh04KK-013.v2
 [Gandotra2020] mh05KK-169 --> mh05KK-169.v1
 [Gandotra2020] mh05KK-170 --> mh05KK-170.v2
-[Gandotra2020] mh05KK-020 --> mh05KK-020.v2
+[Gandotra2020] mh05KK-023 --> mh05KK-023.v3
 [Gandotra2020] mh05KK-178 --> mh05KK-178.v1
 [Gandotra2020] mh06KK-090 --> mh06KK-090.v1
 [Gandotra2020] mh06KK-104 --> mh06KK-104
@@ -346,7 +372,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Gandotra2020] mh08KK-131 --> mh08KK-131.v1
 [Gandotra2020] mh08KK-137 --> mh08KK-137.v1
 [Gandotra2020] mh09KK-161 --> mh09KK-161.v2
-[Gandotra2020] mh09KK-010 --> mh09KK-010
+[Gandotra2020] mh09KK-010 --> mh09KK-010.v1
 [Gandotra2020] mh09KK-145 --> mh09KK-145.v1
 [Gandotra2020] mh09KK-153 --> mh09KK-153.v2
 [Gandotra2020] mh09KK-157 --> mh09KK-157.v2
@@ -400,12 +426,32 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Gandotra2020] mh22KK-328 --> mh22KK-328.v1
 [Gandotra2020] mh22KK-061 --> mh22KK-061.v2
 [Gandotra2020] mh22KK-340 --> mh22KK-340.v1
+[Kureshi2020] mh04ZHA-004 --> mh04ZHA-004
+[Kureshi2020] mh07ZHA-003 --> mh07ZHA-003
+[Kureshi2020] mh16ZHA-009 --> mh16ZHA-009
+[Kureshi2020] mh19ZHA-007 --> mh19ZHA-007
+[Kureshi2020] mh19ZHA-009 --> mh19ZHA-009
+[Sun2020] mh02KK-136 --> mh02KK-136.v1
+[Sun2020] mh13KK-213 --> mh13KK-213.v1
+[Sun2020] mh13KK-218 --> mh13KK-218.v1
+[Sun2020] mh13KK-223 --> mh13KK-223.v1
+[Sun2020] mh16KK-302 --> mh16KK-302.v1
+[Sun2020] mh21KK-320 --> mh21KK-320.v1
+[Sun2020] mh02ZHA-013 --> mh02ZHA-013.v1
+[Sun2020] mh04ZHA-004 --> mh04ZHA-004
+[Sun2020] mh07ZHA-003 --> mh07ZHA-003
+[Sun2020] mh16ZHA-009 --> mh16ZHA-009
+[Sun2020] mh19ZHA-007 --> mh19ZHA-007
+[Sun2020] mh19ZHA-009 --> mh19ZHA-009
+[delaPuente2020] mh09KK-010 --> mh09KK-010.v2
+[delaPuente2020] mh22KK-340 --> mh22KK-340.v2
+[delaPuente2020] mh11PK-63643 --> mh11PK-63643.v2
 [Pakstis2021] mh01KK-172 --> mh01KK-172.v3
 [Pakstis2021] mh01KK-001 --> mh01KK-001.v5
 [Pakstis2021] mh01KK-205 --> mh01KK-205.v4
 [Pakstis2021] mh01KK-212 --> mh01KK-212.v2
 [Pakstis2021] mh01KK-117 --> mh01KK-117.v3
-[Pakstis2021] mh01NK-001 --> mh01NK-001.v3
+[Pakstis2021] mh01NH-04 --> mh01NH-04.v3
 [Pakstis2021] mh01KK-213 --> mh01KK-213.v2
 [Pakstis2021] mh02KK-022 --> mh02KK-022.v2
 [Pakstis2021] mh02KK-138 --> mh02KK-138.v3
@@ -417,7 +463,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Pakstis2021] mh02KK-014 --> mh02KK-014.v2
 [Pakstis2021] mh02KK-015 --> mh02KK-015.v2
 [Pakstis2021] mh03KK-016 --> mh03KK-016.v2
-[Pakstis2021] mh03KK-017 --> mh03KK-017.v2
+[Pakstis2021] mh03KK-017 --> mh03KK-017.v3
 [Pakstis2021] mh03KK-047 --> mh03KK-047.v2
 [Pakstis2021] mh03KK-018 --> mh03KK-018.v2
 [Pakstis2021] mh03KK-150 --> mh03KK-150.v3
@@ -426,7 +472,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Pakstis2021] mh04KK-013 --> mh04KK-013.v4
 [Pakstis2021] mh05KK-169 --> mh05KK-169.v2
 [Pakstis2021] mh05KK-170 --> mh05KK-170.v4
-[Pakstis2021] mh05KK-020 --> mh05KK-020.v3
+[Pakstis2021] mh05KK-023 --> mh05KK-023.v4
 [Pakstis2021] mh05KK-178 --> mh05KK-178.v2
 [Pakstis2021] mh06KK-090 --> mh06KK-090.v2
 [Pakstis2021] mh06KK-104 --> mh06KK-104
@@ -436,7 +482,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Pakstis2021] mh08KK-131 --> mh08KK-131.v2
 [Pakstis2021] mh08KK-137 --> mh08KK-137.v2
 [Pakstis2021] mh09KK-161 --> mh09KK-161.v3
-[Pakstis2021] mh09KK-010 --> mh09KK-010
+[Pakstis2021] mh09KK-010 --> mh09KK-010.v1
 [Pakstis2021] mh09KK-145 --> mh09KK-145.v2
 [Pakstis2021] mh09KK-153 --> mh09KK-153.v3
 [Pakstis2021] mh09KK-157 --> mh09KK-157.v2
@@ -489,10 +535,10 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Pakstis2021] mh21KK-324 --> mh21KK-324.v4
 [Pakstis2021] mh22KK-328 --> mh22KK-328.v2
 [Pakstis2021] mh22KK-061 --> mh22KK-061.v4
-[Pakstis2021] mh22KK-340 --> mh22KK-340.v2
+[Pakstis2021] mh22KK-340 --> mh22KK-340.v3
 [Staadig2021] mh01KK-001 --> mh01KK-001.v4
 [Staadig2021] mh01KK-205 --> mh01KK-205.v3
-[Staadig2021] mh01NK-001 --> mh01NK-001.v2
+[Staadig2021] mh01NH-04 --> mh01NH-04.v1
 [Staadig2021] mh02KK-134 --> mh02KK-134.v3
 [Staadig2021] mh02KK-136 --> mh02KK-136.v1
 [Staadig2021] mh03KK-150 --> mh03KK-150.v2
@@ -506,7 +552,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Staadig2021] mh12KK-046 --> mh12KK-046.v1
 [Staadig2021] mh13KK-213 --> mh13KK-213.v3
 [Staadig2021] mh13KK-217 --> mh13KK-217.v3
-[Staadig2021] mh13KK-218 --> mh13KK-218.v3
+[Staadig2021] mh13KK-218 --> mh13KK-218.v4
 [Staadig2021] mh13KK-225 --> mh13KK-225.v3
 [Staadig2021] mh13KK-223 --> mh13KK-223.v3
 [Staadig2021] mh15KK-067 --> mh15KK-067.v3
@@ -535,9 +581,12 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Staadig2021] mh09KK-035 --> mh09KK-035.v2
 [Staadig2021] mh11KK-040 --> mh11KK-040
 [Staadig2021] mh17KK-055 --> mh17KK-055.v2
-[Auton2015]
-  - 26 population samples
-  - frequencies for 7827 distinct haplotypes in 26 populations; 89524 total frequencies
+[Wu2021] mh03KK-017 --> mh03KK-017.v2
+[Wu2021] mh13KK-218 --> mh13KK-218.v3
+[Fan2022] mh02KK-029 --> mh02KK-029.v3
+[Fan2022] mh02KK-014 --> mh02KK-014.v3
+[Fan2022] mh16KK-259 --> mh16KK-259.v3
+[Fan2022] mh02ZHA-013 --> mh02ZHA-013.v2
 [Hiroaki2015]
   - 26 marker definitions based on 80 SNPs
   - 1 population sample
@@ -571,7 +620,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Kureshi2020]
   - 20 marker definitions based on 73 SNPs
 [Sun2020]
-  - 25 marker definitions based on 93 SNPs
+  - 36 marker definitions based on 136 SNPs
 [Pakstis2021]
   - 90 marker definitions based on 904 SNPs
 [Staadig2021]
@@ -582,7 +631,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
   - 59 marker definitions based on 658 SNPs
 [Byrska-Bishop2022]
   - 5 population samples
-  - frequencies for 10464 distinct haplotypes in 5 populations; 36263 total frequencies
+  - frequencies for 10459 distinct haplotypes in 5 populations; 36241 total frequencies
 [Fan2022]
   - 22 marker definitions based on 338 SNPs and 25 indels
 [Zou2022]

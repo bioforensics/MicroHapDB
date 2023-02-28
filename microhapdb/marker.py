@@ -134,15 +134,22 @@ class Marker:
     @staticmethod
     def standardize_ids(idents):
         def id_in_series(ident, series):
-            return series.str.contains(ident).any()
+            return ident in series.values
 
         ids = set()
         for ident in idents:
+            locusnames = microhapdb.markers.Name.apply(lambda x: x.split(".")[0])
             if id_in_series(ident, microhapdb.variantmap.Variant):
-                markernames = microhapdb.variantmap[microhapdb.variantmap.Variant == ident].Marker
-                ids.update(markernames)
-            elif id_in_series(ident, microhapdb.markers.Name):
-                result = microhapdb.markers[microhapdb.markers.Name == ident]
+                result = microhapdb.variantmap[microhapdb.variantmap.Variant == ident]
+                ids.update(result.Marker)
+            elif id_in_series(ident, microhapdb.markers.Name) or id_in_series(ident, locusnames):
+                result = microhapdb.markers[microhapdb.markers.Name.str.contains(ident)]
+                ids.update(result.Name)
+            elif id_in_series(ident, microhapdb.merged.Derivative):
+                result = microhapdb.merged[microhapdb.merged.Derivative.str.contains(ident)]
+                assert len(result) == 1
+                original = result.Original.iloc[0]
+                result = microhapdb.markers[microhapdb.markers.Name.str.contains(original)]
                 ids.update(result.Name)
         return sorted(microhapdb.markers[microhapdb.markers.Name.isin(ids)].Name)
 
