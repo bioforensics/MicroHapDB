@@ -115,7 +115,7 @@ def test_main_marker_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 753
+    assert len(outlines) == 1 + 1453
 
 
 def test_main_marker_notrunc(capsys):
@@ -123,7 +123,7 @@ def test_main_marker_notrunc(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 753
+    assert len(outlines) == 1 + 1453
 
 
 def test_main_marker_detail(capsys):
@@ -138,26 +138,40 @@ def test_main_marker_query(capsys):
     microhapdb.cli.main(args)
     terminal = capsys.readouterr()
     exp_out = """
-         Name  NumVars  Extent Chrom    Start      End    Ae                   Source
- mh19USC-19pA        3      38 chr19   561779   561816 2.924           delaPuente2020
-   mh19KK-056        2     201 chr19  4852125  4852325 2.608                 Kidd2018
-  mh19SHY-001        8     185 chr19  7698913  7699097 6.469                   Wu2021
-   mh19CP-007        3      42 chr19 14310740 14310781 3.271                 Kidd2018
- mh19USC-19pB        5      66 chr19 16040865 16040930 3.866           delaPuente2020
-  mh19ZHA-006        6      63 chr19 20579863 20579925 3.175                  Sun2020
-    mh19NH-23        3      95 chr19 22052724 22052818 2.032              Hiroaki2015
-mh19KK-299.v1        5     154 chr19 22546698 22546851 4.236      Kidd2018;Turchi2019
-mh19KK-299.v2        7     154 chr19 22546698 22546851 4.253             Gandotra2020
-mh19KK-299.v4       10     182 chr19 22546698 22546879 4.253              Pakstis2021
-mh19KK-299.v3        3      63 chr19 22546749 22546811 3.771              Staadig2021
-  mh19ZHA-007        4     141 chr19 28397316 28397456 4.435      Kureshi2020;Sun2020
- mh19USC-19qA        4      46 chr19 33273772 33273817 3.660           delaPuente2020
-   mh19KK-301        4      64 chr19 50938488 50938551 2.577      Kidd2018;Turchi2019
-   mh19KK-300        7     182 chr19 50947787 50947968 5.407 Gandotra2020;Pakstis2021
-   mh19KK-057        3     115 chr19 51654949 51655063 2.498      Kidd2018;Turchi2019
-  mh19ZHA-009        5     178 chr19 53129073 53129250 4.286      Kureshi2020;Sun2020
- mh19USC-19qB        3      27 chr19 53714388 53714414 4.912           delaPuente2020
-  mh19SHY-002        9     165 chr19 55588421 55588585 3.544                   Wu2021
+           Name  NumVars  Extent Chrom    Start      End    Ae                   Source
+     mh19WL-007        5     102 chr19   410759   410860 1.000                   Yu2022
+   mh19USC-19pA        3      38 chr19   561779   561816 2.924           delaPuente2020
+     mh19WL-024        6     198 chr19  1955525  1955722 4.977                   Yu2022
+     mh19WL-025        4     170 chr19  3120344  3120513 4.746                   Yu2022
+     mh19KK-056        2     201 chr19  4852125  4852325 2.608                 Kidd2018
+ mh19SHY-001.v1        8     185 chr19  7698913  7699097 6.469                   Wu2021
+ mh19SHY-001.v2        5     106 chr19  7698992  7699097 6.442                   Yu2022
+     mh19WL-026        4      84 chr19  9009766  9009849 3.955                   Yu2022
+     mh19CP-007        3      42 chr19 14310740 14310781 3.271                 Kidd2018
+     mh19WL-011        3      96 chr19 15931448 15931543 1.803                   Yu2022
+   mh19USC-19pB        5      66 chr19 16040865 16040930 3.866           delaPuente2020
+    mh19ZHA-006        6      63 chr19 20579863 20579925 3.175                  Sun2020
+      mh19NH-23        3      95 chr19 22052724 22052818 2.032              Hiroaki2015
+  mh19KK-299.v1        5     154 chr19 22546698 22546851 4.236      Kidd2018;Turchi2019
+  mh19KK-299.v2        7     154 chr19 22546698 22546851 4.253             Gandotra2020
+  mh19KK-299.v4       10     182 chr19 22546698 22546879 4.253              Pakstis2021
+  mh19KK-299.v3        3      63 chr19 22546749 22546811 3.771              Staadig2021
+    mh19ZHA-007        4     141 chr19 28397316 28397456 4.435      Kureshi2020;Sun2020
+mh19USC-19qA.v1        4      46 chr19 33273772 33273817 3.660           delaPuente2020
+mh19USC-19qA.v2        6     185 chr19 33273772 33273956 7.147                   Yu2022
+     mh19WL-018        3      92 chr19 46308509 46308600 4.262                   Yu2022
+     mh19WL-028        5     186 chr19 47379150 47379335 2.657                   Yu2022
+     mh19WL-008        5     193 chr19 50811875 50812067 1.945                   Yu2022
+     mh19KK-301        4      64 chr19 50938488 50938551 2.577      Kidd2018;Turchi2019
+     mh19KK-300        7     182 chr19 50947787 50947968 5.407 Gandotra2020;Pakstis2021
+     mh19KK-057        3     115 chr19 51654949 51655063 2.498      Kidd2018;Turchi2019
+    mh19ZHA-009        5     178 chr19 53129073 53129250 4.286      Kureshi2020;Sun2020
+mh19USC-19qB.v2        7     106 chr19 53714365 53714470 6.254                   Yu2022
+mh19USC-19qB.v1        3      27 chr19 53714388 53714414 4.912           delaPuente2020
+    mh19SHY-002        9     165 chr19 55588421 55588585 3.544                   Wu2021
+     mh19WL-027        4     193 chr19 55796289 55796481 4.544                   Yu2022
+     mh19WL-012       11     195 chr19 57013159 57013353 4.385                   Yu2022
+
 """
     obs_out = terminal.out
     print(obs_out)
@@ -216,7 +230,7 @@ def test_main_marker_region_mode(capsys):
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
     print(out)
-    assert len(outlines) == 26 + 1  # markers + 1 header line
+    assert len(outlines) == 50 + 1  # markers + 1 header line
 
 
 def test_main_marker_region_mode_failure(capsys):
@@ -342,7 +356,7 @@ def test_main_marker_bad_code():
         ("--population=SA000009J", "--marker=mh13KK-218.v1", None, 15),
         (None, "--marker=mh13KK-218.v1", "--allele=C|T|C|T", 129),
         (None, "--marker=mh14PK-72639", None, 227),
-        (None, None, None, 253123),
+        (None, None, None, 393411),
     ],
 )
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
@@ -403,10 +417,14 @@ def test_ae_pop(capsys):
     terminal = capsys.readouterr()
     exp_out = """
          Name  NumVars  Extent Chrom    Start      End    Ae              Source
+   mh18WL-002        6     100 chr18   466283   466382 4.056              Yu2022
   mh18SHY-001       11     181 chr18  1952477  1952657 4.127              Wu2021
  mh18PK-87558        6      47 chr18  1960543  1960589 2.217      vanderGaag2018
+   mh18WL-028        4     198 chr18  3246291  3246488 4.185              Yu2022
  mh18USC-18pA        5      77 chr18  5280018  5280094 1.923      delaPuente2020
+   mh18WL-026        3     110 chr18  7382444  7382553 3.135              Yu2022
    mh18CP-005        4      44 chr18  8892865  8892908 3.620            Kidd2018
+   mh18WL-009       10     200 chr18 10150919 10151118 2.000              Yu2022
   mh18ZBF-002        4      77 chr18 11900703 11900779 3.264             Jin2020
   mh18ZHA-004        4     116 chr18 14315932 14316047 3.017             Sun2020
 mh18KK-285.v1        4     136 chr18 24557355 24557490 2.584 Kidd2018;Turchi2019

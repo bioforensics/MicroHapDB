@@ -31,7 +31,7 @@ markers = read_table("marker.csv")
 markers["Ae"] = None
 merged = read_table("merged.csv")
 populations = read_table("population.csv")
-frequencies = read_table("frequency.csv")
+frequencies = read_table("frequency.csv.gz")
 indels = read_table("indels.csv")
 variantmap = compile_variant_map(markers)
 try:
