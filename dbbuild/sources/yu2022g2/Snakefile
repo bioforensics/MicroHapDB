@@ -1,0 +1,28 @@
+import pandas as pd
+
+def chrom_from_marker_name(name):
+    num = name[2:4]
+    if num.startswith("0"):
+        num = num[1:]
+    return f"chr{num}"
+
+rule markers:
+    input:
+        txt="Yu2022-TableS2.tsv"
+    output:
+        csv="marker.csv"
+    run:
+        markers = pd.read_csv(input.txt, sep="\t")
+        markers = markers.rename(columns={"Microhaplotype name": "Name", "rs_ID": "VarRef", "No. of SNPs": "NumVars"})
+        markers["NumVarsRSIDs"] = markers["VarRef"].apply(lambda x: x.count(";") + 1)
+        markers["NumVarsPos"] = markers["Position"].apply(lambda x: x.count(";") + 1)
+        markers["Consistent1"] = markers["NumVars"] == markers["NumVarsRSIDs"]
+        markers["Consistent2"] = markers["NumVars"] == markers["NumVarsPos"]
+        inconsistent = markers[(markers.Consistent1 == False) | (markers.Consistent2 == False)]
+        assert len(inconsistent) == 0
+        markers["Xref"] = None
+        markers["Refr"] = None
+        markers["Positions"] = None
+        markers["Chrom"] = markers["Name"].apply(chrom_from_marker_name)
+        markers = markers[["Name", "Xref", "NumVars", "Refr", "Chrom", "Positions", "VarRef"]]
+        markers.to_csv(output.csv, index=False)

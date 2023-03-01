@@ -8,7 +8,7 @@ def chrom_from_marker_name(name):
 
 rule markers:
     input:
-        txt="mmc1.txt"
+        txt="Yu2022-TableS1.tsv"
     output:
         csv="marker.csv"
     run:
