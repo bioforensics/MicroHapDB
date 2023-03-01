@@ -61,3 +61,5 @@ Contact: daniel.standage@st.dhs.gov.
 <sup>[23]</sup>Turchi C, Melchionda F, Pesaresi M, Tagliabracci A (2019) Evaluation of a microhaplotypes panel for forensic genetics using massive parallel sequencing technology. *FSI: Genetics* 41:120-127, [doi:10.1016/j.fsigen.2019.04.009](https://doi.org/10.1016/j.fsigen.2019.04.009).
 
 <sup>[24]</sup>Zou X, Guanglin H, Liu J, Jiang L, Wang Mengge, Chen P, Hou Y, Wang Z (2022) Screening and selection of 21 novel microhaplotype markers for ancestry inference in ten Chinese subpopulations. *FSI: Genetics*, 58:102687, [doi:10.1016/j.fsigen.2022.102687](https://doi.org/10.1016/j.fsigen.2022.102687).
+
+<sup>[25]</sup>Yu WS, Feng YS, Kang KL, Zhang C, Ji AQ, Ye J, Wang L (2022) Screening of highly discriminative microhaplotype markers for individual identification and mixture deconvolution in East Asian populations. *FSI: Genetics*, 59:102720, [doi:10.1016/j.fsigen.2022.102720](https://doi.org/10.1016/j.fsigen.2022.102720).
