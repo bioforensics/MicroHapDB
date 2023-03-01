@@ -27,6 +27,7 @@ def test_standardize_ids():
         "mh01KK-205.v2",
         "mh01KK-205.v3",
         "mh01KK-205.v4",
+        "mh01KK-205.v5",
     ]
     assert Marker.standardize_ids(["mh05KK-123", "rs4697751"]) == [
         "mh04CP-007",
@@ -49,6 +50,7 @@ def test_assumptions():
         89,  # Turchi2019
         10,  # Voskoboinik2018
         59,  # Wu2021
+        703,  # Yu2022
         21,  # Zou2022
         118,  # delaPuente2020
         15,  # vanderGaag2018
@@ -61,6 +63,7 @@ def test_assumptions():
         8,  # Staadig2021
         11,  # Sun2020
         84,  # Turchi2019
+        3,  # Yu2022
     ]
     expected_markers = sum(total_markers_per_source) - sum(redundant_markers_per_source)
     observed_markers = len(microhapdb.markers)
@@ -96,11 +99,11 @@ def test_markers():
     mh21PK-MX1s (chr21:41464745-41464824)
     mh22PK-104638 (chr22:44857883-44857955)
     """
-    assert microhapdb.markers.shape == (753, 11)
+    assert microhapdb.markers.shape == (1453, 11)
     result = microhapdb.markers[microhapdb.markers.Chrom == "chr19"]
-    assert len(result) == 19
+    assert len(result) == 32
     varids = microhapdb.variantmap[microhapdb.variantmap.Marker.isin(result.Name)].Variant.unique()
-    assert len(varids) == 77
+    assert len(varids) == 133
 
 
 def test_marker_detail():
@@ -479,10 +482,12 @@ def test_marker_object(capsys):
         ("mh13KK-213.v3", "chr13:23191462-23191496", 35, "Staadig2021"),
         ("mh08ZHA-003", "chr8:2914706-2915053", 348, "Sun2020"),
         ("mh15PK-75170", "chr15:24802314-24802380", 67, "vanderGaag2018"),
-        ("mh03LV-06", "chr3:11914401-11914598", 198, "Voskoboinik2018"),
+        ("mh03LV-06.v1", "chr3:11914401-11914598", 198, "Voskoboinik2018"),
         ("mh15SHY-003", "chr15:92605653-92605846", 194, "Wu2021"),
-        ("mh01FHL-009", "chr1:231954505-231954667", 163, "Fan2022"),
+        ("mh01FHL-009.v2", "chr1:231954505-231954667", 163, "Fan2022"),
         ("mh02KK-004.v2", "chr2:118984970-118985128", 159, "Turchi2019"),
+        ("mh20HYP-42", "chr20:59132558-59132664", 107, "Zou2022"),
+        ("mh13WL-032", "chr13:113079836-113079970", 135, "Yu2022"),
     ],
 )
 def test_all_sources(markername, slug, length, source):
@@ -576,8 +581,9 @@ def test_from_region():
     assert len(Marker.table_from_region("chrX")) == 11
     assert len(Marker.table_from_region("chrY")) == 0
     markers = list(Marker.from_region("chr12:100000000-200000000"))
-    assert len(markers) == 8
+    assert len(markers) == 21
     observed = sorted([marker.name for marker in markers])
+    print(observed)
     expected = sorted(
         [
             "mh12CP-003",
@@ -588,6 +594,19 @@ def test_from_region():
             "mh12KK-046.v3",
             "mh12KK-093",
             "mh12KK-209",
+            "mh12WL-001",
+            "mh12WL-003",
+            "mh12WL-004",
+            "mh12WL-009",
+            "mh12WL-013",
+            "mh12WL-024",
+            "mh12WL-046",
+            "mh12WL-047",
+            "mh12WL-048",
+            "mh12WL-049",
+            "mh12WL-050",
+            "mh12WL-054",
+            "mh12WL-059",
         ]
     )
     assert observed == expected
@@ -607,14 +626,21 @@ def test_from_id_no_such_marker():
     "query,result",
     [
         (
-            ["mh02FHL-006", "mh10FHL-007", "mh21FHL-002"],
-            ["mh02ZHA-013.v1", "mh02ZHA-013.v2", "mh10FHL-007", "mh21FHL-002"],
+            ["mh02FHL-006", "mh10FHL-007", "mh21WL-004"],
+            [
+                "mh02ZHA-013.v1",
+                "mh02ZHA-013.v2",
+                "mh10FHL-007",
+                "mh21FHL-002.v1",
+                "mh21FHL-002.v2",
+            ],
         ),
         (["mh11USC-11pB"], ["mh11PK-63643.v1", "mh11PK-63643.v2"]),
         (["mh05KK-020"], ["mh05KK-023.v1", "mh05KK-023.v2", "mh05KK-023.v3", "mh05KK-023.v4"]),
     ],
 )
 def test_standardize_merged_designators(query, result):
+    print(Marker.standardize_ids(query))
     assert Marker.standardize_ids(query) == result
 
 
