@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Italian population frequencies for 98 markers from Turchi et al 2019 (see #107).
 - 21 marker definitions and population frequences from Zou et al 2022 (see #109).
 - Check for overlapping microhaps from different sources during the database build (#112).
-- 703 marker definitions from Yu et al 2022 (see #115).
+- Over 1,000 marker definitions from four whole-genome screens from Yu et al 2022 (see #115, #118).
 
 ### Changed
 - Overhaul of the marker table structure and database build procedure (see #106, #111, #112).
