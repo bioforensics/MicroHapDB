@@ -22,7 +22,7 @@ rule markers:
         markers["Xref"] = None
         markers["Refr"] = None
         markers["Positions"] = None
-        markers = markers.replace({"21:20110:5": "mh21WL-20110:5", "21:13143:4": "mh21WL-13143:4", "ss1388052709;ss1388052710;ss1388052713;ss1388052719": "rs6488668;rs7961959;rs10845939;rs118010816"})
+        markers = markers.replace({"21:20110:5": "mh21WL-005", "21:13143:4": "mh21WL-002", "ss1388052709;ss1388052710;ss1388052713;ss1388052719": "rs6488668;rs7961959;rs10845939;rs118010816"})
         markers["Chrom"] = markers["Name"].apply(chrom_from_marker_name)
         markers = markers[["Name", "Xref", "NumVars", "Refr", "Chrom", "Positions", "VarRef"]]
         markers.to_csv(output.csv, index=False)
