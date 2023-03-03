@@ -10,7 +10,7 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
-from . import nom as nomenclature
+from . import nomenclature
 from .tables import markers, merged, populations, frequencies, indels, variantmap, hg38
 from .population import Population
 from .marker import Marker

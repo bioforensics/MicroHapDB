@@ -11,6 +11,8 @@
 # -------------------------------------------------------------------------------------------------
 
 from enum import Enum
+from io import StringIO
+import sys
 
 
 class ValidationErrors(Enum):
@@ -37,6 +39,7 @@ class Identifier:
     False
     >>> mhid.errors
     "required 'mh' prefix missing; invalid chromosome; too many or too few hypens"
+    >>> mhid.warnings
     >>> mhid = Identifier("mh14WL-003")
     >>> mhid.valid
     True
@@ -49,11 +52,26 @@ class Identifier:
     >>> mhid.suffix
     >>> str(mhid)
     'mh14WL-003'
+    >>> print(mhid.detail)
+    mh14WL-003
+    ├── mh  [standard prefix]
+    ├── 14  [chromosome]
+    ├── WL  [lab]
+    ├── -   [standard separator]
+    └── 003 [designation]
     >>> mhid = Identifier("mh12KK-202.v2")
     >>> mhid.lab
     'KK'
     >>> mhid.suffix
     'v2'
+    >>> print(mhid.detail)
+    mh12KK-202.v2
+    ├── mh  [standard prefix]
+    ├── 12  [chromosome]
+    ├── KK  [lab]
+    ├── -   [standard separator]
+    ├── 202 [designation]
+    └── v2  [marker suffix]
     """
 
     def __init__(self, mhid):
@@ -105,7 +123,7 @@ class Identifier:
             suffix = self._raw.split(".")[1]
             if suffix[0] != "v":
                 self._validation_errors.append(ValidationErrors.SUFFIXV)
-            if not suffix[1].isdigit():
+            if len(suffix) > 1 and not suffix[1:].isdigit():
                 self._validation_errors.append(ValidationErrors.SUFFIXNUM)
 
     @property
@@ -114,10 +132,14 @@ class Identifier:
 
     @property
     def errors(self):
+        if self.valid:
+            return None
         return "; ".join([e.value for e in self._validation_errors])
 
     @property
     def warnings(self):
+        if len(self._validation_warnings) == 0:
+            return None
         return "; ".join([w.value for w in self._validation_warnings])
 
     @property
@@ -181,6 +203,35 @@ class Identifier:
             ident += f".{self.suffix}"
         return ident
 
+    @property
+    def detail(self):
+        if not self.valid:
+            return None
+        lengths = [len(value) for value in (self.chrom_label, self.lab, self.designation)]
+        if self.suffix is not None:
+            lengths.append(len(self.suffix))
+        length = max(lengths)
+        strfmt = f"{{:{length}s}}"
+        output = StringIO()
+        print(str(self), file=output)
+        print("├──", strfmt.format("mh"), "[standard prefix]", file=output)
+        print("├──", strfmt.format(self.chrom_label), "[chromosome]", file=output)
+        print("├──", strfmt.format(self.lab), "[lab]", file=output)
+        print("├──", strfmt.format("-"), "[standard separator]", file=output)
+        if self.suffix is None:
+            print("└──", strfmt.format(self.designation), "[designation]", file=output)
+        else:
+            print("├──", strfmt.format(self.designation), "[designation]", file=output)
+            print("└──", strfmt.format(self.suffix), "[marker suffix]", file=output)
+        return output.getvalue()
 
-def id_is_valid(ident):
-    return Identifier(str(ident)).valid
+
+def validate(ident):
+    mhid = Identifier(str(ident))
+    if mhid.valid:
+        print(mhid.detail)
+    else:
+        print("[nomenclature] validation errors:", mhid.errors, file=sys.stderr)
+    if mhid.warnings is not None:
+        print("[nomenclature] validation warnings:", mhid.warnings, file=sys.stderr)
+    return mhid.valid
