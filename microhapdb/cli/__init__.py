@@ -12,7 +12,7 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
-from . import lookup, marker, population, frequency
+from . import lookup, marker, population, frequency, summarize
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 import microhapdb
 from pyfaidx import Fasta as FastaIdx
@@ -26,6 +26,7 @@ subparser_funcs = {
     "marker": marker.subparser,
     "population": population.subparser,
     "frequency": frequency.subparser,
+    "summarize": summarize.subparser,
 }
 
 mains = {
@@ -33,6 +34,7 @@ mains = {
     "marker": marker.main,
     "population": population.main,
     "frequency": frequency.main,
+    "summarize": summarize.main,
 }
 
 bubbletext = r"""
