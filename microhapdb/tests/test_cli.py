@@ -626,3 +626,21 @@ mh01NH-04.v1        3      53  chr1 230684832 230684884 3.566          Hiroaki20
     """
     print(observed)
     assert observed.strip() == expected.strip()
+
+
+def test_cli_summarize(capsys):
+    args = get_parser().parse_args(["summarize"])
+    microhapdb.cli.main(args)
+    terminal = capsys.readouterr()
+    observed = terminal.out
+    expected = """
+[microhaplotypes]
+  - 1836 marker defintions
+  - 1409 distinct loci
+[frequencies]
+  - 23671 haplotypes
+  - 125 population groups
+  - 488283 total microhap frequencies
+"""
+    print(observed)
+    assert observed.strip() == expected.strip()

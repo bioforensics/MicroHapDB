@@ -165,6 +165,10 @@ class Marker:
         return self.data.Name
 
     @property
+    def locus(self):
+        return self.name.split(".")[0]
+
+    @property
     def slug(self):
         seqid = self.chrom
         return f"{seqid}:{self.start+1}-{self.end}"
