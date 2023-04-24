@@ -430,3 +430,68 @@ class Marker:
         if coord >= end - start:
             return None
         return coord + start
+
+
+class Locus:
+    def __init__(self, markers=[]):
+        self.markers = markers
+
+    @property
+    def fasta(self):
+        out = StringIO()
+        print(">", self.defline, sep="", file=out)
+        targetseq = self.target_seq
+        if len(targetseq) < 80:
+            print(targetseq, file=out)
+        else:
+            i = 0
+            while i < len(targetseq):
+                print(targetseq[i : i + 80], file=out)
+                i += 80
+        return out.getvalue().strip()
+
+    @property
+    def defline(self):
+        parts = [self.name, f"GRCh38:{self.target_slug}"]
+        for marker in self.markers:
+            start, end = self.target_interval
+            offsets = [o - start for o in marker.offsets]
+            varstring = ",".join(map(str, offsets))
+            parts.append(f"{marker.name}={varstring}")
+        line = " ".join(parts)
+        return line
+
+    @property
+    def target_seq(self):
+        start, end = self.target_interval
+        return str(microhapdb.hg38[self.chrom][start:end])
+
+    @property
+    def name(self):
+        if len(self.markers) == 0:
+            return None
+        return self.markers[0].locus
+
+    @property
+    def target_slug(self):
+        seqid = self.chrom
+        start, end = self.target_interval
+        return f"{seqid}:{start}-{end}"
+
+    @property
+    def target_interval(self):
+        start = float("Inf")
+        end = 0
+        for marker in self.markers:
+            mstart, mend = marker.target_interval
+            if mstart < start:
+                start = mstart
+            if mend > end:
+                end = mend
+        return start, end
+
+    @property
+    def chrom(self):
+        if len(self.markers) == 0:
+            return None
+        return self.markers[0].chrom

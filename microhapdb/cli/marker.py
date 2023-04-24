@@ -11,8 +11,9 @@
 # -------------------------------------------------------------------------------------------------
 
 from argparse import RawDescriptionHelpFormatter
+from collections import defaultdict
 import microhapdb
-from microhapdb import Marker
+from microhapdb import Marker, Locus
 import pandas as pd
 import sys
 from textwrap import dedent
@@ -85,8 +86,11 @@ def display(
             for marker in markers:
                 print(marker.detail)
         elif view_format == "fasta":
+            loci = defaultdict(Locus)
             for marker in markers:
-                print(marker.fasta)
+                loci[marker.locus].markers.append(marker)
+            for locus in loci.values():
+                print(locus.fasta)
         elif view_format == "offsets":
             table = pd.concat([marker.definition for marker in markers])
             table = table.rename(columns={"ChromOffset": f"OffsetHg38"})
