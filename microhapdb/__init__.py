@@ -13,7 +13,7 @@
 from . import nomenclature
 from .tables import markers, merged, populations, frequencies, indels, variantmap, hg38
 from .population import Population
-from .marker import Marker
+from .marker import Marker, Locus
 from microhapdb import cli
 from microhapdb import panel
 import pandas as pd

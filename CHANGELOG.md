@@ -15,6 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Overhaul of the marker table structure and database build procedure (see #106, #111, #112).
 - Use Byrska-Bishop 2022 instead of Auton 2015 for main frequency and Ae calculations (see #106, #112, #114).
+- Marker FASTA output now produces a single sequence per locus, even when multiple markers at a locus are included (#124).
 
 
 ## [0.8.2] 2022-11-21
