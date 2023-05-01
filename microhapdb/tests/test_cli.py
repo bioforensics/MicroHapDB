@@ -657,7 +657,7 @@ def test_cli_fasta_locus_multimarker(capsys):
         "mh02KK-134.v2",
         "mh02KK-134.v3",
         "mh02KK-134.v4",
-        "--format=fasta"
+        "--format=fasta",
     ]
     args = get_parser().parse_args(arglist)
     microhapdb.cli.main(args)
