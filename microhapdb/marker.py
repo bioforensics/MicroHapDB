@@ -433,8 +433,8 @@ class Marker:
 
 
 class Locus:
-    def __init__(self, markers=[]):
-        self.markers = markers
+    def __init__(self, markers=None):
+        self.markers = list() if markers is None else markers
 
     @property
     def fasta(self):
