@@ -1,0 +1,146 @@
+from collections import defaultdict
+import re
+import sys
+
+
+rule markers:
+    input:
+        table="table-s1.csv",
+        bed37="coords37.bed",
+        bed38="coords38.bed",
+        bedun="coords-unmapped.bed",
+    output:
+        csv="marker.csv",
+    run:
+        coord_map = parse_coord_mapping(input.bed37, input.bed38, input.bedun)
+        with open(input.table, "r") as infh, open(output.csv, "w") as outfh:
+            print("Name,Xref,NumVars,Refr,Chrom,Positions,VarRef", file=outfh)
+            for marker in parse_table_s1(infh):
+                marker.update_coords(coord_map)
+                if marker.valid:
+                    print(marker, file=outfh)
+                else:
+                    message = f"Skipping marker {marker.name}: could not lift over to GRCh38"
+                    print(message, file=sys.stderr)
+
+
+rule coords37:
+    input:
+        table="table-s1.csv"
+    output:
+        bed37="coords37.bed"
+    run:
+        with open(input.table, "r") as infh, open(output.bed37, "w") as outfh:
+            for marker in parse_table_s1(infh):
+                for pos in marker.positions:
+                    print(marker.chrom, pos - 1, pos, sep="\t", file=outfh)
+
+
+rule convert:
+    input:
+        bed37="coords37.bed",
+        chain="hg19ToHg38.over.chain.gz",
+    output:
+        bed38="coords38.bed",
+        bedun="coords-unmapped.bed",
+    shell:
+        "liftOver {input} {output}"
+
+
+def parse_table_s1(instream):
+    next(instream)
+    next(instream)
+    for line in instream:
+        yield Marker(line)
+
+
+def parse_coord_mapping(bed37, bed38, bedun):
+    unmapped = defaultdict(set)
+    with open(bedun, "r") as fh:
+        for line in fh:
+            if line.startswith("#"):
+                continue
+            chrun, startun, endun = line.strip().split("\t")
+            unmapped[chrun].add(int(endun))
+    mapping = defaultdict(dict)
+    with open(bed37, "r") as fh37, open(bed38, "r") as fh38:
+        for line37 in fh37:
+            chr37, start37, end37 = line37.strip().split("\t")
+            if int(end37) in unmapped[chr37]:
+                continue
+            line38 = next(fh38)
+            chr38, start38, end38 = line38.strip().split("\t")
+            if chr37 == chr38:
+                mapping[chr38][int(end37)] = int(end38)
+    return mapping
+
+
+def parse_coord_mapping_backup(bed37, bed38):
+    mapping = defaultdict(dict)
+    with open(bed37, "r") as fh37, open(bed38, "r") as fh38:
+        for line37, line38 in zip(fh37, fh38):
+            chr37, start37, end37 = line37.strip().split("\t")
+            chr38, start38, end38 = line38.strip().split("\t")
+            assert chr37 == chr38, (line37, line38)
+            mapping[chr38][int(end37)] = int(end38)
+    return mapping
+
+
+class Marker:
+    def __init__(self, data):
+        self._data = data.strip().split(",")
+        self.valid = True
+
+    def __str__(self):
+        values = (
+            self.name,
+            "",
+            str(self.num_snps),
+            "GRCh38",
+            self.chrom,
+            self.position_str,
+            "",
+        )
+        return ",".join(values)
+
+    @property
+    def name(self):
+        match = re.match(r"^CHSCHR(\d\d)_(\d+)$", self._data[0])
+        if not match:
+            raise ValueError(f"cannot parse name '{self._data[0]}'")
+        chrom, ident = match.groups()
+        return f"mh{chrom}SCU-{ident}"
+
+    @property
+    def chrom(self):
+        match = re.match(r"^CHSCHR(\d\d)_(\d+)$", self._data[0])
+        if not match:
+            raise ValueError(f"cannot parse name '{self._data[0]}'")
+        chrom = match.group(1)
+        if chrom[0] == "0":
+            chrom = chrom[1:]
+        return f"chr{chrom}"
+
+    @property
+    def num_snps(self):
+        return int(self._data[5])
+
+    @property
+    def position_str(self):
+        return ";".join(map(str, self.positions))
+
+    @property
+    def positions(self):
+        i = 7
+        j = 7 + self.num_snps
+        return list(map(int, self._data[i:j]))
+
+    def update_coords(self, coord_map):
+        try:
+            new_coords = [coord_map[self.chrom][pos] for pos in self.positions]
+        except KeyError:
+            self.valid = False
+            return
+        i = 7
+        j = 7 + self.num_snps
+        self._data[i:j] = new_coords
