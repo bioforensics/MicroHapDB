@@ -36,7 +36,9 @@ class Marker:
     def from_csv(csvpath, index, source=None):
         table = pd.read_csv(csvpath)
         for n, row in table.iterrows():
-            rsids = row.VarRef.split(";")
+            rsids = []
+            if not pd.isna(row.VarRef):
+                rsids = row.VarRef.split(";")
             if len(rsids) == row.NumVars:
                 yield MarkerFromIDs(
                     row.Name, row.Chrom, rsids, index, xrefs=row.Xref, source=source
