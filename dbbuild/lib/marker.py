@@ -116,8 +116,8 @@ class Marker:
             return False
         if len(self.rsids) < self.numvars:
             return False
-        num37 = len(list(index.resolve(self.rsids, "GRCh37")))
-        num38 = len(list(index.resolve(self.rsids, "GRCh38")))
+        num37 = len(list(self.index.resolve(self.rsids, "GRCh37")))
+        num38 = len(list(self.index.resolve(self.rsids, "GRCh38")))
         return num37 == num38 == self.base.numvars
 
     @property
