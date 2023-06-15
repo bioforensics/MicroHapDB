@@ -168,6 +168,9 @@ class Marker:
     def locus(self):
         return self.name.split(".")[0]
 
+    def overlaps(self, other):
+        return self.start <= other.end and self.end >= other.start
+
 
 class MarkerFromPositions(Marker):
     def __init__(self, name, positions, rsids, index, xrefs=None, source=None):

@@ -40,7 +40,7 @@ class Locus(list):
             for marker in self.markers:
                 yield marker
             return
-        definitions = set(self.markers_by_definition)
+        self.check_overlap()
         for marker in sorted(self.markers, key=lambda m: (m.sources[0].year, m.name.lower())):
             if marker.posstr() in self.definition_names:
                 message = f"Marker {marker.name} as defined in {marker.sources[0].name} was defined previously and is redundant"
@@ -59,41 +59,23 @@ class Locus(list):
                         marker.sources.append(othermarker.sources[0])
                 yield marker
 
-
-class LocusOldDeleteMe(list):
-    @property
-    def name(self):
-        return self[0].locus
-
-    @property
-    def chrom(self):
-        return self[0].chrom
-
-    @property
-    def chrom_num(self):
-        return self[0].chrom_num
-
-    @property
-    def extent(self):
-        return self.start, self.end
-
-    @property
-    def target(self):
-        return self.start - 61, self.end + 60
-
-    @property
-    def start(self):
-        return min([m.start for m in self])
-
-    @property
-    def end(self):
-        return max([m.end for m in self])
-
-    @property
-    def region(self):
-        start, end = self.target
-        return f"{self.chrom}:{start+1}-{end}"
-
-    @property
-    def defline(self):
-        return f">{self.name} GRCh38 {self.region}"
+    def check_overlap(self):
+        import sys
+        if len(self) <= 1:
+            return
+        for i in range(len(self.markers)):
+            marker1 = self.markers[i]
+            for j in range(len(self.markers)):
+                if i == j:
+                    continue
+                marker2 = self.markers[j]
+                if marker1.overlaps(marker2):
+                    break
+            else:
+                for j in range(len(self.markers)):
+                    if i >= j:
+                        continue
+                    marker2 = self.markers[j]
+                    print(f"DEBUG {marker1.name} ({marker1.sourcename}) {marker2.name} ({marker2.sourcename}) {marker1.overlaps(marker2)}", file=sys.stderr)
+                #raise ValueError(f"{marker1.name} ({marker1.sourcename}) does not overlap with any other markers defined at {marker1.locus}")
+                print(f"{marker1.name} ({marker1.sourcename}) does not overlap with any other markers defined at {marker1.locus}", file=sys.stderr)
