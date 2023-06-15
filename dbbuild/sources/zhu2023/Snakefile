@@ -11,9 +11,10 @@ rule markers:
         bedun="coords-unmapped.bed",
     output:
         csv="marker.csv",
+        skipped="skipped.txt",
     run:
         coord_map = parse_coord_mapping(input.bed37, input.bed38, input.bedun)
-        with open(input.table, "r") as infh, open(output.csv, "w") as outfh:
+        with open(input.table, "r") as infh, open(output.csv, "w") as outfh, open(output.skipped, "w") as skipfh:
             print("Name,Xref,NumVars,Refr,Chrom,Positions,VarRef", file=outfh)
             for marker in parse_table_s1(infh):
                 marker.update_coords(coord_map)
@@ -22,6 +23,7 @@ rule markers:
                 else:
                     message = f"Skipping marker {marker.name}: could not lift over to GRCh38"
                     print(message, file=sys.stderr)
+                    print(message, file=skipfh)
 
 
 rule coords37:
@@ -109,7 +111,7 @@ class Marker:
         if not match:
             raise ValueError(f"cannot parse name '{self._data[0]}'")
         chrom, ident = match.groups()
-        return f"mh{chrom}SCU-{ident}"
+        return f"mh{chrom}SCUZJ-{ident}"
 
     @property
     def chrom(self):

@@ -109,7 +109,7 @@ class Identifier:
         lab = self._raw[4:].split("-")[0]
         if not lab.isupper():
             self._validation_warnings.append(ValidationWarnings.LABCASE)
-        if len(lab) < 2 or len(lab) > 4:
+        if len(lab) < 2 or len(lab) > 6:
             self._validation_errors.append(ValidationErrors.LABLENGTH)
         designation = self._raw.split("-")[1].split(".")[0]
         if not designation.isalnum():

@@ -78,7 +78,7 @@ class Marker:
             if chromstr != "0X":
                 strikes.append(f"invalid chromosome '{chromstr}'")
         labpi, mhnumber = name[4:].split("-", 1)
-        if len(labpi) < 2 or len(labpi) > 4:
+        if len(labpi) < 2 or len(labpi) > 6:
             strikes.append(f"lab or PI designation '{labpi}' isn't between 2-4 characters")
         if "." in mhnumber:
             if mhnumber.count(".") > 1:
