@@ -14,7 +14,9 @@ rule markers:
         skipped="skipped.txt",
     run:
         coord_map = parse_coord_mapping(input.bed37, input.bed38, input.bedun)
-        with open(input.table, "r") as infh, open(output.csv, "w") as outfh, open(output.skipped, "w") as skipfh:
+        with open(input.table, "r") as infh, open(output.csv, "w") as outfh, open(
+            output.skipped, "w"
+        ) as skipfh:
             print("Name,Xref,NumVars,Refr,Chrom,Positions,VarRef", file=outfh)
             for marker in parse_table_s1(infh):
                 marker.update_coords(coord_map)
@@ -28,9 +30,9 @@ rule markers:
 
 rule coords37:
     input:
-        table="table-s1.csv"
+        table="table-s1.csv",
     output:
-        bed37="coords37.bed"
+        bed37="coords37.bed",
     run:
         with open(input.table, "r") as infh, open(output.bed37, "w") as outfh:
             for marker in parse_table_s1(infh):
