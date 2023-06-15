@@ -22,6 +22,13 @@ rule markers:
         markers["Xref"] = None
         markers["Refr"] = None
         markers["Positions"] = None
+        substitutions = {
+            "mh06WL-066": "mh06WL-066b",
+            "mh06WL-067": "mh06WL-067b",
+            "mh06WL-068": "mh06WL-068b",
+            "mh20WL-015": "mh20WL-001",
+        }
+        markers = markers.replace(substitutions)
         markers["Chrom"] = markers["Name"].apply(chrom_from_marker_name)
         markers = markers[["Name", "Xref", "NumVars", "Refr", "Chrom", "Positions", "VarRef"]]
         markers.to_csv(output.csv, index=False)

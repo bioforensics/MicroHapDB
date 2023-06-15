@@ -28,8 +28,12 @@ rule markers:
             "21:20110:5": "mh21WL-005",
             "21:13143:4": "mh21WL-002",
             "ss1388052709;ss1388052710;ss1388052713;ss1388052719": "rs6488668;rs7961959;rs10845939;rs118010816",
+            "mh06WL-066": "mh06WL-066a",
+            "mh06WL-067": "mh06WL-067a",
+            "mh06WL-068": "mh06WL-068a",
         }
         markers = markers.replace(substitutions)
+        markers.loc[(markers.Name == "mh06WL-069") & (markers.VarRef.str.contains("rs281863504")), "Name"] = "mh06WL-037"
         markers.loc[(markers.Name == "mh22WL-016") & (markers.VarRef.str.contains("rs79222659")), "Name"] = "mh22WL-016a"
         markers.loc[(markers.Name == "mh22WL-016") & (markers.VarRef.str.contains("rs1004689")), "Name"] = "mh22WL-016b"
         markers["Chrom"] = markers["Name"].apply(chrom_from_marker_name)
