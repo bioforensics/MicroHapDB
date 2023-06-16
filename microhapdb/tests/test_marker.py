@@ -11,10 +11,9 @@
 # -------------------------------------------------------------------------------------------------
 
 
-from io import StringIO
+from collections import defaultdict
 import microhapdb
-from microhapdb import Marker
-import pandas
+from microhapdb import Marker, Locus
 import pytest
 
 
@@ -684,3 +683,13 @@ def test_standardize_locus_names(locus, num_markers):
 
 def test_standardize_ids_incomplete_prefixes():
     assert Marker.standardize_ids(["mh01"]) == []
+
+
+def test_locus_length():
+    loci = defaultdict(Locus)
+    for marker in Marker.objectify(microhapdb.markers):
+        loci[marker.locus].markers.append(marker)
+    for locus in loci.values():
+        # This is the length of the Fasta representation of the sequence, not the sequence itself,
+        # but...close enough. 🙃
+        assert len(locus.fasta) < 700, locus.name
