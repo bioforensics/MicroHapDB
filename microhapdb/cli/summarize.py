@@ -11,8 +11,6 @@
 # -------------------------------------------------------------------------------------------------
 
 import microhapdb
-from microhapdb import Population
-from textwrap import dedent
 
 
 def main(args):
@@ -20,7 +18,7 @@ def main(args):
     markers = microhapdb.Marker.objectify(microhapdb.markers)
     num_loci = len(set([m.locus for m in markers]))
     print("[microhaplotypes]")
-    print(f"  - {num_markers} marker defintions")
+    print(f"  - {num_markers} marker definitions")
     print(f"  - {num_loci} distinct loci")
     num_pops = len(microhapdb.populations)
     num_haplotypes = len(microhapdb.frequencies.groupby(["Marker", "Allele"]))
@@ -32,7 +30,4 @@ def main(args):
 
 
 def subparser(subparsers):
-    subparser = subparsers.add_parser(
-        "summarize",
-        description="Summarize MicroHapDB database contents",
-    )
+    subparsers.add_parser("summarize", description="Summarize MicroHapDB database contents")

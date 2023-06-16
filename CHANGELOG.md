@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Over 1,000 marker definitions from four whole-genome screens from Yu et al 2022 (see #115, #118, #128).
 - New `nomenclature` module for parsing and validating microhap identifiers (see #119).
 - New `summarize` subcommand for summarizing MicroHapDB database contents (see #120).
+- 500 marker definitions from Zhu et al 2023 (see #125).
 - New check during database build time to make sure that markers sharing the same name actually occupy the same locus (see #128).
 
 ### Changed

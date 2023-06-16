@@ -23,7 +23,9 @@ def read_table(table_path):
 def compile_variant_map(markers):
     variantmap = markers[["RSIDs", "Name"]].copy()
     variantmap = variantmap.rename(columns={"RSIDs": "Variant", "Name": "Marker"})
-    variantmap["Variant"] = variantmap["Variant"].apply(lambda x: x.split(";"))
+    variantmap["Variant"] = variantmap["Variant"].apply(
+        lambda x: [] if pd.isna(x) else x.split(";")
+    )
     return variantmap.explode("Variant")
 
 
