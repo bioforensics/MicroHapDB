@@ -64,7 +64,7 @@ def test_hyphen():
 
 
 def test_lab():
-    id1 = Identifier("mh16DSSAGS-123")
+    id1 = Identifier("mh16DSSAGSRNM-123")
     assert not id1.valid
     assert ValidationErrors.LABLENGTH in id1._validation_errors
     id2 = Identifier("mh13dss-xyz")

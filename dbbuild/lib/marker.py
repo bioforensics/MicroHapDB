@@ -36,7 +36,9 @@ class Marker:
     def from_csv(csvpath, index, source=None):
         table = pd.read_csv(csvpath)
         for n, row in table.iterrows():
-            rsids = row.VarRef.split(";")
+            rsids = []
+            if not pd.isna(row.VarRef):
+                rsids = row.VarRef.split(";")
             if len(rsids) == row.NumVars:
                 yield MarkerFromIDs(
                     row.Name, row.Chrom, rsids, index, xrefs=row.Xref, source=source
@@ -76,7 +78,7 @@ class Marker:
             if chromstr != "0X":
                 strikes.append(f"invalid chromosome '{chromstr}'")
         labpi, mhnumber = name[4:].split("-", 1)
-        if len(labpi) < 2 or len(labpi) > 4:
+        if len(labpi) < 2 or len(labpi) > 6:
             strikes.append(f"lab or PI designation '{labpi}' isn't between 2-4 characters")
         if "." in mhnumber:
             if mhnumber.count(".") > 1:
@@ -114,8 +116,8 @@ class Marker:
             return False
         if len(self.rsids) < self.numvars:
             return False
-        num37 = len(list(index.resolve(self.rsids, "GRCh37")))
-        num38 = len(list(index.resolve(self.rsids, "GRCh38")))
+        num37 = len(list(self.index.resolve(self.rsids, "GRCh37")))
+        num38 = len(list(self.index.resolve(self.rsids, "GRCh38")))
         return num37 == num38 == self.base.numvars
 
     @property

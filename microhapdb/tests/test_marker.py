@@ -57,6 +57,7 @@ def test_assumptions():
         21,  # Zou2022
         118,  # delaPuente2020
         15,  # vanderGaag2018
+        494,  # Zhu2023
     ]
     redundant_markers_per_source = [
         1,  # Chen2019
@@ -70,6 +71,7 @@ def test_assumptions():
         296,  # Yu2022G2
         85,  # Yu2022G3
         64,  # Yu2022G4
+        5,  # Zhu2023
     ]
     expected_markers = sum(total_markers_per_source) - sum(redundant_markers_per_source)
     observed_markers = len(microhapdb.markers)
@@ -105,11 +107,11 @@ def test_markers():
     mh21PK-MX1s (chr21:41464745-41464824)
     mh22PK-104638 (chr22:44857883-44857955)
     """
-    assert microhapdb.markers.shape == (1836, 11)
+    assert microhapdb.markers.shape == (2325, 11)
     result = microhapdb.markers[microhapdb.markers.Chrom == "chr19"]
-    assert len(result) == 41
+    assert len(result) == 56
     varids = microhapdb.variantmap[microhapdb.variantmap.Marker.isin(result.Name)].Variant.unique()
-    assert len(varids) == 147
+    assert len(varids) == 148
 
 
 def test_marker_detail():
@@ -587,7 +589,7 @@ def test_from_region():
     assert len(Marker.table_from_region("chrX")) == 11
     assert len(Marker.table_from_region("chrY")) == 0
     markers = list(Marker.from_region("chr12:100000000-200000000"))
-    assert len(markers) == 26
+    assert len(markers) == 34
     observed = sorted([marker.name for marker in markers])
     print(observed)
     expected = sorted(
@@ -600,6 +602,14 @@ def test_from_region():
             "mh12KK-046.v3",
             "mh12KK-093",
             "mh12KK-209",
+            "mh12SCUZJ-0326503",
+            "mh12SCUZJ-0331644",
+            "mh12SCUZJ-0345285",
+            "mh12SCUZJ-0364164",
+            "mh12SCUZJ-0374276",
+            "mh12SCUZJ-0396248",
+            "mh12SCUZJ-0423152",
+            "mh12SCUZJ-0429390",
             "mh12WL-001.v1",
             "mh12WL-001.v2",
             "mh12WL-003",
@@ -645,6 +655,7 @@ def test_from_id_no_such_marker():
                 "mh21FHL-002.v1",
                 "mh21FHL-002.v2",
                 "mh21FHL-002.v3",
+                "mh21FHL-002.v4",
             ],
         ),
         (["mh11USC-11pB"], ["mh11PK-63643.v1", "mh11PK-63643.v2"]),
