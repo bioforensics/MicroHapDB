@@ -636,7 +636,7 @@ def test_cli_summarize(capsys):
     expected = """
 [microhaplotypes]
   - 1836 marker defintions
-  - 1409 distinct loci
+  - 1414 distinct loci
 [frequencies]
   - 23671 haplotypes
   - 125 population groups
