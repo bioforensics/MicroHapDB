@@ -169,7 +169,8 @@ class Marker:
         return self.name.split(".")[0]
 
     def overlaps(self, other):
-        return self.start <= other.end and self.end >= other.start
+        same_chrom = self.chrom_num == other.chrom_num
+        return same_chrom and self.start <= other.end and self.end >= other.start
 
 
 class MarkerFromPositions(Marker):
