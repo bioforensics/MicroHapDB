@@ -33,7 +33,7 @@ rule markers:
             "mh06WL-068": "mh06WL-068a",
         }
         markers = markers.replace(substitutions)
-        markers.loc[(markers.Name == "mh06WL-069") & (markers.VarRef.str.contains("rs281863504")), "Name"] = "mh06WL-037"
+        markers.loc[(markers.Name == "mh06WL-069") & (markers.VarRef.str.contains("rs281863504")), "Name"] = "mh06WL-017"
         markers.loc[(markers.Name == "mh22WL-016") & (markers.VarRef.str.contains("rs79222659")), "Name"] = "mh22WL-016a"
         markers.loc[(markers.Name == "mh22WL-016") & (markers.VarRef.str.contains("rs1004689")), "Name"] = "mh22WL-016b"
         markers["Chrom"] = markers["Name"].apply(chrom_from_marker_name)
