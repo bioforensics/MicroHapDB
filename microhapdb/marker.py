@@ -241,6 +241,8 @@ class Marker:
 
     @property
     def varrefs(self):
+        if pd.isna(self.data.RSIDs):
+            return []
         return self.data.RSIDs.split(";")
 
     def print_detail_definition(self, out):

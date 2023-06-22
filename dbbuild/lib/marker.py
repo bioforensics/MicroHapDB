@@ -170,6 +170,10 @@ class Marker:
     def locus(self):
         return self.name.split(".")[0]
 
+    def overlaps(self, other):
+        same_chrom = self.chrom_num == other.chrom_num
+        return same_chrom and self.start <= other.end and self.end >= other.start
+
 
 class MarkerFromPositions(Marker):
     def __init__(self, name, positions, rsids, index, xrefs=None, source=None):
