@@ -17,7 +17,7 @@ import pytest
 
 def test_assumptions():
     num_allele_freqs_per_source = [
-        524108,  # Byrska-Bishop2022
+        526413,  # Byrska-Bishop2022
         103,  # Chen2019
         4737,  # Gandotra2020
         33,  # Hiroaki2015
@@ -48,7 +48,7 @@ def test_allele_frequencies():
     472325  mh15CP-003        FIN  A|A|C    0.31800           Kidd2018
     """
     af = microhapdb.frequencies
-    assert af.shape == (612777, 5)
+    assert af.shape == (615082, 5)
     result = af[af.Marker == "mh21KK-315.v1"].Allele.unique()
     assert len(result) == 8
     result = af[(af.Marker == "mh21KK-315.v1") & (af.Allele == "A|C|T")]
