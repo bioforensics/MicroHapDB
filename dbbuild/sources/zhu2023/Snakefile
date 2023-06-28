@@ -1,11 +1,13 @@
 from collections import defaultdict
+from itertools import chain
 import re
 import sys
 
 
 rule markers:
     input:
-        table="table-s1.csv",
+        table1="table-s1.csv",
+        table2="table-s2.csv",
         bed37="coords37.bed",
         bed38="coords38.bed",
         bedun="coords-unmapped.bed",
@@ -14,30 +16,31 @@ rule markers:
         skipped="skipped.txt",
     run:
         coord_map = parse_coord_mapping(input.bed37, input.bed38, input.bedun)
-        with open(input.table, "r") as infh, open(output.csv, "w") as outfh, open(
-            output.skipped, "w"
-        ) as skipfh:
-            print("Name,Xref,NumVars,Refr,Chrom,Positions,VarRef", file=outfh)
-            for marker in parse_table_s1(infh):
-                marker.update_coords(coord_map)
-                if marker.valid:
-                    print(marker, file=outfh)
-                else:
-                    message = f"Skipping marker {marker.name}: could not lift over to GRCh38"
-                    print(message, file=sys.stderr)
-                    print(message, file=skipfh)
+        with open(input.table1, "r") as infh1, open(input.table2, "r") as infh2:
+            with open(output.csv, "w") as outfh, open(output.skipped, "w") as skipfh:
+                print("Name,Xref,NumVars,Refr,Chrom,Positions,VarRef", file=outfh)
+                for marker in chain(parse_table(infh1), parse_table(infh2)):
+                    marker.update_coords(coord_map)
+                    if marker.valid:
+                        print(marker, file=outfh)
+                    else:
+                        message = f"Skipping marker {marker.name}: could not lift over to GRCh38"
+                        print(message, file=sys.stderr)
+                        print(message, file=skipfh)
 
 
 rule coords37:
     input:
-        table="table-s1.csv",
+        table1="table-s1.csv",
+        table2="table-s2.csv",
     output:
         bed37="coords37.bed",
     run:
-        with open(input.table, "r") as infh, open(output.bed37, "w") as outfh:
-            for marker in parse_table_s1(infh):
-                for pos in marker.positions:
-                    print(marker.chrom, pos - 1, pos, sep="\t", file=outfh)
+        with open(input.table1, "r") as infh1, open(input.table2, "r") as infh2:
+            with open(output.bed37, "w") as outfh:
+                for marker in chain(parse_table(infh1), parse_table(infh2)):
+                    for pos in marker.positions:
+                        print(marker.chrom, pos - 1, pos, sep="\t", file=outfh)
 
 
 rule convert:
@@ -51,7 +54,7 @@ rule convert:
         "liftOver {input} {output}"
 
 
-def parse_table_s1(instream):
+def parse_table(instream):
     next(instream)
     next(instream)
     for line in instream:
