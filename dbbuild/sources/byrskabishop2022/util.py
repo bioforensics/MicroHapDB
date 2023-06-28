@@ -52,9 +52,13 @@ class GenotypeIndexer:
         for record in self.vcf.fetch(chrom, min(positions) - 1, max(positions)):
             if record.pos not in positions:
                 continue
-            for sample in self.samples:
-                for haplotype, allele in zip(haplotypes[sample], record.samples[sample].alleles):
-                    haplotype[record.pos] = allele
+            for allele in record.alleles:
+                if len(allele) > 1:
+                    break
+            else:
+                for sample in self.samples:
+                    for haplotype, allele in zip(haplotypes[sample], record.samples[sample].alleles):
+                        haplotype[record.pos] = allele
         for sample in self.samples:
             yield sample, haplotypes[sample][0], haplotypes[sample][1]
 
