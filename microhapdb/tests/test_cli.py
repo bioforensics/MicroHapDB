@@ -115,7 +115,7 @@ def test_main_marker_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 2325
+    assert len(outlines) == 1 + 2804
 
 
 def test_main_marker_notrunc(capsys):
@@ -123,7 +123,7 @@ def test_main_marker_notrunc(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 2325
+    assert len(outlines) == 1 + 2804
 
 
 def test_main_marker_detail(capsys):
@@ -138,63 +138,78 @@ def test_main_marker_query(capsys):
     microhapdb.cli.main(args)
     terminal = capsys.readouterr()
     exp_out = """
-             Name  NumVars  Extent Chrom    Start      End    Ae                              Source
-    mh19WL-007.v3        6     251 chr19   410610   410860 1.126                            Yu2022G3
-    mh19WL-007.v1        5     102 chr19   410759   410860 1.000                   Yu2022G1;Yu2022G2
-    mh19WL-007.v2        4      89 chr19   410772   410860 1.000                            Yu2022G4
-     mh19USC-19pA        3      38 chr19   561779   561816 2.924                      delaPuente2020
-mh19SCUZJ-0007484        9     254 chr19   930658   930911 7.592                             Zhu2023
-       mh19WL-024        6     198 chr19  1955525  1955722 4.977                            Yu2022G1
-       mh19WL-025        4     170 chr19  3120344  3120513 4.746                            Yu2022G1
-mh19SCUZJ-0018130        7     297 chr19  3125014  3125310 5.460                             Zhu2023
-mh19SCUZJ-0022447        4     244 chr19  4195774  4196017 5.725                             Zhu2023
-       mh19KK-056        2     201 chr19  4852125  4852325 2.608                            Kidd2018
-   mh19SHY-001.v1        8     185 chr19  7698913  7699097 6.469                              Wu2021
-   mh19SHY-001.v2        5     106 chr19  7698992  7699097 6.442           Yu2022G1;Yu2022G2;Zhu2023
-   mh19SHY-001.v4        6     280 chr19  7698992  7699271 9.195                            Yu2022G3
-   mh19SHY-001.v3        4      67 chr19  7699031  7699097 4.488                            Yu2022G4
-mh19SCUZJ-0046036        7     248 chr19  8787571  8787818 3.649                             Zhu2023
-       mh19WL-026        4      84 chr19  9009766  9009849 3.955                            Yu2022G1
-mh19SCUZJ-0056108        6     214 chr19 11146421 11146634 3.835                             Zhu2023
-mh19SCUZJ-0064306        8     170 chr19 13602099 13602268 5.422                             Zhu2023
-       mh19CP-007        3      42 chr19 14310740 14310781 3.271                            Kidd2018
-       mh19WL-011        3      96 chr19 15931448 15931543 1.803 Yu2022G1;Yu2022G2;Yu2022G3;Yu2022G4
-mh19SCUZJ-0077038        6     233 chr19 15933829 15934061 1.072                             Zhu2023
-     mh19USC-19pB        5      66 chr19 16040865 16040930 3.866                      delaPuente2020
-mh19SCUZJ-0081305        5     260 chr19 17174913 17175172 4.770                             Zhu2023
-      mh19ZHA-006        6      63 chr19 20579863 20579925 4.511                             Sun2020
-        mh19NH-23        3      95 chr19 22052724 22052818 2.032                         Hiroaki2015
-    mh19KK-299.v1        5     154 chr19 22546698 22546851 4.236                 Kidd2018;Turchi2019
-    mh19KK-299.v2        7     154 chr19 22546698 22546851 4.253                        Gandotra2020
-    mh19KK-299.v4       10     182 chr19 22546698 22546879 4.253                         Pakstis2021
-    mh19KK-299.v3        3      63 chr19 22546749 22546811 3.771                         Staadig2021
-      mh19ZHA-007        4     141 chr19 28397316 28397456 4.435                 Kureshi2020;Sun2020
-mh19SCUZJ-0121709        3     120 chr19 28735778 28735897 4.726                             Zhu2023
-mh19SCUZJ-0137855        5     350 chr19 32851722 32852071 2.958                             Zhu2023
-  mh19USC-19qA.v1        4      46 chr19 33273772 33273817 3.660                      delaPuente2020
-  mh19USC-19qA.v3        5      49 chr19 33273772 33273820 5.084                            Yu2022G4
-  mh19USC-19qA.v2        6     185 chr19 33273772 33273956 7.147          Yu2022G1;Yu2022G2;Yu2022G3
-mh19SCUZJ-0146076        8     318 chr19 35194553 35194870 5.130                             Zhu2023
-       mh19WL-022        4     283 chr19 39678442 39678724 3.975                            Yu2022G3
-       mh19WL-013        3      54 chr19 45710986 45711039 2.903                            Yu2022G2
-       mh19WL-018        3      92 chr19 46308509 46308600 4.262          Yu2022G1;Yu2022G3;Yu2022G4
-       mh19WL-028        5     186 chr19 47379150 47379335 3.727                            Yu2022G1
-       mh19WL-008        5     193 chr19 50811875 50812067 1.993                   Yu2022G1;Yu2022G2
-       mh19KK-301        4      64 chr19 50938488 50938551 2.577                 Kidd2018;Turchi2019
-       mh19KK-300        7     182 chr19 50947787 50947968 5.407            Gandotra2020;Pakstis2021
-       mh19KK-057        3     115 chr19 51654949 51655063 2.498                 Kidd2018;Turchi2019
-mh19SCUZJ-0215538        5     331 chr19 52912335 52912665 6.622                             Zhu2023
-      mh19ZHA-009        5     178 chr19 53129073 53129250 4.286                 Kureshi2020;Sun2020
-       mh19WL-020        5     265 chr19 53132309 53132573 7.506                            Yu2022G3
-  mh19USC-19qB.v2        7     106 chr19 53714365 53714470 6.254                            Yu2022G1
-  mh19USC-19qB.v1        3      27 chr19 53714388 53714414 4.912                      delaPuente2020
-  mh19USC-19qB.v3        6      83 chr19 53714388 53714470 6.008                            Yu2022G4
-mh19SCUZJ-0227616        9     280 chr19 54221872 54222151 1.328                             Zhu2023
-mh19SCUZJ-0238255        7     303 chr19 55526863 55527165 3.786                             Zhu2023
-      mh19SHY-002        9     165 chr19 55588421 55588585 3.544                              Wu2021
-       mh19WL-027        4     193 chr19 55796289 55796481 4.544                            Yu2022G1
-       mh19WL-012       11     195 chr19 57013159 57013353 4.385                   Yu2022G1;Yu2022G2
-mh19SCUZJ-0249143       10     185 chr19 57245590 57245774 4.085                             Zhu2023
+                Name  NumVars  Extent Chrom    Start      End     Ae                              Source
+   mh19SCUZJ-0001326       17     337 chr19   389061   389397  4.909                             Zhu2023
+       mh19WL-007.v3        6     251 chr19   410610   410860  1.126                            Yu2022G3
+       mh19WL-007.v1        5     102 chr19   410759   410860  1.000                   Yu2022G1;Yu2022G2
+       mh19WL-007.v2        4      89 chr19   410772   410860  1.000                            Yu2022G4
+        mh19USC-19pA        3      38 chr19   561779   561816  2.924                      delaPuente2020
+   mh19SCUZJ-0007484        9     254 chr19   930658   930911  7.592                             Zhu2023
+   mh19SCUZJ-0012120        7     232 chr19  1923847  1924078  1.883                             Zhu2023
+          mh19WL-024        6     198 chr19  1955525  1955722  4.977                            Yu2022G1
+          mh19WL-025        4     170 chr19  3120344  3120513  4.746                            Yu2022G1
+   mh19SCUZJ-0018130        7     297 chr19  3125014  3125310  5.460                             Zhu2023
+   mh19SCUZJ-0019425        7     335 chr19  3272090  3272424  9.444                             Zhu2023
+   mh19SCUZJ-0022447        4     244 chr19  4195774  4196017  5.725                             Zhu2023
+          mh19KK-056        2     201 chr19  4852125  4852325  2.608                            Kidd2018
+   mh19SCUZJ-0028962       12     346 chr19  5853211  5853556 14.410                             Zhu2023
+   mh19SCUZJ-0039302       10     317 chr19  7570487  7570803  9.407                             Zhu2023
+      mh19SHY-001.v1        8     185 chr19  7698913  7699097  6.469                              Wu2021
+      mh19SHY-001.v2        5     106 chr19  7698992  7699097  6.442           Yu2022G1;Yu2022G2;Zhu2023
+      mh19SHY-001.v4        6     280 chr19  7698992  7699271  9.195                            Yu2022G3
+      mh19SHY-001.v3        4      67 chr19  7699031  7699097  4.488                            Yu2022G4
+   mh19SCUZJ-0046036        7     248 chr19  8787571  8787818  3.649                             Zhu2023
+          mh19WL-026        4      84 chr19  9009766  9009849  3.955                            Yu2022G1
+   mh19SCUZJ-0056108        6     214 chr19 11146421 11146634  3.835                             Zhu2023
+   mh19SCUZJ-0064306        8     170 chr19 13602099 13602268  5.422                             Zhu2023
+          mh19CP-007        3      42 chr19 14310740 14310781  3.271                            Kidd2018
+          mh19WL-011        3      96 chr19 15931448 15931543  1.803 Yu2022G1;Yu2022G2;Yu2022G3;Yu2022G4
+   mh19SCUZJ-0077038        6     233 chr19 15933829 15934061  1.072                             Zhu2023
+        mh19USC-19pB        5      66 chr19 16040865 16040930  3.866                      delaPuente2020
+   mh19SCUZJ-0081305        5     260 chr19 17174913 17175172  4.770                             Zhu2023
+   mh19SCUZJ-0091391        9     269 chr19 20552758 20553026  7.755                             Zhu2023
+         mh19ZHA-006        6      63 chr19 20579863 20579925  4.511                             Sun2020
+           mh19NH-23        3      95 chr19 22052724 22052818  2.032                         Hiroaki2015
+       mh19KK-299.v1        5     154 chr19 22546698 22546851  4.236                 Kidd2018;Turchi2019
+       mh19KK-299.v2        7     154 chr19 22546698 22546851  4.253                        Gandotra2020
+       mh19KK-299.v4       10     182 chr19 22546698 22546879  4.253                         Pakstis2021
+       mh19KK-299.v3        3      63 chr19 22546749 22546811  3.771                         Staadig2021
+   mh19SCUZJ-0119796        6     347 chr19 28336605 28336951 10.495                             Zhu2023
+         mh19ZHA-007        4     141 chr19 28397316 28397456  4.435                 Kureshi2020;Sun2020
+   mh19SCUZJ-0121709        3     120 chr19 28735778 28735897  4.726                             Zhu2023
+   mh19SCUZJ-0129055        6     335 chr19 29597152 29597486  6.674                             Zhu2023
+   mh19SCUZJ-0137855        5     350 chr19 32851722 32852071  2.958                             Zhu2023
+     mh19USC-19qA.v1        4      46 chr19 33273772 33273817  3.660                      delaPuente2020
+     mh19USC-19qA.v3        5      49 chr19 33273772 33273820  5.084                            Yu2022G4
+     mh19USC-19qA.v2        6     185 chr19 33273772 33273956  7.147  Yu2022G1;Yu2022G2;Yu2022G3;Zhu2023
+   mh19SCUZJ-0146076        8     318 chr19 35194553 35194870  5.130                             Zhu2023
+   mh19SCUZJ-0146592       11     307 chr19 35289948 35290254  6.568                             Zhu2023
+          mh19WL-022        4     283 chr19 39678442 39678724  3.975                            Yu2022G3
+   mh19SCUZJ-0164190        9     338 chr19 40875429 40875766  9.761                             Zhu2023
+          mh19WL-013        3      54 chr19 45710986 45711039  2.903                            Yu2022G2
+          mh19WL-018        3      92 chr19 46308509 46308600  4.262          Yu2022G1;Yu2022G3;Yu2022G4
+          mh19WL-028        5     186 chr19 47379150 47379335  3.727                            Yu2022G1
+   mh19SCUZJ-0195134        5     285 chr19 49897779 49898063  7.500                             Zhu2023
+          mh19WL-008        5     193 chr19 50811875 50812067  1.993                   Yu2022G1;Yu2022G2
+          mh19KK-301        4      64 chr19 50938488 50938551  2.577                 Kidd2018;Turchi2019
+          mh19KK-300        7     182 chr19 50947787 50947968  5.407            Gandotra2020;Pakstis2021
+          mh19KK-057        3     115 chr19 51654949 51655063  2.498                 Kidd2018;Turchi2019
+   mh19SCUZJ-0212784        9     335 chr19 52762327 52762661  6.084                             Zhu2023
+   mh19SCUZJ-0215538        5     331 chr19 52912335 52912665  6.622                             Zhu2023
+         mh19ZHA-009        5     178 chr19 53129073 53129250  4.286                 Kureshi2020;Sun2020
+          mh19WL-020        5     265 chr19 53132309 53132573  7.506                            Yu2022G3
+     mh19USC-19qB.v2        7     106 chr19 53714365 53714470  6.254                            Yu2022G1
+     mh19USC-19qB.v1        3      27 chr19 53714388 53714414  4.912                      delaPuente2020
+     mh19USC-19qB.v3        6      83 chr19 53714388 53714470  6.008                            Yu2022G4
+   mh19SCUZJ-0227114        4     241 chr19 54133057 54133297 10.996                             Zhu2023
+   mh19SCUZJ-0227616        9     280 chr19 54221872 54222151  1.328                             Zhu2023
+   mh19SCUZJ-0238255        7     303 chr19 55526863 55527165  3.786                             Zhu2023
+         mh19SHY-002        9     165 chr19 55588421 55588585  3.544                              Wu2021
+          mh19WL-027        4     193 chr19 55796289 55796481  4.544                            Yu2022G1
+   mh19SCUZJ-0244558       11     311 chr19 56207216 56207526  5.247                             Zhu2023
+          mh19WL-012       11     195 chr19 57013159 57013353  4.385                   Yu2022G1;Yu2022G2
+mh19SCUZJ-0249059.v2       17     273 chr19 57245502 57245774 12.735                             Zhu2023
+mh19SCUZJ-0249059.v1       10     185 chr19 57245590 57245774  4.085                             Zhu2023
 """
     obs_out = terminal.out
     print(obs_out)
@@ -253,7 +268,7 @@ def test_main_marker_region_mode(capsys):
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
     print(out)
-    assert len(outlines) == 77 + 1  # markers + 1 header line
+    assert len(outlines) == 94 + 1  # markers + 1 header line
 
 
 def test_main_marker_region_mode_failure(capsys):
@@ -379,7 +394,7 @@ def test_main_marker_bad_code():
         ("--population=SA000009J", "--marker=mh13KK-218.v1", None, 15),
         (None, "--marker=mh13KK-218.v1", "--allele=C|T|C|T", 129),
         (None, "--marker=mh14PK-72639", None, 227),
-        (None, None, None, 615083),
+        (None, None, None, 894906),
     ],
 )
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
@@ -439,26 +454,36 @@ def test_ae_pop(capsys):
     microhapdb.cli.main(args)
     terminal = capsys.readouterr()
     exp_out = """
-             Name  NumVars  Extent Chrom    Start      End    Ae                              Source
-       mh18WL-002        6     100 chr18   466283   466382 4.056 Yu2022G1;Yu2022G2;Yu2022G3;Yu2022G4
-mh18SCUZJ-0003488        7     206 chr18   722819   723024 4.829                             Zhu2023
-      mh18SHY-001       11     181 chr18  1952477  1952657 4.127                              Wu2021
-     mh18PK-87558        6      47 chr18  1960543  1960589 2.217                      vanderGaag2018
-mh18SCUZJ-0011531        4     294 chr18  2326915  2327208 4.654                             Zhu2023
-       mh18WL-028        4     198 chr18  3246291  3246488 4.185                            Yu2022G1
-mh18SCUZJ-0020937        6     323 chr18  4478124  4478446 4.430                             Zhu2023
-     mh18USC-18pA        5      77 chr18  5280018  5280094 1.923                      delaPuente2020
-       mh18WL-026        3     110 chr18  7382444  7382553 3.135                            Yu2022G1
-       mh18CP-005        4      44 chr18  8892865  8892908 3.620                            Kidd2018
-mh18SCUZJ-0040982        6     295 chr18  8935646  8935940 5.154                             Zhu2023
-    mh18WL-009.v2        9      97 chr18 10150919 10151015 1.000                            Yu2022G4
-    mh18WL-009.v1       10     200 chr18 10150919 10151118 2.000          Yu2022G1;Yu2022G2;Yu2022G3
-      mh18ZBF-002        4      77 chr18 11900703 11900779 3.264                             Jin2020
-mh18SCUZJ-0064744        7     317 chr18 14298131 14298447 2.146                             Zhu2023
-      mh18ZHA-004        4     116 chr18 14315932 14316047 3.017                             Sun2020
-    mh18KK-285.v1        4     136 chr18 24557355 24557490 2.584                 Kidd2018;Turchi2019
-    mh18KK-285.v2        3      59 chr18 24557432 24557490 2.577                         Staadig2021
-mh18SCUZJ-0076547        7     269 chr18 24716273 24716541 4.878                             Zhu2023
+                Name  NumVars  Extent Chrom    Start      End     Ae                              Source
+          mh18WL-002        6     100 chr18   466283   466382  4.056 Yu2022G1;Yu2022G2;Yu2022G3;Yu2022G4
+   mh18SCUZJ-0002652        6     343 chr18   626657   626999  1.738                             Zhu2023
+   mh18SCUZJ-0003488        7     206 chr18   722819   723024  4.829                             Zhu2023
+         mh18SHY-001       11     181 chr18  1952477  1952657  4.127                              Wu2021
+        mh18PK-87558        6      47 chr18  1960543  1960589  2.217                      vanderGaag2018
+   mh18SCUZJ-0009510       15     304 chr18  1962681  1962984  1.000                             Zhu2023
+   mh18SCUZJ-0011531        4     294 chr18  2326915  2327208  4.654                             Zhu2023
+   mh18SCUZJ-0015713        7     269 chr18  3197574  3197842  9.003                             Zhu2023
+          mh18WL-028        4     198 chr18  3246291  3246488  4.185                            Yu2022G1
+mh18SCUZJ-0020879.v2       11     270 chr18  4477999  4478268 14.775                             Zhu2023
+mh18SCUZJ-0020879.v1        6     323 chr18  4478124  4478446  4.430                             Zhu2023
+        mh18USC-18pA        5      77 chr18  5280018  5280094  1.923                      delaPuente2020
+          mh18WL-026        3     110 chr18  7382444  7382553  3.135                            Yu2022G1
+          mh18CP-005        4      44 chr18  8892865  8892908  3.620                            Kidd2018
+   mh18SCUZJ-0040982        6     295 chr18  8935646  8935940  5.154                             Zhu2023
+   mh18SCUZJ-0042322        6     305 chr18  9555862  9556166  7.195                             Zhu2023
+       mh18WL-009.v2        9      97 chr18 10150919 10151015  1.000                            Yu2022G4
+       mh18WL-009.v1       10     200 chr18 10150919 10151118  2.000          Yu2022G1;Yu2022G2;Yu2022G3
+   mh18SCUZJ-0052717        6     347 chr18 11578129 11578475  7.319                             Zhu2023
+         mh18ZBF-002        4      77 chr18 11900703 11900779  3.264                             Jin2020
+   mh18SCUZJ-0058695        5     220 chr18 12976468 12976687  6.680                             Zhu2023
+mh18SCUZJ-0064707.v2       10     315 chr18 14298002 14298316  6.209                             Zhu2023
+mh18SCUZJ-0064707.v1        7     317 chr18 14298131 14298447  2.146                             Zhu2023
+         mh18ZHA-004        4     116 chr18 14315932 14316047  3.017                             Sun2020
+   mh18SCUZJ-0070441        6     317 chr18 21906065 21906381 10.511                             Zhu2023
+       mh18KK-285.v1        4     136 chr18 24557355 24557490  2.584                 Kidd2018;Turchi2019
+       mh18KK-285.v2        3      59 chr18 24557432 24557490  2.577                         Staadig2021
+   mh18SCUZJ-0076547        7     269 chr18 24716273 24716541  4.878                             Zhu2023
+
 """
     obs_out = terminal.out
     print(obs_out)
@@ -656,12 +681,12 @@ def test_cli_summarize(capsys):
     observed = terminal.out
     expected = """
 [microhaplotypes]
-  - 2325 marker definitions
-  - 1868 distinct loci
+  - 2804 marker definitions
+  - 2200 distinct loci
 [frequencies]
-  - 31816 haplotypes
+  - 56505 haplotypes
   - 125 population groups
-  - 615082 total microhap frequencies
+  - 894905 total microhap frequencies
 """
     print(observed)
     assert observed.strip() == expected.strip()

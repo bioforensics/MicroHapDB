@@ -4,3 +4,9 @@ Skipping marker mh01SCUZJ-0360036: could not lift over to GRCh38
 Skipping marker mh19SCUZJ-0175894: could not lift over to GRCh38
 Skipping marker mh07SCUZJ-0480749: could not lift over to GRCh38
 Skipping marker mh17SCUZJ-0109164: could not lift over to GRCh38
+Skipping marker mh08SCUZJ-0018972: could not lift over to GRCh38
+Skipping marker mh22SCUZJ-0006768: could not lift over to GRCh38
+Skipping marker mh14SCUZJ-0281643: could not lift over to GRCh38
+Skipping marker mh01SCUZJ-0053698: could not lift over to GRCh38
+Skipping marker mh01SCUZJ-0360197: could not lift over to GRCh38
+Skipping marker mh17SCUZJ-0109159: could not lift over to GRCh38
