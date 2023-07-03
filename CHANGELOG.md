@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [0.9] 2023-07-03
 
 ### Added
 - Italian population frequencies for 98 markers from Turchi et al 2019 (see #107).
@@ -11,13 +11,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Over 1,000 marker definitions from four whole-genome screens from Yu et al 2022 (see #115, #118, #128).
 - New `nomenclature` module for parsing and validating microhap identifiers (see #119).
 - New `summarize` subcommand for summarizing MicroHapDB database contents (see #120).
-- 500 marker definitions from Zhu et al 2023 (see #125).
+- 1,000 marker definitions from Zhu et al 2023 (see #125, #131).
 - New check during database build time to make sure that markers sharing the same name actually occupy the same locus (see #128).
 
 ### Changed
 - Overhaul of the marker table structure and database build procedure (see #106, #111, #112).
-- Use Byrska-Bishop 2022 instead of Auton 2015 for main frequency and Ae calculations (see #106, #112, #114).
-- Marker FASTA output now produces a single sequence per locus, even when multiple markers at a locus are included (#124).
+- Use Byrska-Bishop 2022 instead of Auton 2015 for main frequency and Ae calculations (see #106, #112, #114, #130).
+- Marker FASTA output now produces a single sequence per locus, even when multiple markers at a locus are defined (#124).
 
 
 ## [0.8.2] 2022-11-21
