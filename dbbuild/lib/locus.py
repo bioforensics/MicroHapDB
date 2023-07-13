@@ -41,7 +41,7 @@ class Locus(list):
                 yield marker
             return
         self.check_overlap()
-        for marker in sorted(self.markers, key=lambda m: (m.sources[0].year, m.name.lower())):
+        for marker in sorted(self.markers, key=lambda m: (m.source.year, m.source.order, m.name.lower())):
             if marker.posstr() in self.definition_names:
                 message = f"Marker {marker.name} as defined in {marker.sources[0].name} was defined previously and is redundant"
                 print(message)

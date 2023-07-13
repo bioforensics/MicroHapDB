@@ -37,6 +37,7 @@ class Marker:
         table = pd.read_csv(csvpath)
         for n, row in table.iterrows():
             rsids = []
+            print("DEBUG", row)
             if not pd.isna(row.VarRef):
                 rsids = row.VarRef.split(";")
             if len(rsids) == row.NumVars:
@@ -156,6 +157,10 @@ class Marker:
             return None
         names = [s.name for s in sorted(self.sources, key=lambda x: (x.year, x.name))]
         return ";".join(names)
+
+    @property
+    def source(self):
+        return self.sources[0]
 
     def posstr(self, refr="GRCh38"):
         return ";".join(map(str, self.positions[refr]))

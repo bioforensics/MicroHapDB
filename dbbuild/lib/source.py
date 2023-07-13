@@ -70,6 +70,12 @@ class DataSource:
         return self.metadata["year"]
 
     @property
+    def order(self):
+        if "order" in self.metadata:
+            return self.metadata["order"]
+        return 0
+
+    @property
     def description(self):
         return self.metadata["description"]
 
@@ -175,7 +181,7 @@ class SourceIndex:
                 self._markers.append(marker)
             for sourcename, namedict in locus.source_name_map.items():
                 source_name_map[sourcename].update(namedict)
-        for source in sorted(self.sources, key=lambda s: (s.year, s.name)):
+        for source in sorted(self.sources, key=lambda s: (s.year, s.order, s.name)):
             source.rename_markers(source_name_map[source.name])
 
     def interval_check(self):

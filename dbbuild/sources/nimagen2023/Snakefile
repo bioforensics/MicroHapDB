@@ -1,0 +1,32 @@
+from microhapdb import markers
+from microhapdb.nomenclature import Identifier
+
+
+rule markers:
+    input:
+        rsids="rsids.csv",
+    output:
+        marker="marker.csv",
+    run:
+        with open(input.rsids, "r") as infh, open(output.marker, "w") as outfh:
+            print("Name,Xref,NumVars,Refr,Chrom,Positions,VarRef", file=outfh)
+            for line in infh:
+                name, rsids = line.strip().split(",")
+                numvars = rsids.count(";") + 1
+                chrom = Identifier(name).chrom
+                print(f"{name},,{numvars},,{chrom},,{rsids}", file=outfh)
+
+
+rule prep:
+    input:
+        notes="notes.csv",
+    output:
+        rsids="rsids.csv",
+    run:
+        with open(input.notes, "r") as infh, open(output.rsids, "w") as outfh:
+            for line in infh:
+                name, rsids = line.strip().split(",")
+                if rsids == "":
+                    rsids = markers[markers.Name == name].iloc[0].RSIDs
+                    name = name.split(".")[0]
+                print(name, rsids, sep=",", file=outfh)
