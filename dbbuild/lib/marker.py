@@ -11,6 +11,7 @@
 # -------------------------------------------------------------------------------------------------
 
 from .variant import VariantList
+from itertools import chain
 import pandas as pd
 
 
@@ -178,12 +179,14 @@ class Marker:
         same_chrom = self.chrom_num == other.chrom_num
         return same_chrom and self.start <= other.end and self.end >= other.start
 
-    def rsid_union(self, other):
-        for rsid in set(self.rsids) | set(other.rsids):
-            if rsid not in self.rsids:
-                self.rsids.append(rsid)
-            if rsid not in other.rsids:
-                other.rsids.append(rsid)
+    def rsid_union(self, *others):
+        rsids = set(self.rsids)
+        for other in others:
+            rsids |= set(other.rsids)
+        for rsid in rsids:
+            for marker in chain([self], others):
+                if rsid not in marker.rsids:
+                    marker.rsids.append(rsid)
 
 
 class MarkerFromPositions(Marker):
