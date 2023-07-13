@@ -37,7 +37,6 @@ class Marker:
         table = pd.read_csv(csvpath)
         for n, row in table.iterrows():
             rsids = []
-            print("DEBUG", row)
             if not pd.isna(row.VarRef):
                 rsids = row.VarRef.split(";")
             if len(rsids) == row.NumVars:
@@ -178,6 +177,13 @@ class Marker:
     def overlaps(self, other):
         same_chrom = self.chrom_num == other.chrom_num
         return same_chrom and self.start <= other.end and self.end >= other.start
+
+    def rsid_union(self, other):
+        for rsid in set(self.rsids) | set(other.rsids):
+            if rsid not in self.rsids:
+                self.rsids.append(rsid)
+            if rsid not in other.rsids:
+                other.rsids.append(rsid)
 
 
 class MarkerFromPositions(Marker):

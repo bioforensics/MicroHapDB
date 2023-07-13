@@ -46,6 +46,8 @@ class Locus(list):
                 message = f"Marker {marker.name} as defined in {marker.sources[0].name} was defined previously and is redundant"
                 print(message)
                 self.source_name_map[marker.sources[0].name][marker.name] = self.definition_names[marker.posstr()]
+                orig = self.markers_by_definition[marker.posstr()][0]
+                orig.rsid_union(marker)
                 continue
             else:
                 new_name = marker.name
