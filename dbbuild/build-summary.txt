@@ -646,6 +646,7 @@ Marker mh03WL-006 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh04FHL-005 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh04FHL-005 as defined in Yu2022G4 was defined previously and is redundant
 Marker mh05KK-170 as defined in Turchi2019 was defined previously and is redundant
+Marker mh05KK-170 as defined in NimaGen2023 was defined previously and is redundant
 Marker mh09KK-145 as defined in NimaGen2023 was defined previously and is redundant
 Marker mh09KK-153 as defined in Turchi2019 was defined previously and is redundant
 Marker mh09KK-153 as defined in Yu2022G2 was defined previously and is redundant
@@ -2981,7 +2982,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [NimaGen2023] mh03LV-06 --> mh03LV-06.v5
 [NimaGen2023] mh03WL-006 --> mh03WL-006.v4
 [NimaGen2023] mh04FHL-005 --> mh04FHL-005.v6
-[NimaGen2023] mh05KK-170 --> mh05KK-170.v5
+[NimaGen2023] mh05KK-170 --> mh05KK-170.v2
 [NimaGen2023] mh07KK-009 --> mh07KK-009.v3
 [NimaGen2023] mh08KK-137 --> mh08KK-137.v3
 [NimaGen2023] mh09KK-145 --> mh09KK-145.v1
@@ -3060,7 +3061,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
   - 10 population samples
   - frequencies for 65 distinct haplotypes in 10 populations; 650 total frequencies
 [NimaGen2023]
-  - 29 marker definitions based on 240 SNPs
+  - 29 marker definitions based on 241 SNPs
 [Zhu2023]
   - 988 marker definitions based on 7382 SNPs
 
