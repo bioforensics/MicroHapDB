@@ -647,10 +647,12 @@ Marker mh04FHL-005 as defined in Yu2022G2 was defined previously and is redundan
 Marker mh04FHL-005 as defined in Yu2022G4 was defined previously and is redundant
 Marker mh05KK-170 as defined in Turchi2019 was defined previously and is redundant
 Marker mh05KK-170 as defined in NimaGen2023 was defined previously and is redundant
+Marker mh08KK-137 as defined in NimaGen2023 was defined previously and is redundant
 Marker mh09KK-145 as defined in NimaGen2023 was defined previously and is redundant
 Marker mh09KK-153 as defined in Turchi2019 was defined previously and is redundant
 Marker mh09KK-153 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh09KK-153 as defined in Yu2022G3 was defined previously and is redundant
+Marker mh09KK-153 as defined in NimaGen2023 was defined previously and is redundant
 Marker mh11KK-180 as defined in Turchi2019 was defined previously and is redundant
 Marker mh11KK-180 as defined in NimaGen2023 was defined previously and is redundant
 Marker mh12KK-201 as defined in NimaGen2023 was defined previously and is redundant
@@ -664,7 +666,6 @@ Marker mh13KK-218 as defined in Pakstis2021 was defined previously and is redund
 Marker mh13KK-221 as defined in Pakstis2021 was defined previously and is redundant
 Marker mh13KK-221 as defined in NimaGen2023 was defined previously and is redundant
 Marker mh16KK-011 as defined in Yu2022G2 was defined previously and is redundant
-Marker mh16KK-011 as defined in NimaGen2023 was defined previously and is redundant
 Marker mh17KK-278 as defined in NimaGen2023 was defined previously and is redundant
 Marker mh20KK-306 as defined in NimaGen2023 was defined previously and is redundant
 Marker mh21KK-320 as defined in Turchi2019 was defined previously and is redundant
@@ -2984,9 +2985,9 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [NimaGen2023] mh04FHL-005 --> mh04FHL-005.v6
 [NimaGen2023] mh05KK-170 --> mh05KK-170.v2
 [NimaGen2023] mh07KK-009 --> mh07KK-009.v3
-[NimaGen2023] mh08KK-137 --> mh08KK-137.v3
+[NimaGen2023] mh08KK-137 --> mh08KK-137.v1
 [NimaGen2023] mh09KK-145 --> mh09KK-145.v1
-[NimaGen2023] mh09KK-153 --> mh09KK-153.v5
+[NimaGen2023] mh09KK-153 --> mh09KK-153.v2
 [NimaGen2023] mh10KK-162 --> mh10KK-162.v3
 [NimaGen2023] mh11KK-180 --> mh11KK-180.v2
 [NimaGen2023] mh11KK-183 --> mh11KK-183.v3
@@ -2995,7 +2996,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [NimaGen2023] mh13KK-217 --> mh13KK-217.v2
 [NimaGen2023] mh13KK-218 --> mh13KK-218.v6
 [NimaGen2023] mh13KK-221 --> mh13KK-221.v1
-[NimaGen2023] mh16KK-011 --> mh16KK-011.v1
+[NimaGen2023] mh16KK-011 --> mh16KK-011.v5
 [NimaGen2023] mh16KK-259 --> mh16KK-259.v5
 [NimaGen2023] mh17KK-278 --> mh17KK-278.v1
 [NimaGen2023] mh20KK-306 --> mh20KK-306.v1
@@ -3045,7 +3046,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
   - 59 marker definitions based on 658 SNPs
 [Byrska-Bishop2022]
   - 31 population samples
-  - frequencies for 56948 distinct haplotypes in 31 populations; 817539 total frequencies
+  - frequencies for 56691 distinct haplotypes in 31 populations; 814236 total frequencies
 [Fan2022]
   - 22 marker definitions based on 338 SNPs and 25 indels
 [Yu2022G1]
@@ -3061,7 +3062,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
   - 10 population samples
   - frequencies for 65 distinct haplotypes in 10 populations; 650 total frequencies
 [NimaGen2023]
-  - 29 marker definitions based on 241 SNPs
+  - 29 marker definitions based on 244 SNPs
 [Zhu2023]
   - 988 marker definitions based on 7382 SNPs
 
