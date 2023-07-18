@@ -14,16 +14,11 @@ from .interval import IntervalIndex
 from .locus import Locus
 from .marker import Marker
 from .variant import VariantIndex
-from collections import Counter, defaultdict
+from collections import defaultdict
 from io import StringIO
 import json
 import pandas as pd
 from pathlib import Path
-from pyfaidx import Fasta as FastaIdx
-import rsidx
-import sqlite3
-import subprocess
-from tempfile import TemporaryDirectory
 
 
 class DataSource:
@@ -68,6 +63,16 @@ class DataSource:
     @property
     def year(self):
         return self.metadata["year"]
+
+    @property
+    def order(self):
+        if "order" in self.metadata:
+            return self.metadata["order"]
+        return 0
+
+    @property
+    def sortkey(self):
+        return self.year, self.order, self.name.lower()
 
     @property
     def description(self):
@@ -175,7 +180,7 @@ class SourceIndex:
                 self._markers.append(marker)
             for sourcename, namedict in locus.source_name_map.items():
                 source_name_map[sourcename].update(namedict)
-        for source in sorted(self.sources, key=lambda s: (s.year, s.name)):
+        for source in sorted(self.sources, key=lambda s: s.sortkey):
             source.rename_markers(source_name_map[source.name])
 
     def interval_check(self):
@@ -186,7 +191,7 @@ class SourceIndex:
     @property
     def markers(self):
         table = list()
-        for marker in sorted(self._markers, key=lambda m: (m.chrom_num, m.span, m.name)):
+        for marker in sorted(self._markers, key=lambda m: m.sortkey):
             table.append(marker.fields)
         return pd.DataFrame(table, columns=Marker.field_names)
 
@@ -218,6 +223,6 @@ class SourceIndex:
 
     def __str__(self):
         output = StringIO()
-        for source in sorted(self.sources, key=lambda s: (s.year, s.name.lower())):
+        for source in sorted(self.sources, key=lambda s: s.sortkey):
             print(source, file=output)
         return output.getvalue()

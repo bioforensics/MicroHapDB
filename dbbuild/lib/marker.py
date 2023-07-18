@@ -154,8 +154,12 @@ class Marker:
     def sourcename(self):
         if len(self.sources) == 0:
             return None
-        names = [s.name for s in sorted(self.sources, key=lambda x: (x.year, x.name))]
+        names = [s.name for s in sorted(self.sources, key=lambda s: s.sortkey)]
         return ";".join(names)
+
+    @property
+    def source(self):
+        return self.sources[0]
 
     def posstr(self, refr="GRCh38"):
         return ";".join(map(str, self.positions[refr]))
@@ -173,6 +177,10 @@ class Marker:
     def overlaps(self, other):
         same_chrom = self.chrom_num == other.chrom_num
         return same_chrom and self.start <= other.end and self.end >= other.start
+
+    @property
+    def sortkey(self):
+        return self.chrom_num, self.span, self.name
 
 
 class MarkerFromPositions(Marker):
