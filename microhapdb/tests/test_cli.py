@@ -115,7 +115,7 @@ def test_main_marker_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 2804
+    assert len(outlines) == 1 + 2818
 
 
 def test_main_marker_notrunc(capsys):
@@ -123,7 +123,7 @@ def test_main_marker_notrunc(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 2804
+    assert len(outlines) == 1 + 2818
 
 
 def test_main_marker_detail(capsys):
@@ -140,9 +140,9 @@ def test_main_marker_query(capsys):
     exp_out = """
                 Name  NumVars  Extent Chrom    Start      End     Ae                              Source
    mh19SCUZJ-0001326       17     337 chr19   389061   389397  4.909                             Zhu2023
-       mh19WL-007.v3        6     251 chr19   410610   410860  1.126                            Yu2022G3
+       mh19WL-007.v2        6     251 chr19   410610   410860  1.126                            Yu2022G3
        mh19WL-007.v1        5     102 chr19   410759   410860  1.000                   Yu2022G1;Yu2022G2
-       mh19WL-007.v2        4      89 chr19   410772   410860  1.000                            Yu2022G4
+       mh19WL-007.v3        4      89 chr19   410772   410860  1.000                            Yu2022G4
         mh19USC-19pA        3      38 chr19   561779   561816  2.924                      delaPuente2020
    mh19SCUZJ-0007484        9     254 chr19   930658   930911  7.592                             Zhu2023
    mh19SCUZJ-0012120        7     232 chr19  1923847  1924078  1.883                             Zhu2023
@@ -156,8 +156,8 @@ def test_main_marker_query(capsys):
    mh19SCUZJ-0039302       10     317 chr19  7570487  7570803  9.407                             Zhu2023
       mh19SHY-001.v1        8     185 chr19  7698913  7699097  6.469                              Wu2021
       mh19SHY-001.v2        5     106 chr19  7698992  7699097  6.442           Yu2022G1;Yu2022G2;Zhu2023
-      mh19SHY-001.v4        6     280 chr19  7698992  7699271  9.195                            Yu2022G3
-      mh19SHY-001.v3        4      67 chr19  7699031  7699097  4.488                            Yu2022G4
+      mh19SHY-001.v3        6     280 chr19  7698992  7699271  9.195                            Yu2022G3
+      mh19SHY-001.v4        4      67 chr19  7699031  7699097  4.488                            Yu2022G4
    mh19SCUZJ-0046036        7     248 chr19  8787571  8787818  3.649                             Zhu2023
           mh19WL-026        4      84 chr19  9009766  9009849  3.955                            Yu2022G1
    mh19SCUZJ-0056108        6     214 chr19 11146421 11146634  3.835                             Zhu2023
@@ -172,8 +172,8 @@ def test_main_marker_query(capsys):
            mh19NH-23        3      95 chr19 22052724 22052818  2.032                         Hiroaki2015
        mh19KK-299.v1        5     154 chr19 22546698 22546851  4.236                 Kidd2018;Turchi2019
        mh19KK-299.v2        7     154 chr19 22546698 22546851  4.253                        Gandotra2020
-       mh19KK-299.v4       10     182 chr19 22546698 22546879  4.253                         Pakstis2021
-       mh19KK-299.v3        3      63 chr19 22546749 22546811  3.771                         Staadig2021
+       mh19KK-299.v3       10     182 chr19 22546698 22546879  4.253                         Pakstis2021
+       mh19KK-299.v4        3      63 chr19 22546749 22546811  3.771                         Staadig2021
    mh19SCUZJ-0119796        6     347 chr19 28336605 28336951 10.495                             Zhu2023
          mh19ZHA-007        4     141 chr19 28397316 28397456  4.435                 Kureshi2020;Sun2020
    mh19SCUZJ-0121709        3     120 chr19 28735778 28735897  4.726                             Zhu2023
@@ -208,8 +208,8 @@ def test_main_marker_query(capsys):
           mh19WL-027        4     193 chr19 55796289 55796481  4.544                            Yu2022G1
    mh19SCUZJ-0244558       11     311 chr19 56207216 56207526  5.247                             Zhu2023
           mh19WL-012       11     195 chr19 57013159 57013353  4.385                   Yu2022G1;Yu2022G2
-mh19SCUZJ-0249059.v2       17     273 chr19 57245502 57245774 12.735                             Zhu2023
-mh19SCUZJ-0249059.v1       10     185 chr19 57245590 57245774  4.085                             Zhu2023
+mh19SCUZJ-0249059.v1       17     273 chr19 57245502 57245774 12.735                             Zhu2023
+mh19SCUZJ-0249059.v2       10     185 chr19 57245590 57245774  4.085                             Zhu2023
 """
     obs_out = terminal.out
     print(obs_out)
@@ -394,7 +394,7 @@ def test_main_marker_bad_code():
         ("--population=SA000009J", "--marker=mh13KK-218.v1", None, 15),
         (None, "--marker=mh13KK-218.v1", "--allele=C|T|C|T", 129),
         (None, "--marker=mh14PK-72639", None, 227),
-        (None, None, None, 894906),
+        (None, None, None, 902906),
     ],
 )
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
@@ -464,8 +464,8 @@ def test_ae_pop(capsys):
    mh18SCUZJ-0011531        4     294 chr18  2326915  2327208  4.654                             Zhu2023
    mh18SCUZJ-0015713        7     269 chr18  3197574  3197842  9.003                             Zhu2023
           mh18WL-028        4     198 chr18  3246291  3246488  4.185                            Yu2022G1
-mh18SCUZJ-0020879.v2       11     270 chr18  4477999  4478268 14.775                             Zhu2023
-mh18SCUZJ-0020879.v1        6     323 chr18  4478124  4478446  4.430                             Zhu2023
+mh18SCUZJ-0020879.v1       11     270 chr18  4477999  4478268 14.775                             Zhu2023
+mh18SCUZJ-0020879.v2        6     323 chr18  4478124  4478446  4.430                             Zhu2023
         mh18USC-18pA        5      77 chr18  5280018  5280094  1.923                      delaPuente2020
           mh18WL-026        3     110 chr18  7382444  7382553  3.135                            Yu2022G1
           mh18CP-005        4      44 chr18  8892865  8892908  3.620                            Kidd2018
@@ -476,14 +476,13 @@ mh18SCUZJ-0020879.v1        6     323 chr18  4478124  4478446  4.430            
    mh18SCUZJ-0052717        6     347 chr18 11578129 11578475  7.319                             Zhu2023
          mh18ZBF-002        4      77 chr18 11900703 11900779  3.264                             Jin2020
    mh18SCUZJ-0058695        5     220 chr18 12976468 12976687  6.680                             Zhu2023
-mh18SCUZJ-0064707.v2       10     315 chr18 14298002 14298316  6.209                             Zhu2023
-mh18SCUZJ-0064707.v1        7     317 chr18 14298131 14298447  2.146                             Zhu2023
+mh18SCUZJ-0064707.v1       10     315 chr18 14298002 14298316  6.209                             Zhu2023
+mh18SCUZJ-0064707.v2        7     317 chr18 14298131 14298447  2.146                             Zhu2023
          mh18ZHA-004        4     116 chr18 14315932 14316047  3.017                             Sun2020
    mh18SCUZJ-0070441        6     317 chr18 21906065 21906381 10.511                             Zhu2023
        mh18KK-285.v1        4     136 chr18 24557355 24557490  2.584                 Kidd2018;Turchi2019
        mh18KK-285.v2        3      59 chr18 24557432 24557490  2.577                         Staadig2021
    mh18SCUZJ-0076547        7     269 chr18 24716273 24716541  4.878                             Zhu2023
-
 """
     obs_out = terminal.out
     print(obs_out)
@@ -504,7 +503,7 @@ def test_marker_offsets_cli(capsys):
         "--format=offsets",
         "--delta=25",
         "--min-length=200",
-        "mh03KK-150.v2",
+        "mh03KK-150.v3",
         "mh11KK-180.v1",
         "mh13KK-217.v1",
         "mh07USC-7qC",
@@ -681,12 +680,12 @@ def test_cli_summarize(capsys):
     observed = terminal.out
     expected = """
 [microhaplotypes]
-  - 2804 marker definitions
+  - 2818 marker definitions
   - 2200 distinct loci
 [frequencies]
-  - 56505 haplotypes
+  - 57231 haplotypes
   - 125 population groups
-  - 894905 total microhap frequencies
+  - 902905 total microhap frequencies
 """
     print(observed)
     assert observed.strip() == expected.strip()
@@ -710,10 +709,10 @@ def test_cli_fasta_locus_multimarker(capsys):
     terminal = capsys.readouterr()
     observed = terminal.out
     expected = """
->mh02KK-134 GRCh38:chr2:160222879-160223013 mh02KK-134.v3=20,44,59 mh02KK-134.v1=20,44,59,123 mh02KK-134.v2=20,44,59,65,107,123 mh02KK-134.v4=20,44,59,65,72,87,107,123
+>mh02KK-134 GRCh38:chr2:160222879-160223013 mh02KK-134.v4=20,44,59 mh02KK-134.v1=20,44,59,123 mh02KK-134.v2=20,44,59,65,107,123 mh02KK-134.v3=20,44,59,65,72,87,107,123
 TACCCTTGGCAGGAACCCTCACTACCTAAGGATGGGCAATGGCTTATGAGTGAGAAACACGGAGCCGTGGGAACTCAGAA
 TGACATGCTACCTGGAGATTGTGGTAACGCCCTGTTTTTTTGTGGGCATATCTA
->mh14SHY-003 GRCh38:chr14:57983921-57984213 mh14SHY-003.v1=10,14,16,26,102,108,109,161,192,199 mh14SHY-003.v4=10,14,102,108,199,262,281 mh14SHY-003.v3=102,108,199 mh14SHY-003.v2=102,108,199,262,281
+>mh14SHY-003 GRCh38:chr14:57983921-57984213 mh14SHY-003.v1=10,14,16,26,102,108,109,161,192,199 mh14SHY-003.v3=10,14,102,108,199,262,281 mh14SHY-003.v4=102,108,199 mh14SHY-003.v2=102,108,199,262,281
 GTAGGAGTGATGTACGGGGCACCTACTTGGGGTTCACATGCTGGCCCCTTTATTGAGTTCATTCTGAATCCAGAAGCTTG
 GCAGAGTTCAGCCAGATGGCAGGGTGAGCGCCCTGCCTTCCTGGTAGTCTCTTCTTCTGCAAGGGAATAGGAGGCGTTCA
 CCCTCCTTTGTTCAAGAGTCTATTTCTAGGGGCCTATCAGCCCAGGGTCCCTTCTCCAGCTTTCTCAGGAGGCCCCACAT

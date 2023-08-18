@@ -57,6 +57,7 @@ def test_assumptions():
         118,  # delaPuente2020
         15,  # vanderGaag2018
         988,  # Zhu2023
+        29,  # NimaGen2023
     ]
     redundant_markers_per_source = [
         1,  # Chen2019
@@ -71,6 +72,7 @@ def test_assumptions():
         85,  # Yu2022G3
         64,  # Yu2022G4
         20,  # Zhu2023
+        15,  # NimaGen2023
     ]
     expected_markers = sum(total_markers_per_source) - sum(redundant_markers_per_source)
     observed_markers = len(microhapdb.markers)
@@ -106,7 +108,7 @@ def test_markers():
     mh21PK-MX1s (chr21:41464745-41464824)
     mh22PK-104638 (chr22:44857883-44857955)
     """
-    assert microhapdb.markers.shape == (2804, 11)
+    assert microhapdb.markers.shape == (2818, 11)
     result = microhapdb.markers[microhapdb.markers.Chrom == "chr19"]
     assert len(result) == 71
     varids = microhapdb.variantmap[microhapdb.variantmap.Marker.isin(result.Name)].Variant.unique()
@@ -481,17 +483,17 @@ def test_marker_object(capsys):
     [
         ("mh16KK-062", "chr16:87468089-87468386", 298, "Kidd2018"),
         ("mh01CP-010", "chr1:85240118-85240140", 23, "Chen2019"),
-        ("mh09KK-153.v2", "chr9:101207360-101207606", 247, "Gandotra2020"),
+        ("mh15KK-066.v2", "chr15:52192634-52192892", 259, "Gandotra2020"),
         ("mh10NH-14", "chr10:11288562-11288613", 52, "Hiroaki2015"),
         ("mh02ZBF-001", "chr2:99401808-99401896", 89, "Jin2020"),
         ("mh17ZHA-001", "chr17:390130-390249", 120, "Kureshi2020"),
         ("mh16USC-16pB", "chr16:24314927-24314937", 11, "delaPuente2020"),
-        ("mh13KK-213.v3", "chr13:23191462-23191496", 35, "Staadig2021"),
+        ("mh13KK-213.v4", "chr13:23191462-23191496", 35, "Staadig2021"),
         ("mh08ZHA-003", "chr8:2914706-2915053", 348, "Sun2020"),
         ("mh15PK-75170", "chr15:24802314-24802380", 67, "vanderGaag2018"),
         ("mh03LV-06.v1", "chr3:11914401-11914598", 198, "Voskoboinik2018"),
         ("mh15SHY-003", "chr15:92605653-92605846", 194, "Wu2021"),
-        ("mh01FHL-009.v2", "chr1:231954505-231954667", 163, "Fan2022"),
+        ("mh01FHL-009.v1", "chr1:231954505-231954667", 163, "Fan2022"),
         ("mh02KK-004.v2", "chr2:118984970-118985128", 159, "Turchi2019"),
         ("mh20HYP-42", "chr20:59132558-59132664", 107, "Zou2022"),
         ("mh13WL-032", "chr13:113079836-113079970", 135, "Yu2022G1"),
@@ -501,7 +503,7 @@ def test_all_sources(markername, slug, length, source):
     marker = Marker.from_id(markername)
     assert marker.slug == slug
     assert len(marker) == length
-    assert marker.data.Source == source
+    assert marker.data.Source in source
 
 
 @pytest.mark.parametrize(
@@ -555,7 +557,7 @@ def test_marker_definition_single():
 
 
 def test_marker_definition_multi():
-    ids = ["mh03KK-150.v2", "mh11KK-180.v1", "mh13KK-217.v1", "mh07USC-7qC"]
+    ids = ["mh03KK-150.v3", "mh11KK-180.v1", "mh13KK-217.v1", "mh07USC-7qC"]
     definition = Marker.definitions_from_ids(ids, delta=25, minlen=200)
     assert definition.shape == (15, 4)
     observed = definition.Offset.tolist()
