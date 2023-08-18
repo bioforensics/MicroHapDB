@@ -29,7 +29,7 @@ class IntervalIndex:
                 loci = set([m.locus for m in interval.data])
                 if len(loci) == 1:
                     continue
-                markers = sorted(interval.data, key=lambda m: (m.sources[0].year, m.sources[0].name))
+                markers = sorted(interval.data, key=lambda m: m.sources[0].sortkey)
                 for marker in markers[1:]:
                     if marker.name != markers[0].name and marker.name not in self.mergeables:
                         self.mergeables[marker.name] = markers[0].name

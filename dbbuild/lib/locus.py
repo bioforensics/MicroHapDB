@@ -41,24 +41,23 @@ class Locus(list):
                 yield marker
             return
         self.check_overlap()
-        for marker in sorted(self.markers, key=lambda m: (m.source.year, m.source.order, m.name.lower())):
+        for marker in sorted(self.markers, key=lambda m: (m.source.sortkey, m.sortkey)):
             if marker.posstr() in self.definition_names:
-                message = f"Marker {marker.name} as defined in {marker.sources[0].name} was defined previously and is redundant"
+                assert len(marker.sources) == 1, (marker.name, marker.sources)
+                message = f"Marker {marker.name} as defined in {marker.source.name} was defined previously and is redundant"
                 print(message)
-                self.source_name_map[marker.sources[0].name][marker.name] = self.definition_names[marker.posstr()]
-                others = self.markers_by_definition[marker.posstr()]
-                marker.rsid_union(*others)
+                self.source_name_map[marker.source.name][marker.name] = self.definition_names[marker.posstr()]
                 continue
             else:
                 new_name = marker.name
                 if len(self.markers_by_definition) > 1:
                     new_name = f"{marker.name}.v{len(self.definition_names) + 1}"
                 self.definition_names[marker.posstr()] = new_name
-                self.source_name_map[marker.sources[0].name][marker.name] = new_name
+                self.source_name_map[marker.source.name][marker.name] = new_name
                 marker.name = new_name
                 for othermarker in self.markers_by_definition[marker.posstr()]:
                     if othermarker != marker:
-                        marker.sources.append(othermarker.sources[0])
+                        marker.sources.append(othermarker.source)
                 yield marker
 
     def check_overlap(self):

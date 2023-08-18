@@ -155,7 +155,7 @@ class Marker:
     def sourcename(self):
         if len(self.sources) == 0:
             return None
-        names = [s.name for s in sorted(self.sources, key=lambda x: (x.year, x.name))]
+        names = [s.name for s in sorted(self.sources, key=lambda s: s.sortkey)]
         return ";".join(names)
 
     @property
@@ -187,6 +187,10 @@ class Marker:
             for marker in chain([self], others):
                 if rsid not in marker.rsids:
                     marker.rsids.append(rsid)
+
+    @property
+    def sortkey(self):
+        return self.chrom_num, self.span, self.name
 
 
 class MarkerFromPositions(Marker):
