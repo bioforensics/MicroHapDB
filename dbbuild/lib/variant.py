@@ -12,6 +12,7 @@
 
 from collections import defaultdict
 from dataclasses import dataclass
+import json
 import pandas as pd
 from pathlib import Path
 import rsidx
@@ -83,7 +84,7 @@ class VariantIndex:
         merged_file = self.dbsnp_path / "refsnp-merged.csv.gz"
         if not merged_file.is_file():
             merged_file = self.dbsnp_path / "refsnp-merged.csv"
-        if merged_file:
+        if merged_file.is_file():
             table = pd.read_csv(merged_file)
             self.merged_rsids = dict(zip(table.Source, table.Target))
         else:
@@ -92,20 +93,22 @@ class VariantIndex:
                 raise FileNotFoundError(merged_file)
             self.merged_rsids = dict()
             threshold = updateint
-            for n, line in enumerate(instream):
-                try:
-                    data = json.loads(line)
-                except:
-                    warn(f"Could not parse line {n+1}, skipping: {line}")
-                source = data["refsnp_id"]
-                targets = data["merged_snapshot_data"]["merged_into"]
-                for target in targets:
-                    self.merged_rsids[f"rs{source}"] = f"rs{target}"
-                if n >= threshold:
-                    threshold += updateint
-                    if threshold == updateint * 10:
-                        updateint = threshold
-                    print(f"processed {n} rows")
+            with open(merged_file, "r") as instream:
+                for n, line in enumerate(instream):
+                    try:
+                        data = json.loads(line)
+                    except Exception:
+                        warn(f"Could not parse line {n+1}, skipping: {line}")
+                        continue
+                    source = data["refsnp_id"]
+                    targets = data["merged_snapshot_data"]["merged_into"]
+                    for target in targets:
+                        self.merged_rsids[f"rs{source}"] = f"rs{target}"
+                    if n >= threshold:
+                        threshold += updateint
+                        if threshold == updateint * 10:
+                            updateint = threshold
+                        print(f"processed {n} rows")
             table = pd.DataFrame(self.merged_rsids.items(), columns=["Source", "Target"])
             table.to_csv(self.dbsnp_path / "refsnp-merged.csv", index=False)
 

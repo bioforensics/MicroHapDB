@@ -1,6 +1,7 @@
 {
     "name": "Zhu2023",
     "year": 2023,
+    "order": 1,
     "doi": "10.1016/j.fsigen.2023.102874",
     "description": "Evaluation of 500 'moderately polymorphic' microhaplotype markers and 500 'highly polymorphic' markers in Chinese populations"
 }
