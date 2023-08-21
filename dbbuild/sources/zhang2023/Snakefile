@@ -1,0 +1,59 @@
+import pandas as pd
+
+
+rule markers:
+    input:
+        table="Supplementary.Tables.csv",
+    output:
+        csv="marker.csv",
+    run:
+        table = pd.read_csv(input.table)
+        markers = list()
+        for n, row in table.iterrows():
+            marker = Marker.from_row(row)
+            if not marker.is_primary:
+                continue
+            markers.append(marker.fields)
+        colnames = ["Name", "Xref", "NumVars", "Refr", "Chrom", "Positions", "VarRef"]
+        pd.DataFrame(markers, columns=colnames).to_csv(output.csv, index=False)
+
+
+class Marker:
+    def __init__(self, label, region, numsnps, snplocs):
+        self.label = label
+        self.region = region
+        self.numsnps = int(numsnps)
+        self.snplocs = snplocs
+
+    @classmethod
+    def from_row(cls, row):
+        return cls(row.MH, row.Location, row.SNPs, row.Locations)
+
+    @property
+    def is_primary(self):
+        return self.label.count("-") == 1
+
+    @property
+    def fields(self):
+        return [self.name, None, self.numsnps, "GRCh37", self.chrom, self.snps, None]
+
+    @property
+    def name(self):
+        labnum = self.label.split("-")[-1]
+        return f"mh{self.chromnum}LW-{labnum}"
+
+    @property
+    def chromnum(self):
+        chrom = self.chrom[3:]
+        if int(chrom) < 10:
+            chrom = f"0{chrom}"
+        return chrom
+
+    @property
+    def chrom(self):
+        return self.region.split(":")[0]
+
+    @property
+    def snps(self):
+        assert self.numsnps == self.snplocs.count("-") + 1, (self.numsnps, self.snplocs)
+        return self.snplocs.replace("-", ";")
