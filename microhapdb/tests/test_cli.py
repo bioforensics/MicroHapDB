@@ -115,7 +115,7 @@ def test_main_marker_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 2818
+    assert len(outlines) == 1 + 2863
 
 
 def test_main_marker_notrunc(capsys):
@@ -123,7 +123,7 @@ def test_main_marker_notrunc(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 2818
+    assert len(outlines) == 1 + 2863
 
 
 def test_main_marker_detail(capsys):
@@ -179,6 +179,7 @@ def test_main_marker_query(capsys):
    mh19SCUZJ-0121709        3     120 chr19 28735778 28735897  4.726                             Zhu2023
    mh19SCUZJ-0129055        6     335 chr19 29597152 29597486  6.674                             Zhu2023
    mh19SCUZJ-0137855        5     350 chr19 32851722 32852071  2.958                             Zhu2023
+     mh19USC-19qA.v4        6      78 chr19 33273743 33273820  5.090                           Zhang2023
      mh19USC-19qA.v1        4      46 chr19 33273772 33273817  3.660                      delaPuente2020
      mh19USC-19qA.v3        5      49 chr19 33273772 33273820  5.084                            Yu2022G4
      mh19USC-19qA.v2        6     185 chr19 33273772 33273956  7.147  Yu2022G1;Yu2022G2;Yu2022G3;Zhu2023
@@ -268,7 +269,7 @@ def test_main_marker_region_mode(capsys):
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
     print(out)
-    assert len(outlines) == 94 + 1  # markers + 1 header line
+    assert len(outlines) == 95 + 1  # markers + 1 header line
 
 
 def test_main_marker_region_mode_failure(capsys):
@@ -394,7 +395,7 @@ def test_main_marker_bad_code():
         ("--population=SA000009J", "--marker=mh13KK-218.v1", None, 15),
         (None, "--marker=mh13KK-218.v1", "--allele=C|T|C|T", 129),
         (None, "--marker=mh14PK-72639", None, 227),
-        (None, None, None, 902906),
+        (None, None, None, 911851),
     ],
 )
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
@@ -455,6 +456,7 @@ def test_ae_pop(capsys):
     terminal = capsys.readouterr()
     exp_out = """
                 Name  NumVars  Extent Chrom    Start      End     Ae                              Source
+           mh18LW-45       12      81 chr18   108028   108108  1.000                           Zhang2023
           mh18WL-002        6     100 chr18   466283   466382  4.056 Yu2022G1;Yu2022G2;Yu2022G3;Yu2022G4
    mh18SCUZJ-0002652        6     343 chr18   626657   626999  1.738                             Zhu2023
    mh18SCUZJ-0003488        7     206 chr18   722819   723024  4.829                             Zhu2023
@@ -483,6 +485,7 @@ mh18SCUZJ-0064707.v2        7     317 chr18 14298131 14298447  2.146            
        mh18KK-285.v1        4     136 chr18 24557355 24557490  2.584                 Kidd2018;Turchi2019
        mh18KK-285.v2        3      59 chr18 24557432 24557490  2.577                         Staadig2021
    mh18SCUZJ-0076547        7     269 chr18 24716273 24716541  4.878                             Zhu2023
+
 """
     obs_out = terminal.out
     print(obs_out)
@@ -680,12 +683,12 @@ def test_cli_summarize(capsys):
     observed = terminal.out
     expected = """
 [microhaplotypes]
-  - 2818 marker definitions
-  - 2200 distinct loci
+  - 2863 marker definitions
+  - 2231 distinct loci
 [frequencies]
-  - 57231 haplotypes
+  - 57695 haplotypes
   - 125 population groups
-  - 902905 total microhap frequencies
+  - 911850 total microhap frequencies
 """
     print(observed)
     assert observed.strip() == expected.strip()
