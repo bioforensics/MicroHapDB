@@ -58,6 +58,7 @@ def test_assumptions():
         15,  # vanderGaag2018
         988,  # Zhu2023
         29,  # NimaGen2023
+        50,  # Zhang2023
     ]
     redundant_markers_per_source = [
         1,  # Chen2019
@@ -73,6 +74,7 @@ def test_assumptions():
         64,  # Yu2022G4
         20,  # Zhu2023
         15,  # NimaGen2023
+        5,  # Zhang2023
     ]
     expected_markers = sum(total_markers_per_source) - sum(redundant_markers_per_source)
     observed_markers = len(microhapdb.markers)
@@ -108,9 +110,9 @@ def test_markers():
     mh21PK-MX1s (chr21:41464745-41464824)
     mh22PK-104638 (chr22:44857883-44857955)
     """
-    assert microhapdb.markers.shape == (2818, 11)
+    assert microhapdb.markers.shape == (2863, 11)
     result = microhapdb.markers[microhapdb.markers.Chrom == "chr19"]
-    assert len(result) == 71
+    assert len(result) == 72
     varids = microhapdb.variantmap[microhapdb.variantmap.Marker.isin(result.Name)].Variant.unique()
     assert len(varids) == 148
 
@@ -659,6 +661,7 @@ def test_from_id_no_such_marker():
             [
                 "mh02ZHA-013.v1",
                 "mh02ZHA-013.v2",
+                "mh02ZHA-013.v3",
                 "mh10FHL-007",
                 "mh21FHL-002.v1",
                 "mh21FHL-002.v2",
