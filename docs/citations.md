@@ -65,3 +65,7 @@ Contact: daniel.standage@st.dhs.gov.
 <sup>[25]</sup>Yu WS, Feng YS, Kang KL, Zhang C, Ji AQ, Ye J, Wang L (2022) Screening of highly discriminative microhaplotype markers for individual identification and mixture deconvolution in East Asian populations. *FSI: Genetics*, 59:102720, [doi:10.1016/j.fsigen.2022.102720](https://doi.org/10.1016/j.fsigen.2022.102720).
 
 <sup>[26]</sup>Zhu Q, Wang H, Cao Y, Huang Y, Wei Y, Hu Y, Dai X, Shan T, Wang Y, Zhang J (2023) Evaluation of large-scale highly polymorphic microhaplotypes in complex DNA mixtures analysis using RMNE method. *FSI: Genetics* 65:102874, [doi:10.1016/j.fsigen.2023.102874](https://doi.org/10.1016/j.fsigen.2023.102874).
+
+<sup>[27]</sup>Zhang R, Xue J, Tan M, Chen D, Xiao Y, Liu G, Zheng Y, Wu Q, Liao M, Lv M, Qu S, Liang W (2023) An MPS-Based 50plex Microhaplotype Assay for Forensic DNA Analysis. *Genes* 14:865, [doi:10.3390/genes14040865](https://doi.org/10.3390/genes14040865).
+
+<sup>[28]</sup>Du Q, Ma G, Lu C, Wang Q, Fu L, Cong B, Li S (2023) Development and evaluation of a novel panel containing 188 microhaplotypes for 2nd-degree kinship testing in the Hebei Han population. *FSI: Genetics* 65, [doi:10.1016/j.fsigen.2023.102855](https://doi.org/10.1016/j.fsigen.2023.102855).
