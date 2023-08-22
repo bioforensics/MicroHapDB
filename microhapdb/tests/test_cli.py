@@ -115,7 +115,7 @@ def test_main_marker_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 2863
+    assert len(outlines) == 1 + 3053
 
 
 def test_main_marker_notrunc(capsys):
@@ -123,7 +123,7 @@ def test_main_marker_notrunc(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 2863
+    assert len(outlines) == 1 + 3053
 
 
 def test_main_marker_detail(capsys):
@@ -144,6 +144,7 @@ def test_main_marker_query(capsys):
        mh19WL-007.v1        5     102 chr19   410759   410860  1.000                   Yu2022G1;Yu2022G2
        mh19WL-007.v3        4      89 chr19   410772   410860  1.000                            Yu2022G4
         mh19USC-19pA        3      38 chr19   561779   561816  2.924                      delaPuente2020
+         mh19LS-19pA        5     155 chr19   645780   645934  3.724                              Du2023
    mh19SCUZJ-0007484        9     254 chr19   930658   930911  7.592                             Zhu2023
    mh19SCUZJ-0012120        7     232 chr19  1923847  1924078  1.883                             Zhu2023
           mh19WL-024        6     198 chr19  1955525  1955722  4.977                            Yu2022G1
@@ -179,6 +180,7 @@ def test_main_marker_query(capsys):
    mh19SCUZJ-0121709        3     120 chr19 28735778 28735897  4.726                             Zhu2023
    mh19SCUZJ-0129055        6     335 chr19 29597152 29597486  6.674                             Zhu2023
    mh19SCUZJ-0137855        5     350 chr19 32851722 32852071  2.958                             Zhu2023
+         mh19LS-19qA        3     105 chr19 32967227 32967331  3.048                              Du2023
      mh19USC-19qA.v4        6      78 chr19 33273743 33273820  5.090                           Zhang2023
      mh19USC-19qA.v1        4      46 chr19 33273772 33273817  3.660                      delaPuente2020
      mh19USC-19qA.v3        5      49 chr19 33273772 33273820  5.084                            Yu2022G4
@@ -207,6 +209,7 @@ def test_main_marker_query(capsys):
    mh19SCUZJ-0238255        7     303 chr19 55526863 55527165  3.786                             Zhu2023
          mh19SHY-002        9     165 chr19 55588421 55588585  3.544                              Wu2021
           mh19WL-027        4     193 chr19 55796289 55796481  4.544                            Yu2022G1
+         mh19LS-19qB        3     103 chr19 55911606 55911708  2.435                              Du2023
    mh19SCUZJ-0244558       11     311 chr19 56207216 56207526  5.247                             Zhu2023
           mh19WL-012       11     195 chr19 57013159 57013353  4.385                   Yu2022G1;Yu2022G2
 mh19SCUZJ-0249059.v1       17     273 chr19 57245502 57245774 12.735                             Zhu2023
@@ -269,7 +272,7 @@ def test_main_marker_region_mode(capsys):
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
     print(out)
-    assert len(outlines) == 95 + 1  # markers + 1 header line
+    assert len(outlines) == 101 + 1  # markers + 1 header line
 
 
 def test_main_marker_region_mode_failure(capsys):
@@ -395,7 +398,7 @@ def test_main_marker_bad_code():
         ("--population=SA000009J", "--marker=mh13KK-218.v1", None, 15),
         (None, "--marker=mh13KK-218.v1", "--allele=C|T|C|T", 129),
         (None, "--marker=mh14PK-72639", None, 227),
-        (None, None, None, 911851),
+        (None, None, None, 934927),
     ],
 )
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
@@ -460,6 +463,7 @@ def test_ae_pop(capsys):
           mh18WL-002        6     100 chr18   466283   466382  4.056 Yu2022G1;Yu2022G2;Yu2022G3;Yu2022G4
    mh18SCUZJ-0002652        6     343 chr18   626657   626999  1.738                             Zhu2023
    mh18SCUZJ-0003488        7     206 chr18   722819   723024  4.829                             Zhu2023
+         mh18LS-18pA        3      97 chr18  1648913  1649009  2.504                              Du2023
          mh18SHY-001       11     181 chr18  1952477  1952657  4.127                              Wu2021
         mh18PK-87558        6      47 chr18  1960543  1960589  2.217                      vanderGaag2018
    mh18SCUZJ-0009510       15     304 chr18  1962681  1962984  1.000                             Zhu2023
@@ -475,7 +479,8 @@ mh18SCUZJ-0020879.v2        6     323 chr18  4478124  4478446  4.430            
    mh18SCUZJ-0042322        6     305 chr18  9555862  9556166  7.195                             Zhu2023
        mh18WL-009.v2        9      97 chr18 10150919 10151015  1.000                            Yu2022G4
        mh18WL-009.v1       10     200 chr18 10150919 10151118  2.000          Yu2022G1;Yu2022G2;Yu2022G3
-   mh18SCUZJ-0052717        6     347 chr18 11578129 11578475  7.319                             Zhu2023
+mh18SCUZJ-0052717.v2        3     110 chr18 11578129 11578238  3.206                              Du2023
+mh18SCUZJ-0052717.v1        6     347 chr18 11578129 11578475  7.319                             Zhu2023
          mh18ZBF-002        4      77 chr18 11900703 11900779  3.264                             Jin2020
    mh18SCUZJ-0058695        5     220 chr18 12976468 12976687  6.680                             Zhu2023
 mh18SCUZJ-0064707.v1       10     315 chr18 14298002 14298316  6.209                             Zhu2023
@@ -485,7 +490,6 @@ mh18SCUZJ-0064707.v2        7     317 chr18 14298131 14298447  2.146            
        mh18KK-285.v1        4     136 chr18 24557355 24557490  2.584                 Kidd2018;Turchi2019
        mh18KK-285.v2        3      59 chr18 24557432 24557490  2.577                         Staadig2021
    mh18SCUZJ-0076547        7     269 chr18 24716273 24716541  4.878                             Zhu2023
-
 """
     obs_out = terminal.out
     print(obs_out)
@@ -683,12 +687,12 @@ def test_cli_summarize(capsys):
     observed = terminal.out
     expected = """
 [microhaplotypes]
-  - 2863 marker definitions
-  - 2231 distinct loci
+  - 3053 marker definitions
+  - 2413 distinct loci
 [frequencies]
-  - 57695 haplotypes
+  - 58679 haplotypes
   - 125 population groups
-  - 911850 total microhap frequencies
+  - 934926 total microhap frequencies
 """
     print(observed)
     assert observed.strip() == expected.strip()

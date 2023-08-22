@@ -59,6 +59,7 @@ def test_assumptions():
         988,  # Zhu2023
         29,  # NimaGen2023
         50,  # Zhang2023
+        191,  # Du2023
     ]
     redundant_markers_per_source = [
         1,  # Chen2019
@@ -75,6 +76,7 @@ def test_assumptions():
         20,  # Zhu2023
         15,  # NimaGen2023
         5,  # Zhang2023
+        1,  # Du2023
     ]
     expected_markers = sum(total_markers_per_source) - sum(redundant_markers_per_source)
     observed_markers = len(microhapdb.markers)
@@ -110,11 +112,11 @@ def test_markers():
     mh21PK-MX1s (chr21:41464745-41464824)
     mh22PK-104638 (chr22:44857883-44857955)
     """
-    assert microhapdb.markers.shape == (2863, 11)
+    assert microhapdb.markers.shape == (3053, 11)
     result = microhapdb.markers[microhapdb.markers.Chrom == "chr19"]
-    assert len(result) == 72
+    assert len(result) == 75
     varids = microhapdb.variantmap[microhapdb.variantmap.Marker.isin(result.Name)].Variant.unique()
-    assert len(varids) == 148
+    assert len(varids) == 159
 
 
 def test_marker_detail():
@@ -592,7 +594,7 @@ def test_from_region():
     assert len(Marker.table_from_region("chrX")) == 11
     assert len(Marker.table_from_region("chrY")) == 0
     markers = list(Marker.from_region("chr12:100000000-200000000"))
-    assert len(markers) == 41
+    assert len(markers) == 42
     observed = sorted([marker.name for marker in markers])
     print(observed)
     expected = sorted(
@@ -605,6 +607,7 @@ def test_from_region():
             "mh12KK-046.v3",
             "mh12KK-093",
             "mh12KK-209",
+            "mh12LS-12qF",
             "mh12SCUZJ-0326486.v1",
             "mh12SCUZJ-0326486.v2",
             "mh12SCUZJ-0331644",

@@ -177,29 +177,34 @@ def beta_legacy():
 
 
 def kidd2022():
-    return [
-        "mh01KK-212.v2",
-        "mh02KK-022.v2",
-        "mh02KK-029.v2",
-        "mh02KK-134.v4",
-        "mh02KK-014.v2",
-        "mh05KK-170.v4",
-        "mh07KK-009.v2",
-        "mh08KK-137.v2",
-        "mh09KK-145.v2",
-        "mh09KK-153.v3",
-        "mh10KK-162.v2",
-        "mh11KK-180.v4",
-        "mh11KK-183.v2",
-        "mh12KK-201.v2",
-        "mh13KK-213.v4",
-        "mh13KK-217.v4",
-        "mh13KK-218.v2",
+    loci = (
+        "mh01KK-212",
+        "mh02KK-022",
+        "mh02KK-029",
+        "mh02KK-134",
+        "mh02KK-014",
+        "mh05KK-170",
+        "mh07KK-009",
+        "mh08KK-137",
+        "mh09KK-145",
+        "mh09KK-153",
+        "mh10KK-162",
+        "mh11KK-180",
+        "mh11KK-183",
+        "mh12KK-201",
+        "mh13KK-213",
+        "mh13KK-217",
+        "mh13KK-218",
         "mh13KK-221",
-        "mh16KK-259.v2",
-        "mh16KK-011.v2",
-        "mh17KK-278.v2",
-        "mh20KK-306.v2",
-        "mh21KK-320.v4",
-        "mh22KK-340.v2",
+        "mh16KK-259",
+        "mh16KK-011",
+        "mh17KK-278",
+        "mh20KK-306",
+        "mh21KK-320",
+        "mh22KK-340",
+    )
+    panel = microhapdb.markers[
+        microhapdb.markers.Source.str.contains("Pakstis2021")
+        & microhapdb.markers.Name.str.startswith(loci)
     ]
+    return sorted(panel.Name)

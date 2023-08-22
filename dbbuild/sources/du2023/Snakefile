@@ -1,0 +1,52 @@
+import pandas as pd
+
+
+rule markers:
+    input:
+        table="TableS5.csv",
+    output:
+        csv="marker.csv",
+    run:
+        table = pd.read_csv(input.table)
+        markers = list()
+        for n, row in table.iterrows():
+            marker = Marker.from_row(row)
+            if marker.numsnps == 1:
+                continue
+            markers.append(marker.fields)
+        colnames = ["Name", "Xref", "NumVars", "Refr", "Chrom", "Positions", "VarRef"]
+        pd.DataFrame(markers, columns=colnames).to_csv(output.csv, index=False)
+
+
+class Marker:
+    def __init__(self, label, chrom, rsids):
+        self.label = label
+        self.chr = chrom
+        self.rsids = rsids.replace("/", ";")
+
+    @classmethod
+    def from_row(cls, row):
+        return cls(row.ID, row.Chrom, row.SNPs)
+
+    @property
+    def fields(self):
+        return [self.name, None, self.numsnps, None, self.chrom, None, self.rsids]
+
+    @property
+    def name(self):
+        return f"mh{self.chromnum}LS-{self.label}"
+
+    @property
+    def chromnum(self):
+        if self.chr in "XY" or int(self.chr) < 10:
+            return f"0{self.chr}"
+        else:
+            return self.chr
+
+    @property
+    def chrom(self):
+        return f"chr{self.chr}"
+
+    @property
+    def numsnps(self):
+        return self.rsids.count(";") + 1
