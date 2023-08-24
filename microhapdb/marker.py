@@ -232,7 +232,7 @@ class Marker:
     def detail(self):
         output = StringIO()
         print("-" * 62, "[ MicroHapDB ]----", sep="", file=output)
-        print(self.name, end="\n\n", file=output)
+        self.print_detail_all_names(output)
         self.print_detail_definition(output)
         self.print_detail_markerseq(output)
         self.print_detail_targetseq(output)
@@ -244,6 +244,14 @@ class Marker:
         if pd.isna(self.data.RSIDs):
             return []
         return self.data.RSIDs.split(";")
+
+    def print_detail_all_names(self, out):
+        names = microhapdb.merged[microhapdb.merged.Original == self.locus].Derivative.unique()
+        print("MH Locus:", self.locus, end="", file=out)
+        if len(names) > 0:
+            names = ", ".join(sorted(names))
+            print(f" (a.k.a. {names})", end="", file=out)
+        print(f"\nMarker:   {self.name} (Source: {self.data.Source})\n", file=out)
 
     def print_detail_definition(self, out):
         marker_slug = f"{self.slug} ({len(self)} bp)"

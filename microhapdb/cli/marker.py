@@ -83,7 +83,7 @@ def display(
             Marker.objectify(result, delta=delta, minlen=minlen, extendmode=extend_mode)
         )
         if view_format == "detail":
-            for marker in markers:
+            for marker in sorted(markers, key=lambda m: m.name):
                 print(marker.detail)
         elif view_format == "fasta":
             loci = defaultdict(Locus)

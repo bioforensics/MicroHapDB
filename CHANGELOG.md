@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Added
+- Marker definitions for NimaGen 29-plex (see #134).
+- 50 marker definitions from Zhang et al 2023 (see #136).
+- 191 marker definitions from Du et al 2023 (see #137).
+- Jupyter notebook for plotting database growth over time (see #135).
+
+### Changed
+
+- Cleanup of database build code (see #133).
+- Improved marker detail view now includes locus, marker, synonym, and source info (see #138).
+
+
 ## [0.9] 2023-07-03
 
 ### Added
