@@ -69,7 +69,7 @@ def subparser(subparsers):
     Examples::
 
         microhapdb frequency --marker=mh22KK-060 --population=SA000001B
-        microhapdb frequency --marker=mh22KK-060 --allele=C,A
+        microhapdb frequency --marker=mh22KK-060 --allele='C|A'
     """
     epilog = dedent(epilog)
     subparser = subparsers.add_parser(

@@ -75,7 +75,7 @@ def get_parser():
         "-v",
         "--version",
         action="version",
-        version="MicroHapDB v{}".format(microhapdb.__version__),
+        version=f"MicroHapDB v{microhapdb.__version__}",
     )
     cli.add_argument(
         "-f", "--files", action="store_true", help="print data table filenames and exit"
@@ -89,9 +89,10 @@ def get_parser():
 
 
 def print_files():
-    tables = ("marker", "population", "frequency", "marker-aes")
+    tables = ("marker", "marker-aes", "population")
     for table in tables:
         print(microhapdb.data_file(f"{table}.csv"))
+    print(microhapdb.data_file("frequency.csv.gz"))
 
 
 def download_hg38():  # pragma: no cover
