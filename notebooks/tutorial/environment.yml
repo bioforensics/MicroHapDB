@@ -1,0 +1,9 @@
+name: microhapulator-demo
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bash_kernel
+  - curl
+  - microhapdb==0.9
