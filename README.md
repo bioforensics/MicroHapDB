@@ -14,6 +14,8 @@ Polymorphism statistics ($A_e$) are computed for 26 global populations so that m
 MicroHapDB is designed to be user-friendly for researchers, technology developers, and forensic practitioners, supporting a range of access methods from browsing and simple text queries to complex queries and full programmatic access via a Python API.
 It is designed as a community resource requiring minimal infrastructure to use and maintain: the entire contents of the database are distributed in plain text with each copy of MicroHapDB.
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/bioforensics/MicroHapDB/master?labpath=notebooks%2Ftutorial%2Fdemo_v0.9.ipynb)
+
 
 ## Installation
 
