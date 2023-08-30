@@ -1,4 +1,4 @@
-name: microhapulator-demo
+name: microhapdb-demo
 channels:
   - conda-forge
   - bioconda
