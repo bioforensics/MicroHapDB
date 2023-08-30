@@ -1,4 +1,5 @@
 microhapdb/_version.py export-subst
 notebooks/*.ipynb linguist-documentation
+binder/*.ipynb linguist-documentation
 dbbuild/sources/auton2015/scripts/infocalc linguist-vendored
 dbbuild/legacy/sources/1kgp/infocalc linguist-vendored
