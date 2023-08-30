@@ -28,17 +28,18 @@ Including `import microhapdb` in the header of a Python program will provide acc
 
 ### Database tables
 
-MicroHapDB is comprised of three primary database tables.
-In the Python API, each is stored in memory as a [Pandas](https://pandas.pydata.org) DataFrame object.
+MicroHapDB is comprised of two primary database tables.
+Each is stored in memory as a [Pandas](https://pandas.pydata.org) DataFrame object.
 
 - `microhapdb.markers`
-- `microhapdb.populations`
 - `microhapdb.frequencies`
 
 Additional auxiliary tables are also provided, including the following.
 
+- `microhapdb.populations`: contains descriptions of each population group for which frequency data is available
+- `microhapdb.merged`: contains a mapping of microhap identifiers that were merged during the database build process
 - `microhapdb.variantmap`: contains a mapping of dbSNP variants to their corresponding microhap markers
-- `microhapdb.indels`: contains variant information for markers that include insertion/deletion variants
+- `microhapdb.indels`: contains variant information for markers that include insertion/deletion variants (DEPRECATED)
 
 ### Convenience functions for data retrieval
 

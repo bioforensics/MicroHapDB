@@ -1,24 +1,14 @@
 # Ranking markers
 
-MicroHapDB provides three primary criteria for ranking markers.
-Phased genotypes for 2,504 individuals from Phase 3 of the 1000 Genomes Project, selected from 26 global population groups, are used to calculate these statistics.
+The literature on microhaplotypes describe several measures of allelic variation with which to compare microhap markers.
+These include, among others, the following statistics.
 
+- Effective number of alleles ($A_e$)
+- Informativeness for assignment ($I_n$)
+- Fixation index ($F_{ST}$)
 
-## Effective number of alleles (*A<sub>e</sub>*)
+Simply put, $A_e$ measures *within-population* allelic variation, while $I_n$ and $F_{ST}$ measure *between-population* allelic variation.
 
-The marker's effective number of alleles ($A_e$) is computed individually for 26 population groups.
-By default, the average of the 26 populations $A_e$ is shown, but the `--ae-pop` flag or the `microhapdb.set_ae_population` function can be used to specify a single population for which to display $A_e$ values.
-
-The $A_e$ statistic is a measure of the *within-population* allelic variation at a locus, which corresponds to the marker's diagnostic power for identification purposes.
-
-
-## Informativeness (*I<sub>n</sub>*)
-
-Rosenberg's informativeness for assignment to populations ($I_n$) is computed on 26 global population groups.
-
-
-## Fixation index (*F<sub>ST</sub>*)
-
-The fixation index ($F_{ST}$) is computed on 26 global population groups.
-
-The $I_n$ and $F_{ST}$ statistics measure *between-population* allelic variation at a locus, which corresponds to the marker's utility for predicting population of origin.
+In the past, MicroHapDB pre-computed all three statistics for each marker in the database.
+However, because the values are correlated, and to better handle the increasing scale of the database, MicroHapDB now reports only the $A_e$ for each marker.
+$A_e$ calculations are based on the most recent 1000 Genomes Project haplotypes and are provided for 26 global population groups, 4 (non-admixed) continental superpopulation groups, and a global average.
