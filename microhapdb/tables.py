@@ -12,6 +12,7 @@
 
 from pkg_resources import resource_filename
 import pandas as pd
+from pathlib import Path
 from pyfaidx import Fasta as FastaIdx
 
 
@@ -36,7 +37,8 @@ populations = read_table("population.csv")
 frequencies = read_table("frequency.csv.gz")
 indels = read_table("indels.csv")
 variantmap = compile_variant_map(markers)
-try:
+hg38file = resource_filename("microhapdb", "data/hg38.fasta")
+if Path(hg38file).is_file():
     hg38 = FastaIdx(resource_filename("microhapdb", "data/hg38.fasta"))
-except:  # pragma: no cover
+else:  # pragma: no cover
     hg38 = None
