@@ -1,10 +1,8 @@
 # Configuring marker target sequences
 
 When designing an assay for targeted amplification or hybridization enrichment of microhaplotype markers, the precise location of the targeted locus must be specified for each marker.
-This typically includes more than just the sequence bounded by the first and last SNPs\* in the marker.
+This typically includes more than just the sequence bounded by the first and last SNPs in the marker.
 When targeting multiple markers in a single assay, the relative lengths of the target sequences and the position of the SNPs within the target sequences must be considered.
-
-*\*NOTE: Some microhap markers include indel polymorphisms as well as SNPs, but this document will refer only to SNPs for clarity.*
 
 MicroHapDB allows the user to specify parameters for configuring target sequences to meet desired length constraints, and recomputes SNP positions relative to the target sequence for convenience.
 Target sequence information can be formatted in several different ways, and can be used not only for assay design but also for bioinformatics analysis of microhap sequence data.
