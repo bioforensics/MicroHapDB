@@ -48,7 +48,7 @@ def parse_markers(instream):
         if line.strip() == "":
             continue
         fields = line.rstrip().split("\t")
-        pos38 = int(fields[4]) - 1
+        pos38 = int(fields[4])
         varref = fields[8] if len(fields) >= 9 else ""
         if fields[0].startswith("MH"):
             if marker is not None:
