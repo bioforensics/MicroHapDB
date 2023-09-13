@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Cleanup of database build code (see #133).
 - Improved marker detail view now includes locus, marker, synonym, and source info (see #138).
+- Updated documentation (see #139, #142).
 
 ### Fixed
 - Off-by-one errors in Fan 2022 marker definitions (see #140).

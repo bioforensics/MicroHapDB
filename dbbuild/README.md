@@ -41,6 +41,9 @@ If the build is successful, the updated data tables can be copied to the main da
 cp *.csv* ../microhapdb/data/
 ```
 
+Note that if the build script is run to integrate new marker definitions, 1000 Genomes Project population frequency estimates for those new markers will not be computed without re-running the `sources/byrskabishop2022/` build procedure after updating its `marker-latest.csv` file.
+The `./build.py` script must be run before the `sources/byrskabishop2022/` build to provide an up-to-date marker file, and then it must be run again after the `sources/byrskabishop2022/` build to aggregate the newly computed frequency and $A_e$ values.
+
 See the appendices at the end of this document for details about which software dependencies and databases are required for the database build.
 
 
