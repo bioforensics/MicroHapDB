@@ -11,9 +11,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Jupyter notebook for plotting database growth over time (see #135).
 
 ### Changed
-
 - Cleanup of database build code (see #133).
 - Improved marker detail view now includes locus, marker, synonym, and source info (see #138).
+
+### Fixed
+- Off-by-one errors in Fan 2022 marker definitions (see #140).
 
 
 ## [0.9] 2023-07-03
