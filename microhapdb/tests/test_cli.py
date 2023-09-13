@@ -639,11 +639,9 @@ def test_efm_multi_pop():
         microhapdb.cli.frequency.main(args)
 
 
-def test_bad_format():
-    arglist = ["frequency", "--marker", "mh02USC-2pA", "--population", "EAS", "--format", "detail"]
+def test_frequency_bad_format():
+    arglist = ["frequency", "--marker=mh02USC-2pA", "--population=EAS"]
     args = microhapdb.cli.get_parser().parse_args(arglist)
-    with pytest.raises(NotImplementedError):
-        microhapdb.cli.frequency.main(args)
     args.format = "BoGuS"
     with pytest.raises(ValueError, match=r'unsupported view format "BoGuS"'):
         microhapdb.cli.frequency.main(args)

@@ -47,8 +47,6 @@ def apply_filters(markers=None, populations=None, allele=None):
 def display(result, view_format, population):
     if view_format == "table":
         result.to_csv(sys.stdout, sep="\t", index=False)
-    elif view_format == "detail":
-        raise NotImplementedError("detail format not yet implemented")
     elif view_format == "mhpl8r":
         npop = len(result.Population.unique())
         if npop > 1:
@@ -78,9 +76,7 @@ def subparser(subparsers):
         epilog=epilog,
         formatter_class=RawDescriptionHelpFormatter,
     )
-    subparser.add_argument(
-        "--format", choices=["table", "detail", "mhpl8r", "efm"], default="table"
-    )
+    subparser.add_argument("--format", choices=["table", "mhpl8r", "efm"], default="table")
     meg = subparser.add_mutually_exclusive_group()
     meg.add_argument("--marker", metavar="ID", nargs="+", help="restrict frequencies by marker")
     meg.add_argument(
