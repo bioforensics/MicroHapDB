@@ -1,38 +1,57 @@
 # MicroHapDB Database Construction
 
-The contents of the MicroHapDB database were integrated from a variety of public sources.
-Considerable care was taken to capture original data and document the process of reformatting and streamlining this data into a format that could be integrated into MicroHapDB.
-This directory describes how the core MicroHapDB tables were constructed, and provides a model for integrating marker/population/frequency data from additional sources.
+## Overview
 
-> Since its inception, MicroHapDB has been envisioned as a resource requiring minimal infrastructure.
-> The database interface does not require a central server, but is installed as part of a software package run locally.
-> The contents of the database are stored in simple easy-to-use tables using the popular CSV format.
-> The database construction process is automated and documented, enabling any reasonably competent bioinformatics practitioner to repopulate the database from scratch using primary data sources and commodity computing hardware.
-> At some point in the future, MicroHapDB may support a Web-based interface, but at the moment this is a lower priority.
+This directory describes the MicroHapDB database build procedure and provides a model for integrating marker, population, and frequency data from additional sources.
+Considerable care was taken to capture original data and document the process of reformatting and streamlining this data for aggregation in MicroHapDB.
+This directory describes how the core MicroHapDB tables were constructed, and provides a model for integrating marker and frequency data from additional sources.
 
 If MicroHapDB is missing important data, a request to include this data can be submitted using the [MicroHapDB issue tracker](https://github.com/bioforensics/MicroHapDB/issues/new).
 Contributions from the community in the form of GitHub pull requests are also welcome!
 
 
-## Database Sources
+## Primary Data Sources
 
-Microhap marker, population, and frequency data is organized by source for the database build.
-Here, "source" refers to a paper describing a specific published study.
-Each source has a dedicated directory located in `dbbuild/sources/.`
+The `sources/` directory contains a dedicated subdirectory for each primary data source integrated into MicroHapDB.
+Each subdirectory in turn contains "raw" primary data files as published in the literature, often in the form of tables, text files, or spreadsheets.
+It also contains the code used to reformat the primary data into a consistent format usable by MicroHapDB.
 
-Adding new data to MicroHapDB requires adding a new "source" directory, populating it with data files in the expected format (described below), and executing the database build workflow.
-By convention, the name of this directory is the surname of the first author of the study followed by the publication year (e.g. `kidd2018`, `delapuente2020`, `wu2021`).
+Adding new data sources to MicroHapDB typically does not require re-processing any of the data sources already present.
+The code and documentation for each primary data source is provided in the spirit of full disclosure, but also establishes the complete provenance of each data point, facilitates reproducibility, and allows any errors in data processing to be corrected rapidly.
+The goal is that—if ever needed, heaven forbid—any reasonbly capable bioinformatician with an interest in microhaplotypes could pick up and take over stewardship of this community resource.
 
-Each data source must include a `source.json` file with metadata describing the study.
-Additionally, each source must include at least one of the following files, but can include as many appropriate depending on available data.
+> Some sources include dedicated documentation in a README file, providing build instructions tailored specifically for that data source.
+> For sources lacking a README, the default build process is to run `snakemake -c1` in the directory.
 
-- `marker.csv`
-- `population.csv`
-- `frequency.csv`
-- `indels.csv` (required only if one ore more marker definitions include indel variants)
 
-If these files are populated manually, no other files are required.
-However, for some sources, MicroHapDB includes code for converting data from its original *ad hoc* format to the format expected by MicroHapDB.
+## Rebuilding the Database from Scratch
+
+The MicroHapDB database can be rebuilt with the following command in the `dbbuild/` directory.
+
+```
+./build.py databases/dbSNP/ databases/chains/ | tee build-summary.txt
+```
+
+The arguments provided to the build script will depend on the location of the dbSNP files and liftover chain files on the system.
+Running `./build.py --help` should provide helpful guidance.
+
+If the build is successful, the updated data tables can be copied to the main data directory with the following command.
+
+```
+cp *.csv* ../microhapdb/data/
+```
+
+Note that if the build script is run to integrate new marker definitions, 1000 Genomes Project population frequency estimates for those new markers will not be computed without re-running the `sources/byrskabishop2022/` build procedure after updating its `marker-latest.csv` file.
+The `./build.py` script must be run before the `sources/byrskabishop2022/` build to provide an up-to-date marker file, and then it must be run again after the `sources/byrskabishop2022/` build to aggregate the newly computed frequency and $A_e$ values.
+
+See the appendices at the end of this document for details about which software dependencies and databases are required for the database build.
+
+
+## Data Types
+
+MicroHapDB's core data is comprised of marker definitions and allele frequency estimates.
+Each primary data source must contain at least one of these data types, as well as source metadata.
+The required format for this data is described below.
 
 ### `source.json`
 
@@ -43,6 +62,7 @@ It includes the following fields.
 - `year`: publication year
 - `doi`: DOI of the corresponding paper
 - `description`: free-text description of the data source
+- `order`: optionally, specify the order of precedence this source should have in its publication year; when not provided, sources can have an arbitrary precedence within a given year
 
 For example, the `source.json` file for Kidd (2018) looks like this.
 
@@ -83,30 +103,6 @@ mh01USC-1qD,,3,,chr1,,rs12141154;rs74148721;rs56274766
 mh02USC-2pA,,4,,chr2,,rs76708321;rs1686420;rs1686419;rs1686418
 ```
 
-### `population.csv`
-
-The `population.csv` file contains a description of any population groups for which MH allele frequency data is available from this study.
-This includes the following fields.
-
-- `ID`: a unique identifier for this population across all sources
-- `Name`: a free-text description of the population, intended to be human readable
-- `Xref`: optional cross-reference
-
-For example, the first few lines of the `population.tsv` for the original 1000 Genomes Project data (Auton 2015) look like this.
-
-```csv
-ID,Name,Xref
-CHB,"Han Chinese in Beijing, China",SA004058R
-JPT,"Japanese in Tokyo, Japan",SA004060K
-CHS,Southern Han Chinese,SA004059S
-CDX,"Chinese Dai in Xishuangbanna, China",SA004238R
-KHV,"Kinh in Ho Chi Minh City, Vietnam",SA004249T
-CEU,Utah Residents (CEPH) with Northern and Western European Ancestry,SA004250L
-TSI,Toscani in Italia,SA004057Q
-FIN,Finnish in Finland,SA004049R
-GBR,British in England and Scotland,SA004050J
-```
-
 ### `frequency.csv`
 
 The `frequency.csv` file contains any population frequency data published by the study.
@@ -132,7 +128,33 @@ mh06PK-24844,MHDBP-936bc36f79,C|C|G|C|C|C|A|A|G|A,0.000
 mh06PK-24844,MHDBP-3dab7bdd14,C|C|G|C|C|C|A|A|G|A,0.329
 ```
 
+### `population.csv`
+
+The `population.csv` file provides a description of any population groups for which MH allele frequency data is available from this study.
+This includes the following fields.
+
+- `ID`: a unique identifier for this population across all sources
+- `Name`: a free-text description of the population, intended to be human readable
+- `Xref`: optional cross-reference
+
+For example, the first few lines of the `population.tsv` for the NYGC 1000 Genomes Project data (Byrska-Bishop 2022) look like this.
+
+```csv
+ID,Name,Xref
+1KGP,1000 Genomes Aggregate,
+AFR,Africa,
+EUR,Europe,
+SAS,South Asia,
+EAS,East Asia,
+CHB,"Han Chinese in Beijing, China",SA004058R
+JPT,"Japanese in Tokyo, Japan",SA004060K
+CHS,Southern Han Chinese,SA004059S
+```
+
 ### `indel.csv`
+
+> **NOTE**: MicroHapDB uses this indel metadata to display MH sequences correctly.
+> Population frequency estimates for microhaps with indels may not be accurate for all data sources, and it is not recommended to rely on frequency estimates for these markers.
 
 The `indel.csv` file contains insertion/deletion variant data for any markers that include indels.
 It includes the following fields.
@@ -151,21 +173,8 @@ mh11KK-091,0,TG,T
 mh22KK-064,3,AATAATT,A
 ```
 
-> **NOTE**: MicroHapDB uses this indel metadata to display MH sequences correctly.
-> Population frequency estimates for microhaps with indels may not be accurate for all data sources, and it is not recommended to rely on frequency estimates for these markers.
 
-
-## Rebuilding the Database from Scratch
-
-With software dependencies and databases in place, the database can be rebuilt with the following command (run within the `dbbuild/` directory).
-
-```
-./build.py | tee build-summary.txt
-```
-
-The CSV files created during the build should then be copied to the `microhapdb/data/` directory.
-
-### Dependencies
+## Appendix A: Software Dependencies
 
 The software dependencies for the build include the following.
 It should be possible to possible to perform the main build with a subset of these dependencies, but rebuilding some specific sources is only possible with all of these dependencies.
@@ -181,12 +190,14 @@ They can be installed using pip and/or conda.
 - geckodriver
 - intervaltree
 
-### Databases
+
+## Appendix B: Required Auxiliary Data files
+
+Run `./build.py --check` to see the expected locations of these files
 
 - dbSNP
     - .vcf.gz, .vcf.gz.tbi, and .rsidx files
     - GRCh37 and GRCh38
-- 1000 Genomes VCFs
 - UCSC liftover chain files
     - hg19ToHg38
     - hg38ToHg19
