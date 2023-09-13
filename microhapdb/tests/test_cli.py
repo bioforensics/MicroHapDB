@@ -398,7 +398,7 @@ def test_main_marker_bad_code():
         ("--population=SA000009J", "--marker=mh13KK-218.v1", None, 15),
         (None, "--marker=mh13KK-218.v1", "--allele=C|T|C|T", 129),
         (None, "--marker=mh14PK-72639", None, 227),
-        (None, None, None, 934927),
+        (None, None, None, 944734),
     ],
 )
 def test_main_frequency_by_pop(pop, marker, allele, numrows, capsys):
@@ -690,9 +690,9 @@ def test_cli_summarize(capsys):
   - 3053 marker definitions
   - 2413 distinct loci
 [frequencies]
-  - 58679 haplotypes
+  - 59772 haplotypes
   - 125 population groups
-  - 934926 total microhap frequencies
+  - 944733 total microhap frequencies
 """
     print(observed)
     assert observed.strip() == expected.strip()
