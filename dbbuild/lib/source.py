@@ -218,7 +218,7 @@ class SourceIndex:
     @property
     def merges(self):
         table = pd.DataFrame(self.interval_index.mergeables.items(), columns=["Derivative", "Original"])
-        table = table.sort_values("Original").reset_index(drop=True)
+        table = table.sort_values(["Original", "Derivative"]).reset_index(drop=True)
         return table
 
     def __str__(self):
