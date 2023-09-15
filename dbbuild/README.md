@@ -189,15 +189,29 @@ They can be installed using pip and/or conda.
 - selenium
 - geckodriver
 - intervaltree
+- tqdm
 
 
 ## Appendix B: Required Auxiliary Data files
 
-Run `./build.py --check` to see the expected locations of these files
-
 - dbSNP
-    - .vcf.gz, .vcf.gz.tbi, and .rsidx files
-    - GRCh37 and GRCh38
+    - .vcf.gz, .vcf.gz.tbi, and .rsidx files for both GRCh37 and GRCh38
+    - info on merged records
 - UCSC liftover chain files
     - hg19ToHg38
     - hg38ToHg19
+
+The following command will download data files required for the database build.
+
+```
+snakemake -c1 -p -s download.smk -d databases/
+```
+
+Following a successful run, the command `./build.py --check` can be used to verify that the files were downloaded correctly to the expected location.
+
+A dbSNP rsidx index must also be built for both GRCh37 and GRCh38 coordinates. Note that the following commands require many hours of run time.
+
+```
+rsidx index databases/dbSNP/dbSNP_GRCh37.vcf.gz databases/dbSNP/dbSNP_GRCh37.rsidx
+rsidx index databases/dbSNP/dbSNP_GRCh38.vcf.gz databases/dbSNP/dbSNP_GRCh38.rsidx
+```

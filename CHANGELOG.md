@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [0.10] 2023-09-15
 
 ### Added
 - Marker definitions for NimaGen 29-plex (see #134).
