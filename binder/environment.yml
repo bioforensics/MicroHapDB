@@ -6,4 +6,4 @@ channels:
 dependencies:
   - bash_kernel
   - curl
-  - microhapdb==0.9
+  - microhapdb==0.10

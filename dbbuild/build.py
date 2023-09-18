@@ -41,6 +41,7 @@ def validate_paths(dbsnp_path, chain_path):
         for extension in ("vcf.gz", "vcf.gz.tbi", "rsidx"):
             path = Path(dbsnp_path) / f"dbSNP_GRCh{version}.{extension}"
             paths.append(path)
+    paths.append(Path(dbsnp_path) / "refsnp-merged.csv.gz")
     paths.append(Path(chain_path) / "hg19ToHg38.over.chain.gz")
     paths.append(Path(chain_path) / "hg38ToHg19.over.chain.gz")
     files_present = [p.is_file() for p in paths]
