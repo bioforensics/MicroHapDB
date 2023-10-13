@@ -427,7 +427,7 @@ class Marker:
         variants = list()
         for offset, refr_offset in zip(self.target_offsets, self.offsets):
             variants.append((self.name, offset, self.chrom, refr_offset))
-        return pd.DataFrame(variants, columns=["Marker", "Offset", "Chrom", f"ChromOffset"])
+        return pd.DataFrame(variants, columns=["Marker", "Offset", "Chrom", "ChromOffset"])
 
     def global_to_local(self, coord):
         start, end = self.target_interval
@@ -447,6 +447,16 @@ class Locus:
         self.markers = list() if markers is None else markers
 
     @property
+    def definition(self):
+        variants = list()
+        for marker in sorted(self.markers, key=lambda m: m.name):
+            start, end = self.target_interval
+            offsets = [o - start for o in marker.offsets]
+            for offset, refr_offset in zip(offsets, marker.offsets):
+                variants.append((marker.name, offset, marker.chrom, refr_offset))
+        return pd.DataFrame(variants, columns=["Marker", "Offset", "Chrom", "ChromOffset"])
+
+    @property
     def fasta(self):
         out = StringIO()
         print(">", self.defline, sep="", file=out)
@@ -463,7 +473,7 @@ class Locus:
     @property
     def defline(self):
         parts = [self.name, f"GRCh38:{self.target_slug}"]
-        for marker in self.markers:
+        for marker in sorted(self.markers, key=lambda m: m.name):
             start, end = self.target_interval
             offsets = [o - start for o in marker.offsets]
             varstring = ",".join(map(str, offsets))
