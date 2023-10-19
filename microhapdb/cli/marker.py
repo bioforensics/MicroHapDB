@@ -92,7 +92,10 @@ def display(
             for locus in loci.values():
                 print(locus.fasta)
         elif view_format == "offsets":
-            table = pd.concat([marker.definition for marker in markers])
+            loci = defaultdict(Locus)
+            for marker in markers:
+                loci[marker.locus].markers.append(marker)
+            table = pd.concat([locus.definition for locus in loci.values()])
             table = table.rename(columns={"ChromOffset": f"OffsetHg38"})
             table.to_csv(sys.stdout, sep="\t", index=False)
         else:

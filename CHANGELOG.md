@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Added 
+- A new table flagging markers with repetitive content (see #147).
+
+
+## [0.10.1] 2023-10-13
+
+### Fixed
+- Bug with offsets table (`marker --format=offsets`) when multiple markers are defined for a locus (#144).
+
+
 ## [0.10] 2023-09-15
 
 ### Added
