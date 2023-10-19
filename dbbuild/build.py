@@ -15,11 +15,14 @@
 from argparse import ArgumentParser
 from lib import SourceIndex
 from pathlib import Path
+from repeats import main as flag_repeats
 import sys
 
 
-def main(source_path, dbsnp_path, chain_path, exclusions=["Auton2015"], check_only=False):
-    validate_paths(dbsnp_path, chain_path)
+def main(
+    source_path, dbsnp_path, chain_path, rmsk_path, exclusions=["Auton2015"], check_only=False
+):
+    validate_paths(dbsnp_path, chain_path, rmsk_path)
     if check_only:
         return
     index = SourceIndex(source_path, dbsnp_path, chain_path, exclude=exclusions)
@@ -32,10 +35,12 @@ def main(source_path, dbsnp_path, chain_path, exclusions=["Auton2015"], check_on
     )
     index.populations.to_csv("population.csv", index=False)
     index.merges.to_csv("merged.csv", index=False)
+    repeats = flag_repeats(Path(rmsk_path) / "rmsk.txt.gz", "marker.csv", delta=25)
+    repeats.to_csv("repeats.csv", index=False)
     print(index)
 
 
-def validate_paths(dbsnp_path, chain_path):
+def validate_paths(dbsnp_path, rmsk_path, chain_path):
     paths = list()
     for version in (37, 38):
         for extension in ("vcf.gz", "vcf.gz.tbi", "rsidx"):
@@ -44,6 +49,7 @@ def validate_paths(dbsnp_path, chain_path):
     paths.append(Path(dbsnp_path) / "refsnp-merged.csv.gz")
     paths.append(Path(chain_path) / "hg19ToHg38.over.chain.gz")
     paths.append(Path(chain_path) / "hg38ToHg19.over.chain.gz")
+    paths.append(Path(rmsk_path) / "rmsk.txt.gz")
     files_present = [p.is_file() for p in paths]
     print("-" * 60, "[Auxiliary data file check]\n", "Present  Path", sep="\n", file=sys.stderr)
     for path, present in zip(paths, files_present):
@@ -58,6 +64,7 @@ def get_parser():
     parser = ArgumentParser(description="MicroHapDB database build procedure")
     parser.add_argument("dbsnp_path")
     parser.add_argument("chain_path")
+    parser.add_argument("rmsk_path")
     parser.add_argument(
         "--sources",
         default="sources",
@@ -83,6 +90,7 @@ if __name__ == "__main__":
         args.sources,
         args.dbsnp_path,
         args.chain_path,
+        args.rmsk_path,
         exclusions=args.exclude,
         check_only=args.check,
     )
