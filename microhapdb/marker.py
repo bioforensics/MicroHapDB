@@ -338,6 +338,9 @@ class Marker:
     def print_detail_targetseq_alleles(self, blocks, out):
         for allele in self.alleles:
             allelevars = allele.split("|")
+            if len(allelevars) != len(self.variant_lengths):
+                message = f"num var mismatch ({self.name}): {len(allelevars)} vs {len(self.variant_lengths)}"
+                raise ValueError(message)
             n = -1
             for blocktype, blocklength in blocks:
                 if blocktype == "span":

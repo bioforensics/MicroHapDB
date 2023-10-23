@@ -974,3 +974,46 @@ def test_locus_length():
         loci[marker.locus].markers.append(marker)
     for locus in loci.values():
         assert len(locus.target_seq) <= 610, locus.name
+
+
+def test_mh06WL017v1():
+    subset = microhapdb.markers[microhapdb.markers.Name == "mh06WL-017.v1"]
+    markers = list(Marker.objectify(subset))
+    assert len(markers) == 1
+    marker = markers[0]
+    assert len(marker) == 199
+    print(marker.varrefs)
+    assert marker.varrefs == [
+        "rs71542446",
+        "rs41270931",
+        "rs28724261",
+        "rs71542447",
+        "rs2854267",
+        "rs9274216",
+        "rs35986240",
+        "rs201930518",
+        "rs17613599",
+        "rs71542448",
+        "rs9274217",
+        "rs58770498",
+        "rs17613606",
+        "rs9274218",
+        "rs115495316",
+        "rs9274219",
+        "rs9274220",
+        "rs2856703",
+        "rs41270932",
+        "rs9274222",
+        "rs72844333",
+        "rs200098349",
+        "rs17843724",
+        "rs74222206",
+        "rs281863378",
+        "rs9274225",
+        "rs41270933",
+        "rs17613622",
+        "rs17613629",
+        "rs17613636",
+        "rs281863362",
+        "rs9274227",
+    ]
