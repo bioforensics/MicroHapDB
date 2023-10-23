@@ -46,6 +46,9 @@ class GenotypeIndexer:
 
     def get_haplotypes(self, chrom, positions):
         reference = self.get_reference_haplotype(chrom, positions)
+        if len(reference) != len(positions):
+            message = f"variant count mismatch: {len(reference)} vs {len(positions)}"
+            raise ValueError(message)
         haplotypes = dict()
         for sample in self.samples:
             haplotypes[sample] = (Haplotype(reference), Haplotype(reference))

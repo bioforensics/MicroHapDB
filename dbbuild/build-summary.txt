@@ -1,34 +1,5 @@
 swapping out rs74812635 for rs602427
 swapping out rs75324027 for rs602875
-swapping out rs74812635 for rs602427
-swapping out rs75324027 for rs602875
-swapping out rs281863504 for rs71542446
-swapping out rs281863503 for rs41270931
-swapping out rs281863502 for rs28724261
-swapping out rs281863499 for rs71542447
-swapping out rs281863486 for rs2854267
-swapping out rs281863485 for rs9274216
-swapping out rs281863467 for rs201930518
-swapping out rs281863466 for rs17613599
-swapping out rs281863464 for rs71542448
-swapping out rs281863463 for rs9274217
-swapping out rs281863439 for rs58770498
-swapping out rs281863431 for rs17613606
-swapping out rs281863430 for rs9274218
-swapping out rs281863427 for rs115495316
-swapping out rs281863426 for rs9274219
-swapping out rs281863425 for rs9274220
-swapping out rs281863414 for rs2856703
-swapping out rs281863406 for rs41270932
-swapping out rs281863401 for rs9274222
-swapping out rs281863398 for rs72844333
-swapping out rs281863397 for rs200098349
-swapping out rs281863382 for rs74222206
-swapping out rs281863375 for rs9274225
-swapping out rs281863371 for rs41270933
-swapping out rs281863364 for rs17613629
-swapping out rs281863363 for rs17613636
-swapping out rs281863357 for rs9274227
 swapping out rs281863504 for rs71542446
 swapping out rs281863503 for rs41270931
 swapping out rs281863502 for rs28724261
@@ -57,18 +28,11 @@ swapping out rs281863364 for rs17613629
 swapping out rs281863363 for rs17613636
 swapping out rs281863357 for rs9274227
 swapping out rs561074738 for rs9348865
-swapping out rs561074738 for rs9348865
 swapping out rs115980227 for rs80319605
-swapping out rs115980227 for rs80319605
-swapping out rs536547537 for rs80087112
 swapping out rs536547537 for rs80087112
 swapping out rs74898010 for rs73151289
 swapping out rs28970291 for rs4076758
 swapping out rs72629020 for rs36190610
-swapping out rs74898010 for rs73151289
-swapping out rs28970291 for rs4076758
-swapping out rs72629020 for rs36190610
-swapping out rs10546081 for rs9657920
 swapping out rs10546081 for rs9657920
 swapping out rs281863504 for rs71542446
 swapping out rs281863503 for rs41270931
@@ -97,52 +61,8 @@ swapping out rs281863371 for rs41270933
 swapping out rs281863364 for rs17613629
 swapping out rs281863363 for rs17613636
 swapping out rs281863357 for rs9274227
-swapping out rs281863504 for rs71542446
-swapping out rs281863503 for rs41270931
-swapping out rs281863502 for rs28724261
-swapping out rs281863499 for rs71542447
-swapping out rs281863486 for rs2854267
-swapping out rs281863485 for rs9274216
-swapping out rs281863467 for rs201930518
-swapping out rs281863466 for rs17613599
-swapping out rs281863464 for rs71542448
-swapping out rs281863463 for rs9274217
-swapping out rs281863439 for rs58770498
-swapping out rs281863431 for rs17613606
-swapping out rs281863430 for rs9274218
-swapping out rs281863427 for rs115495316
-swapping out rs281863426 for rs9274219
-swapping out rs281863425 for rs9274220
-swapping out rs281863414 for rs2856703
-swapping out rs281863406 for rs41270932
-swapping out rs281863401 for rs9274222
-swapping out rs281863398 for rs72844333
-swapping out rs281863397 for rs200098349
-swapping out rs281863382 for rs74222206
-swapping out rs281863375 for rs9274225
-swapping out rs281863371 for rs41270933
-swapping out rs281863364 for rs17613629
-swapping out rs281863363 for rs17613636
-swapping out rs281863357 for rs9274227
-swapping out rs115980227 for rs80319605
 swapping out rs115980227 for rs80319605
 swapping out rs536547537 for rs80087112
-swapping out rs536547537 for rs80087112
-swapping out rs281863504 for rs71542446
-swapping out rs281863503 for rs41270931
-swapping out rs281863502 for rs28724261
-swapping out rs281863499 for rs71542447
-swapping out rs281863486 for rs2854267
-swapping out rs281863485 for rs9274216
-swapping out rs281863467 for rs201930518
-swapping out rs281863466 for rs17613599
-swapping out rs281863464 for rs71542448
-swapping out rs281863463 for rs9274217
-swapping out rs281863439 for rs58770498
-swapping out rs281863431 for rs17613606
-swapping out rs281863430 for rs9274218
-swapping out rs281863427 for rs115495316
-swapping out rs281863426 for rs9274219
 swapping out rs281863504 for rs71542446
 swapping out rs281863503 for rs41270931
 swapping out rs281863502 for rs28724261
@@ -160,11 +80,7 @@ swapping out rs281863427 for rs115495316
 swapping out rs281863426 for rs9274219
 swapping out rs576530137 for rs281864341
 swapping out rs530460066 for rs281864275
-swapping out rs576530137 for rs281864341
-swapping out rs530460066 for rs281864275
 swapping out rs573533995 for rs12222263
-swapping out rs573533995 for rs12222263
-swapping out rs536547537 for rs80087112
 swapping out rs536547537 for rs80087112
 Merging 'mh01SCUZJ-0109666' --> 'mh01SCUZJ-0109665'
 Merging 'mh01WL-082' --> 'mh01WL-020'
@@ -3118,7 +3034,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
   - 59 marker definitions based on 658 SNPs
 [Byrska-Bishop2022]
   - 31 population samples
-  - frequencies for 59232 distinct haplotypes in 31 populations; 856064 total frequencies
+  - frequencies for 59233 distinct haplotypes in 31 populations; 856067 total frequencies
 [Fan2022]
   - 22 marker definitions based on 338 SNPs and 25 indels
 [Yu2022G1]

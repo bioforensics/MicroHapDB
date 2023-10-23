@@ -225,9 +225,9 @@ class MarkerFromIDs(Marker):
 
     def resolve(self):
         for refr in ("GRCh37", "GRCh38"):
-            for position in self.index.resolve(self.rsids, refr, strict=True):
-                self.positions[refr].append(position)
-            self.positions[refr].sort()
+            positions = sorted(self.index.resolve(self.rsids, refr, strict=True))
+            self.positions[refr] = [pos for pos, rsid in positions]
+            self.rsids = [rsid for pos, rsid in positions]  # Possibly updated from refsnp-merged
 
     @property
     def numvars(self):
