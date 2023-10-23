@@ -145,7 +145,7 @@ class VariantIndex:
                 print(f"swapping out {rsid} for {self.merged_rsids[rsid]}")
                 rsid = self.merged_rsids[rsid]
             if rsid in self.coords_by_rsid[refr]:
-                yield self.coords_by_rsid[refr][rsid]
+                yield self.coords_by_rsid[refr][rsid], rsid
             elif strict is True:
                 raise ValueError(f"no {refr} coordinate for {rsid}")
 
