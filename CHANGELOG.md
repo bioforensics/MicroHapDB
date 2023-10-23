@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added 
 - A new table flagging markers with repetitive content (see #147).
 
+### Changed
+- Merged RSIDs resolved during database build now propagated to the final marker definition (see #149).
+
 
 ## [0.10.1] 2023-10-13
 
