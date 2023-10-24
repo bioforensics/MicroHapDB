@@ -45,20 +45,22 @@ def parse_frequencies(stream, haplotypes):
     }
     freqdata = list()
     marker = None
+    counts = (None, None, None)
     next(stream)
     for line in stream:
         values = line.strip().split("\t")
         if line.startswith("mh"):
             marker = values[0]
+            counts = values[-3:]
         else:
             if marker == "mh17PK-86511":
                 continue
             hapid = values[0]
             freqs = values[1:]
-            for freq, pop in zip(freqs, ("NL", "Asia", "Africa")):
-                entry = (marker, popids[pop], haplotypes[marker][hapid], float(freq))
+            for freq, pop, count in zip(freqs, ("NL", "Asia", "Africa"), counts):
+                entry = (marker, popids[pop], haplotypes[marker][hapid], float(freq), count)
                 freqdata.append(entry)
-    return pd.DataFrame(freqdata, columns=["Marker", "Population", "Allele", "Frequency"])
+    return pd.DataFrame(freqdata, columns=["Marker", "Population", "Allele", "Frequency", "Count"])
 
 
 def compile_marker_definitions(markerrsids, markerdefs, outcsv):
