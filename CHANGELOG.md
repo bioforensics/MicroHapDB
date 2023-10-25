@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added 
 - A new table flagging markers with repetitive content (see #147).
+- A new column in the `microhapdb.frequencies` table containing the number of observed haplotypes used to compute frequency estimates for each population group (see #151).
 
 ### Changed
 - Merged RSIDs resolved during database build now propagated to the final marker definition (see #149).

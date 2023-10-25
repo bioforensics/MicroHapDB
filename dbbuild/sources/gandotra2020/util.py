@@ -43,11 +43,11 @@ def compile_freqs(csvdir, outcsv):
         marker, population = parse_csv_filename(csvfile)
         data = pd.read_csv(csvfile, skiprows=2, skipfooter=1, engine="python", header=None)
         data["Allele"] = data[0].apply(lambda x: x.replace("-", "|"))
+        data["Count"] = data[1].sum()
         data["Marker"] = marker
         data["Population"] = population
-        data = data.rename(columns={2: "Frequency"})[
-            ["Marker", "Population", "Allele", "Frequency"]
-        ]
+        columns = ["Marker", "Population", "Allele", "Frequency", "Count"]
+        data = data.rename(columns={2: "Frequency"})[columns]
         datalist.append(data)
     pd.concat(datalist).round(4).to_csv(outcsv, index=False, float_format="%.4f")
 

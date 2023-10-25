@@ -73,6 +73,7 @@ def cleanup_frequencies(freq):
     freq.loc[(freq.Marker.str.startswith("mh05KK-120")) & (freq.Source == "Kidd2018") & (freq.NumVars == 3), "Marker"] = "mh05KK-120.v1"
     freq.loc[(freq.Marker.str.startswith("mh05KK-120")) & (freq.Source == "Kidd2018") & (freq.NumVars == 4), "Marker"] = "mh05KK-120.v2"
     freq = freq.drop(columns="NumVars")
+    freq["Count"] = freq["Count"].astype("Int16")
     return freq
 
 

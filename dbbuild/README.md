@@ -112,20 +112,21 @@ It includes the following fields.
 - `Population`: the unique identifer of the population
 - `Allele`: the allele of each variant in the microhap, separated by pipe symbols
 - `Frequency`: the frequency of the allele in the specified population (a real number between 0.0 and 1.0)
+- `Count`: the total number of alleles (denominator) used to compute the given population frequency estimate
 
 For example, the first few lines of the `frequency.tsv` for van der Gaag (2018) look like this.
 
 ```csv
-Marker,Population,Allele,Frequency
-mh06PK-24844,MHDBP-383d86606a,T|C|G|C|C|C|A|A|G|A,0.000
-mh06PK-24844,MHDBP-936bc36f79,T|C|G|C|C|C|A|A|G|A,0.000
-mh06PK-24844,MHDBP-3dab7bdd14,T|C|G|C|C|C|A|A|G|A,0.123
-mh06PK-24844,MHDBP-383d86606a,T|C|G|C|C|T|A|A|G|G,0.566
-mh06PK-24844,MHDBP-936bc36f79,T|C|G|C|C|T|A|A|G|G,0.586
-mh06PK-24844,MHDBP-3dab7bdd14,T|C|G|C|C|T|A|A|G|G,0.425
-mh06PK-24844,MHDBP-383d86606a,C|C|G|C|C|C|A|A|G|A,0.071
-mh06PK-24844,MHDBP-936bc36f79,C|C|G|C|C|C|A|A|G|A,0.000
-mh06PK-24844,MHDBP-3dab7bdd14,C|C|G|C|C|C|A|A|G|A,0.329
+Marker,Population,Allele,Frequency,Count
+mh06PK-24844,MHDBP-383d86606a,T|C|G|C|C|C|A|A|G|A,0.000,99
+mh06PK-24844,MHDBP-936bc36f79,T|C|G|C|C|C|A|A|G|A,0.000,87
+mh06PK-24844,MHDBP-3dab7bdd14,T|C|G|C|C|C|A|A|G|A,0.123,73
+mh06PK-24844,MHDBP-383d86606a,T|C|G|C|C|T|A|A|G|G,0.566,99
+mh06PK-24844,MHDBP-936bc36f79,T|C|G|C|C|T|A|A|G|G,0.586,87
+mh06PK-24844,MHDBP-3dab7bdd14,T|C|G|C|C|T|A|A|G|G,0.425,73
+mh06PK-24844,MHDBP-383d86606a,C|C|G|C|C|C|A|A|G|A,0.071,99
+mh06PK-24844,MHDBP-936bc36f79,C|C|G|C|C|C|A|A|G|A,0.000,87
+mh06PK-24844,MHDBP-3dab7bdd14,C|C|G|C|C|C|A|A|G|A,0.329,73
 ```
 
 ### `population.csv`
@@ -200,6 +201,7 @@ They can be installed using pip and/or conda.
 - UCSC liftover chain files
     - hg19ToHg38
     - hg38ToHg19
+- UCSC RepeatMasker track
 
 The following command will download data files required for the database build.
 
