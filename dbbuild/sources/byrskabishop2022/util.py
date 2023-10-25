@@ -132,7 +132,7 @@ def compile_frequencies(haplotypes):
     table = list()
     for freqdata in list_frequencies(haplotypes):
         table.append(freqdata)
-    return pd.DataFrame(table, columns=["Marker", "Population", "Allele", "Frequency"])
+    return pd.DataFrame(table, columns=["Marker", "Population", "Allele", "Frequency", "Count"])
 
 
 def list_frequencies(haplotypes):
@@ -152,13 +152,15 @@ def list_frequencies(haplotypes):
                 if row["Population"] not in admixed:
                     pop_tallies[row["Marker"]][row["Superpopulation"]].update(mhallele)
     for marker, popcounts in sorted(pop_tallies.items()):
+        total_count = sum(agg_tallies[marker].values())
         for mhallele, agg_count in sorted(agg_tallies[marker].items()):
-            freq = agg_count / sum(agg_tallies[marker].values())
-            yield marker, "1KGP", mhallele, freq
+            freq = agg_count / total_count
+            yield marker, "1KGP", mhallele, freq, total_count
         for population, haplocounts in sorted(popcounts.items()):
+            total_count = sum(haplocounts.values())
             for mhallele, count in sorted(haplocounts.items()):
-                freq = count / sum(haplocounts.values())
-                yield marker, population, mhallele, freq
+                freq = count / total_count
+                yield marker, population, mhallele, freq, total_count
 
 
 def compute_aes(frequencies):
