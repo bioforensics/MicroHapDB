@@ -59,4 +59,5 @@ rule frequencies:
                 entry = [row.Marker, pop.replace(" ", ""), allele, frequency]
                 table.append(entry)
         frequencies = pd.DataFrame(table, columns=["Marker", "Population", "Allele", "Frequency"])
+        frequencies["Count"] = None
         frequencies.to_csv(output.csv, index=False)

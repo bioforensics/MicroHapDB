@@ -61,9 +61,13 @@ def reformat_frequencies(infile, mapfile, outfile):
     idmaptable = pd.read_csv(mapfile)
     idmap = dict(zip(idmaptable.InternalName, idmaptable.Marker))
     freqs = pd.read_csv(infile, sep="\t").replace(idmap)
+    counts_by_marker = dict()
+    for markerid, subset in freqs.groupby("MarkerName"):
+        counts_by_marker[markerid] = subset.NumberOfObservations.sum()
     freqs.drop(columns=["NumberOfObservations"], inplace=True)
     freqs["Haplotype"] = freqs["Haplotype"].apply(lambda x: "|".join(list(x)))
     freqs["Population"] = "MHDBP-7c055e7ee8"
     freqs.rename(columns={"MarkerName": "Marker", "Haplotype": "Allele"}, inplace=True)
     freqs = freqs[["Marker", "Population", "Allele", "Frequency"]]
+    freqs["Count"] = freqs.Marker.apply(lambda x: counts_by_marker[x])
     freqs.to_csv(outfile, index=False, float_format="%.3f")

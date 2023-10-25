@@ -40,7 +40,11 @@ rule frequencies:
     run:
         freqs = pd.read_csv(input.csv)
         freqs = freqs.fillna(method="ffill")
+        counts_by_marker = dict()
+        for marker, subset in freqs.groupby("Marker"):
+            counts_by_marker[marker] = subset.Count.sum()
         freqs["Allele"] = freqs["Haplotype"].apply(lambda x: "|".join(list(x)))
         freqs["Population"] = "Italians"
-        freqs = freqs[["Marker", "Population", "Allele", "Frequency"]]
+        freqs = freqs[["Marker", "Population", "Allele", "Frequency", "Count"]]
+        freqs["Count"] = freqs.Marker.apply(lambda markerid: counts_by_marker[markerid])
         freqs.to_csv(output.csv, index=False)

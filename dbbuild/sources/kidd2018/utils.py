@@ -157,11 +157,11 @@ def alfred_frequencies(table, mappingfile):
     data = list()
     mapping = parse_popid_mapping(mappingfile)
     with smartopen(table, "r") as fh:
-        for marker, pop, allele, freq in parse_freqs(fh, mapping):
+        for marker, pop, allele, freq, count in parse_freqs(fh, mapping):
             if marker == "mh05KK-058":
                 marker = "mh15KK-058"
-            data.append((marker, pop, allele, freq))
-    return pd.DataFrame(data, columns=["Marker", "Population", "Allele", "Frequency"])
+            data.append((marker, pop, allele, freq, count))
+    return pd.DataFrame(data, columns=["Marker", "Population", "Allele", "Frequency", "Count"])
 
 
 def parse_freqs(stream, mapping):
@@ -195,6 +195,7 @@ def parse_freqs(stream, mapping):
                 continue
             values = line.split("\t")
             popid = search(r"^([^\(]+)\((\S+)\)", values[0]).group(2)
+            count = values[1]
             freqs = values[2:]
             if len(alleles) != len(freqs):
                 message = "WARNING: allele/freq mismatch "
@@ -206,4 +207,4 @@ def parse_freqs(stream, mapping):
                 allele = allele.replace(",", "|")
                 if popid in mapping:
                     popid = mapping[popid]
-                yield markerid, popid, allele, float(freq)
+                yield markerid, popid, allele, float(freq), int(count)
