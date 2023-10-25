@@ -13,6 +13,7 @@
 
 import microhapdb
 import pytest
+from random import choice
 
 
 def test_assumptions():
@@ -34,21 +35,21 @@ def test_allele_frequencies():
     """
     >>> f = microhapdb.frequencies
     >>> f[(f.Marker == "mh15CP-003") & (f.Population == "YRI")]
-                Marker Population Allele  Frequency             Source
-    716565  mh15CP-003        YRI  A|A|C    0.02893  Byrska-Bishop2022
-    716566  mh15CP-003        YRI  A|G|A    0.59091  Byrska-Bishop2022
-    716567  mh15CP-003        YRI  A|G|C    0.38017  Byrska-Bishop2022
-    716568  mh15CP-003        YRI  A|G|A    0.57400           Kidd2018
-    716569  mh15CP-003        YRI  A|G|C    0.39800           Kidd2018
-    716570  mh15CP-003        YRI  A|A|C    0.02800           Kidd2018
-    716571  mh15CP-003        YRI  C|G|C    0.00000           Kidd2018
+                Marker Population Allele  Frequency  Count             Source
+    716565  mh15CP-003        YRI  A|A|C    0.02893    242  Byrska-Bishop2022
+    716566  mh15CP-003        YRI  A|G|A    0.59091    242  Byrska-Bishop2022
+    716567  mh15CP-003        YRI  A|G|C    0.38017    242  Byrska-Bishop2022
+    716568  mh15CP-003        YRI  A|G|A    0.57400    216           Kidd2018
+    716569  mh15CP-003        YRI  A|G|C    0.39800    216           Kidd2018
+    716570  mh15CP-003        YRI  A|A|C    0.02800    216           Kidd2018
+    716571  mh15CP-003        YRI  C|G|C    0.00000    216           Kidd2018
     >>> f.query("Marker == 'mh15CP-003' and Allele == 'A|A|C' and Population == 'FIN'")
-                Marker Population Allele  Frequency             Source
-    716442  mh15CP-003        FIN  A|A|C    0.31818  Byrska-Bishop2022
-    716448  mh15CP-003        FIN  A|A|C    0.31800           Kidd2018
+                Marker Population Allele  Frequency  Count             Source
+    716442  mh15CP-003        FIN  A|A|C    0.31818    198  Byrska-Bishop2022
+    716448  mh15CP-003        FIN  A|A|C    0.31800    198           Kidd2018
     """
     af = microhapdb.frequencies
-    assert af.shape == (944736, 5)
+    assert af.shape == (944736, 6)
     result = af[af.Marker == "mh21KK-315.v1"].Allele.unique()
     assert len(result) == 8
     result = af[(af.Marker == "mh21KK-315.v1") & (af.Allele == "A|C|T")]
@@ -95,3 +96,27 @@ def test_all_consistent():
         if len(numvars) > 1:
             inconsistent_markers.add(markerid)
     assert len(inconsistent_markers) == 0, sorted(inconsistent_markers)
+
+
+@pytest.mark.parametrize(
+    "marker,population,counts",
+    [
+        ("mh01CP-012", "EUR", [1052] * 4),
+        ("mh11HYP-29", "ASW", [122] * 3),
+        ("mh03USC-3qB", "CHS", [224] * 4),
+    ],
+)
+def test_counts_simple(marker, population, counts):
+    freq = microhapdb.frequencies
+    subset = freq[(freq.Marker == marker) & (freq.Population == population)]
+    assert subset.Count.to_list() == counts
+
+
+def test_counts_random():
+    freq = microhapdb.frequencies
+    pops = microhapdb.populations
+    for _ in range(5):
+        random_marker = choice(microhapdb.markers.Name)
+        random_population = choice(pops[pops.Source == "Byrska-Bishop2022"].ID.to_list())
+        subset = freq[(freq.Marker == random_marker) & (freq.Population == random_population)]
+        assert len(set(subset.Count)) == 1, subset
