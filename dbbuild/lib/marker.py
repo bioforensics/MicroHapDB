@@ -41,16 +41,16 @@ class Marker:
             if not pd.isna(row.VarRef):
                 rsids = row.VarRef.split(";")
             if len(rsids) == row.NumVars:
-                yield MarkerFromIDs(
-                    row.Name, row.Chrom, rsids, index, xrefs=row.Xref, source=source
-                )
+                marker = MarkerFromIDs(row.Name, row.Chrom, rsids, index, xrefs=row.Xref, source=source)
             else:
                 positions = row.Positions.split(";")
                 positions = list(map(int, positions))
                 position_list = VariantList(row.Refr, row.Chrom, positions)
-                yield MarkerFromPositions(
-                    row.Name, position_list, rsids, index, xrefs=row.Xref, source=source
-                )
+                marker = MarkerFromPositions(row.Name, position_list, rsids, index, xrefs=row.Xref, source=source)
+            if len(marker) > 1000:
+                msg = f"marker configuration issue for {marker.name}: spans {len(marker)} bp"
+                raise ValueError(msg)
+            yield marker
 
     def __init__(self, name, rsids, index, xrefs=None, source=None):
         self.name = Marker.check_name(name)

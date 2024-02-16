@@ -111,7 +111,6 @@ Merging 'mh01WL-062' --> 'mh01KK-212'
 Merging 'mh01WL-048' --> 'mh01KK-212'
 Merging 'mh01SCUZJ-0514894' --> 'mh01KK-212'
 Merging 'mh01WL-079' --> 'mh01WL-040'
-Merging 'mh01WL-075' --> 'mh01WL-010'
 Merging 'mh01SCUZJ-0055154' --> 'mh01WL-106'
 Merging 'mh01SCUZJ-0012052' --> 'mh01WL-097'
 Merging 'mh01NK-001' --> 'mh01NH-04'
@@ -127,6 +126,7 @@ Merging 'mh01WL-012' --> 'mh01KK-211'
 Merging 'mh01WL-072' --> 'mh01KK-211'
 Merging 'mh01WL-069' --> 'mh01WL-005'
 Merging 'mh01SCUZJ-0541700' --> 'mh01WL-005'
+Merging 'mh01WL-075' --> 'mh01WL-010'
 Merging 'mh01WL-063' --> 'mh01WL-088'
 Merging 'mh01WL-043' --> 'mh01KK-205'
 Merging 'mh01WL-052' --> 'mh01WL-038'
@@ -419,7 +419,6 @@ Merging 'mh04WL-049' --> 'mh04WL-004'
 Merging 'mh04SCUZJ-0185425' --> 'mh04WL-004'
 Merging 'mh04SCUZJ-0185432' --> 'mh04WL-004'
 Merging 'mh04SCUZJ-0640428' --> 'mh04WL-044'
-Merging 'mh04SCUZJ-0009045' --> 'mh04WL-052'
 Merging 'mh04SCUZJ-0115309' --> 'mh04SCUZJ-0115278'
 Merging 'mh04WL-051' --> 'mh04WL-001'
 Merging 'mh04WL-038' --> 'mh04WL-001'
@@ -452,6 +451,7 @@ Merging 'mh04SCUZJ-0422388' --> 'mh04SHY-001'
 Merging 'mh04WL-059' --> 'mh04WL-012'
 Merging 'mh04SCUZJ-0236608' --> 'mh04WL-012'
 Merging 'mh04LW-14' --> 'mh04WL-012'
+Merging 'mh04SCUZJ-0009045' --> 'mh04WL-052'
 Merging 'mh04SCUZJ-0194603' --> 'mh04SCUZJ-0194557'
 Merging 'mh04SCUZJ-0147560' --> 'mh04SCUZJ-0146582'
 Merging 'mh04WL-006' --> 'mh04ZHA-002'
@@ -465,7 +465,6 @@ Merging 'mh04WL-045' --> 'mh04WL-081'
 Merging 'mh04LW-12' --> 'mh04WL-048'
 Merging 'mh05WL-037' --> 'mh05WL-013'
 Merging 'mh05SCUZJ-0505173' --> 'mh05WL-046'
-Merging 'mh05WL-039' --> 'mh05WL-026'
 Merging 'mh05SCUZJ-0123824' --> 'mh05WL-067'
 Merging 'mh05SCUZJ-0283616' --> 'mh05SCUZJ-0282942'
 Merging 'mh05SCUZJ-0319310' --> 'mh05WL-003'
@@ -482,6 +481,7 @@ Merging 'mh05WL-044' --> 'mh05WL-001'
 Merging 'mh05WL-019' --> 'mh05KK-178'
 Merging 'mh05WL-043' --> 'mh05KK-178'
 Merging 'mh05SCUZJ-0525179' --> 'mh05SCUZJ-0525156'
+Merging 'mh05WL-039' --> 'mh05WL-026'
 Merging 'mh05WL-035' --> 'mh05WL-058'
 Merging 'mh05KK-121' --> 'mh05KK-120'
 Merging 'mh05WL-042' --> 'mh05WL-070'
@@ -504,10 +504,8 @@ Merging 'mh06WL-058' --> 'mh06WL-039'
 Merging 'mh06WL-049' --> 'mh06WL-018'
 Merging 'mh06WL-036' --> 'mh06WL-018'
 Merging 'mh06SCUZJ-0842484' --> 'mh06WL-018'
-Merging 'mh06SCUZJ-0006768' --> 'mh06WL-051'
 Merging 'mh06WL-037' --> 'mh06WL-017'
 Merging 'mh06WL-045' --> 'mh06WL-063'
-Merging 'mh06WL-054' --> 'mh06WL-008'
 Merging 'mh06WL-053' --> 'mh06WL-004'
 Merging 'mh06SCUZJ-0651421' --> 'mh06WL-004'
 Merging 'mh06SCUZJ-0638942' --> 'mh06SCUZJ-0638919'
@@ -516,6 +514,8 @@ Merging 'mh06SCUZJ-0480603' --> 'mh06SCUZJ-0480560'
 Merging 'mh06WL-059' --> 'mh06WL-009'
 Merging 'mh06WL-043' --> 'mh06WL-009'
 Merging 'mh06WL-052' --> 'mh06WL-006'
+Merging 'mh06SCUZJ-0006768' --> 'mh06WL-051'
+Merging 'mh06WL-054' --> 'mh06WL-008'
 Merging 'mh07WL-040' --> 'mh07WL-009'
 Merging 'mh07SCUZJ-0121697' --> 'mh07FHL-002'
 Merging 'mh07WL-046' --> 'mh07WL-018'
@@ -922,6 +922,7 @@ Marker mh08WL-003 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh08WL-003 as defined in Yu2022G3 was defined previously and is redundant
 Marker mh08WL-005 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh08WL-056 as defined in Zhu2023 was defined previously and is redundant
+Marker mh08WL-056 as defined in Phillips2023 was defined previously and is redundant
 Marker mh08WL-008 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh08WL-008 as defined in Yu2022G3 was defined previously and is redundant
 Marker mh08WL-023 as defined in Yu2022G2 was defined previously and is redundant
@@ -998,6 +999,7 @@ Marker mh12WL-001 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh12WL-001 as defined in Yu2022G4 was defined previously and is redundant
 Marker mh12WL-013 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh12WL-002 as defined in Yu2022G2 was defined previously and is redundant
+Marker mh12WL-002 as defined in Phillips2023 was defined previously and is redundant
 Marker mh12WL-003 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh12WL-003 as defined in Yu2022G3 was defined previously and is redundant
 Marker mh12WL-003 as defined in Yu2022G4 was defined previously and is redundant
@@ -1020,7 +1022,9 @@ Marker mh12WL-010 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh12WL-027 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh13WL-008 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh13WL-001 as defined in Yu2022G2 was defined previously and is redundant
+Marker mh13WL-001 as defined in Phillips2023 was defined previously and is redundant
 Marker mh13USC-13qA as defined in Yu2022G2 was defined previously and is redundant
+Marker mh13USC-13qA as defined in Phillips2023 was defined previously and is redundant
 Marker mh13WL-003 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh13WL-012 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh13WL-012 as defined in Yu2022G3 was defined previously and is redundant
@@ -1044,6 +1048,7 @@ Marker mh14WL-034 as defined in Yu2022G3 was defined previously and is redundant
 Marker mh14WL-005 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh14WL-008 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh15WL-001 as defined in Yu2022G2 was defined previously and is redundant
+Marker mh15WL-001 as defined in Phillips2023 was defined previously and is redundant
 Marker mh15WL-002 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh15WL-002 as defined in Yu2022G3 was defined previously and is redundant
 Marker mh15WL-013 as defined in Yu2022G2 was defined previously and is redundant
@@ -1114,6 +1119,7 @@ Marker mh20WL-003 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh20WL-014 as defined in Yu2022G3 was defined previously and is redundant
 Marker mh20WL-014 as defined in Yu2022G4 was defined previously and is redundant
 Marker mh20WL-011 as defined in Yu2022G2 was defined previously and is redundant
+Marker mh20WL-026 as defined in Phillips2023 was defined previously and is redundant
 Marker mh20WL-012 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh21FHL-002 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh21FHL-002 as defined in Yu2022G3 was defined previously and is redundant
@@ -1122,6 +1128,7 @@ Marker mh21WL-002 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh21WL-007 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh21WL-007 as defined in Yu2022G4 was defined previously and is redundant
 Marker mh21WL-020 as defined in Zhu2023 was defined previously and is redundant
+Marker mh21WL-020 as defined in Phillips2023 was defined previously and is redundant
 Marker mh22WL-005 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh22WL-005 as defined in Yu2022G3 was defined previously and is redundant
 Marker mh22WL-006 as defined in Yu2022G2 was defined previously and is redundant
@@ -1129,6 +1136,7 @@ Marker mh22WL-007 as defined in Yu2022G2 was defined previously and is redundant
 Marker mh22ZBF-001 as defined in Yu2022G1 was defined previously and is redundant
 Marker mh22ZBF-001 as defined in Yu2022G4 was defined previously and is redundant
 Marker mh22WL-004 as defined in Yu2022G2 was defined previously and is redundant
+Marker mh22WL-004 as defined in Phillips2023 was defined previously and is redundant
 Marker mh11CP-004 as defined in Chen2019 was defined previously and is redundant
 Marker mh01KK-106 as defined in Turchi2019 was defined previously and is redundant
 Marker mh02KK-003 as defined in Turchi2019 was defined previously and is redundant
@@ -1181,8 +1189,8 @@ Marker mh22KK-069 as defined in Turchi2019 was defined previously and is redunda
 Marker mh22KK-303 as defined in Turchi2019 was defined previously and is redundant
 Marker mh03WL-060 as defined in Zhu2023 was defined previously and is redundant
 Marker mh06WL-051 as defined in Zhu2023 was defined previously and is redundant
-Marker mh05USC-5qA as defined in Yu2022G4 was defined previously and is redundant
 Marker mh12USC-12qC as defined in Yu2022G4 was defined previously and is redundant
+Marker mh05USC-5qA as defined in Yu2022G4 was defined previously and is redundant
 Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redundant
 [Hiroaki2015] mh01NH-04 --> mh01NH-04.v1
 [Kidd2018] mh02KK-134 --> mh02KK-134.v1
@@ -1397,9 +1405,14 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [delaPuente2020] mh11USC-11qC --> mh11USC-11qC.v1
 [delaPuente2020] mh03USC-3qC --> mh03USC-3qC.v1
 [delaPuente2020] mh01USC-1qC --> mh01USC-1qC.v1
+[delaPuente2020] mh13USC-13qB --> mh13USC-13qB.v1
+[delaPuente2020] mh09USC-9qC --> mh09USC-9qC.v1
+[delaPuente2020] mh12USC-12qC --> mh12USC-12qC.v1
+[delaPuente2020] mh07USC-7qA --> mh07USC-7qA.v1
+[delaPuente2020] mh17USC-17qB --> mh17USC-17qB.v1
+[delaPuente2020] mh12USC-12qA --> mh12USC-12qA.v1
 [delaPuente2020] mh05USC-5qA --> mh05USC-5qA
 [delaPuente2020] mh11PK-63643 --> mh11PK-63643.v2
-[delaPuente2020] mh12USC-12qC --> mh12USC-12qC
 [Gandotra2020] mh01KK-212 --> mh01KK-212.v1
 [Gandotra2020] mh02KK-014 --> mh02KK-014.v1
 [Gandotra2020] mh02KK-022 --> mh02KK-022.v1
@@ -2573,7 +2586,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Yu2022G3] mh22WL-004 --> mh22WL-004.v2
 [Yu2022G3] mh03FHL-001 --> mh03FHL-001.v2
 [Yu2022G3] mh03WL-060 --> mh03WL-060
-[Yu2022G3] mh06WL-051 --> mh06WL-051
+[Yu2022G3] mh06WL-051 --> mh06WL-051.v1
 [Yu2022G3] mh04WL-052 --> mh04WL-052.v1
 [Yu2022G3] mh14WL-030 --> mh14WL-030.v1
 [Yu2022G3] mh22WL-013 --> mh22WL-013.v1
@@ -2582,7 +2595,10 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Yu2022G3] mh08WL-045 --> mh08WL-045.v1
 [Yu2022G3] mh10WL-033 --> mh10WL-033.v1
 [Yu2022G3] mh05WL-046 --> mh05WL-046.v1
+[Yu2022G3] mh10WL-031 --> mh10WL-031.v1
+[Yu2022G3] mh08WL-037 --> mh08WL-037.v1
 [Yu2022G3] mh05WL-026 --> mh05WL-026.v2
+[Yu2022G3] mh18WL-020 --> mh18WL-020.v1
 [Yu2022G3] mh08WL-021 --> mh08WL-021.v2
 [Yu2022G3] mh06WL-063 --> mh06WL-063.v1
 [Yu2022G3] mh09WL-023 --> mh09WL-023.v1
@@ -2736,8 +2752,10 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Yu2022G4] mh22WL-004 --> mh22WL-004.v3
 [Yu2022G4] mh11WL-027 --> mh11WL-027.v1
 [Yu2022G4] mh08WL-045 --> mh08WL-045.v2
+[Yu2022G4] mh12USC-12qC --> mh12USC-12qC.v1
+[Yu2022G4] mh18WL-018 --> mh18WL-018.v1
+[Yu2022G4] mh11WL-026 --> mh11WL-026.v1
 [Yu2022G4] mh05USC-5qA --> mh05USC-5qA
-[Yu2022G4] mh12USC-12qC --> mh12USC-12qC
 [Yu2022G4] mh06WL-063 --> mh06WL-063.v2
 [Yu2022G4] mh09WL-023 --> mh09WL-023.v2
 [Yu2022G4] mh11WL-030 --> mh11WL-030.v2
@@ -2923,7 +2941,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Zhu2023] mh10SCUZJ-0297129 --> mh10SCUZJ-0297129.v2
 [Zhu2023] mh15SCUZJ-0251770 --> mh15SCUZJ-0251770.v2
 [Zhu2023] mh01USC-1qC --> mh01USC-1qC.v2
-[Zhu2023] mh06WL-051 --> mh06WL-051
+[Zhu2023] mh06WL-051 --> mh06WL-051.v1
 [Zhu2023] mh04WL-052 --> mh04WL-052.v2
 [Zhu2023] mh14WL-030 --> mh14WL-030.v2
 [Zhu2023] mh22WL-013 --> mh22WL-013.v2
@@ -2933,6 +2951,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Zhu2023] mh10WL-033 --> mh10WL-033.v2
 [Zhu2023] mh18SCUZJ-0052717 --> mh18SCUZJ-0052717.v1
 [Zhu2023] mh05WL-046 --> mh05WL-046.v2
+[Zhu2023] mh03SCUZJ-0388069 --> mh03SCUZJ-0388069.v1
 [NimaGen2023] mh01KK-212 --> mh01KK-212.v1
 [NimaGen2023] mh01WL-003 --> mh01WL-003.v1
 [NimaGen2023] mh01WL-006 --> mh01WL-006.v3
@@ -2990,6 +3009,44 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
 [Du2023] mh07ZHA-004 --> mh07ZHA-004.v2
 [Du2023] mh01WL-077 --> mh01WL-077.v2
 [Du2023] mh04WL-074 --> mh04WL-074.v2
+[Phillips2023] mh11KK-180 --> mh11KK-180.v5
+[Phillips2023] mh06KK-008 --> mh06KK-008.v4
+[Phillips2023] mh19SHY-001 --> mh19SHY-001.v5
+[Phillips2023] mh17WL-022 --> mh17WL-022.v4
+[Phillips2023] mh19USC-19qA --> mh19USC-19qA.v5
+[Phillips2023] mh01WL-010 --> mh01WL-010.v3
+[Phillips2023] mh02WL-003 --> mh02WL-003.v3
+[Phillips2023] mh04WL-028 --> mh04WL-028.v3
+[Phillips2023] mh06WL-008 --> mh06WL-008.v3
+[Phillips2023] mh08WL-056 --> mh08WL-056.v1
+[Phillips2023] mh12WL-002 --> mh12WL-002.v1
+[Phillips2023] mh13WL-001 --> mh13WL-001.v1
+[Phillips2023] mh13USC-13qA --> mh13USC-13qA.v2
+[Phillips2023] mh15WL-001 --> mh15WL-001.v1
+[Phillips2023] mh16WL-012 --> mh16WL-012.v3
+[Phillips2023] mh17WL-004 --> mh17WL-004.v3
+[Phillips2023] mh19USC-19qB --> mh19USC-19qB.v4
+[Phillips2023] mh20WL-026 --> mh20WL-026.v1
+[Phillips2023] mh21WL-020 --> mh21WL-020.v1
+[Phillips2023] mh22WL-004 --> mh22WL-004.v3
+[Phillips2023] mh07SCUZJ-0502291 --> mh07SCUZJ-0502291.v3
+[Phillips2023] mh07SCUZJ-0380111 --> mh07SCUZJ-0380111.v3
+[Phillips2023] mh03USC-3qC --> mh03USC-3qC.v4
+[Phillips2023] mh06WL-051 --> mh06WL-051.v2
+[Phillips2023] mh04WL-052 --> mh04WL-052.v3
+[Phillips2023] mh03SCUZJ-0388069 --> mh03SCUZJ-0388069.v2
+[Phillips2023] mh13USC-13qB --> mh13USC-13qB.v2
+[Phillips2023] mh09USC-9qC --> mh09USC-9qC.v2
+[Phillips2023] mh12USC-12qC --> mh12USC-12qC.v2
+[Phillips2023] mh18WL-018 --> mh18WL-018.v2
+[Phillips2023] mh07USC-7qA --> mh07USC-7qA.v2
+[Phillips2023] mh17USC-17qB --> mh17USC-17qB.v2
+[Phillips2023] mh11WL-026 --> mh11WL-026.v2
+[Phillips2023] mh12USC-12qA --> mh12USC-12qA.v2
+[Phillips2023] mh10WL-031 --> mh10WL-031.v2
+[Phillips2023] mh08WL-037 --> mh08WL-037.v2
+[Phillips2023] mh05WL-026 --> mh05WL-026.v3
+[Phillips2023] mh18WL-020 --> mh18WL-020.v2
 [Hiroaki2015]
   - 26 marker definitions based on 80 SNPs
   - 1 population sample
@@ -3034,7 +3091,7 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
   - 59 marker definitions based on 658 SNPs
 [Byrska-Bishop2022]
   - 31 population samples
-  - frequencies for 59233 distinct haplotypes in 31 populations; 856067 total frequencies
+  - frequencies for 60041 distinct haplotypes in 31 populations; 867955 total frequencies
 [Fan2022]
   - 22 marker definitions based on 338 SNPs and 25 indels
 [Yu2022G1]
@@ -3057,4 +3114,6 @@ Marker mh11KK-040 as defined in Staadig2021 was defined previously and is redund
   - 50 marker definitions based on 243 SNPs
 [Du2023]
   - 191 marker definitions based on 616 SNPs
+[Phillips2023]
+  - 38 marker definitions based on 227 SNPs
 
