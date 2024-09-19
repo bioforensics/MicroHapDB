@@ -383,6 +383,15 @@ class Marker:
         return str(microhapdb.hg38[self.chrom][start:end])
 
     @property
+    def flank_seqs(self):
+        markerseq = self.target_seq
+        first_snp_idx = self.target_offsets[0]
+        last_snp_idx = self.target_offsets[-1]
+        left = markerseq[:first_snp_idx]
+        right = markerseq[last_snp_idx:]
+        return left, right
+
+    @property
     def reference_lengths(self):
         lengths = list()
         ind = microhapdb.indels
