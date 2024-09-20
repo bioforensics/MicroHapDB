@@ -161,6 +161,12 @@ class Marker:
         return self.data.Chrom
 
     @property
+    def chrom_num(self):
+        if self.chrom == "chrX":
+            return 23
+        return int(self.chrom[3:])
+
+    @property
     def name(self):
         return self.data.Name
 
