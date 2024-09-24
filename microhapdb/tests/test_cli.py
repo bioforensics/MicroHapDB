@@ -10,17 +10,17 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
+from importlib.resources import files
 from io import StringIO
 import microhapdb
 from microhapdb.cli import get_parser
 import pandas
-from pkg_resources import resource_filename
 import pytest
 from tempfile import NamedTemporaryFile
 
 
 def data_file(path):
-    return resource_filename("microhapdb", f"tests/data/{path}")
+    return files("microhapdb") / "tests" / "data" / path
 
 
 def test_main_no_args(capsys):

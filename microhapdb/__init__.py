@@ -17,7 +17,7 @@ from .marker import Marker, Locus
 from microhapdb import cli
 from microhapdb import panel
 import pandas as pd
-from pkg_resources import resource_filename
+from importlib.resources import files
 from ._version import get_versions
 
 __version__ = get_versions()["version"]
@@ -25,7 +25,7 @@ del get_versions
 
 
 def data_file(path):
-    return resource_filename("microhapdb", f"data/{path}")
+    return files("microhapdb") / "data" / path
 
 
 def set_ae_population(popid="1KGP"):

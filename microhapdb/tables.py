@@ -10,14 +10,14 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
-from pkg_resources import resource_filename
+from importlib.resources import files
 import pandas as pd
-from pathlib import Path
 from pyfaidx import Fasta as FastaIdx
 
 
 def read_table(table_path):
-    table = pd.read_csv(resource_filename("microhapdb", f"data/{table_path}"))
+    path = files("microhapdb") / "data" / table_path
+    table = pd.read_csv(path)
     return table
 
 
@@ -39,8 +39,8 @@ frequencies["Count"] = frequencies["Count"].astype("Int16")
 repeats = read_table("repeats.csv").set_index("Marker")
 indels = read_table("indels.csv")
 variantmap = compile_variant_map(markers)
-hg38file = resource_filename("microhapdb", "data/hg38.fasta")
-if Path(hg38file).is_file():
-    hg38 = FastaIdx(resource_filename("microhapdb", "data/hg38.fasta"))
+hg38file = files("microhapdb") / "data" / "hg38.fasta"
+if hg38file.is_file():
+    hg38 = FastaIdx(hg38file)
 else:  # pragma: no cover
     hg38 = None
