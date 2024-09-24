@@ -151,16 +151,18 @@ def list_frequencies(haplotypes):
                 pop_tallies[row["Marker"]][row["Population"]].update(mhallele)
                 if row["Population"] not in admixed:
                     pop_tallies[row["Marker"]][row["Superpopulation"]].update(mhallele)
+    populations = set(haplotypes.Population)
     for marker, popcounts in sorted(pop_tallies.items()):
-        total_count = sum(agg_tallies[marker].values())
-        for mhallele, agg_count in sorted(agg_tallies[marker].items()):
-            freq = agg_count / total_count
-            yield marker, "1KGP", mhallele, freq, total_count
+        population_frequencies = list()
         for population, haplocounts in sorted(popcounts.items()):
             total_count = sum(haplocounts.values())
             for mhallele, count in sorted(haplocounts.items()):
                 freq = count / total_count
                 yield marker, population, mhallele, freq, total_count
+                if population in populations:  # This excludes superpopulations
+                    population_frequencies.append(freq)
+        global_frequency = sum(population_frequencies) / len(population_frequencies)
+        yield marker, "1KGP", mhallele, global_frequency, 0
 
 
 def compute_aes(frequencies):
