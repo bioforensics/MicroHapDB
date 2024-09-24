@@ -76,3 +76,7 @@ def retrieve_by_id(ident):
 
 
 set_ae_population("1KGP")
+
+from . import _version
+
+__version__ = _version.get_versions()["version"]
