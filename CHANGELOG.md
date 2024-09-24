@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+- Debugged a test that counts observed haplotypes (#154).
+
+
 ## [0.11] 2023-10-25
 
 ### Added 
