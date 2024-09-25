@@ -16,7 +16,7 @@ cp ../../marker.csv marker-latest.csv
 Then haplotype frequencies and A<sub>e</sub> values can be recomputed as follows.
 
 ```
-snakemake -c 8 --config 1kgp_dir=databases/1000Genomes/ refr=databases/hg38.fasta -p
+snakemake -c 8 --config dir_1kgp=databases/1000Genomes/ refr=databases/hg38.fasta -p
 ```
 
 
