@@ -138,38 +138,33 @@ def compile_frequencies(haplotypes):
 def list_frequencies(haplotypes):
     admixed = ("ACB", "ASW", "CLM", "MXL", "PEL", "PUR")
     pop_tallies = defaultdict(lambda: defaultdict(Counter))
-    agg_tallies = defaultdict(Counter)
     for n, row in haplotypes.iterrows():
         for haplokey in ("Haplotype1", "Haplotype2"):
             mhallele = [row[haplokey]]
             if not pd.isna(mhallele):
-                # The following line could arguably be moved into the conditional block below to
-                # excluded admixed individuals from the aggregate haplotype tallies. But as of
-                # today, I think including them in the aggregate totals is appropriate.
-                # -- DSS, 2023-02-28.
-                agg_tallies[row["Marker"]].update(mhallele)
                 pop_tallies[row["Marker"]][row["Population"]].update(mhallele)
                 if row["Population"] not in admixed:
                     pop_tallies[row["Marker"]][row["Superpopulation"]].update(mhallele)
-    populations = set(haplotypes.Population)
     for marker, popcounts in sorted(pop_tallies.items()):
-        population_frequencies = list()
         for population, haplocounts in sorted(popcounts.items()):
             total_count = sum(haplocounts.values())
             for mhallele, count in sorted(haplocounts.items()):
                 freq = count / total_count
                 yield marker, population, mhallele, freq, total_count
-                if population in populations:  # This excludes superpopulations
-                    population_frequencies.append(freq)
-        global_frequency = sum(population_frequencies) / len(population_frequencies)
-        yield marker, "1KGP", mhallele, global_frequency, 0
 
 
 def compute_aes(frequencies):
     aes = list()
+    superpops = ("AFR", "AMR", "EAS", "EUR", "SAS")
     for marker, marker_data in frequencies.groupby("Marker"):
+        population_aes = list()
         for population, pop_data in marker_data.groupby("Population"):
             ae = 1.0 / sum([f**2 for f in pop_data.Frequency])
             entry = (marker, population, ae)
             aes.append(entry)
+            if population not in superpops:
+                population_aes.append(ae)
+        avg_ae = sum(population_aes) / len(population_aes)
+        entry = (marker, "1KGP", avg_ae)
+        aes.append(entry)
     return pd.DataFrame(aes, columns=["Marker", "Population", "Ae"])
