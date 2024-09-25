@@ -118,6 +118,7 @@ def test_counts_random():
     for _ in range(5):
         random_marker = choice(microhapdb.markers.Name)
         random_population = choice(pops[pops.Source == "Byrska-Bishop2022"].ID.to_list())
+        print("DEBUG", random_marker, random_population)
         subset = freq[
             (freq.Marker == random_marker)
             & (freq.Population == random_population)
