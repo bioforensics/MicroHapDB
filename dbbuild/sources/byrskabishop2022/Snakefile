@@ -51,7 +51,7 @@ rule haplotypes:
         csv="haplotypes.csv.gz",
         csvunf="haplotypes_unfiltered.csv.gz",
     params:
-        dir1kgp=config["1kgp_dir"],
+        dir1kgp=config["dir_1kgp"],
         refr=config["refr"],
     run:
         markers = pd.read_csv(input.markers)
@@ -73,7 +73,7 @@ rule populations:
         csv="sample_pops.csv",
         csvunf="sample_pops_unfiltered.csv",
     params:
-        dir1kgp=config["1kgp_dir"],
+        dir1kgp=config["dir_1kgp"],
     run:
         pops = pd.read_csv(input.samples, sep="\t")
         pedigree = pd.read_csv(input.pedigree, sep="\t")

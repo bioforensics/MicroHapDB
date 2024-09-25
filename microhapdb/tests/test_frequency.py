@@ -18,7 +18,7 @@ from random import choice
 
 def test_assumptions():
     num_allele_freqs_per_source = [
-        856067,  # Byrska-Bishop2022
+        796834,  # Byrska-Bishop2022
         103,  # Chen2019
         4737,  # Gandotra2020
         33,  # Hiroaki2015
@@ -36,24 +36,24 @@ def test_allele_frequencies():
     >>> f = microhapdb.frequencies
     >>> f[(f.Marker == "mh15CP-003") & (f.Population == "YRI")]
                 Marker Population Allele  Frequency  Count             Source
-    716565  mh15CP-003        YRI  A|A|C    0.02893    242  Byrska-Bishop2022
-    716566  mh15CP-003        YRI  A|G|A    0.59091    242  Byrska-Bishop2022
-    716567  mh15CP-003        YRI  A|G|C    0.38017    242  Byrska-Bishop2022
-    716568  mh15CP-003        YRI  A|G|A    0.57400    216           Kidd2018
-    716569  mh15CP-003        YRI  A|G|C    0.39800    216           Kidd2018
-    716570  mh15CP-003        YRI  A|A|C    0.02800    216           Kidd2018
-    716571  mh15CP-003        YRI  C|G|C    0.00000    216           Kidd2018
+    671589  mh15CP-003        YRI  A|A|C    0.02893    242  Byrska-Bishop2022
+    671590  mh15CP-003        YRI  A|G|A    0.59091    242  Byrska-Bishop2022
+    671591  mh15CP-003        YRI  A|G|C    0.38017    242  Byrska-Bishop2022
+    671592  mh15CP-003        YRI  A|G|A    0.57400    216           Kidd2018
+    671593  mh15CP-003        YRI  A|G|C    0.39800    216           Kidd2018
+    671594  mh15CP-003        YRI  A|A|C    0.02800    216           Kidd2018
+    671595  mh15CP-003        YRI  C|G|C    0.00000    216           Kidd2018
     >>> f.query("Marker == 'mh15CP-003' and Allele == 'A|A|C' and Population == 'FIN'")
                 Marker Population Allele  Frequency  Count             Source
-    716442  mh15CP-003        FIN  A|A|C    0.31818    198  Byrska-Bishop2022
-    716448  mh15CP-003        FIN  A|A|C    0.31800    198           Kidd2018
+    671466  mh15CP-003        FIN  A|A|C    0.31818    198  Byrska-Bishop2022
+    671472  mh15CP-003        FIN  A|A|C    0.31800    198           Kidd2018
     """
     af = microhapdb.frequencies
-    assert af.shape == (944736, 6)
+    assert af.shape == (885503, 6)
     result = af[af.Marker == "mh21KK-315.v1"].Allele.unique()
     assert len(result) == 8
     result = af[(af.Marker == "mh21KK-315.v1") & (af.Allele == "A|C|T")]
-    assert len(result) == 115
+    assert len(result) == 114
     result = af.query(
         'Marker == "mh21KK-315.v1" & Allele == "A|C|T" & Population == "SA001773S"'
     ).Frequency.values[0]
@@ -118,5 +118,10 @@ def test_counts_random():
     for _ in range(5):
         random_marker = choice(microhapdb.markers.Name)
         random_population = choice(pops[pops.Source == "Byrska-Bishop2022"].ID.to_list())
-        subset = freq[(freq.Marker == random_marker) & (freq.Population == random_population)]
+        print("DEBUG", random_marker, random_population)
+        subset = freq[
+            (freq.Marker == random_marker)
+            & (freq.Population == random_population)
+            & (freq.Source == "Byrska-Bishop2022")
+        ]
         assert len(set(subset.Count)) == 1, subset

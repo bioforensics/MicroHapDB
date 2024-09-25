@@ -188,11 +188,11 @@ class Marker:
 
     @property
     def start(self):
-        return self.data.Start - 1
+        return int(self.data.Start - 1)
 
     @property
     def end(self):
-        return self.data.End - 1 + self.variant_lengths[-1]
+        return int(self.data.End - 1 + self.variant_lengths[-1])
 
     @property
     def target_slug(self):

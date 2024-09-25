@@ -17,7 +17,7 @@ from .marker import Marker, Locus
 from microhapdb import cli
 from microhapdb import panel
 import pandas as pd
-from pkg_resources import resource_filename
+from importlib.resources import files
 from ._version import get_versions
 
 __version__ = get_versions()["version"]
@@ -25,7 +25,7 @@ del get_versions
 
 
 def data_file(path):
-    return resource_filename("microhapdb", f"data/{path}")
+    return files("microhapdb") / "data" / path
 
 
 def set_ae_population(popid="1KGP"):
@@ -43,10 +43,10 @@ def retrieve_by_id(ident):
 
     >>> retrieve_by_id("mh17KK-014")
                 Name  NumVars  Extent  Chrom    Start      End                Positions              Positions37                          RSIDs    Source     Ae
-    2592  mh17KK-014        3      37  chr17  4497061  4497097  4497061;4497089;4497097  4400356;4400384;4400392  rs333113;rs8074965;rs11657785  Kidd2018  3.923
+    2592  mh17KK-014        3      37  chr17  4497061  4497097  4497061;4497089;4497097  4400356;4400384;4400392  rs333113;rs8074965;rs11657785  Kidd2018  2.074
     >>> retrieve_by_id("rs8074965")
                 Name  NumVars  Extent  Chrom    Start      End                Positions              Positions37                          RSIDs    Source     Ae
-    2592  mh17KK-014        3      37  chr17  4497061  4497097  4497061;4497089;4497097  4400356;4400384;4400392  rs333113;rs8074965;rs11657785  Kidd2018  3.923
+    2592  mh17KK-014        3      37  chr17  4497061  4497097  4497061;4497089;4497097  4400356;4400384;4400392  rs333113;rs8074965;rs11657785  Kidd2018  2.074
     >>> retrieve_by_id("Chagga")
                    ID    Name        Source
     16  mMHseq-Chagga  Chagga  Gandotra2020
@@ -76,3 +76,7 @@ def retrieve_by_id(ident):
 
 
 set_ae_population("1KGP")
+
+from . import _version
+
+__version__ = _version.get_versions()["version"]

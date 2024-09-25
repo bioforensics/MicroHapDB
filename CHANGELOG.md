@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+- Debugged a test that counts observed haplotypes (#154).
+- Replaced global pooled Ae values with 26-population average as the default Ae reported (#155).
+- Replaced deprecated `pkg_resources` module with `importlib.resources` (#156).
+- Upgraded versioneer to a Python 3.12+ compatible version (#156).
+
+
 ## [0.11] 2023-10-25
 
 ### Added 
