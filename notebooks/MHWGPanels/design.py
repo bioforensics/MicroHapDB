@@ -133,7 +133,7 @@ class LinkageGraph(list):
             pbar.set_description(chrom)
             cmarkers = [mh for mh in markers if mh.chrom == chrom]
             short = [mh for mh in cmarkers if len(mh) < 100 and mh.data.Ae > 3.0]
-            long = [mh for mh in cmarkers if 100 <= len(mh) < 250 and mh.data.Ae > 5.0]
+            long = [mh for mh in cmarkers if 100 <= len(mh) < 260 and mh.data.Ae > 5.0]
             for marker_set in (short, long):
                 marker_set = sorted(marker_set, key=lambda mh: mh.data.Ae, reverse=True)
                 marker_set = marker_set[:max_per_chrom]
@@ -181,13 +181,19 @@ class MaskManager:
         else:
             logger.info(f"Filtering markers using {len(mask_paths)} user-provided mask(s)")
             masker = Masker(*mask_paths)
-            self.identifiers = set([mh.name for mh in masker.mask(markers)])
-            logger.info(f"{len(self.identifiers)} markers passed masking filter")
+            self.markers = [mh for mh in masker.mask(markers)]
+            loci = set([mh.locus for mh in self.markers])
+            message = f"{len(self.identifiers)} ({len(loci)} loci) markers passed masking filter"
+            logger.info(message)
 
     def write(self, path):
         logger.info(f"Writing filtered markers to {path}")
         with open(path, "w") as fh:
-            print(*sorted(self.identifiers), sep="\n", file=fh)
+            print(*self.identifiers, sep="\n", file=fh)
+
+    @property
+    def identifiers(self):
+        return sorted([mh.name for mh in self.markers])
 
 
 class Masker:
