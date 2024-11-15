@@ -12,11 +12,10 @@
 # Development Center.
 # -------------------------------------------------------------------------------------------------
 
-from indel_index import IndelIndex
 from argparse import ArgumentParser
-import microhapdb
-import pandas as pd
+from indel_index import IndelIndex
 import sys
+from util import load_markers
 
 
 def main(markers, dbsnp_path, delta=25, min_freq=0.005, distance=4):
@@ -54,7 +53,6 @@ def get_parser():
     parser.add_argument("markers", help="path to MicroHapDB marker definitions in CSV format")
     parser.add_argument("dbsnp", help="path to dbSNP VCF file; must be tabix-indexed (.tbi)")
     parser.add_argument(
-        "-d",
         "--distance",
         type=int,
         default=4,
@@ -69,7 +67,6 @@ def get_parser():
         help="extend Δ bp beyond each marker when retrieving dbSNP indels; by default Δ=25",
     )
     parser.add_argument(
-        "-f",
         "--min-freq",
         type=float,
         default=0.005,
@@ -78,20 +75,10 @@ def get_parser():
     )
     parser.add_argument(
         "--aes",
+        metavar="PATH",
         help="path to MicroHapDB Ae table in CSV format; by default, Ae values are reported as 0.0",
     )
     return parser
-
-
-def load_markers(marker_path, ae_path):
-    mtable = pd.read_csv(marker_path)
-    mtable["Ae"] = 0.0
-    if args.aes:
-        aes = pd.read_csv(ae_path)
-        popaes = aes[aes.Population == "1KGP"].drop(columns=["Population"])
-        mtable = mtable.drop(columns=["Ae"]).join(popaes.set_index("Marker"), on="Name")
-    markers = sorted(microhapdb.Marker.objectify(mtable), key=lambda m: m.name)
-    return markers
 
 
 if __name__ == "__main__":

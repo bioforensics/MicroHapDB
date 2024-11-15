@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # -------------------------------------------------------------------------------------------------
 # Copyright (c) 2024, DHS.
 #
@@ -11,74 +13,55 @@
 # -------------------------------------------------------------------------------------------------
 
 from argparse import ArgumentParser
-import microhapdb
-import pandas as pd
 import polars as pl
-import sys
 from tqdm import tqdm
+from util import load_markers, parse_ucsc_rmsk_track
 
 
-def main(markers, repeats):
-    data = list()
+def main(markers, repeats, distance=4):
+    print("Marker", "Extent", "Ae", "Offset", "Repeats", sep="\t")
     for mh in tqdm(markers):
+        offending_offsets = set()
+        offending_repeats = set()
         for offset in mh.offsets:
-            start = offset - 4
-            end = offset + 4
+            start = offset - distance
+            end = offset + distance
             overlapping = repeats.filter(
                 (pl.col("genoName") == mh.chrom)
                 & (pl.col("genoStart") < end)
                 & (start < pl.col("genoEnd"))
             )
             if len(overlapping) > 0:
-                repeat_data = "|".join(overlapping.get_column("repName"))
-                entry = (mh.name, len(mh), mh.data.Ae, offset, repeat_data)
-                data.append(entry)
-    output = pd.DataFrame(data, columns=["Marker", "Extent", "Ae", "Offset", "Repeats"])
-    output.to_csv(sys.stdout, sep="\t", index=False)
-
-
-def parse_ucsc_rmsk_track(path):
-    header = [
-        "bin",
-        "swScore",
-        "milliDiv",
-        "milliDel",
-        "milliIns",
-        "genoName",
-        "genoStart",
-        "genoEnd",
-        "genoLeft",
-        "strand",
-        "repName",
-        "repClass",
-        "repFamily",
-        "repStart",
-        "repEnd",
-        "repLeft",
-        "id",
-    ]
-    return pl.read_csv(path, sep="\t", new_columns=header, has_header=False)
+                offending_offsets.add(offset)
+                offending_repeats.update(overlapping.get_column("repName"))
+        if len(offending_offsets) > 0:
+            offset_data = ";".join(sorted(map(str, offending_offsets)))
+            repeat_data = ";".join(sorted(offending_repeats))
+            print(mh.name, len(mh), mh.data.Ae, offset_data, repeat_data, sep="\t")
 
 
 def get_parser():
     parser = ArgumentParser()
-    parser.add_argument("markers")
-    parser.add_argument("rmsk_path")
-    parser.add_argument("--aes")
+    parser.add_argument("markers", help="path to MicroHapDB marker definitions in CSV format")
+    parser.add_argument("rmsk", help="path to UCSC RepeatMasker track data")
+    parser.add_argument(
+        "--distance",
+        type=int,
+        default=4,
+        metavar="D",
+        help="flag markers with ADSs within D bp of a dbSNP indel; by default D=4",
+    )
+    parser.add_argument(
+        "--aes",
+        metavar="PATH",
+        help="path to MicroHapDB Ae table in CSV format; by default, Ae values are reported as 0.0",
+    )
     return parser
 
 
 if __name__ == "__main__":
     args = get_parser().parse_args()
-    marker_table = pd.read_csv(args.markers)
-    marker_table["Ae"] = 0.0
-    if args.aes:
-        aes = pd.read_csv(args.aes)
-        popaes = aes[aes.Population == "1KGP"].drop(columns=["Population"])
-        marker_table = marker_table.drop(columns=["Ae"]).join(
-            popaes.set_index("Marker"), on="Name"
-        )
-    markers = list(microhapdb.Marker.objectify(marker_table))
-    repeats = parse_ucsc_rmsk_track(args.rmsk_path)
+    markers = load_markers(args.markers, args.aes)
+    repeats = parse_ucsc_rmsk_track(args.rmsk)
     repeats = repeats.filter(pl.col("repClass") == "Low_complexity")
-    main(markers, repeats)
+    main(markers, repeats, distance=args.distance)
