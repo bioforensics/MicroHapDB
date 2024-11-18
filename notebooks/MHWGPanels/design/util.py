@@ -26,7 +26,7 @@ def load_markers(marker_path, ae_path):
     return markers
 
 
-def parse_ucsc_rmsk_track(path, filter_key=None, filter_value=None):
+def parse_ucsc_rmsk_track(path):
     header = [
         "bin",
         "swScore",
@@ -46,4 +46,4 @@ def parse_ucsc_rmsk_track(path, filter_key=None, filter_value=None):
         "repLeft",
         "id",
     ]
-    return pl.read_csv(path, sep="\t", new_columns=header, has_header=False)
+    return pl.read_csv(path, separator="\t", new_columns=header, has_header=False)
