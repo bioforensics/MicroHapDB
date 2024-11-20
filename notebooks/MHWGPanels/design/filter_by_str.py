@@ -23,11 +23,7 @@ def main(markers, strs):
     print("Marker", "Extent", "Ae", "Locus", sep="\t")
     for mh in (pbar := tqdm(markers)):
         pbar.set_description(f"{mh.name:<20}")
-        overlap = strs[
-            (strs.Chrom == mh.chrom)
-            & (strs.End > mh.start)
-            & (strs.Start < mh.end)
-        ]
+        overlap = strs[(strs.Chrom == mh.chrom) & (strs.End > mh.start) & (strs.Start < mh.end)]
         if len(overlap) > 0:
             loci = ";".join(sorted(overlap.Locus))
             print(mh.name, len(mh), mh.data.Ae, loci, sep="\t")
