@@ -1,0 +1,76 @@
+rule apply_masks:
+    input:
+        script="apply_filters.py",
+        markers=config["markers"],
+        indel="indel-mask.tsv",
+        lowcomplex="lowcomplex-mask.tsv",
+        repeat="repeat-mask.tsv",
+        strs="str-mask.tsv",
+        aes=config["aes"],
+    output:
+        passed="markers-passed-filter.csv",
+        failed="markers-failed-filter.tsv",
+        plot="masking-results-plot.png",
+    params:
+        max_length=config["max_length"],
+    shell:
+        "python {input.script} {input.markers} {input.indel} {input.lowcomplex} {input.repeat} {input.strs} --aes {input.aes} --maxlen {params.max_length} --passed {output.passed} --failed {output.failed} --visualize {output.plot}"
+
+
+rule filter_indels:
+    input:
+        script="filter_by_indel.py",
+        markers=config["markers"],
+        dbsnp=config["dbsnp"],
+        aes=config["aes"],
+    output:
+        tsv="indel-mask.tsv",
+    params:
+        ads_dist=config["ads_dist"],
+        min_freq=config["min_indel_freq"],
+    shell:
+        "python {input.script} {input.markers} {input.dbsnp} --aes {input.aes} --distance {params.ads_dist} --delta 25 --min-freq {params.min_freq} > {output}"
+
+
+rule filter_lowcomplex:
+    input:
+        script="filter_by_lowcomplex.py",
+        markers=config["markers"],
+        rmsk=config["rmsk"],
+        aes=config["aes"],
+    output:
+        tsv="lowcomplex-mask.tsv",
+    params:
+        ads_dist=config["ads_dist"],
+    shell:
+        "python {input.script} {input.markers} {input.rmsk} --aes {input.aes} --distance {params.ads_dist} > {output}"
+
+
+rule filter_repeats:
+    input:
+        script="filter_by_repeats.py",
+        markers=config["markers"],
+        rmsk=config["rmsk"],
+        aes=config["aes"],
+    output:
+        tsv="repeat-mask.tsv",
+    params:
+        sine=config["sine"],
+        line=config["line"],
+        ltr=config["ltr"],
+    shell:
+        "python {input.script} {input.markers} {input.rmsk} --aes {input.aes} --sine {params.sine} --line {params.line} --ltr {params.ltr} > {output}"
+
+
+rule filter_strs:
+    input:
+        script="filter_by_str.py",
+        markers=config["markers"],
+        fssg=config["fssg"],
+        aes=config["aes"],
+    output:
+        tsv="str-mask.tsv",
+    params:
+        ld_dist=config["ld_dist"],
+    shell:
+        "python {input.script} {input.markers} {input.fssg} --aes {input.aes} --distance {params.ld_dist} > {output}"

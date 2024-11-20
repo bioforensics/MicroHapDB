@@ -15,15 +15,17 @@ import pandas as pd
 import polars as pl
 
 
-def load_markers(marker_path, ae_path):
+def load_markers(marker_path, ae_path, objectify=True):
     mtable = pd.read_csv(marker_path)
     mtable["Ae"] = 0.0
     if ae_path:
         aes = pd.read_csv(ae_path)
         popaes = aes[aes.Population == "1KGP"].drop(columns=["Population"])
         mtable = mtable.drop(columns=["Ae"]).join(popaes.set_index("Marker"), on="Name")
-    markers = sorted(microhapdb.Marker.objectify(mtable), key=lambda m: m.name)
-    return markers
+    if objectify:
+        return sorted(microhapdb.Marker.objectify(mtable), key=lambda m: m.name)
+    else:
+        return mtable
 
 
 def parse_ucsc_rmsk_track(path):
