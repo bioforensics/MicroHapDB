@@ -19,10 +19,12 @@ from tqdm import tqdm
 from util import load_markers, parse_ucsc_rmsk_track
 
 
-def main(markers, repeats):
+def main(markers, repeats, whitelist):
     print("Marker", "Extent", "Ae", "Repeats", sep="\t")
     for mh in (pbar := tqdm(markers)):
         pbar.set_description(f"{mh.name:<20}")
+        if whitelist and mh.locus in whitelist:
+            continue
         overlap = repeats.filter(
             (pl.col("genoName") == mh.chrom)
             & (pl.col("genoEnd") > mh.start)
@@ -79,14 +81,25 @@ def get_parser():
     )
     parser.add_argument(
         "--aes",
-        metavar="PATH",
+        metavar="FILE",
         help="path to MicroHapDB Ae table in CSV format; by default, Ae values are reported as 0.0",
     )
+    parser.add_argument(
+        "--whitelist",
+        metavar="FILE",
+        help="path to a text file with locus IDs indicating loci for which primers have been successfully designed previously"
+    )
     return parser
+
+
+def load_whitelist(path):
+    with open(path, "r") as fh:
+        return set(fh.read().split())
 
 
 if __name__ == "__main__":
     args = get_parser().parse_args()
     markers = load_markers(args.markers, args.aes)
     repeats = load_and_filter_repeats(args.rmsk, sine=args.sine, line=args.line, ltr=args.ltr)
-    main(markers, repeats)
+    whitelist = None if args.whitelist is None else load_whitelist(args.whitelist)
+    main(markers, repeats, whitelist)

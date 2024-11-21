@@ -52,6 +52,7 @@ rule filter_repeats:
         markers=config["markers"],
         rmsk=config["rmsk"],
         aes=config["aes"],
+        whitelist="whitelist.txt"
     output:
         tsv="repeat-mask.tsv",
     params:
@@ -59,7 +60,7 @@ rule filter_repeats:
         line=config["line"],
         ltr=config["ltr"],
     shell:
-        "python {input.script} {input.markers} {input.rmsk} --aes {input.aes} --sine {params.sine} --line {params.line} --ltr {params.ltr} > {output}"
+        "python {input.script} {input.markers} {input.rmsk} --aes {input.aes} --sine {params.sine} --line {params.line} --ltr {params.ltr} --whitelist {input.whitelist} > {output}"
 
 
 rule filter_strs:

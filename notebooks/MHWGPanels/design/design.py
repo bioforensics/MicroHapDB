@@ -6,6 +6,7 @@ from itertools import combinations
 import logging
 from math import comb
 import networkx as nx
+from statistics import geometric_mean
 import sys
 from tqdm import tqdm
 from util import load_markers
@@ -147,6 +148,7 @@ class LinkageGraph(list):
         best_clique = None
         for clique in tqdm(cliques):
             ae = sum(mh.data.Ae for mh in clique)
+            # ae = geometric_mean(mh.data.Ae if mh.data.Ae < 9.0 else mh.data.Ae * 2.0 for mh in clique)
             if ae > best_ae:
                 best_ae = ae
                 best_clique = clique
