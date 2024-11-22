@@ -87,7 +87,7 @@ def get_parser():
     parser.add_argument(
         "--whitelist",
         metavar="FILE",
-        help="path to a text file with locus IDs indicating loci for which primers have been successfully designed previously"
+        help="path to a text file with locus IDs indicating loci for which primers have been successfully designed previously",
     )
     return parser
 

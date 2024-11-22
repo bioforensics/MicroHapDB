@@ -54,7 +54,7 @@ def get_parser():
         type=float,
         default=10e6,
         metavar="D",
-        help="extend beyond the end of each locus D bp; by default D=10000000",
+        help="any microhap within D bp of an FSSG STR marker will be considered in linkage disequilibrium with that STR and filtered out; by default D=10000000 (10 Mb)",
     )
     parser.add_argument(
         "--aes",

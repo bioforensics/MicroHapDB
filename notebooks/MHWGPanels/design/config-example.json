@@ -10,5 +10,7 @@
     "sine": 929,
     "line": 411,
     "ltr": 909,
-    "ld_dist": 10000000
+    "ld_dist": 10000000,
+    "max_candidates_per_chrom": "6 14",
+    "design_batches": 6
 }

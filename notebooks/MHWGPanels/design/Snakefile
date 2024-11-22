@@ -1,3 +1,32 @@
+rule post_design:
+    input:
+        script="post_design.py",
+        markers="markers-passed-filter.csv",
+        prelim="prelim-panel.txt",
+        aes=config["aes"],
+    output:
+        txt="final-panel.txt",
+    params:
+        ld_dist=config["ld_dist"],
+    shell:
+        "python {input} --distance {params.ld_dist} > {output}"
+
+
+rule design_panel:
+    input:
+        script="design_panel.py",
+        markers="markers-passed-filter.csv",
+        aes=config["aes"],
+    output:
+        txt="prelim-panel.txt",
+    params:
+        ld_dist=config["ld_dist"],
+        max_per_chrom=config["max_candidates_per_chrom"],
+        batches=config["design_batches"],
+    shell:
+        "python {input} --distance {params.ld_dist} --max-per-chrom {params.max_per_chrom} --batches {params.batches} > {output}"
+
+
 rule apply_masks:
     input:
         script="apply_filters.py",
@@ -52,7 +81,7 @@ rule filter_repeats:
         markers=config["markers"],
         rmsk=config["rmsk"],
         aes=config["aes"],
-        whitelist="whitelist.txt"
+        whitelist="whitelist.txt",
     output:
         tsv="repeat-mask.tsv",
     params:
