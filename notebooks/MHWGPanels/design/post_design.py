@@ -15,13 +15,13 @@
 from argparse import ArgumentParser
 import pandas as pd
 import sys
-from util import load_markers
+from util import load_markers, interval_distance
 
 
-def main(markers, panel, distance=10e6):
+def main(markers, panel, ld_distance=10e6):
     panel_ids = panel.copy()
     while True:
-        to_add = get_best_additions(markers, panel_ids, distance=distance)
+        to_add = get_best_additions(markers, panel_ids, ld_distance=ld_distance)
         if len(to_add) == 0:
             break
         panel_ids |= to_add
@@ -29,34 +29,34 @@ def main(markers, panel, distance=10e6):
     final_panel.to_csv(sys.stdout, sep=" ", index=False, header=False)
     added = final_panel[~final_panel.Name.isin(panel)]
     added.to_csv(sys.stderr, sep=" ", index=False, header=False)
+    print(
+        f"Added {len(added)} more microhaps for a total of {len(final_panel)} markers",
+        file=sys.stderr,
+    )
 
 
-def get_best_additions(markers, panel, distance=10e6):
+def get_best_additions(markers, panel, ld_distance=10e6):
     to_add = set()
-    candidates = get_candidates(markers, panel, distance=distance)
+    candidates = get_candidates(markers, panel, ld_distance=ld_distance)
     ctable = markers[(markers.Name.isin(candidates)) & (markers.Ae >= 3.5)]
     for chrom, subtable in ctable.groupby("Chrom"):
-        if chrom == "chrX":
-            continue
         subtable = subtable.sort_values("Ae", ascending=False)
         to_add.add(subtable.Name.iloc[0])
     return to_add
 
 
-def get_candidates(markers, panel, distance=10e6):
+def get_candidates(markers, panel, ld_distance=10e6):
     candidates = set()
     ingroup = markers[markers.Name.isin(panel)]
     outgroup = markers[~markers.Name.isin(panel)]
     for chrom, subingroup in ingroup.groupby("Chrom"):
         suboutgroup = outgroup[outgroup.Chrom == chrom]
         for i, outrow in suboutgroup.iterrows():
-            smallest_distance = float("Inf")
             for j, inrow in subingroup.iterrows():
-                x, y = sorted(((inrow.Start, inrow.End), (outrow.Start, outrow.End)))
-                dist_xy = y[0] - x[1] if x[0] <= x[1] < y[0] else 0
-                if dist_xy < smallest_distance:
-                    smallest_distance = dist_xy
-            if smallest_distance > distance:
+                dist_ij = interval_distance((inrow.Start, inrow.End), (outrow.Start, outrow.End))
+                if dist_ij < ld_distance:
+                    break
+            else:
                 candidates.add(outrow.Name)
     return candidates
 
@@ -80,4 +80,4 @@ if __name__ == "__main__":
     args = get_parser().parse_args()
     markers = load_markers(args.markers, args.aes, objectify=False)
     panel = pd.read_csv(args.panel, sep=" ", names=["Chrom", "Marker", "Extent", "Ae"])
-    main(markers, set(panel.Marker), distance=args.distance)
+    main(markers, set(panel.Marker), ld_distance=args.distance)

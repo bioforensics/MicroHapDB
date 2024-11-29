@@ -13,24 +13,50 @@
 # -------------------------------------------------------------------------------------------------
 
 from argparse import ArgumentParser
-from linkage_graph import LinkageGraph, logger
-import sys
-from util import load_markers
+from linkage_graph import LinkageGraph, LinkageGraphThresholds, logger
+from util import load_markers, marker_distance
 
 
-def main(markers, max_per_chrom_long=8, max_per_chrom_short=8, batches=8, distance=10e6):
-    logger.info(f"Populating linkage graph long={max_per_chrom_long} short={max_per_chrom_short}")
-    graph = LinkageGraph.populate(
-        markers,
-        max_per_chrom_long=max_per_chrom_long,
-        max_per_chrom_short=max_per_chrom_short,
-        batches=batches,
-        distance=distance,
-    )
-    panel = graph.panel
+def main(markers, thresholds, cutlist=None):
+    logger.info("Populating linkage graph")
+    graph = LinkageGraph.populate(markers, thresholds)
+    panel = graph.design_panel()
     for mh in panel:
         print(mh.chrom, mh.name, len(mh), mh.data.Ae)
-    print(len(panel), sep="\n", file=sys.stderr)
+    if cutlist:
+        with open(cutlist, "w") as fh:
+            generate_cut_list(fh, panel)
+
+
+def generate_cut_list(outstream, panel, min_ae=5.0):
+    panel_loci = set(mh.locus for mh in panel)
+    for marker in markers:
+        if marker.data.Ae < min_ae or marker.locus in panel_loci:
+            continue
+        neighbor, distance = find_closest_panel_marker(marker, panel)
+        print(
+            marker.chrom,
+            marker.name,
+            len(marker),
+            marker.data.Ae,
+            neighbor.name,
+            neighbor.data.Ae,
+            distance,
+            file=outstream,
+        )
+
+
+def find_closest_panel_marker(marker, panel):
+    closest_neighbor = None
+    closest_distance = float("Inf")
+    for neighbor in panel:
+        if neighbor.chrom != marker.chrom:
+            continue
+        distance = marker_distance(marker, neighbor)
+        if distance < closest_distance:
+            closest_neighbor = neighbor
+            closest_distance = distance
+    return closest_neighbor, closest_distance
 
 
 def get_parser():
@@ -59,16 +85,20 @@ def get_parser():
         metavar="D",
         help="two markers must be separated by more than D bp to be considered independently inherited (as a heuristic); by default D=10000000",
     )
+    parser.add_argument(
+        "--cut-list",
+        metavar="FILE",
+        help="write high Ae markers that didn't make the cut to FILE",
+    )
     return parser
 
 
 if __name__ == "__main__":
     args = get_parser().parse_args()
     markers = load_markers(args.markers, args.aes)
-    main(
-        markers,
+    thresholds = LinkageGraphThresholds(
         max_per_chrom_short=args.max_per_chrom[0],
         max_per_chrom_long=args.max_per_chrom[1],
-        batches=args.batches,
-        distance=args.distance,
+        ld_distance=args.distance,
     )
+    main(markers, thresholds, cutlist=args.cut_list)

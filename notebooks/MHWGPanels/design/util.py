@@ -49,3 +49,13 @@ def parse_ucsc_rmsk_track(path):
         "id",
     ]
     return pl.read_csv(path, separator="\t", new_columns=header, has_header=False)
+
+
+def marker_distance(m1, m2):
+    return interval_distance((m1.start, m1.end), (m2.start, m2.end))
+
+
+def interval_distance(itvl1, itvl2):
+    x, y = sorted((itvl1, itvl2))
+    distance = y[0] - x[1] if x[0] <= x[1] < y[0] else 0
+    return distance

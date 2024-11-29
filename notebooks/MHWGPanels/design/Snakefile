@@ -22,9 +22,8 @@ rule design_panel:
     params:
         ld_dist=config["ld_dist"],
         max_per_chrom=config["max_candidates_per_chrom"],
-        batches=config["design_batches"],
     shell:
-        "python {input} --distance {params.ld_dist} --max-per-chrom {params.max_per_chrom} --batches {params.batches} > {output}"
+        "python {input} --distance {params.ld_dist} --max-per-chrom {params.max_per_chrom} > {output}"
 
 
 rule apply_masks:
