@@ -2,10 +2,10 @@ rule post_design:
     input:
         script="post_design.py",
         markers="markers-passed-filter.csv",
-        prelim="prelim-panel.txt",
+        prelim="prelim-panel.tsv",
         aes=config["aes"],
     output:
-        txt="final-panel.txt",
+        tsv="final-panel.tsv",
     params:
         ld_dist=config["ld_dist"],
     shell:
@@ -18,12 +18,13 @@ rule design_panel:
         markers="markers-passed-filter.csv",
         aes=config["aes"],
     output:
-        txt="prelim-panel.txt",
+        tsv="prelim-panel.tsv",
+        cutlist="cut-list.tsv",
     params:
         ld_dist=config["ld_dist"],
         max_per_chrom=config["max_candidates_per_chrom"],
     shell:
-        "python {input} --distance {params.ld_dist} --max-per-chrom {params.max_per_chrom} > {output}"
+        "python {input} --distance {params.ld_dist} --max-per-chrom {params.max_per_chrom} --cut-list {output.cutlist} > {output.tsv}"
 
 
 rule apply_masks:

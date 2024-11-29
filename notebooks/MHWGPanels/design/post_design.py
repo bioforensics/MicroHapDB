@@ -26,11 +26,12 @@ def main(markers, panel, ld_distance=10e6):
             break
         panel_ids |= to_add
     final_panel = markers[markers.Name.isin(panel_ids)][["Chrom", "Name", "Extent", "Ae"]]
-    final_panel.to_csv(sys.stdout, sep=" ", index=False, header=False)
+    final_panel.rename(columns={"Name": "Marker"})
+    final_panel.to_csv(sys.stdout, sep="\t", index=False)
     added = final_panel[~final_panel.Name.isin(panel)]
-    added.to_csv(sys.stderr, sep=" ", index=False, header=False)
+    added.to_string(sys.stderr, index=False)
     print(
-        f"Added {len(added)} more microhaps for a total of {len(final_panel)} markers",
+        f"\nAdded {len(added)} more microhaps for a total of {len(final_panel)} markers",
         file=sys.stderr,
     )
 
@@ -79,5 +80,5 @@ def get_parser():
 if __name__ == "__main__":
     args = get_parser().parse_args()
     markers = load_markers(args.markers, args.aes, objectify=False)
-    panel = pd.read_csv(args.panel, sep=" ", names=["Chrom", "Marker", "Extent", "Ae"])
+    panel = pd.read_csv(args.panel, sep="\t")
     main(markers, set(panel.Marker), ld_distance=args.distance)

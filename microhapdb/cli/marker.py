@@ -17,7 +17,6 @@ from microhapdb import Marker, Locus
 import pandas as pd
 import sys
 from textwrap import dedent
-from warnings import warn
 
 
 def main(args):
@@ -96,7 +95,7 @@ def display(
             for marker in markers:
                 loci[marker.locus].markers.append(marker)
             table = pd.concat([locus.definition for locus in loci.values()])
-            table = table.rename(columns={"ChromOffset": f"OffsetHg38"})
+            table = table.rename(columns={"ChromOffset": "OffsetHg38"})
             table.to_csv(sys.stdout, sep="\t", index=False)
         else:
             raise ValueError(f'unsupported view format "{view_format}"')
