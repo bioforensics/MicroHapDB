@@ -13,27 +13,27 @@
 # -------------------------------------------------------------------------------------------------
 
 from argparse import ArgumentParser
+import microhapdb
 import pandas as pd
 import sys
 from util import load_markers, interval_distance
 
 
 def main(markers, panel, ld_distance=10e6):
-    panel_ids = panel.copy()
+    final_panel_ids = extend_panel_iteratively(markers, panel.copy(), ld_distance=ld_distance)
+    final_panel = markers[markers.Name.isin(final_panel_ids)]
+    print_output(final_panel, panel)
+
+
+
+def extend_panel_iteratively(markers, panel, ld_distance=10e6):
+    extended_panel = panel.copy()
     while True:
-        to_add = get_best_additions(markers, panel_ids, ld_distance=ld_distance)
+        to_add = get_best_additions(markers, extended_panel, ld_distance=ld_distance)
         if len(to_add) == 0:
             break
-        panel_ids |= to_add
-    final_panel = markers[markers.Name.isin(panel_ids)][["Chrom", "Name", "Extent", "Ae"]]
-    final_panel.rename(columns={"Name": "Marker"})
-    final_panel.to_csv(sys.stdout, sep="\t", index=False)
-    added = final_panel[~final_panel.Name.isin(panel)]
-    added.to_string(sys.stderr, index=False)
-    print(
-        f"\nAdded {len(added)} more microhaps for a total of {len(final_panel)} markers",
-        file=sys.stderr,
-    )
+        extended_panel |= to_add
+    return extended_panel
 
 
 def get_best_additions(markers, panel, ld_distance=10e6):
@@ -44,6 +44,16 @@ def get_best_additions(markers, panel, ld_distance=10e6):
         subtable = subtable.sort_values("Ae", ascending=False)
         to_add.add(subtable.Name.iloc[0])
     return to_add
+
+
+def print_output(panel, original):
+    print("Marker", "Chrom", "Location", "Extent", "Ae", sep="\t")
+    for mh in microhapdb.Marker.objectify(panel):
+        print(mh.name, mh.chrom, mh.slug, len(mh), mh.data.Ae, sep="\t")
+    added = panel[~panel.Name.isin(original)][["Chrom", "Name", "Extent", "Ae"]]
+    added.rename(columns={"Name": "Marker"})
+    added.to_string(sys.stderr, index=False)
+    print(f"\nAdded {len(added)} more microhaps for a total of {len(panel)} markers", file=sys.stderr)
 
 
 def get_candidates(markers, panel, ld_distance=10e6):

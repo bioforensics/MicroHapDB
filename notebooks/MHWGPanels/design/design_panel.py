@@ -21,9 +21,9 @@ def main(markers, thresholds, cutlist=None):
     logger.info("Populating linkage graph")
     graph = LinkageGraph.populate(markers, thresholds)
     panel = graph.design_panel()
-    print("Chromosome", "Marker", "Extent", "Ae", sep="\t")
+    print("Marker", "Location", "Extent", "Ae", sep="\t")
     for mh in panel:
-        print(mh.chrom, mh.name, len(mh), mh.data.Ae, sep="\t")
+        print(mh.name, mh.slug, len(mh), mh.data.Ae, sep="\t")
     if cutlist:
         with open(cutlist, "w") as fh:
             generate_cut_list(fh, panel)
@@ -31,7 +31,7 @@ def main(markers, thresholds, cutlist=None):
 
 def generate_cut_list(outstream, panel, min_ae=5.0):
     print(
-        "Chromosome", "Marker", "Extent", "Ae", "ClosestNeighbor", "NeighborAe", "NeighborDistance",
+        "Marker", "Location", "Extent", "Ae", "ClosestNeighbor", "NeighborAe", "NeighborDistance",
         sep="\t",
         file=outstream
     )
@@ -41,8 +41,8 @@ def generate_cut_list(outstream, panel, min_ae=5.0):
             continue
         neighbor, distance = find_closest_panel_marker(marker, panel)
         print(
-            marker.chrom,
             marker.name,
+            marker.slug,
             len(marker),
             marker.data.Ae,
             neighbor.name,
