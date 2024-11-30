@@ -25,7 +25,6 @@ def main(markers, panel, ld_distance=10e6):
     print_output(final_panel, panel)
 
 
-
 def extend_panel_iteratively(markers, panel, ld_distance=10e6):
     extended_panel = panel.copy()
     while True:
@@ -47,9 +46,9 @@ def get_best_additions(markers, panel, ld_distance=10e6):
 
 
 def print_output(panel, original):
-    print("Marker", "Chrom", "Location", "Extent", "Ae", sep="\t")
+    print("Marker", "Chrom", "Location", "Extent", "Ae", "RSIDs", sep="\t")
     for mh in microhapdb.Marker.objectify(panel):
-        print(mh.name, mh.chrom, mh.slug, len(mh), mh.data.Ae, sep="\t")
+        print(mh.name, mh.chrom, mh.slug, len(mh), mh.data.Ae, ";".join(mh.varrefs), sep="\t")
     added = panel[~panel.Name.isin(original)][["Chrom", "Name", "Extent", "Ae"]]
     added.rename(columns={"Name": "Marker"})
     added.to_string(sys.stderr, index=False)
