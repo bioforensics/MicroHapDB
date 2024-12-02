@@ -2,8 +2,8 @@ rule post_design:
     input:
         script="code/post_design.py",
         markers="data/results/markers-passed-filter.csv",
-        prelim="data/intermediate/prelim-panel.tsv",
         aes="data/input/marker-aes-0.12.csv",
+        prelim="data/intermediate/prelim-panel.tsv",
     output:
         tsv="data/results/final-panel.tsv",
     params:
@@ -31,11 +31,11 @@ rule apply_masks:
     input:
         script="code/apply_filters.py",
         markers="data/input/marker-0.12.csv",
+        aes="data/input/marker-aes-0.12.csv",
         indel="data/intermediate/indel-mask.tsv",
         lowcomplex="data/intermediate/lowcomplex-mask.tsv",
         repeat="data/intermediate/repeat-mask.tsv",
         strs="data/intermediate/str-mask.tsv",
-        aes="data/input/marker-aes-0.12.csv",
     output:
         passed="data/results/markers-passed-filter.csv",
         failed="data/intermediate/markers-failed-filter.tsv",
@@ -43,44 +43,44 @@ rule apply_masks:
     params:
         max_length=config["max_length"],
     shell:
-        "python {input.script} {input.markers} {input.indel} {input.lowcomplex} {input.repeat} {input.strs} --aes {input.aes} --maxlen {params.max_length} --passed {output.passed} --failed {output.failed} --visualize {output.plot}"
+        "python {input} --maxlen {params.max_length} --passed {output.passed} --failed {output.failed} --visualize {output.plot}"
 
 
 rule filter_indels:
     input:
         script="code/filter_by_indel.py",
         markers="data/input/marker-0.12.csv",
-        dbsnp=config["dbsnp"],
         aes="data/input/marker-aes-0.12.csv",
+        dbsnp=config["dbsnp"],
     output:
         tsv="data/intermediate/indel-mask.tsv",
     params:
         ads_dist=config["ads_dist"],
         min_freq=config["min_indel_freq"],
     shell:
-        "python {input.script} {input.markers} {input.dbsnp} --aes {input.aes} --distance {params.ads_dist} --delta 25 --min-freq {params.min_freq} > {output}"
+        "python {input} --distance {params.ads_dist} --delta 25 --min-freq {params.min_freq} > {output}"
 
 
 rule filter_lowcomplex:
     input:
         script="code/filter_by_lowcomplex.py",
         markers="data/input/marker-0.12.csv",
-        rmsk=config["rmsk"],
         aes="data/input/marker-aes-0.12.csv",
+        rmsk=config["rmsk"],
     output:
         tsv="data/intermediate/lowcomplex-mask.tsv",
     params:
         ads_dist=config["ads_dist"],
     shell:
-        "python {input.script} {input.markers} {input.rmsk} --aes {input.aes} --distance {params.ads_dist} > {output}"
+        "python {input} --distance {params.ads_dist} > {output}"
 
 
 rule filter_repeats:
     input:
         script="code/filter_by_repeats.py",
         markers="data/input/marker-0.12.csv",
-        rmsk=config["rmsk"],
         aes="data/input/marker-aes-0.12.csv",
+        rmsk=config["rmsk"],
         whitelist="data/input/whitelist.txt",
     output:
         tsv="data/intermediate/repeat-mask.tsv",
@@ -89,18 +89,18 @@ rule filter_repeats:
         line=config["line"],
         ltr=config["ltr"],
     shell:
-        "python {input.script} {input.markers} {input.rmsk} --aes {input.aes} --sine {params.sine} --line {params.line} --ltr {params.ltr} --whitelist {input.whitelist} > {output}"
+        "python {input.script} {input.markers} {input.aes} {input.rmsk} --sine {params.sine} --line {params.line} --ltr {params.ltr} --whitelist {input.whitelist} > {output}"
 
 
 rule filter_strs:
     input:
         script="code/filter_by_str.py",
         markers="data/input/marker-0.12.csv",
-        fssg="data/input/FSSG-common-locus-info.csv",
         aes="data/input/marker-aes-0.12.csv",
+        fssg="data/input/FSSG-common-locus-info.csv",
     output:
         tsv="data/intermediate/str-mask.tsv",
     params:
         ld_dist=config["ld_dist"],
     shell:
-        "python {input.script} {input.markers} {input.fssg} --aes {input.aes} --distance {params.ld_dist} > {output}"
+        "python {input} --distance {params.ld_dist} > {output}"

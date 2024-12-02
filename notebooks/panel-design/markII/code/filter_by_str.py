@@ -48,6 +48,7 @@ def parse_range(chrom_range):
 def get_parser():
     parser = ArgumentParser()
     parser.add_argument("markers", help="path to MicroHapDB marker definitions in CSV format")
+    parser.add_argument("aes", help="path to MicroHapDB Ae table in CSV format")
     parser.add_argument("fssg", help="path to FSSG info table")
     parser.add_argument(
         "--distance",
@@ -55,11 +56,6 @@ def get_parser():
         default=10e6,
         metavar="D",
         help="any microhap within D bp of an FSSG STR marker will be considered in linkage disequilibrium with that STR and filtered out; by default D=10000000 (10 Mb)",
-    )
-    parser.add_argument(
-        "--aes",
-        metavar="PATH",
-        help="path to MicroHapDB Ae table in CSV format; by default, Ae values are reported as 0.0",
     )
     return parser
 

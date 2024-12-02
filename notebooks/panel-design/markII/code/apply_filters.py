@@ -30,15 +30,11 @@ def main(markers, masks, pass_stream=sys.stdout, fail_stream=None, vis_path=None
 def get_parser():
     parser = ArgumentParser(description="Filter markers based on the provided mask(s)")
     parser.add_argument("markers", help="path to MicroHapDB marker definitions in CSV format")
+    parser.add_argument("aes", help="path to MicroHapDB Ae table in CSV format")
     parser.add_argument("indel_mask", help="path to CSV file with indel mask")
     parser.add_argument("lowcomplex_mask", help="path to CSV file with low-complexity mask")
     parser.add_argument("repeat_mask", help="path to CSV file with repeat mask")
     parser.add_argument("str_mask", help="path to CSV file with forensic STR mask")
-    parser.add_argument(
-        "--aes",
-        metavar="PATH",
-        help="path to MicroHapDB Ae table in CSV format; by default, Ae values are reported as 0.0",
-    )
     parser.add_argument(
         "--maxlen",
         type=int,

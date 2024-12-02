@@ -74,8 +74,8 @@ def get_candidates(markers, panel, ld_distance=10e6):
 def get_parser():
     parser = ArgumentParser()
     parser.add_argument("markers", help="path to MicroHapDB marker definitions in CSV format")
-    parser.add_argument("panel", help="path to a file with panel marker IDs")
     parser.add_argument("aes", help="path to MicroHapDB Ae table in CSV format")
+    parser.add_argument("panel", help="path to a file with panel marker IDs")
     parser.add_argument(
         "--distance",
         type=float,

@@ -43,6 +43,7 @@ def main(markers, repeats, distance=4):
 def get_parser():
     parser = ArgumentParser()
     parser.add_argument("markers", help="path to MicroHapDB marker definitions in CSV format")
+    parser.add_argument("aes", help="path to MicroHapDB Ae table in CSV format")
     parser.add_argument("rmsk", help="path to UCSC RepeatMasker track data")
     parser.add_argument(
         "--distance",
@@ -50,11 +51,6 @@ def get_parser():
         default=4,
         metavar="D",
         help="flag markers with ADSs within D bp of a dbSNP indel; by default D=4",
-    )
-    parser.add_argument(
-        "--aes",
-        metavar="PATH",
-        help="path to MicroHapDB Ae table in CSV format; by default, Ae values are reported as 0.0",
     )
     return parser
 

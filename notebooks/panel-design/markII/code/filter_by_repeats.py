@@ -57,6 +57,7 @@ def load_and_filter_repeats(rmsk_path, sine=929, line=411, ltr=909):
 def get_parser():
     parser = ArgumentParser()
     parser.add_argument("markers", help="path to MicroHapDB marker definitions in CSV format")
+    parser.add_argument("aes", help="path to MicroHapDB Ae table in CSV format")
     parser.add_argument("rmsk", help="path to UCSC RepeatMasker track data")
     parser.add_argument(
         "--sine",
@@ -78,11 +79,6 @@ def get_parser():
         default=909,
         metavar="Z",
         help="discard LTR elements with a RepeatMasker score of Z or lower; by default Z=909",
-    )
-    parser.add_argument(
-        "--aes",
-        metavar="FILE",
-        help="path to MicroHapDB Ae table in CSV format; by default, Ae values are reported as 0.0",
     )
     parser.add_argument(
         "--whitelist",

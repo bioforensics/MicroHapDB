@@ -51,6 +51,7 @@ def get_parser():
     desc = "Identify markers with allele-defining SNPs (ADSs) near common indels"
     parser = ArgumentParser(description=desc)
     parser.add_argument("markers", help="path to MicroHapDB marker definitions in CSV format")
+    parser.add_argument("aes", help="path to MicroHapDB Ae table in CSV format")
     parser.add_argument("dbsnp", help="path to dbSNP VCF file; must be tabix-indexed (.tbi)")
     parser.add_argument(
         "--distance",
@@ -72,11 +73,6 @@ def get_parser():
         default=0.005,
         metavar="F",
         help="ignore indels with frequency < F; by default F=0.005 (0.5%%)",
-    )
-    parser.add_argument(
-        "--aes",
-        metavar="PATH",
-        help="path to MicroHapDB Ae table in CSV format; by default, Ae values are reported as 0.0",
     )
     return parser
 
