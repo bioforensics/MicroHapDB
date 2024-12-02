@@ -1,11 +1,11 @@
 rule post_design:
     input:
-        script="post_design.py",
-        markers="markers-passed-filter.csv",
-        prelim="prelim-panel.tsv",
-        aes=config["aes"],
+        script="code/post_design.py",
+        markers="data/results/markers-passed-filter.csv",
+        prelim="data/intermediate/prelim-panel.tsv",
+        aes="data/input/marker-aes-0.12.csv",
     output:
-        tsv="final-panel.tsv",
+        tsv="data/results/final-panel.tsv",
     params:
         ld_dist=config["ld_dist"],
     shell:
@@ -14,12 +14,12 @@ rule post_design:
 
 rule design_panel:
     input:
-        script="design_panel.py",
-        markers="markers-passed-filter.csv",
-        aes=config["aes"],
+        script="code/design_panel.py",
+        markers="data/results/markers-passed-filter.csv",
+        aes="data/input/marker-aes-0.12.csv",
     output:
-        tsv="prelim-panel.tsv",
-        cutlist="cut-list.tsv",
+        tsv="data/intermediate/prelim-panel.tsv",
+        cutlist="data/intermediate/cut-list.tsv",
     params:
         ld_dist=config["ld_dist"],
         max_per_chrom=config["max_candidates_per_chrom"],
@@ -29,17 +29,17 @@ rule design_panel:
 
 rule apply_masks:
     input:
-        script="apply_filters.py",
-        markers=config["markers"],
-        indel="indel-mask.tsv",
-        lowcomplex="lowcomplex-mask.tsv",
-        repeat="repeat-mask.tsv",
-        strs="str-mask.tsv",
-        aes=config["aes"],
+        script="code/apply_filters.py",
+        markers="data/input/marker-0.12.csv",
+        indel="data/intermediate/indel-mask.tsv",
+        lowcomplex="data/intermediate/lowcomplex-mask.tsv",
+        repeat="data/intermediate/repeat-mask.tsv",
+        strs="data/intermediate/str-mask.tsv",
+        aes="data/input/marker-aes-0.12.csv",
     output:
-        passed="markers-passed-filter.csv",
-        failed="markers-failed-filter.tsv",
-        plot="masking-results-plot.png",
+        passed="data/results/markers-passed-filter.csv",
+        failed="data/intermediate/markers-failed-filter.tsv",
+        plot="data/results/masking-results-plot.png",
     params:
         max_length=config["max_length"],
     shell:
@@ -48,12 +48,12 @@ rule apply_masks:
 
 rule filter_indels:
     input:
-        script="filter_by_indel.py",
-        markers=config["markers"],
+        script="code/filter_by_indel.py",
+        markers="data/input/marker-0.12.csv",
         dbsnp=config["dbsnp"],
-        aes=config["aes"],
+        aes="data/input/marker-aes-0.12.csv",
     output:
-        tsv="indel-mask.tsv",
+        tsv="data/intermediate/indel-mask.tsv",
     params:
         ads_dist=config["ads_dist"],
         min_freq=config["min_indel_freq"],
@@ -63,12 +63,12 @@ rule filter_indels:
 
 rule filter_lowcomplex:
     input:
-        script="filter_by_lowcomplex.py",
-        markers=config["markers"],
+        script="code/filter_by_lowcomplex.py",
+        markers="data/input/marker-0.12.csv",
         rmsk=config["rmsk"],
-        aes=config["aes"],
+        aes="data/input/marker-aes-0.12.csv",
     output:
-        tsv="lowcomplex-mask.tsv",
+        tsv="data/intermediate/lowcomplex-mask.tsv",
     params:
         ads_dist=config["ads_dist"],
     shell:
@@ -77,13 +77,13 @@ rule filter_lowcomplex:
 
 rule filter_repeats:
     input:
-        script="filter_by_repeats.py",
-        markers=config["markers"],
+        script="code/filter_by_repeats.py",
+        markers="data/input/marker-0.12.csv",
         rmsk=config["rmsk"],
-        aes=config["aes"],
-        whitelist="whitelist.txt",
+        aes="data/input/marker-aes-0.12.csv",
+        whitelist="data/input/whitelist.txt",
     output:
-        tsv="repeat-mask.tsv",
+        tsv="data/intermediate/repeat-mask.tsv",
     params:
         sine=config["sine"],
         line=config["line"],
@@ -94,12 +94,12 @@ rule filter_repeats:
 
 rule filter_strs:
     input:
-        script="filter_by_str.py",
-        markers=config["markers"],
-        fssg=config["fssg"],
-        aes=config["aes"],
+        script="code/filter_by_str.py",
+        markers="data/input/marker-0.12.csv",
+        fssg="data/input/FSSG-common-locus-info.csv",
+        aes="data/input/marker-aes-0.12.csv",
     output:
-        tsv="str-mask.tsv",
+        tsv="data/intermediate/str-mask.tsv",
     params:
         ld_dist=config["ld_dist"],
     shell:

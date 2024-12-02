@@ -1,9 +1,6 @@
 {
-    "markers": "../../../microhapdb/data/marker.csv",
-    "aes": "../../../microhapdb/data/marker-aes.csv",
     "rmsk": "../../../dbbuild/databases/rmsk.txt.gz",
     "dbsnp": "../../../dbbuild/databases/dbSNP/dbSNP_GRCh38.vcf.gz",
-    "fssg": "FSSG-common-locus-info.csv",
     "max_length": 260,
     "ads_dist": 4,
     "min_indel_freq": 0.005,
