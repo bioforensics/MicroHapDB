@@ -52,7 +52,9 @@ def print_output(panel, original):
     added = panel[~panel.Name.isin(original)][["Chrom", "Name", "Extent", "Ae"]]
     added.rename(columns={"Name": "Marker"})
     added.to_string(sys.stderr, index=False)
-    print(f"\nAdded {len(added)} more microhaps for a total of {len(panel)} markers", file=sys.stderr)
+    print(
+        f"\nAdded {len(added)} more microhaps for a total of {len(panel)} markers", file=sys.stderr
+    )
 
 
 def get_candidates(markers, panel, ld_distance=10e6):

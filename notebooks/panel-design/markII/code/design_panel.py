@@ -31,9 +31,15 @@ def main(markers, thresholds, cutlist=None):
 
 def generate_cut_list(outstream, panel, min_ae=5.0):
     print(
-        "Marker", "Location", "Extent", "Ae", "ClosestNeighbor", "NeighborAe", "NeighborDistance",
+        "Marker",
+        "Location",
+        "Extent",
+        "Ae",
+        "ClosestNeighbor",
+        "NeighborAe",
+        "NeighborDistance",
         sep="\t",
-        file=outstream
+        file=outstream,
     )
     panel_loci = set(mh.locus for mh in panel)
     for marker in markers:
