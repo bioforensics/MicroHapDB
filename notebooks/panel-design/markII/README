@@ -11,3 +11,4 @@ Constructed the whitelist as follows:
 >>> subtable = table[(~table.FailMode.str.contains("length")) & (~table.FailMode.str.contains("str")) & (table.Ae > 9.0)].sort_values("Ae", ascending=False)
 >>> subtable.to_csv("high-ae-filtered.tsv", sep="\t", index=False)
 ```
+tagore -i <(code/plot.py) -p test -ofmt png -f
