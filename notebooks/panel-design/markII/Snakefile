@@ -1,3 +1,36 @@
+rule all:
+    input:
+        "data/results/aes_markII_vs_codis.png",
+        "data/results/ideogram.png",
+
+
+rule plot_aes_vs_codis:
+    input:
+        script="code/plot_ae.py",
+        panel="data/results/final-panel.tsv",
+        codis="data/input/codis-strs-aes.tsv",
+    output:
+        figure="data/results/aes_markII_vs_codis.png",
+    shell:
+        "python {input} {output}"
+
+rule plot_ideogram:
+    input:
+        script="code/plot_ideogram.py",
+        markers="data/input/marker-0.12.csv",
+        aes="data/input/marker-aes-0.12.csv",
+        passed="data/results/markers-passed-filter.csv",
+        failed="data/intermediate/markers-failed-filter.tsv",
+        panel="data/results/final-panel.tsv",
+    output:
+        figure="data/results/ideogram.png",
+    shell:
+        """
+        tagore -i <(python {input}) -p data/results/ideogram -ofmt png -f
+        rm data/results/ideogram.svg
+        """
+
+
 rule post_design:
     input:
         script="code/post_design.py",
