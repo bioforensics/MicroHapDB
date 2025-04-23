@@ -161,6 +161,12 @@ class Marker:
         return self.data.Chrom
 
     @property
+    def chrom_num(self):
+        if self.chrom == "chrX":
+            return 23
+        return int(self.chrom[3:])
+
+    @property
     def name(self):
         return self.data.Name
 
@@ -381,6 +387,15 @@ class Marker:
     def target_seq(self):
         start, end = self.target_interval
         return str(microhapdb.hg38[self.chrom][start:end])
+
+    @property
+    def flank_seqs(self):
+        markerseq = self.target_seq
+        first_snp_idx = self.target_offsets[0]
+        last_snp_idx = self.target_offsets[-1]
+        left = markerseq[:first_snp_idx]
+        right = markerseq[last_snp_idx:]
+        return left, right
 
     @property
     def reference_lengths(self):

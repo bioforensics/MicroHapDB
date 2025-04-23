@@ -1,0 +1,12 @@
+{
+    "rmsk": "../../../dbbuild/databases/rmsk.txt.gz",
+    "dbsnp": "../../../dbbuild/databases/dbSNP/dbSNP_GRCh38.vcf.gz",
+    "max_length": 260,
+    "ads_dist": 4,
+    "min_indel_freq": 0.005,
+    "sine": 929,
+    "line": 411,
+    "ltr": 909,
+    "ld_dist": 9.5e6,
+    "max_short_mh_per_chrom": 6
+}

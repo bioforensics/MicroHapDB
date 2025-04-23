@@ -58,6 +58,12 @@ def parse_ucsc_rmsk_track(path):
         "id",
     ]
     table = pd.read_csv(path, sep="\t", names=header)
+    table = table[
+        (~table.repClass.isin(("SINE", "LINE", "LTR")))
+        | ((table.repClass == "SINE") & (table.swScore > 929))
+        | ((table.repClass == "LINE") & (table.swScore > 411))
+        | ((table.repClass == "LTR")  & (table.swScore > 909))
+    ]
     return table.groupby("genoName")
 
 

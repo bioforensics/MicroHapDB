@@ -1,0 +1,139 @@
+rule all:
+    input:
+        "data/results/aes_markII_vs_codis.png",
+        "data/results/ideogram.png",
+
+
+rule plot_aes_vs_codis:
+    input:
+        script="code/plot_ae.py",
+        panel="data/results/final-panel.tsv",
+        codis="data/input/codis-strs-aes.tsv",
+    output:
+        figure="data/results/aes_markII_vs_codis.png",
+    shell:
+        "python {input} {output}"
+
+rule plot_ideogram:
+    input:
+        script="code/plot_ideogram.py",
+        markers="data/input/marker-0.12.csv",
+        aes="data/input/marker-aes-0.12.csv",
+        passed="data/results/markers-passed-filter.csv",
+        failed="data/intermediate/markers-failed-filter.tsv",
+        panel="data/results/final-panel.tsv",
+    output:
+        figure="data/results/ideogram.png",
+    shell:
+        """
+        tagore -i <(python {input}) -p data/results/ideogram -ofmt png -f
+        rm data/results/ideogram.svg
+        """
+
+
+rule post_design:
+    input:
+        script="code/post_design.py",
+        markers="data/results/markers-passed-filter.csv",
+        aes="data/input/marker-aes-0.12.csv",
+        prelim="data/intermediate/prelim-panel.tsv",
+    output:
+        tsv="data/results/final-panel.tsv",
+    params:
+        ld_dist=config["ld_dist"],
+    shell:
+        "python {input} --distance {params.ld_dist} > {output}"
+
+
+rule design_panel:
+    input:
+        script="code/design_panel.py",
+        markers="data/results/markers-passed-filter.csv",
+        aes="data/input/marker-aes-0.12.csv",
+    output:
+        tsv="data/intermediate/prelim-panel.tsv",
+        cutlist="data/intermediate/cut-list.tsv",
+    params:
+        ld_dist=config["ld_dist"],
+        max_per_chrom=config["max_short_mh_per_chrom"],
+    shell:
+        "python {input} --distance {params.ld_dist} --max-short-mh-per-chrom {params.max_per_chrom} --cut-list {output.cutlist} > {output.tsv}"
+
+
+rule apply_masks:
+    input:
+        script="code/apply_filters.py",
+        markers="data/input/marker-0.12.csv",
+        aes="data/input/marker-aes-0.12.csv",
+        indel="data/intermediate/indel-mask.tsv",
+        lowcomplex="data/intermediate/lowcomplex-mask.tsv",
+        repeat="data/intermediate/repeat-mask.tsv",
+        strs="data/intermediate/str-mask.tsv",
+    output:
+        passed="data/results/markers-passed-filter.csv",
+        failed="data/intermediate/markers-failed-filter.tsv",
+        plot="data/results/masking-results-plot.png",
+    params:
+        max_length=config["max_length"],
+    shell:
+        "python {input} --maxlen {params.max_length} --passed {output.passed} --failed {output.failed} --visualize {output.plot}"
+
+
+rule filter_indels:
+    input:
+        script="code/filter_by_indel.py",
+        markers="data/input/marker-0.12.csv",
+        aes="data/input/marker-aes-0.12.csv",
+        dbsnp=config["dbsnp"],
+    output:
+        tsv="data/intermediate/indel-mask.tsv",
+    params:
+        ads_dist=config["ads_dist"],
+        min_freq=config["min_indel_freq"],
+    shell:
+        "python {input} --distance {params.ads_dist} --delta 25 --min-freq {params.min_freq} > {output}"
+
+
+rule filter_lowcomplex:
+    input:
+        script="code/filter_by_lowcomplex.py",
+        markers="data/input/marker-0.12.csv",
+        aes="data/input/marker-aes-0.12.csv",
+        rmsk=config["rmsk"],
+    output:
+        tsv="data/intermediate/lowcomplex-mask.tsv",
+    params:
+        ads_dist=config["ads_dist"],
+    shell:
+        "python {input} --distance {params.ads_dist} > {output}"
+
+
+rule filter_repeats:
+    input:
+        script="code/filter_by_repeats.py",
+        markers="data/input/marker-0.12.csv",
+        aes="data/input/marker-aes-0.12.csv",
+        rmsk=config["rmsk"],
+        whitelist="data/input/whitelist.txt",
+    output:
+        tsv="data/intermediate/repeat-mask.tsv",
+    params:
+        sine=config["sine"],
+        line=config["line"],
+        ltr=config["ltr"],
+    shell:
+        "python {input.script} {input.markers} {input.aes} {input.rmsk} --sine {params.sine} --line {params.line} --ltr {params.ltr} --whitelist {input.whitelist} > {output}"
+
+
+rule filter_strs:
+    input:
+        script="code/filter_by_str.py",
+        markers="data/input/marker-0.12.csv",
+        aes="data/input/marker-aes-0.12.csv",
+        fssg="data/input/FSSG-common-locus-info.csv",
+    output:
+        tsv="data/intermediate/str-mask.tsv",
+    params:
+        ld_dist=config["ld_dist"],
+    shell:
+        "python {input} --distance {params.ld_dist} > {output}"
