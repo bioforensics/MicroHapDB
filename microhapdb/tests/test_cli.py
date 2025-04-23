@@ -86,7 +86,7 @@ def test_main_pop_noargs(capsys):
     microhapdb.cli.main(args)
     out, err = capsys.readouterr()
     outlines = out.strip().split("\n")
-    assert len(outlines) == 1 + 125
+    assert len(outlines) == 1 + 124
 
 
 def test_main_pop_detail(capsys):
@@ -689,7 +689,7 @@ def test_cli_summarize(capsys):
   - 2413 distinct loci
 [frequencies]
   - 59753 haplotypes
-  - 125 population groups
+  - 124 population groups
   - 885503 total microhap frequencies
 """
     print(observed)
