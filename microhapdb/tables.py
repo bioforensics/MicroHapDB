@@ -36,7 +36,6 @@ merged = read_table("merged.csv")
 populations = read_table("population.csv")
 frequencies = read_table("frequency.csv.gz")
 frequencies["Count"] = frequencies["Count"].astype("Int16")
-repeats = read_table("repeats.csv").set_index("Marker")
 indels = read_table("indels.csv")
 variantmap = compile_variant_map(markers)
 hg38file = files("microhapdb") / "data" / "hg38.fasta"

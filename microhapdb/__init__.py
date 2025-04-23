@@ -11,7 +11,7 @@
 # -------------------------------------------------------------------------------------------------
 
 from . import nomenclature
-from .tables import markers, merged, populations, frequencies, repeats, indels, variantmap, hg38
+from .tables import markers, merged, populations, frequencies, indels, variantmap, hg38
 from .population import Population
 from .marker import Marker, Locus
 from microhapdb import cli
