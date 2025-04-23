@@ -77,26 +77,18 @@ def get_parser():
     parser.add_argument("markers", help="path to MicroHapDB marker definitions in CSV format")
     parser.add_argument("aes", help="path to MicroHapDB Ae table in CSV format")
     parser.add_argument(
-        "--max-per-chrom",
+        "--max-short-mh-per-chrom",
         type=int,
-        nargs=2,
-        default=(8, 8),
+        default=6,
         metavar="M",
-        help="select the M highest ranked short and long markers (respectively) per chromosome by Ae; by default M=(8, 8)",
-    )
-    parser.add_argument(
-        "--batches",
-        type=int,
-        default=8,
-        metavar="B",
-        help="split the linkage graph into B batches; by default B=8",
+        help="when building the linkage graph, exclude all but the M highest-ranked (by Ae) short microhaps for each chromosome; by default M=6",
     )
     parser.add_argument(
         "--distance",
         type=float,
-        default=10e6,
+        default=9.5e6,
         metavar="D",
-        help="two markers must be separated by more than D bp to be considered independently inherited (as a heuristic); by default D=10000000",
+        help="two markers must be separated by more than D bp to be considered independently inherited (as a heuristic); by default D=95000000 (9.5 Mbp)",
     )
     parser.add_argument(
         "--cut-list",
@@ -110,8 +102,8 @@ if __name__ == "__main__":
     args = get_parser().parse_args()
     markers = load_markers(args.markers, args.aes)
     thresholds = LinkageGraphThresholds(
-        max_per_chrom_short=args.max_per_chrom[0],
-        max_per_chrom_long=args.max_per_chrom[1],
+        max_per_chrom_short=args.max_short_mh_per_chrom,
+        max_per_chrom_long=100,  # effectively disable this filter
         ld_distance=args.distance,
     )
     main(markers, thresholds, cutlist=args.cut_list)

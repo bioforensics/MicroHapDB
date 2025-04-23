@@ -8,5 +8,5 @@
     "line": 411,
     "ltr": 909,
     "ld_dist": 9.5e6,
-    "max_candidates_per_chrom": "6 100"
+    "max_short_mh_per_chrom": 6
 }

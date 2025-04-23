@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Panel design notebooks (#157).
+
 ### Fixed
 - Debugged a test that counts observed haplotypes (#154).
 - Replaced global pooled Ae values with 26-population average as the default Ae reported (#155).
