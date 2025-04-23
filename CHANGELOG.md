@@ -5,13 +5,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
-- Panel design notebooks (#157).
+- Panel design notebooks (see #157).
 
 ### Fixed
-- Debugged a test that counts observed haplotypes (#154).
-- Replaced global pooled Ae values with 26-population average as the default Ae reported (#155, #158).
-- Replaced deprecated `pkg_resources` module with `importlib.resources` (#156).
-- Upgraded versioneer to a Python 3.12+ compatible version (#156).
+- Debugged a test that counts observed haplotypes (see #154).
+- Replaced global pooled Ae values with 26-population average as the default Ae reported (see #155, #158).
+- Replaced deprecated `pkg_resources` module with `importlib.resources` (see #156).
+- Upgraded versioneer to a Python 3.12+ compatible version (see #156).
+
+### Removed
+- Table flagging microhaps with repetitive content (see #153, #157).
 
 
 ## [0.11] 2023-10-25
@@ -24,13 +27,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Merged RSIDs resolved during database build now propagated to the final marker definition (see #149).
 
 ### Fixed
-- Added manual and automated fixes to ensure frequencies are formatted correcly and matche to the correct marker definition (see #150).
+- Added manual and automated fixes to ensure frequencies are formatted correcly and matched to the correct marker definition (see #150).
 
 
 ## [0.10.1] 2023-10-13
 
 ### Fixed
-- Bug with offsets table (`marker --format=offsets`) when multiple markers are defined for a locus (#144).
+- Bug with offsets table (`marker --format=offsets`) when multiple markers are defined for a locus (see #144).
 
 
 ## [0.10] 2023-09-15

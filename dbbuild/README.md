@@ -29,7 +29,7 @@ The goal is that—if ever needed, heaven forbid—any reasonbly capable bioinfo
 The MicroHapDB database can be rebuilt with the following command in the `dbbuild/` directory.
 
 ```
-./build.py databases/dbSNP/ databases/chains/ | tee build-summary.txt
+./build.py databases/dbSNP/ databases/chains/ --exclude Auton2015 | tee build-summary.txt
 ```
 
 The arguments provided to the build script will depend on the location of the dbSNP files and liftover chain files on the system.
