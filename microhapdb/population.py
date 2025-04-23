@@ -30,7 +30,7 @@ class Population:
     SA000010B       Japanese        Kidd2018
     JPT     Japanese in Tokyo, Japan        Byrska-Bishop2022
     >>> microhapdb.populations.shape
-    (125, 3)
+    (124, 3)
     """
 
     def __init__(self, popid, name, source):

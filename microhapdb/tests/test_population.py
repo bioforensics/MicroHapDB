@@ -29,7 +29,7 @@ def test_standardize_ids():
 
 def test_assumptions():
     num_populations_per_source = [
-        31,  # Byrska-Bishop2022
+        30,  # Byrska-Bishop2022
         1,  # Chen2019
         7,  # Gandotra2020
         1,  # Hiroaki2015
@@ -49,8 +49,8 @@ def test_populations():
     SA000040E Kachari Kidd2018
     >>> Population.table_from_ids(["EAS", "SAS"])
           ID        Name             Source
-    27   EAS   East Asia  Byrska-Bishop2022
-    104  SAS  South Asia  Byrska-Bishop2022
+    26   EAS   East Asia  Byrska-Bishop2022
+    103  SAS  South Asia  Byrska-Bishop2022
     >>> for pop in Population.from_query("Name.str.contains('Han')"):
     ...   print(pop.popid, pop.name, pop.source)
     ChengduHan Chengdu Han Zou2022
@@ -62,14 +62,14 @@ def test_populations():
     CHS Southern Han Chinese Byrska-Bishop2022
     >>> Population.table_from_query("Name.str.contains('Afr')")
                      ID                                     Name             Source
-    3               AFR                                   Africa  Byrska-Bishop2022
-    4  MHDBP-3dab7bdd14                                   Africa     vanderGaag2018
-    5         SA000101C                        African Americans           Kidd2018
-    6               ACB           African Caribbeans in Barbados  Byrska-Bishop2022
-    7               ASW  Americans of African Ancestry in SW USA  Byrska-Bishop2022
+    2               AFR                                   Africa  Byrska-Bishop2022
+    3  MHDBP-3dab7bdd14                                   Africa     vanderGaag2018
+    4         SA000101C                        African Americans           Kidd2018
+    5               ACB           African Caribbeans in Barbados  Byrska-Bishop2022
+    6               ASW  Americans of African Ancestry in SW USA  Byrska-Bishop2022
     """
     pop = microhapdb.populations
-    assert pop.shape == (125, 3)
+    assert pop.shape == (124, 3)
     assert Population.from_id("MHDBP-7c055e7ee8").name == "Swedish"
     assert Population.from_id("SA000028K").name == "Karitiana"
     result = Population.table_from_query("Name.str.contains('Jews')")
