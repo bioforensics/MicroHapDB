@@ -125,3 +125,11 @@ def test_counts_random():
             & (freq.Source == "Byrska-Bishop2022")
         ]
         assert len(set(subset.Count)) == 1, subset
+
+
+def test_marker_names_valid():
+    freq_markers = set(microhapdb.frequencies.Marker)
+    markers = set(microhapdb.markers.Name)
+    invalid = freq_markers - markers
+    print(invalid)
+    assert len(invalid) == 0
