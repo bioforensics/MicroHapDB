@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Replaced global pooled Ae values with 26-population average as the default Ae reported (see #155, #158).
 - Replaced deprecated `pkg_resources` module with `importlib.resources` (see #156).
 - Upgraded versioneer to a Python 3.12+ compatible version (see #156).
+- Resolved a bug with marker name updates in the frequency table during database build; did not affect any 1KGP frequencies or corresponding Ae scores (see #159).
 
 ### Removed
 - Table flagging microhaps with repetitive content (see #153, #157).

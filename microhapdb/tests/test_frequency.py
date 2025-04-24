@@ -133,9 +133,9 @@ def test_regression_marker_names_valid():
     invalid = freq_markers - markers
     print(invalid)
     assert len(invalid) == 0
-    assert "mh01NH-01" in microhapdb.markers.Name.values
-    assert "mh01NH-01.v1" not in microhapdb.markers.Name.values
-    assert "mh01NH-01.v2" not in microhapdb.markers.Name.values
+    assert "mh01NH-01" in microhapdb.frequencies.Marker.values
+    assert "mh01NH-01.v1" not in microhapdb.frequencies.Marker.values
+    assert "mh01NH-01.v2" not in microhapdb.frequencies.Marker.values
 
 
 @pytest.mark.parametrize(
