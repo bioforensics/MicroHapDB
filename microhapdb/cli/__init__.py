@@ -17,7 +17,6 @@ from argparse import ArgumentParser, RawDescriptionHelpFormatter
 import microhapdb
 from pyfaidx import Fasta as FastaIdx
 from subprocess import run
-import sys
 from urllib.request import urlretrieve
 
 
@@ -102,4 +101,4 @@ def download_hg38():  # pragma: no cover
     urlretrieve(url, pathgz)
     run(["gunzip", pathgz])
     hg38 = FastaIdx(path)
-    markerseq = hg38["chr13"][53486574:53486837]  # Ensure index is built
+    _ = hg38["chr13"][53486574:53486837]  # Ensure index is built

@@ -396,7 +396,7 @@ def test_main_marker_bad_code():
     [
         ("--population=Swedish", None, None, 187),
         ("--population=SA000009J", "--marker=mh13KK-218.v1", None, 15),
-        (None, "--marker=mh13KK-218.v1", "--allele=C|T|C|T", 128),
+        (None, "--marker=mh13KK-218.v1", "--allele=C:T:C:T", 128),
         (None, "--marker=mh14PK-72639", None, 211),
         (None, None, None, 885504),
     ],
@@ -552,7 +552,7 @@ def test_mhpl8r(capsys):
     result = pandas.read_csv(StringIO(terminal.out), sep="\t")
     print(result)
     assert result.shape == (4, 3)
-    assert result.Haplotype.iloc[0] == "A|A|G|A"
+    assert result.Haplotype.iloc[0] == "A:A:G:A"
     assert result.Frequency.iloc[0] == pytest.approx(0.00780)
 
 
@@ -574,7 +574,7 @@ def test_mhpl8r_panel(capsys):
     result = pandas.read_csv(StringIO(terminal.out), sep="\t")
     print(result)
     assert result.shape == (14, 3)
-    assert result.Haplotype.iloc[8] == "A|G|T"
+    assert result.Haplotype.iloc[8] == "A:G:T"
     assert result.Frequency.iloc[8] == pytest.approx(0.37738)
 
 
@@ -614,7 +614,7 @@ def test_efm(capsys):
     result = pandas.read_csv(StringIO(terminal.out))
     print(result)
     assert result.shape == (13, 4)
-    assert result["Allele"].iloc[3] == "C|T|C"
+    assert result["Allele"].iloc[3] == "C:T:C"
     assert result["mh01USC-1pD"].iloc[3] == pytest.approx(0.093)
     assert pandas.isna(result["mh15USC-15qA"].iloc[3])
     assert result["mh17USC-17pA"].iloc[3] == pytest.approx(0.022)
@@ -685,10 +685,10 @@ def test_cli_summarize(capsys):
     observed = terminal.out
     expected = """
 [microhaplotypes]
-  - 3053 marker definitions
+  - 3053 allele definitions
   - 2413 distinct loci
 [frequencies]
-  - 59753 haplotypes
+  - 59704 haplotypes
   - 124 population groups
   - 885503 total microhap frequencies
 """

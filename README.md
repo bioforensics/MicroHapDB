@@ -4,17 +4,19 @@
 [![Install with bioconda][condabadge]](http://bioconda.github.io/recipes/microhapdb/README.html)
 [![BSD licensed][licensebadge]](https://github.com/bioforensics/MicroHapDB/blob/master/LICENSE.txt)
 
-NBFAC, 2018-2023
+NBFAC, 2018-2025
 https://github.com/bioforensics/microhapdb
 
 **MicroHapDB** is a comprehensive catalog of human microhaplotype variation.
 The database integrates marker and population frequency data from numerous published research articles.
 Allele frequency estimates and allelic diversity statistics ($A_e$) are computed for 26 global populations so that markers can be ranked and evaluated for various applications.
 
-MicroHapDB is designed to be user-friendly for researchers, technology developers, and forensic practitioners, supporting a range of access methods from browsing and simple text queries to complex queries and full programmatic access via a Python API.
-It is designed as a community resource requiring minimal infrastructure to use and maintain: the entire contents of the database are distributed in plain text with each copy of MicroHapDB.
+MicroHapDB is managed as a community resource requiring minimal infrastructure to maintain: the entire contents of the database are distributed in plain text with each copy of MicroHapDB.
+The primary interface to MicroHapDB is through the console command line, which provides methods for browsing, searching, and filtering the database contents.
+Full programmatic access is available via a Python API.
+Alternatively, users can access the database tables directly using a spreadsheet program (e.g. Microsoft Excel), 
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/bioforensics/MicroHapDB/master?labpath=binder%2Fdemo_v0.9.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/bioforensics/MicroHapDB/master?labpath=binder%2Fdemo_v0.11.ipynb)
 
 
 ## Installation
@@ -32,10 +34,6 @@ pytest --pyargs microhapdb --doctest-modules
 MicroHapDB provides several methods to access the contents of a locally installed database.
 The [MicroHapDB documentation](https://microhapdb.readthedocs.io/) includes a ["Getting started" guide](https://microhapdb.readthedocs.io/en/latest/starting.html) as well as a comprehensive reference for running MicroHapDB on the command line.
 
-> *A particularly intrepid and curious user may also be so bold as to download the core database tables directly from [GitHub](https://github.com/bioforensics/MicroHapDB/tree/master/microhapdb/data).*
-
-MicroHapDB includes [statistics for ranking markers](https://microhapdb.readthedocs.io/en/latest/ranking.html), tools for [panel design](targets), and instructions for [adding markers to a private local copy of the database](https://microhapdb.readthedocs.io/en/latest/extending.html).
-
 
 ## Citation
 
@@ -45,12 +43,10 @@ If you use this database, please cite our work.
 
 MicroHapDB was created and is maintained by the Bioinformatics Group at the National Bioforensic Anaylsis Center (NBFAC).
 
-Additional references are available [on this page](https://microhapdb.readthedocs.io/en/latest/install.html).
+Additional references are available [on this page](https://microhapdb.readthedocs.io/en/latest/citations.html).
 
 
-[alfred]: https://alfred.med.yale.edu/alfred/alfredDataDownload.asp
-[Pandas]: https://pandas.pydata.org
-[cibadge]: https://github.com/bioforensics/MicroHapDB/workflows/CI%20Build/badge.svg
+[cibadge]: https://github.com/bioforensics/MicroHapDB/workflows/CI%20Build/badge.svg?branch=master
 [pypibadge]: https://img.shields.io/pypi/v/microhapdb.svg
 [condabadge]: https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg
 [licensebadge]: https://img.shields.io/badge/license-BSD-blue.svg

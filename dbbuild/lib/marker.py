@@ -54,6 +54,7 @@ class Marker:
 
     def __init__(self, name, rsids, index, xrefs=None, source=None):
         self.name = Marker.check_name(name)
+        self.source_name = str(self.name)
         self.rsids = rsids
         self.index = index
         self.xrefs = xrefs
@@ -75,7 +76,7 @@ class Marker:
             chrom = int(chromstr)
             if chrom < 1 or chrom > 22:
                 strikes.append(f"invalid chromosome '{chromstr}'")
-        except:
+        except Exception:
             if chromstr != "0X":
                 strikes.append(f"invalid chromosome '{chromstr}'")
         labpi, mhnumber = name[4:].split("-", 1)
@@ -89,7 +90,7 @@ class Marker:
                 strikes.append(f"invalid version designator in marker number '{mhnumber}'")
             try:
                 int(version[1:])
-            except:
+            except Exception:
                 strikes.append(f"invalid version designator in marker number '{mhnumber}'")
         if len(strikes) > 0:
             message = f"{name}: " + "; ".join(strikes)

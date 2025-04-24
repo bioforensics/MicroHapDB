@@ -46,14 +46,14 @@ class Locus(list):
                 assert len(marker.sources) == 1, (marker.name, marker.sources)
                 message = f"Marker {marker.name} as defined in {marker.source.name} was defined previously and is redundant"
                 print(message)
-                self.source_name_map[marker.source.name][marker.name] = self.definition_names[marker.posstr()]
+                self.source_name_map[marker.source.name][marker.source_name] = self.definition_names[marker.posstr()]
                 continue
             else:
                 new_name = marker.name
                 if len(self.markers_by_definition) > 1:
                     new_name = f"{marker.name}.v{len(self.definition_names) + 1}"
                 self.definition_names[marker.posstr()] = new_name
-                self.source_name_map[marker.source.name][marker.name] = new_name
+                self.source_name_map[marker.source.name][marker.source_name] = new_name
                 marker.name = new_name
                 for othermarker in self.markers_by_definition[marker.posstr()]:
                     if othermarker != marker:

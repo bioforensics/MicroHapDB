@@ -266,16 +266,16 @@ class Marker:
         offsets38 = ", ".join([str(o) for o in self.offsets])
         marker_offsets = ", ".join([str(o) for o in self.marker_offsets])
         target_offsets = ", ".join([str(o) for o in self.target_offsets])
-        print(f"Marker Definition", file=out)
-        print(f"    Marker extent\n        - {marker_slug}", file=out)
-        print(f"    Target locus\n        - {target_slug}", file=out)
-        print(f"    Constituent variants", file=out)
-        print(f"        - chromosome offsets (GRCh37):", offsets37, file=out)
-        print(f"        - chromosome offsets (GRCh38):", offsets38, file=out)
-        print(f"        - marker offsets:", marker_offsets, file=out)
-        print(f"        - target offsets:", target_offsets, file=out)
-        print(f"        - cross-references:", ", ".join(self.varrefs), file=out)
-        print(f"    Observed haplotypes", file=out)
+        print("Marker Definition", file=out)
+        print("    Marker extent\n        -", marker_slug, file=out)
+        print("    Target locus\n        -", target_slug, file=out)
+        print("    Constituent variants", file=out)
+        print("        - chromosome offsets (GRCh37):", offsets37, file=out)
+        print("        - chromosome offsets (GRCh38):", offsets38, file=out)
+        print("        - marker offsets:", marker_offsets, file=out)
+        print("        - target offsets:", target_offsets, file=out)
+        print("        - cross-references:", ", ".join(self.varrefs), file=out)
+        print("    Observed haplotypes", file=out)
         for allele in self.alleles:
             print("        -", allele, file=out)
         print("\n", file=out)
@@ -343,7 +343,7 @@ class Marker:
 
     def print_detail_targetseq_alleles(self, blocks, out):
         for allele in self.alleles:
-            allelevars = allele.split("|")
+            allelevars = allele.split(":")
             if len(allelevars) != len(self.variant_lengths):
                 message = f"num var mismatch ({self.name}): {len(allelevars)} vs {len(self.variant_lengths)}"
                 raise ValueError(message)
