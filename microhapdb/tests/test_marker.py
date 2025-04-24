@@ -139,12 +139,12 @@ Marker Definition
         - target offsets: 10, 39, 79
         - cross-references: rs56256724, rs2073578, rs633153
     Observed haplotypes
-        - C|A|C
-        - C|A|T
-        - C|C|C
-        - C|C|T
-        - T|A|T
-        - T|C|T
+        - C:A:C
+        - C:A:T
+        - C:C:C
+        - C:C:T
+        - T:A:T
+        - T:C:T
 
 
 --[ Core Marker Sequence ]--
@@ -186,21 +186,21 @@ Marker Definition
         - target offsets: 43, 71, 165, 179
         - cross-references: rs74865590, rs438055, rs370672, rs6555108
     Observed haplotypes
-        - C|A|A|A
-        - C|A|A|G
-        - C|A|G|A
-        - C|A|G|G
-        - C|G|A|A
-        - C|G|A|G
-        - C|G|G|A
-        - C|G|G|G
-        - T|A|A|A
-        - T|A|A|G
-        - T|A|G|A
-        - T|A|G|G
-        - T|G|A|A
-        - T|G|A|G
-        - T|G|G|G
+        - C:A:A:A
+        - C:A:A:G
+        - C:A:G:A
+        - C:A:G:G
+        - C:G:A:A
+        - C:G:A:G
+        - C:G:G:A
+        - C:G:G:G
+        - T:A:A:A
+        - T:A:A:G
+        - T:A:G:A
+        - T:A:G:G
+        - T:G:A:A
+        - T:G:A:G
+        - T:G:G:G
 
 
 --[ Core Marker Sequence ]--
@@ -252,12 +252,12 @@ Marker Definition
         - target offsets: 0, 8, 31, 41, 54, 63
         - cross-references: rs66509440, rs66804793, rs528179479, rs9925859, rs9929895, rs74032085
     Observed haplotypes
-        - C|G|G|C|A|T
-        - C|G|G|G|A|T
-        - C|G|G|G|G|T
-        - T|A|C|G|T|C
-        - T|A|G|G|A|T
-        - T|A|G|G|T|C
+        - C:G:G:C:A:T
+        - C:G:G:G:A:T
+        - C:G:G:G:G:T
+        - T:A:C:G:T:C
+        - T:A:G:G:A:T
+        - T:A:G:G:T:C
 
 
 --[ Core Marker Sequence ]--
@@ -300,21 +300,21 @@ Marker Definition
         - target offsets: 13, 20, 35, 42, 51, 55, 59, 60, 61, 67
         - cross-references: rs1204206, rs376614501, rs1196416099, rs35198802, rs553417439, rs1204207, rs545720382, rs34901968, rs546942508, rs1204208
     Observed haplotypes
-        - C|C|G|C|C|C|A|A|A|A
-        - C|C|G|C|C|C|A|A|G|A
-        - G|CT|G|C|C|C|A|G|G|A
-        - G|C|G|C|C|C|A|G|G|A
-        - G|C|G|T|C|C|A|G|G|A
-        - G|C|G|T|C|T|A|G|G|A
-        - G|C|G|T|G|C|A|G|G|A
-        - T|C|GA|C|C|T|A|A|G|G
-        - T|C|G|C|C|C|A|A|A|A
-        - T|C|G|C|C|C|A|A|G|A
-        - T|C|G|C|C|C|T|A|G|A
-        - T|C|G|C|C|T|A|A|G|G
-        - T|C|G|C|C|T|T|A|G|G
-        - T|C|G|T|C|C|A|A|G|A
-        - T|C|G|T|C|C|A|G|G|A
+        - C:C:G:C:C:C:A:A:A:A
+        - C:C:G:C:C:C:A:A:G:A
+        - G:C:G:C:C:C:A:G:G:A
+        - G:C:G:T:C:C:A:G:G:A
+        - G:C:G:T:C:T:A:G:G:A
+        - G:C:G:T:G:C:A:G:G:A
+        - G:CT:G:C:C:C:A:G:G:A
+        - T:C:G:C:C:C:A:A:A:A
+        - T:C:G:C:C:C:A:A:G:A
+        - T:C:G:C:C:C:T:A:G:A
+        - T:C:G:C:C:T:A:A:G:G
+        - T:C:G:C:C:T:T:A:G:G
+        - T:C:G:T:C:C:A:A:G:A
+        - T:C:G:T:C:C:A:G:G:A
+        - T:C:GA:C:C:T:A:A:G:G
 
 
 --[ Core Marker Sequence ]--
@@ -327,12 +327,11 @@ TTACATCCAAACGTGAGCAGGAGGAAACTCGGAACATACTGTTTTTAAGAACTAG
 AGGAAGAAAGTGATTACATCC-AAACGTGAGCAGGAG-GAAACTCGGAACATACTGTTTTTAAGAACTAGTATCACTAGAGTT
 .............C......C-..............G-......C........C...C...AAA.....A.............
 .............C......C-..............G-......C........C...C...AAG.....A.............
-.............G......CT..............G-......C........C...C...AGG.....A.............
 .............G......C-..............G-......C........C...C...AGG.....A.............
 .............G......C-..............G-......T........C...C...AGG.....A.............
 .............G......C-..............G-......T........C...T...AGG.....A.............
 .............G......C-..............G-......T........G...C...AGG.....A.............
-.............T......C-..............GA......C........C...T...AAG.....G.............
+.............G......CT..............G-......C........C...C...AGG.....A.............
 .............T......C-..............G-......C........C...C...AAA.....A.............
 .............T......C-..............G-......C........C...C...AAG.....A.............
 .............T......C-..............G-......C........C...C...TAG.....A.............
@@ -340,6 +339,7 @@ AGGAAGAAAGTGATTACATCC-AAACGTGAGCAGGAG-GAAACTCGGAACATACTGTTTTTAAGAACTAGTATCACTAGA
 .............T......C-..............G-......C........C...T...TAG.....G.............
 .............T......C-..............G-......T........C...C...AAG.....A.............
 .............T......C-..............G-......T........C...C...AGG.....A.............
+.............T......C-..............GA......C........C...T...AAG.....G.............
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------[ MicroHapDB ]----
@@ -358,10 +358,10 @@ Marker Definition
         - target offsets: 17, 32, 36, 41, 57, 63
         - cross-references: rs9962474, rs9947384, rs62081065, rs28612163, rs62081066, rs28695806
     Observed haplotypes
-        - C|A|A|G|A|T
-        - C|A|G|C|A|C
-        - C|A|G|C|T|C
-        - T|G|A|G|A|T
+        - C:A:A:G:A:T
+        - C:A:G:C:A:C
+        - C:A:G:C:T:C
+        - T:G:A:G:A:T
 
 
 --[ Core Marker Sequence ]--
@@ -394,26 +394,26 @@ Marker Definition
         - target offsets: 10, 11, 12, 19, 20, 21, 35, 58, 74, 77, 78, 82
         - cross-references: rs117862404, rs62232223, rs7291353, rs71328677, rs62232224, rs10685889, rs10685890, rs113141650, rs62232225, rs62232226
     Observed haplotypes
-        - C|A|G|C|G|C|CCTGCC|TTCTT|GTGAG|C|T|G
-        - C|A|G|C|G|C|C|T|G|C|T|G
-        - C|A|G|C|G|T|CCTGCC|TTCTT|GTGAG|C|C|T
-        - C|A|G|C|G|T|C|T|G|C|C|T
-        - C|G|C|C|G|C|CCTGCC|T|GTGAG|C|T|G
-        - C|G|G|C|A|C|CCTGCC|T|G|C|T|G
-        - C|G|G|C|A|C|C|T|G|C|T|G
-        - C|G|G|C|G|C|CCTGCC|T|GTGAG|C|T|G
-        - C|G|G|C|G|C|CCTGCC|T|GTGAG|G|T|G
-        - C|G|G|C|G|C|CCTGCC|T|G|C|T|G
-        - C|G|G|C|G|C|C|T|G|C|T|G
-        - C|G|G|C|G|C|C|T|G|G|T|G
-        - C|G|G|C|G|T|CCTGCC|TTCTT|GTGAG|C|C|T
-        - C|G|G|C|G|T|C|TTCTT|GTGAG|C|C|T
-        - C|G|G|C|G|T|C|T|G|C|C|T
-        - C|G|G|T|G|C|CCTGCC|TTCTT|GTGAG|C|T|G
-        - C|G|G|T|G|C|C|T|G|C|T|G
-        - T|G|G|C|A|C|C|T|G|C|T|G
-        - T|G|G|C|G|C|CCTGCC|TTCTT|GTGAG|C|T|G
-        - T|G|G|C|G|C|C|T|G|C|T|G
+        - C:A:G:C:G:C:C:T:G:C:T:G
+        - C:A:G:C:G:C:CCTGCC:TTCTT:GTGAG:C:T:G
+        - C:A:G:C:G:T:C:T:G:C:C:T
+        - C:A:G:C:G:T:CCTGCC:TTCTT:GTGAG:C:C:T
+        - C:G:C:C:G:C:CCTGCC:T:GTGAG:C:T:G
+        - C:G:G:C:A:C:C:T:G:C:T:G
+        - C:G:G:C:A:C:CCTGCC:T:G:C:T:G
+        - C:G:G:C:G:C:C:T:G:C:T:G
+        - C:G:G:C:G:C:C:T:G:G:T:G
+        - C:G:G:C:G:C:CCTGCC:T:G:C:T:G
+        - C:G:G:C:G:C:CCTGCC:T:GTGAG:C:T:G
+        - C:G:G:C:G:C:CCTGCC:T:GTGAG:G:T:G
+        - C:G:G:C:G:T:C:T:G:C:C:T
+        - C:G:G:C:G:T:C:TTCTT:GTGAG:C:C:T
+        - C:G:G:C:G:T:CCTGCC:TTCTT:GTGAG:C:C:T
+        - C:G:G:T:G:C:C:T:G:C:T:G
+        - C:G:G:T:G:C:CCTGCC:TTCTT:GTGAG:C:T:G
+        - T:G:G:C:A:C:C:T:G:C:T:G
+        - T:G:G:C:G:C:C:T:G:C:T:G
+        - T:G:G:C:G:C:CCTGCC:TTCTT:GTGAG:C:T:G
 
 
 --[ Core Marker Sequence ]--
@@ -424,26 +424,26 @@ CGGTTGTGACGCTCAGCTCACCAGTCCTGCCTACTTGCCAGCAGGTATTCTCAGAGGGACCACAGAGCTGAGG
 --[ Marker Target Sequence with MH alleles (haplotypes) ]--
           ***      ***             ******                 *****               *****  **   *
 GTGACATTGGCGGTTGTGACGCTCAGCTCACCAGTCCTGCCTACTTGCCAGCAGGTATT----CTCAGAGGGACCACAG----AGCTGAGGGTGACCTGCA
-..........CAG......CGC.............CCTGCC.................TTCTT...............GTGAG..CT...G..........
 ..........CAG......CGC.............C-----.................T----...............G----..CT...G..........
-..........CAG......CGT.............CCTGCC.................TTCTT...............GTGAG..CC...T..........
+..........CAG......CGC.............CCTGCC.................TTCTT...............GTGAG..CT...G..........
 ..........CAG......CGT.............C-----.................T----...............G----..CC...T..........
+..........CAG......CGT.............CCTGCC.................TTCTT...............GTGAG..CC...T..........
 ..........CGC......CGC.............CCTGCC.................T----...............GTGAG..CT...G..........
-..........CGG......CAC.............CCTGCC.................T----...............G----..CT...G..........
 ..........CGG......CAC.............C-----.................T----...............G----..CT...G..........
-..........CGG......CGC.............CCTGCC.................T----...............GTGAG..CT...G..........
-..........CGG......CGC.............CCTGCC.................T----...............GTGAG..GT...G..........
-..........CGG......CGC.............CCTGCC.................T----...............G----..CT...G..........
+..........CGG......CAC.............CCTGCC.................T----...............G----..CT...G..........
 ..........CGG......CGC.............C-----.................T----...............G----..CT...G..........
 ..........CGG......CGC.............C-----.................T----...............G----..GT...G..........
-..........CGG......CGT.............CCTGCC.................TTCTT...............GTGAG..CC...T..........
-..........CGG......CGT.............C-----.................TTCTT...............GTGAG..CC...T..........
+..........CGG......CGC.............CCTGCC.................T----...............G----..CT...G..........
+..........CGG......CGC.............CCTGCC.................T----...............GTGAG..CT...G..........
+..........CGG......CGC.............CCTGCC.................T----...............GTGAG..GT...G..........
 ..........CGG......CGT.............C-----.................T----...............G----..CC...T..........
-..........CGG......TGC.............CCTGCC.................TTCTT...............GTGAG..CT...G..........
+..........CGG......CGT.............C-----.................TTCTT...............GTGAG..CC...T..........
+..........CGG......CGT.............CCTGCC.................TTCTT...............GTGAG..CC...T..........
 ..........CGG......TGC.............C-----.................T----...............G----..CT...G..........
+..........CGG......TGC.............CCTGCC.................TTCTT...............GTGAG..CT...G..........
 ..........TGG......CAC.............C-----.................T----...............G----..CT...G..........
-..........TGG......CGC.............CCTGCC.................TTCTT...............GTGAG..CT...G..........
 ..........TGG......CGC.............C-----.................T----...............G----..CT...G..........
+..........TGG......CGC.............CCTGCC.................TTCTT...............GTGAG..CT...G..........
 --------------------------------------------------------------------------------
 """
     assert observed.strip() == expected.strip()
@@ -470,33 +470,33 @@ Marker Definition
         - target offsets: 10, 43, 66, 109, 147
         - cross-references: rs904372, rs3101651, rs745331, rs3104513, rs732916
     Observed haplotypes
-        - C|C|A|C|A
-        - C|C|A|C|C
-        - C|C|A|G|A
-        - C|C|A|G|C
-        - C|C|G|C|A
-        - C|C|G|C|C
-        - C|C|G|G|A
-        - C|C|G|G|C
-        - C|T|A|C|A
-        - C|T|A|C|C
-        - C|T|A|G|A
-        - C|T|A|G|C
-        - C|T|G|G|A
-        - C|T|G|G|C
-        - T|C|A|C|A
-        - T|C|A|C|C
-        - T|C|A|G|A
-        - T|C|A|G|C
-        - T|C|G|C|C
-        - T|C|G|G|A
-        - T|C|G|G|C
-        - T|T|A|C|A
-        - T|T|A|C|C
-        - T|T|A|G|A
-        - T|T|A|G|C
-        - T|T|G|C|C
-        - T|T|G|G|A
+        - C:C:A:C:A
+        - C:C:A:C:C
+        - C:C:A:G:A
+        - C:C:A:G:C
+        - C:C:G:C:A
+        - C:C:G:C:C
+        - C:C:G:G:A
+        - C:C:G:G:C
+        - C:T:A:C:A
+        - C:T:A:C:C
+        - C:T:A:G:A
+        - C:T:A:G:C
+        - C:T:G:G:A
+        - C:T:G:G:C
+        - T:C:A:C:A
+        - T:C:A:C:C
+        - T:C:A:G:A
+        - T:C:A:G:C
+        - T:C:G:C:C
+        - T:C:G:G:A
+        - T:C:G:G:C
+        - T:T:A:C:A
+        - T:T:A:C:C
+        - T:T:A:G:A
+        - T:T:A:G:C
+        - T:T:G:C:C
+        - T:T:G:G:A
 
 
 --[ Core Marker Sequence ]--
@@ -553,47 +553,47 @@ Marker Definition
         - target offsets: 10, 43, 66, 109, 147, 233
         - cross-references: rs904372, rs3101651, rs745331, rs3104513, rs732916, rs732915
     Observed haplotypes
-        - C|C|A|C|A|C
-        - C|C|A|C|C|C
-        - C|C|A|C|C|G
-        - C|C|A|G|A|C
-        - C|C|A|G|A|G
-        - C|C|A|G|C|C
-        - C|C|A|G|C|G
-        - C|C|G|C|A|C
-        - C|C|G|C|C|C
-        - C|C|G|C|C|G
-        - C|C|G|G|A|C
-        - C|C|G|G|A|G
-        - C|C|G|G|C|C
-        - C|C|G|G|C|G
-        - C|T|A|C|A|C
-        - C|T|A|C|A|G
-        - C|T|A|C|C|G
-        - C|T|A|G|A|C
-        - C|T|A|G|C|C
-        - C|T|A|G|C|G
-        - C|T|G|G|A|C
-        - C|T|G|G|C|C
-        - T|C|A|C|A|C
-        - T|C|A|C|C|C
-        - T|C|A|C|C|G
-        - T|C|A|G|A|C
-        - T|C|A|G|C|C
-        - T|C|A|G|C|G
-        - T|C|G|C|C|G
-        - T|C|G|G|A|C
-        - T|C|G|G|A|G
-        - T|C|G|G|C|C
-        - T|C|G|G|C|G
-        - T|T|A|C|A|C
-        - T|T|A|C|A|G
-        - T|T|A|C|C|G
-        - T|T|A|G|A|C
-        - T|T|A|G|C|C
-        - T|T|A|G|C|G
-        - T|T|G|C|C|G
-        - T|T|G|G|A|C
+        - C:C:A:C:A:C
+        - C:C:A:C:C:C
+        - C:C:A:C:C:G
+        - C:C:A:G:A:C
+        - C:C:A:G:A:G
+        - C:C:A:G:C:C
+        - C:C:A:G:C:G
+        - C:C:G:C:A:C
+        - C:C:G:C:C:C
+        - C:C:G:C:C:G
+        - C:C:G:G:A:C
+        - C:C:G:G:A:G
+        - C:C:G:G:C:C
+        - C:C:G:G:C:G
+        - C:T:A:C:A:C
+        - C:T:A:C:A:G
+        - C:T:A:C:C:G
+        - C:T:A:G:A:C
+        - C:T:A:G:C:C
+        - C:T:A:G:C:G
+        - C:T:G:G:A:C
+        - C:T:G:G:C:C
+        - T:C:A:C:A:C
+        - T:C:A:C:C:C
+        - T:C:A:C:C:G
+        - T:C:A:G:A:C
+        - T:C:A:G:C:C
+        - T:C:A:G:C:G
+        - T:C:G:C:C:G
+        - T:C:G:G:A:C
+        - T:C:G:G:A:G
+        - T:C:G:G:C:C
+        - T:C:G:G:C:G
+        - T:T:A:C:A:C
+        - T:T:A:C:A:G
+        - T:T:A:C:C:G
+        - T:T:A:G:A:C
+        - T:T:A:G:C:C
+        - T:T:A:G:C:G
+        - T:T:G:C:C:G
+        - T:T:G:G:A:C
 
 
 --[ Core Marker Sequence ]--
@@ -665,21 +665,21 @@ Marker Definition
         - target offsets: 10, 43, 66, 109
         - cross-references: rs904372, rs3101651, rs745331, rs3104513
     Observed haplotypes
-        - C|C|A|C
-        - C|C|A|G
-        - C|C|G|C
-        - C|C|G|G
-        - C|T|A|C
-        - C|T|A|G
-        - C|T|G|G
-        - T|C|A|C
-        - T|C|A|G
-        - T|C|G|C
-        - T|C|G|G
-        - T|T|A|C
-        - T|T|A|G
-        - T|T|G|C
-        - T|T|G|G
+        - C:C:A:C
+        - C:C:A:G
+        - C:C:G:C
+        - C:C:G:G
+        - C:T:A:C
+        - C:T:A:G
+        - C:T:G:G
+        - T:C:A:C
+        - T:C:A:G
+        - T:C:G:C
+        - T:C:G:G
+        - T:T:A:C
+        - T:T:A:G
+        - T:T:G:C
+        - T:T:G:G
 
 
 --[ Core Marker Sequence ]--

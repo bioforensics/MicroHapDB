@@ -206,6 +206,7 @@ class SourceIndex:
         table = pd.concat(
             [source.frequencies for source in self.sources if source.frequencies is not None]
         )
+        table["Allele"] = table["Allele"].str.replace("|", ":")
         table = table.sort_values(["Marker", "Population"]).reset_index(drop=True)
         return table
 
