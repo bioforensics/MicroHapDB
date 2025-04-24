@@ -127,9 +127,31 @@ def test_counts_random():
         assert len(set(subset.Count)) == 1, subset
 
 
-def test_marker_names_valid():
+def test_regression_marker_names_valid():
     freq_markers = set(microhapdb.frequencies.Marker)
     markers = set(microhapdb.markers.Name)
     invalid = freq_markers - markers
     print(invalid)
     assert len(invalid) == 0
+    assert "mh01NH-01" in microhapdb.markers.Name.values
+    assert "mh01NH-01.v1" not in microhapdb.markers.Name.values
+    assert "mh01NH-01.v2" not in microhapdb.markers.Name.values
+
+
+@pytest.mark.parametrize(
+    "marker, oldid, source, num_freqs",
+    [
+        ("mh01NH-04.v1", "mh01NK-001", "Staadig2021", 4),
+        ("mh01NH-04.v2", "mh01NK-001", "Kidd2018", 415),
+        ("mh01NH-04.v2", "mh01NK-001", "Turchi2019", 5),
+        ("mh01NH-04.v2", "mh01NK-001", "Gandotra2020", 30),
+        ("mh09USC-9pA.v2", "mh09KK-010", "Gandotra2020", 58),
+        ("mh22USC-22qB.v2", "mh22KK-340", "Gandotra2020", 57),
+    ],
+)
+def test_regression_renamed_freqs(marker, oldid, source, num_freqs):
+    freq = microhapdb.frequencies
+    subset = freq[(freq.Marker == marker) & (freq.Source == source)]
+    assert len(subset) == num_freqs
+    subset = freq[freq.Marker == oldid]
+    assert len(subset) == 0
