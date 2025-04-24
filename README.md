@@ -14,7 +14,7 @@ Allele frequency estimates and allelic diversity statistics ($A_e$) are computed
 MicroHapDB is managed as a community resource requiring minimal infrastructure to maintain: the entire contents of the database are distributed in plain text with each copy of MicroHapDB.
 The primary interface to MicroHapDB is through the console command line, which provides methods for browsing, searching, and filtering the database contents.
 Full programmatic access is available via a Python API.
-Alternatively, users can access the database tables directly using a spreadsheet program (e.g. Microsoft Excel), 
+Alternatively, users can access the database tables directly using a spreadsheet program such as Microsoft Excel.
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/bioforensics/MicroHapDB/master?labpath=binder%2Fdemo_v0.11.ipynb)
 
@@ -46,7 +46,7 @@ MicroHapDB was created and is maintained by the Bioinformatics Group at the Nati
 Additional references are available [on this page](https://microhapdb.readthedocs.io/en/latest/citations.html).
 
 
-[cibadge]: https://github.com/bioforensics/MicroHapDB/workflows/CI%20Build/badge.svg?branch=master
+[cibadge]: https://github.com/bioforensics/MicroHapDB/actions/workflows/cibuild.yml/badge.svg?branch=master
 [pypibadge]: https://img.shields.io/pypi/v/microhapdb.svg
 [condabadge]: https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg
 [licensebadge]: https://img.shields.io/badge/license-BSD-blue.svg

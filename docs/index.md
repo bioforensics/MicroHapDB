@@ -4,8 +4,10 @@
 The database integrates marker and population frequency data from numerous published research articles—see [citations](citations.md).
 Allele frequency estimates and allelic diversity statistics ($A_e$) are computed for 26 global populations so that markers can be ranked and evaluated for various applications.
 
-MicroHapDB is designed to be user-friendly for researchers, technology developers, and forensic practitioners, supporting a range of access methods from browsing and simple text queries to complex queries and full programmatic access via a Python API.
-It is designed as a community resource requiring minimal infrastructure to use and maintain: the entire contents of the database are distributed in plain text with each copy of MicroHapDB.
+MicroHapDB is managed as a community resource requiring minimal infrastructure to maintain: the entire contents of the database are distributed in plain text with each copy of MicroHapDB.
+The primary interface to MicroHapDB is through the console command line, which provides methods for browsing, searching, and filtering the database contents.
+Full programmatic access is available via a Python API.
+Alternatively, users can access the database tables directly using a spreadsheet program such as Microsoft Excel.
 
 
 ## Table of Contents
