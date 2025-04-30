@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.12] 2025-04-30
 
 ### Added
 - Panel design notebooks (see #157).
