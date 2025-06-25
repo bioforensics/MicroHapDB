@@ -1,16 +1,28 @@
 rule all:
     input:
         "data/results/aes_markII_vs_codis.png",
+        "data/results/aes_pool.png",
         "data/results/ideogram.png",
 
 
 rule plot_aes_vs_codis:
     input:
-        script="code/plot_ae.py",
+        script="code/plot_ae_panel.py",
         panel="data/results/final-panel.tsv",
         codis="data/input/codis-strs-aes.tsv",
     output:
         figure="data/results/aes_markII_vs_codis.png",
+    shell:
+        "python {input} {output}"
+
+
+rule plot_pool_aes:
+    input:
+        script="code/plot_ae_pool.py",
+        panel="data/results/markers-passed-filter.csv",
+        aes="data/input/marker-aes-0.12.csv",
+    output:
+        figure="data/results/aes_pool.png",
     shell:
         "python {input} {output}"
 
