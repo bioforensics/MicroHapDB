@@ -50,7 +50,7 @@ def plot_by_bins(microhaps):
         markersizes = [nv / max_num_snps * 15 for nv in data.NumVars]
         label = f"{numsnps}-{numsnps+1} ADSs" if numsnps < 10 else "≥10 ADSs"
         marker = "." if numsnps == 2 else "o"
-        plt.scatter(data.Extent, data.Ae, marker=marker, s=markersizes, color=color, alpha=0.9, label=label)
+        plt.scatter(data.Extent, data.Ae, marker=marker, s=markersizes, color=color, alpha=0.8, label=label)
 
 
 def get_parser():
