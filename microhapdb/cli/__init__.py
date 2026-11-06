@@ -19,7 +19,6 @@ from pyfaidx import Fasta as FastaIdx
 from subprocess import run
 from urllib.request import urlretrieve
 
-
 subparser_funcs = {
     "lookup": lookup.subparser,
     "marker": marker.subparser,

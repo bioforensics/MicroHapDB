@@ -13,7 +13,6 @@
 from setuptools import setup
 import versioneer
 
-
 desc = "Portable database of microhaplotype marker and allele frequency data"
 with open("README.md", "r") as infile:
     longdesc = infile.read()

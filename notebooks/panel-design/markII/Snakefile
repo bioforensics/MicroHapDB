@@ -2,6 +2,7 @@ rule all:
     input:
         "data/results/aes_markII_vs_codis.png",
         "data/results/ideogram.png",
+        "data/results/pairwise_dist.png",
 
 
 rule plot_aes_vs_codis:
@@ -13,6 +14,17 @@ rule plot_aes_vs_codis:
         figure="data/results/aes_markII_vs_codis.png",
     shell:
         "python {input} {output}"
+
+
+rule plot_pairwise_dist_hist:
+    input:
+        script="code/plot_dist.py",
+        passed="data/results/markers-passed-filter.csv",
+    output:
+        figure="data/results/pairwise_dist.png"
+    shell:
+        "python {input} {output}"
+
 
 rule plot_ideogram:
     input:
